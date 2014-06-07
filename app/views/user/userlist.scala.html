@@ -1,0 +1,15 @@
+@(users: List[User])
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+        </tr>
+        @for(user <- users) {
+            <tr>
+                <td>@user.getName</td>
+                <td>@user.getAge</td>
+            </tr>
+        }
+    </tbody>
+</table>

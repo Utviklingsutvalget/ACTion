@@ -1,23 +1,10 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.*;
-
-import play.mvc.*;
-import play.test.*;
-import play.data.DynamicForm;
-import play.data.validation.ValidationError;
-import play.data.validation.Constraints.RequiredValidator;
-import play.i18n.Lang;
-import play.libs.F;
-import play.libs.F.*;
+import org.junit.Assert;
+import org.junit.Test;
 import play.twirl.api.Content;
 
-import static play.test.Helpers.*;
-import static org.fest.assertions.Assertions.*;
+import static org.fest.assertions.Assertions.assertThat;
+import static play.test.Helpers.contentAsString;
+import static play.test.Helpers.contentType;
 
 
 /**
@@ -41,5 +28,8 @@ public class ApplicationTest {
         assertThat(contentAsString(html)).contains("Your new application is ready.");
     }
 
-
+    @Test
+    public void testJunitThing() throws Exception {
+        Assert.assertTrue(false);
+    }
 }

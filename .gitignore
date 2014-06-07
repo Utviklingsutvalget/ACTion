@@ -86,6 +86,7 @@ server.pid
 /dist/
 .cache
 
+!activator-launch-1.2.2.jar
 
 ### vim ###
 [._]*.s[a-w][a-z]
