@@ -1,5 +1,6 @@
 package controllers;
 
+import models.User;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -16,6 +17,7 @@ public class Application extends Controller {
                 new User("Eivind", 12),
                 new User("Martin", 21)
         ));
+        
         return ok(index.render(users));
     }
 }
