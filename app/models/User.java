@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.Ebean;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
@@ -33,7 +34,7 @@ public class User extends Model {
     }
 
     @Transactional
-    public static void persist() {
-
+    public static void save(User user) {
+        Ebean.save(user);
     }
 }
