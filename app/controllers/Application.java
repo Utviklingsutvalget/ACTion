@@ -14,10 +14,12 @@ public class Application extends Controller {
         List<User> users = new ArrayList<>();
 
         users.addAll(Arrays.asList(
-                new User("Eivind", 12),
-                new User("Martin", 21)
+                new User("Eivind", User.Gender.FEMALE),
+                new User("Martin", User.Gender.MALE)
         ));
-        
+
+        User user = new User("Rebecca", User.Gender.MALE);
+
         return ok(index.render(users));
     }
 }

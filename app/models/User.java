@@ -1,35 +1,39 @@
 package models;
 
-public class User {
-    private String name;
-    private int age;
+import play.data.validation.Constraints;
+import play.db.ebean.Model;
+import play.db.ebean.Transactional;
 
-    public User(String name, int age) {
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class User extends Model {
+    public enum Gender {
+        FEMALE, MALE
+    }
+
+    public static Finder<Long, User> find = new Finder<>(
+            Long.class, User.class
+    );
+
+    @Id
+    @Constraints.Min(10)
+    public Long id;
+
+    @Constraints.Required
+    public String name;
+
+    @Constraints.Required
+    public Gender gender;
+
+    public User(String name, Gender gender) {
         this.name = name;
-        this.age = age;
+        this.gender = gender;
     }
 
-    public String getName() {
-        return name;
-    }
+    @Transactional
+    public static void persist() {
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                '}';
     }
 }
