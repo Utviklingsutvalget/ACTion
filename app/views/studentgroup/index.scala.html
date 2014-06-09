@@ -1,0 +1,16 @@
+@(groups: List[StudentGroup])
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        @for(group <- groups) {
+            <tr>
+                <td>@group.name</td>
+                <td>@group.description</td>
+                <td>Show (TOOD)</td>
+            </tr>
+        }
+    </tbody>
+</table>
