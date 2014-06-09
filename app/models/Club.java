@@ -10,12 +10,12 @@ import javax.persistence.Id;
 import static play.data.validation.Constraints.Required;
 
 @Entity
-public class StudentGroup extends Model {
-    public static Finder<Long, StudentGroup> find = new Finder<>(Long.class, StudentGroup.class);
+public class Club extends Model {
+    public static Finder<Long, Club> find = new Finder<>(Long.class, Club.class);
 
     @Transactional
-    public static void update(StudentGroup studentGroup) {
-        Ebean.update(studentGroup);
+    public static void update(Club club) {
+        Ebean.update(club);
     }
 
     @Id
