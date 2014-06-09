@@ -11,12 +11,17 @@ import javax.persistence.Id;
 @Entity
 public class User extends Model {
     public enum Gender {
-        FEMALE, MALE
+        FEMALE, MALE;
     }
 
     public static Finder<Long, User> find = new Finder<>(
             Long.class, User.class
     );
+
+    @Transactional
+    public static void save(User user) {
+        Ebean.save(user);
+    }
 
     @Id
     @Constraints.Min(10)
@@ -31,10 +36,5 @@ public class User extends Model {
     public User(String name, Gender gender) {
         this.name = name;
         this.gender = gender;
-    }
-
-    @Transactional
-    public static void save(User user) {
-        Ebean.save(user);
     }
 }

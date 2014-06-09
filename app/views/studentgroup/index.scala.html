@@ -3,13 +3,11 @@
     <tbody>
         <tr>
             <th>Name</th>
-            <th>Description</th>
         </tr>
         @for(group <- groups) {
             <tr>
                 <td>@group.name</td>
-                <td>@group.description</td>
-                <td>Show (TOOD)</td>
+                <td><a href="/groups/@group.id">Show</a></td>
             </tr>
         }
     </tbody>
