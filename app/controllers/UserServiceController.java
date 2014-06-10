@@ -68,8 +68,8 @@ public class UserServiceController extends BaseUserService {
      */
     @Override
     public Token doFindToken(String tokenId) {
-        // TODO IMPLEMENT
-        throw new NotImplementedException();
+        // No implementation required.
+        return null;
     }
 
 
@@ -96,6 +96,5 @@ public class UserServiceController extends BaseUserService {
     @Override
     public void doDeleteExpiredTokens() {
         // TODO IMPLEMENT
-        throw new NotImplementedException();
     }
 }
