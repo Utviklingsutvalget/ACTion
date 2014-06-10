@@ -12,6 +12,6 @@ public class Users {
     public static Result index() {
         List<User> users = User.find.all();
 
-        return ok(views.html.user.index.render(users));
+        return ok(index.render(users));
     }
 }

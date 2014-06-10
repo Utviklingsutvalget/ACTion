@@ -17,6 +17,6 @@ libraryDependencies ++= Seq(
   javaWs
 )
 
-resolvers += Resolver.sonatypeRepo("releases")
+//resolvers += Resolver.sonatypeRepo("releases")
 
-libraryDependencies += "ws.securesocial" %% "securesocial" % "2.1.3"
+//libraryDependencies += "ws.securesocial" %% "securesocial" % "2.1.3"
