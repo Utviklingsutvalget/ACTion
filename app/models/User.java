@@ -14,9 +14,7 @@ public class User extends Model {
         FEMALE, MALE
     }
 
-    public static Finder<Long, User> find = new Finder<>(
-            Long.class, User.class
-    );
+    public static Finder<Long, User> find = new Finder<>(Long.class, User.class);
 
     @Id
     @Constraints.Min(10)
