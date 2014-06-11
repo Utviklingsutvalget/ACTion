@@ -27,7 +27,7 @@ public class Sessions extends Controller {
         final String requestUrl = "https://accounts.google.com/o/oauth2/auth";
         final String tokenUrl = "https://accounts.google.com/o/oauth2/auth";
         final String filePath = "secrets/googleoauth";
-        final String callbackUrl = "https://westerdals.tk/login";
+        final String callbackUrl = "https://action.cadence.singles/login";
 
         Map<String, String> oauthConfig = getOauthConfig(filePath);
 
