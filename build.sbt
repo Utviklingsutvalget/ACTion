@@ -11,6 +11,7 @@ javacOptions in Compile ++= Seq("-source", "1.7", "-target", "1.7")
 scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
+  "org.apache.commons" % "commons-lang3" % "3.3.2",
   javaJdbc,
   javaEbean,
   cache,
