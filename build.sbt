@@ -12,7 +12,6 @@ scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-lang3" % "3.3.2",
-  "be.objectify" %% "deadbolt-java" % "2.3.0-RC1",
   javaJdbc,
   javaEbean,
   cache,

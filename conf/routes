@@ -14,4 +14,4 @@ GET        /assets/*file        controllers.Assets.at(path="/public", file)
 # Google OAuth routes
 GET        /login               controllers.Sessions.login
 
-POST       /login               controllers.Sessions.callBack
+#POST       /login               controllers.Sessions.callBack
