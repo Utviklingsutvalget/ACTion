@@ -65,8 +65,8 @@ public class Sessions extends Controller {
         return oauthConfig;
     }
 
-    public static void callBack() {
-
+    public static Result callBack() {
+        return ok(views.html.dust.render());
     }
 
 
