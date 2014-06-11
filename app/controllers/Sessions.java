@@ -16,7 +16,7 @@ public class Sessions extends Controller {
     
     public static Result index() {
         if(verifySession()) {
-            return redirect(Application.index());
+            return redirect((play.mvc.Call) Application.index());
         } else {
             return ok(views.html.index.render());
         }
@@ -25,6 +25,7 @@ public class Sessions extends Controller {
 
     public static Result login() {
         final String requestUrl = "https://accounts.google.com/o/oauth2/auth";
+        final String tokenUrl = "https://accounts.google.com/o/oauth2/auth";
         final String filePath = "secrets/googleoauth";
         final String callbackUrl = "https://westerdals.tk/login";
 
@@ -34,8 +35,11 @@ public class Sessions extends Controller {
         String clientSecret = oauthConfig.get("clientSecret");
         OAuth.ConsumerKey consumerKey = new OAuth.ConsumerKey(clientId, clientSecret);
 
-        //OAuth.ServiceInfo info = new OAuth.ServiceInfo(, callbackUrl, requestUrl, consumerKey);
-        return null;
+        OAuth.ServiceInfo info = new OAuth.ServiceInfo(tokenUrl, callbackUrl, requestUrl, consumerKey);
+
+        OAuth oAuth = new OAuth(info);
+
+        return redirect(tokenUrl);
     }
 
     private static Map<String, String> getOauthConfig(String fileName) {
