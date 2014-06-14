@@ -117,16 +117,13 @@ public class OAuth2 extends Controller {
             if(!claims.get("aud").toString().equals(CONF.get("client_id")))
                 return badRequest(debug.render("id mismatch"));
 
-            long sub = Long.parseLong(claims.get("sub").toString());
-            if(User.find.byId(sub) == null) {
+            String subId = claims.get("sub").toString();
+            User user = User.find.where().eq("id", subId).findUnique();
 
+            if(user == null)
+                return getUserProfileInformation(claims, jObject.get("access_token").toString());
 
-                return ok(debug.render("create user"));
-
-            } else {
-
-                return ok(debug.render("Login User"));
-            }
+            return ok(debug.render("Login User: " + user.name + ", " + user.id));
 
         } catch(UnsupportedEncodingException e) {
         }
@@ -135,9 +132,50 @@ public class OAuth2 extends Controller {
         return ok(debug.render("Length: " +portions.length));
     }
 
-    public static Results getUserPRofile() {
+    public static Result getUserProfileInformation(JSONObject claims, String accessToken) {
 
-        return null;
+        try {
+
+            String subId = claims.get("sub").toString();
+            URL url = new URL("https://www.googleapis.com/plus/v1/people/" + subId + "?");
+
+            //!HTTPS!
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+            String params = "fields=aboutMe" +
+                    "&key=" + accessToken;
+
+            //Request header
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", USER_AGENT);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Authorization", claims.get("at_hash").toString());
+            byte[] bytes = params.getBytes("UTF-8");
+            connection.setRequestProperty("Content-Length", String.valueOf(bytes.length));
+
+            //Send post request
+            connection.setDoOutput(true);
+            DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
+            dos.writeBytes(params);
+            dos.flush();
+            dos.close();
+
+            //Read
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = br.readLine()) != null) {
+                response.append(inputLine);
+            }
+            br.close();
+
+            return ok(debug.render(response.toString()));
+
+        } catch(MalformedURLException e) {return badRequest(debug.render("Malformed URL: " + e.getMessage()));
+        } catch(ProtocolException e1) {return badRequest(debug.render("ProtocolException: " + e1.getMessage()));
+        } catch(IOException e2) {return badRequest(debug.render("IOException: " + e2.getMessage()));}
     }
 
     /**
