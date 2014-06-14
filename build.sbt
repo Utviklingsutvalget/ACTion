@@ -12,6 +12,7 @@ scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-lang3" % "3.3.2",
+  "org.json" % "json" % "20140107",
   javaJdbc,
   javaEbean,
   cache,

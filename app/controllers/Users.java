@@ -9,7 +9,9 @@ import java.util.List;
 import static play.mvc.Results.ok;
 
 public class Users {
+
     public static Result index() {
+
         List<User> users = User.find.all();
 
         return ok(index.render(users));

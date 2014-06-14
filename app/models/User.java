@@ -18,7 +18,7 @@ public class User extends Model {
 
     @Id
     @Constraints.Min(10)
-    public Long id;
+    public Long id; //Unique sub id from google
 
     @Constraints.Required
     public String name;
@@ -33,6 +33,7 @@ public class User extends Model {
 
     @Transactional
     public static void save(User user) {
+
         Ebean.save(user);
     }
 }
