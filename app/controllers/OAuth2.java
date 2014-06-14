@@ -121,7 +121,8 @@ public class OAuth2 extends Controller {
             User user = User.find.where().eq("id", subId).findUnique();
 
             if(user == null)
-                return getUserProfileInformation(claims, jObject.get("access_token").toString());
+                return ok(debug.render(response));
+                //return getUserProfileInformation(claims, jObject.get("access_token").toString());
 
             return ok(debug.render("Login User: " + user.name + ", " + user.id));
 
