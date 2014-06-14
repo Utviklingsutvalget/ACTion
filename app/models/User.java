@@ -5,14 +5,16 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class User extends Model {
+
     public enum Gender {
         FEMALE, MALE;
     }
@@ -36,8 +38,8 @@ public class User extends Model {
     @Constraints.Required
     public Gender gender;
 
-    @ManyToMany(mappedBy = "members")
-    public List<Club> clubs = new ArrayList<>();
+    @OneToMany(cascade= CascadeType.ALL)
+    public List<Membership> memberships = new ArrayList<>();
 
     public User(String name, Gender gender) {
         this.name = name;

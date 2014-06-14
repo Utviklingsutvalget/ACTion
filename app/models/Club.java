@@ -4,9 +4,10 @@ import com.avaje.ebean.Ebean;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,6 @@ public class Club extends Model {
     @Required
     public String description;
 
-    @ManyToMany
-    public List<User> members = new ArrayList<>();
+    @OneToMany(cascade= CascadeType.ALL)
+    public List<Membership> members = new ArrayList<>();
 }
