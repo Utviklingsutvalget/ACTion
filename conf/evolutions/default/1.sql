@@ -4,7 +4,7 @@
 # --- !Ups
 
 create table user (
-  id                        bigint not null,
+  id                        varchar(255) not null,
   name                      varchar(255),
   gender                    integer,
   constraint ck_user_gender check (gender in (0,1)),

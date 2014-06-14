@@ -18,7 +18,7 @@ public class User extends Model {
 
     @Id
     @Constraints.Min(10)
-    public Long id; //Unique sub id from google
+    public String id; //Unique sub id from google
 
     @Constraints.Required
     public String name;
