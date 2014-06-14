@@ -18,6 +18,12 @@ create table user (
   constraint pk_user primary key (id))
 ;
 
+
+create table club_user (
+  club_id                        bigint not null,
+  user_id                        bigint not null,
+  constraint pk_club_user primary key (club_id, user_id))
+;
 create sequence club_seq;
 
 create sequence user_seq;
@@ -25,11 +31,17 @@ create sequence user_seq;
 
 
 
+alter table club_user add constraint fk_club_user_club_01 foreign key (club_id) references club (id) on delete restrict on update restrict;
+
+alter table club_user add constraint fk_club_user_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
+
 # --- !Downs
 
 SET REFERENTIAL_INTEGRITY FALSE;
 
 drop table if exists club;
+
+drop table if exists club_user;
 
 drop table if exists user;
 

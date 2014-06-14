@@ -7,6 +7,9 @@ import play.db.ebean.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User extends Model {
@@ -32,6 +35,9 @@ public class User extends Model {
 
     @Constraints.Required
     public Gender gender;
+
+    @ManyToMany(mappedBy = "members")
+    public List<Club> clubs = new ArrayList<>();
 
     public User(String name, Gender gender) {
         this.name = name;

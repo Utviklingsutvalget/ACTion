@@ -6,6 +6,9 @@ import play.db.ebean.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 import static play.data.validation.Constraints.Required;
 
@@ -26,4 +29,7 @@ public class Club extends Model {
 
     @Required
     public String description;
+
+    @ManyToMany
+    public List<User> members = new ArrayList<>();
 }
