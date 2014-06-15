@@ -7,14 +7,22 @@ import play.db.ebean.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User extends Model {
+
     public enum Gender {
-        FEMALE, MALE
+        FEMALE, MALE;
     }
 
-    public static Finder<Long, User> find = new Finder<>(Long.class, User.class);
+    public static Finder<Long, User> find = new Finder<>(String.class, User.class);
+
+    @Transactional
+    public static void save(User user) {
+        Ebean.save(user);
+    }
 
     @Id
     @Constraints.Min(10)
@@ -25,6 +33,9 @@ public class User extends Model {
 
     @Constraints.Required
     public Gender gender;
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "user")
+    public List<Membership> memberships = new ArrayList<>();
 
     public User(String id, String name, Gender gender) {
 

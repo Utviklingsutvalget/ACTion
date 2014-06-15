@@ -1,0 +1,15 @@
+@(clubs: List[Club])
+
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+        </tr>
+        @for(club <- clubs) {
+            <tr>
+                <td>@club.name</td>
+                <td><a href="@routes.Clubs.show(String.valueOf(club.id))">Show</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
