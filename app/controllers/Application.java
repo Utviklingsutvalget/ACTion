@@ -3,19 +3,14 @@ package controllers;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import views.html.debug;
 
 public class Application extends Controller {
     public static Result index() {
-        List<User> users = new ArrayList<>();
+        return ok(index.render());
+    }
 
-        users.addAll(Arrays.asList(
-                new User("Eivind", 12),
-                new User("Martin", 21)
-        ));
-        return ok(index.render(users));
+    public static Result debug() {
+        return ok(debug.render("Message: "));
     }
 }

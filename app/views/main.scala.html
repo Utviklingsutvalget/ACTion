@@ -12,9 +12,12 @@
         <script src="@routes.Assets.at("javascripts/foundation.min.js")" type="text/javascript"></script>
     </head>
     <body>
+        @header()
+        <hr/>
+
         @content
 
         <hr/>
-        @footer.render()
+        @footer()
     </body>
 </html>
