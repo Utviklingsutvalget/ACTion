@@ -1,5 +1,6 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.BeforeAccess;
 import models.User;
 import org.json.JSONObject;
 import utils.*;
@@ -22,10 +23,10 @@ import views.html.*;
  */
 public class OAuth2 extends Controller {
 
+    private static final Map<String, String> CONF = FileUtility.getMap("secrets/googleoauth", "=");
+
     /**Endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.*/
     public static GoogleUtility.DiscoveryDocument dd;
-
-    private static final Map<String, String> CONF = FileUtility.getMap("secrets/googleoauth", "=");
 
     /**
      * Redirects the user to https://accounts.google.com/o/oauth2/auth with a
@@ -133,7 +134,7 @@ public class OAuth2 extends Controller {
             if(user == null)
                 return getUserProfileInformation(claims, jObject.get("access_token").toString());
 
-            return ok(error.render("Login User: " + user.name + ", " + user.id));
+            return ok(index.render(user, "You are logged in"));
 
         } catch(UnsupportedEncodingException e) {return badRequest(error.render(e.getMessage()));}
     }
@@ -165,7 +166,16 @@ public class OAuth2 extends Controller {
             }
             br.close();
 
-            return ok(error.render(response.toString()));
+            JSONObject jsonObject = new JSONObject(response.toString());
+
+            User user = new User(
+                    jsonObject.getString("sub"),
+                    jsonObject.getString("name"),
+                    User.Gender.valueOf(jsonObject.getString("gender").toUpperCase()));
+
+            User.save(user);
+
+            return ok(index.render(user, "Congratulations on your first login"));
 
         } catch(MalformedURLException e) {return badRequest(error.render("Malformed URL: " + e.getMessage()));
         } catch(ProtocolException e1) {return badRequest(error.render("ProtocolException: " + e1.getMessage()));
@@ -195,4 +205,6 @@ public class OAuth2 extends Controller {
         }
         return session("token");
     }
+
+
 }
