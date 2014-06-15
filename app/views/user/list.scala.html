@@ -3,13 +3,16 @@
     <tbody>
         <tr>
             <th>Name</th>
-            <th>Age</th>
+            <th>Gender</th>
+            <th>Manage</th>
         </tr>
         @for(user <- users) {
             <tr>
                 <td>@user.name</td>
                 <td>@user.gender</td>
+                <td><a href="@routes.Users.delete(user.id)">Delete</a> </td>
             </tr>
         }
     </tbody>
+
 </table>
