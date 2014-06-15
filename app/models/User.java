@@ -19,7 +19,7 @@ public class User extends Model {
         FEMALE, MALE;
     }
 
-    public static Finder<Long, User> find = new Finder<>(String.class, User.class);
+    public static Finder<String, User> find = new Finder<>(String.class, User.class);
 
     @Id
     @Constraints.Min(10)
