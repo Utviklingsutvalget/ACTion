@@ -1,11 +1,14 @@
 package controllers;
 
-import be.objectify.deadbolt.java.actions.BeforeAccess;
 import models.User;
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
-import utils.*;
-import play.mvc.Result;
 import play.mvc.Controller;
+import play.mvc.Result;
+import utils.FileUtility;
+import utils.GoogleUtility;
+import views.html.error;
+import views.html.index;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -16,7 +19,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.UUID;
-import views.html.*;
 
 /**
  * Created by Morten on 14.06.2014.
@@ -115,8 +117,8 @@ public class OAuth2 extends Controller {
         //header, payload and signature
         String[] portions = jObject.get("id_token").toString().split("\\.");
 
-        byte[] decodedHeader = java.util.Base64.getDecoder().decode(portions[0]);
-        byte[] decodedClaims = java.util.Base64.getDecoder().decode(portions[1]);
+        byte[] decodedHeader = Base64.decodeBase64(portions[0]);
+        byte[] decodedClaims = Base64.decodeBase64(portions[1]);
 
         try {
 
