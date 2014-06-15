@@ -26,7 +26,9 @@ public class User extends Model {
     @Constraints.Required
     public Gender gender;
 
-    public User(String name, Gender gender) {
+    public User(String id, String name, Gender gender) {
+
+        this.id = id;
         this.name = name;
         this.gender = gender;
     }
