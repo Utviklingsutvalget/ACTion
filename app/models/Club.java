@@ -4,10 +4,7 @@ import com.avaje.ebean.Ebean;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +28,6 @@ public class Club extends Model {
     @Required
     public String description;
 
-    @OneToMany(cascade= CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "club")
     public List<Membership> members = new ArrayList<>();
 }

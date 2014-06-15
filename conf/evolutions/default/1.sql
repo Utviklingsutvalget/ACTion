@@ -11,13 +11,11 @@ create table club (
 ;
 
 create table membership (
-  name                      varchar(255),
-  description               varchar(255),
-  gender                    integer,
-  user_id                   bigint not null,
+  club_id                   bigint,
+  user_id                   bigint,
   level                     integer,
-  constraint ck_membership_gender check (gender in (0,1)),
-  constraint ck_membership_level check (level in (0,1,2,3,4,5)))
+  constraint ck_membership_level check (level in (0,1,2,3,4,5)),
+  constraint pk_membership primary key (club_id, user_id))
 ;
 
 create table user (
@@ -34,8 +32,10 @@ create sequence membership_seq;
 
 create sequence user_seq;
 
-alter table membership add constraint fk_membership_user_1 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_membership_user_1 on membership (user_id);
+alter table membership add constraint fk_membership_club_1 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_membership_club_1 on membership (club_id);
+alter table membership add constraint fk_membership_user_2 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_membership_user_2 on membership (user_id);
 
 
 
