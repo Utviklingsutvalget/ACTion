@@ -5,8 +5,10 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +20,6 @@ public class User extends Model {
     }
 
     public static Finder<Long, User> find = new Finder<>(String.class, User.class);
-
-    @Transactional
-    public static void save(User user) {
-        Ebean.save(user);
-    }
 
     @Id
     @Constraints.Min(10)
@@ -45,8 +42,5 @@ public class User extends Model {
     }
 
     @Transactional
-    public static void save(User user) {
-
-        Ebean.save(user);
-    }
+    public static void save(User user) {Ebean.save(user);}
 }
