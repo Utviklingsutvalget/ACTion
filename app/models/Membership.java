@@ -51,12 +51,11 @@ public class Membership extends Model {
         public boolean equals(Object o) {
             if(this == o) {
                 return true;
-            } else
+            } else {
                 return o instanceof MembershipKey &&
                         ((MembershipKey) o).userId.equals(this.userId) &&
                         ((MembershipKey) o).clubId.equals(this.clubId);
-
-
+            }
         }
 
         @Override
