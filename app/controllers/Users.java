@@ -16,4 +16,10 @@ public class Users {
 
         return ok(index.render(users));
     }
+
+    public static Result delete(String id) {
+
+        User.find.where().eq("id", id).findUnique().delete();
+        return index();
+    }
 }
