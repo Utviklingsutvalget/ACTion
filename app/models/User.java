@@ -18,7 +18,7 @@ public class User extends Model {
 
     @Id
     @Constraints.Min(10)
-    public Long id; //Unique sub id from google
+    public String id; //Unique sub id from google
 
     @Constraints.Required
     public String name;
@@ -26,7 +26,9 @@ public class User extends Model {
     @Constraints.Required
     public Gender gender;
 
-    public User(String name, Gender gender) {
+    public User(String id, String name, Gender gender) {
+
+        this.id = id;
         this.name = name;
         this.gender = gender;
     }

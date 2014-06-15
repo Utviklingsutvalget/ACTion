@@ -1,3 +1,14 @@
+@(user: User, subHeader: String)
+
 @main("Index") {
+
     @default()
+    <br>
+
+    @if(user != null) {
+
+        <h3>@subHeader</h3>
+
+        <strong>@user.id @user.name @user.gender</strong>
+    }
 }

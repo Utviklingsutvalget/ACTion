@@ -1,28 +1,32 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.BeforeAccess;
 import models.User;
-import org.json.*;
-import play.mvc.*;
-import utils.FileUtility;
+import org.json.JSONObject;
+import utils.*;
+import play.mvc.Result;
+import play.mvc.Controller;
 
-import java.io.IOException;
-import java.net.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
-
-import views.html.debug;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import java.util.UUID;
+import views.html.*;
 
 /**
- * Created by Morten on 13.06.2014.
- *
- * OAuth2
+ * Created by Morten on 14.06.2014.
  */
 public class OAuth2 extends Controller {
 
     private static final Map<String, String> CONF = FileUtility.getMap("secrets/googleoauth", "=");
+
+    /**Endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.*/
+    public static GoogleUtility.DiscoveryDocument dd;
 
     /**
      * Redirects the user to https://accounts.google.com/o/oauth2/auth with a
@@ -32,9 +36,16 @@ public class OAuth2 extends Controller {
      */
     public static Result authenticate() {
 
-        return redirect("https://accounts.google.com/o/oauth2/auth?" +
+        if(dd == null) {
+               try {
+                   dd = new GoogleUtility.DiscoveryDocument();
+               } catch(MalformedURLException e) {return notFound(error.render(e.getMessage()));
+               } catch(IOException e1) {return notFound(error.render(e1.getMessage()));}
+        }
+
+        return redirect(dd.getEndpoints(GoogleUtility.AUTHORIZATION_ENDPOINT) + "?" +
                 "client_id=" + CONF.get("client_id") +
-                "&response_type=code" +
+                "&response_type=" + dd.getResponseTypes(GoogleUtility.CODE) +
                 "&scope=openid profile" +
                 "&redirect_uri=http://localhost:9000/login/oauth2callback" +
                 "&state=" + getStateToken());
@@ -51,7 +62,7 @@ public class OAuth2 extends Controller {
 
         try {
 
-            URL url = new URL("https://accounts.google.com/o/oauth2/token?");
+            URL url = new URL(dd.getEndpoints(GoogleUtility.TOKEN_ENDPOINT) + "?");
 
             //!HTTPS!
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -91,9 +102,9 @@ public class OAuth2 extends Controller {
             //and return the Result
             return obtainUserInformation(response.toString());
 
-        } catch(MalformedURLException e) {return badRequest(debug.render("Malformed URL: " + e.getMessage()));
-        } catch(ProtocolException e1) {return badRequest(debug.render("ProtocolException: " + e1.getMessage()));
-        } catch(IOException e2) {return badRequest(debug.render("IOException: " + e2.getMessage()));}
+        } catch(MalformedURLException e) {return badRequest(error.render(e.getMessage()));
+        } catch(ProtocolException e1) {return badRequest(error.render(e1.getMessage()));
+        } catch(IOException e2) {return badRequest(error.render(e2.getMessage()));}
     }
 
     public static Result obtainUserInformation(String response) {
@@ -115,29 +126,60 @@ public class OAuth2 extends Controller {
             //Identifies the audience that this ID token is intended for.
             //It must be one of the OAuth 2.0 client IDs of your application.
             if(!claims.get("aud").toString().equals(CONF.get("client_id")))
-                return badRequest(debug.render("id mismatch"));
+                return badRequest(error.render("id mismatch"));
 
-            long sub = Long.parseLong(claims.get("sub").toString());
-            if(User.find.byId(sub) == null) {
+            String subId = claims.get("sub").toString();
+            User user = User.find.where().eq("id", subId).findUnique();
 
+            if(user == null)
+                return getUserProfileInformation(claims, jObject.get("access_token").toString());
 
-                return ok(debug.render("create user"));
+            return ok(index.render(user, "You are logged in"));
 
-            } else {
-
-                return ok(debug.render("Login User"));
-            }
-
-        } catch(UnsupportedEncodingException e) {
-        }
-
-
-        return ok(debug.render("Length: " +portions.length));
+        } catch(UnsupportedEncodingException e) {return badRequest(error.render(e.getMessage()));}
     }
 
-    public static Results getUserPRofile() {
+    public static Result getUserProfileInformation(JSONObject claims, String accessToken) {
 
-        return null;
+        try {
+
+            String subId = claims.get("sub").toString();
+            URL url = new URL(dd.getEndpoints(GoogleUtility.USER_INFO_ENDPOINT));
+
+            //!HTTPS!
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+            //Request header
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", USER_AGENT);
+            connection.setRequestProperty("Content-length", "0");
+            connection.setRequestProperty("Authorization", "Bearer " + accessToken);
+
+            //Read
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = br.readLine()) != null) {
+                response.append(inputLine);
+            }
+            br.close();
+
+            JSONObject jsonObject = new JSONObject(response.toString());
+
+            User user = new User(
+                    jsonObject.getString("sub"),
+                    jsonObject.getString("name"),
+                    User.Gender.valueOf(jsonObject.getString("gender").toUpperCase()));
+
+            User.save(user);
+
+            return ok(index.render(user, "Congratulations on your first login"));
+
+        } catch(MalformedURLException e) {return badRequest(error.render("Malformed URL: " + e.getMessage()));
+        } catch(ProtocolException e1) {return badRequest(error.render("ProtocolException: " + e1.getMessage()));
+        } catch(IOException e2) {return badRequest(error.render("IOException: " + e2.getMessage()));}
     }
 
     /**
@@ -163,4 +205,6 @@ public class OAuth2 extends Controller {
         }
         return session("token");
     }
+
+
 }
