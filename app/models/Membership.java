@@ -22,22 +22,12 @@ public class Membership extends Model {
     public MembershipLevel level;
 
     public enum MembershipLevel {
-        SUBSCRIBE(0),
-        MEMBER(1),
-        BOARD(2),
-        VICE(3),
-        LEADER(3),
-        COUNCIL(5);
-
-        private final int level;
-
-        MembershipLevel(int level) {
-            this.level = level;
-        }
-
-        public int getLevel() {
-            return level;
-        }
+        SUBSCRIBE,
+        MEMBER,
+        BOARD,
+        VICE,
+        LEADER,
+        COUNCIL;
     }
 
     @Embeddable
@@ -49,6 +39,25 @@ public class Membership extends Model {
 
         @Override
         public boolean equals(Object o) {
+
+            MembershipLevel myLevel = MembershipLevel.MEMBER;
+
+            switch (myLevel) {
+
+                case SUBSCRIBE:
+                    break;
+                case MEMBER:
+                    break;
+                case BOARD:
+                    break;
+                case VICE:
+                case LEADER:
+
+                    break;
+                case COUNCIL:
+                    break;
+            }
+
             if(this == o) {
                 return true;
             } else {

@@ -6,4 +6,9 @@ import views.html.index;
 
 public class Application extends Controller {
     public static Result index() {return ok(index.render(null, null));}
+
+    public static Result whatever() {
+
+        return null;
+    }
 }

@@ -1,6 +1,5 @@
 package models;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import play.db.ebean.Model;
 
 import javax.persistence.Embeddable;
@@ -17,13 +16,10 @@ public class Activation extends Model {
     @ManyToOne
     public Club club;
 
-    @ManyToOne
-    public Plugin plugin;
-
     @Embeddable
     public class ActivationKey {
 
-        public String pluginId;
+        public Long powerupId;
 
         public Long clubId;
 
@@ -33,16 +29,14 @@ public class Activation extends Model {
                 return true;
             } else {
                 return o instanceof ActivationKey &&
-                        ((ActivationKey) o).pluginId.equals(this.pluginId) &&
+                        ((ActivationKey) o).powerupId.equals(this.powerupId) &&
                         ((ActivationKey) o).clubId.equals(this.clubId);
             }
         }
 
         @Override
         public int hashCode() {
-            return new HashCodeBuilder()
-                    .append(getClass().getName())
-                    .toHashCode();
+            return super.hashCode();
         }
 
     }

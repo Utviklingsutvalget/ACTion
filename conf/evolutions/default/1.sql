@@ -4,9 +4,9 @@
 # --- !Ups
 
 create table activation (
-  plugin_id                 varchar(255),
+  powerup_id                bigint,
   club_id                   bigint,
-  constraint pk_activation primary key (plugin_id, club_id))
+  constraint pk_activation primary key (powerup_id, club_id))
 ;
 
 create table club (
@@ -24,9 +24,12 @@ create table membership (
   constraint pk_membership primary key (club_id, user_id))
 ;
 
-create table plugin (
-  id                        varchar(255) not null,
-  constraint pk_plugin primary key (id))
+create table powerup (
+  id                        bigint not null,
+  class_name                varchar(255),
+  friendly_name             varchar(255),
+  is_mandatory              boolean,
+  constraint pk_powerup primary key (id))
 ;
 
 create table user (
@@ -43,14 +46,14 @@ create sequence club_seq;
 
 create sequence membership_seq;
 
-create sequence plugin_seq;
+create sequence powerup_seq;
 
 create sequence user_seq;
 
-alter table activation add constraint fk_activation_club_1 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_activation_club_1 on activation (club_id);
-alter table activation add constraint fk_activation_plugin_2 foreign key (plugin_id) references plugin (id) on delete restrict on update restrict;
-create index ix_activation_plugin_2 on activation (plugin_id);
+alter table activation add constraint fk_activation_powerup_1 foreign key (powerup_id) references powerup (id) on delete restrict on update restrict;
+create index ix_activation_powerup_1 on activation (powerup_id);
+alter table activation add constraint fk_activation_club_2 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_activation_club_2 on activation (club_id);
 alter table membership add constraint fk_membership_club_3 foreign key (club_id) references club (id) on delete restrict on update restrict;
 create index ix_membership_club_3 on membership (club_id);
 alter table membership add constraint fk_membership_user_4 foreign key (user_id) references user (id) on delete restrict on update restrict;
@@ -68,7 +71,7 @@ drop table if exists club;
 
 drop table if exists membership;
 
-drop table if exists plugin;
+drop table if exists powerup;
 
 drop table if exists user;
 
@@ -80,7 +83,7 @@ drop sequence if exists club_seq;
 
 drop sequence if exists membership_seq;
 
-drop sequence if exists plugin_seq;
+drop sequence if exists powerup_seq;
 
 drop sequence if exists user_seq;
 
