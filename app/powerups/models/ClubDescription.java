@@ -1,6 +1,5 @@
-package powerups.core.descriptionpowerup.models;
+package powerups.models;
 
-import models.Club;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
@@ -11,9 +10,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name= "pl_ClubDescription")
 public class ClubDescription extends Model {
+    public static Finder<Long, ClubDescription> find = new Finder<>(Long.class, ClubDescription.class);
 
     @Id
-    public Club club;
+    public Long clubId;
 
     @Constraints.Required
     public String description;
