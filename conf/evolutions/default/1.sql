@@ -16,6 +16,12 @@ create table club (
   constraint pk_club primary key (id))
 ;
 
+create table pl_ClubDescription (
+  club_id                   bigint not null,
+  description               varchar(255),
+  constraint pk_pl_ClubDescription primary key (club_id))
+;
+
 create table membership (
   club_id                   bigint,
   user_id                   varchar(255),
@@ -44,6 +50,8 @@ create sequence activation_seq;
 
 create sequence club_seq;
 
+create sequence pl_ClubDescription_seq;
+
 create sequence membership_seq;
 
 create sequence powerup_seq;
@@ -69,6 +77,8 @@ drop table if exists activation;
 
 drop table if exists club;
 
+drop table if exists pl_ClubDescription;
+
 drop table if exists membership;
 
 drop table if exists powerup;
@@ -80,6 +90,8 @@ SET REFERENTIAL_INTEGRITY TRUE;
 drop sequence if exists activation_seq;
 
 drop sequence if exists club_seq;
+
+drop sequence if exists pl_ClubDescription_seq;
 
 drop sequence if exists membership_seq;
 
