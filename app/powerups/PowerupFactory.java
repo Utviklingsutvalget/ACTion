@@ -13,8 +13,9 @@ public class PowerupFactory {
         Club club = Club.find.byId(activation.key.clubId);
 
         try {
-            Class<? extends Powerup> c = (Class<? extends Powerup>) Class.forName(powerupModel.className);
-            Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class);
+            @SuppressWarnings("unchecked")
+            Class<Powerup> c = (Class<Powerup>) Class.forName(powerupModel.className);
+            Constructor<Powerup> constructor = c.getDeclaredConstructor(Club.class);
             return constructor.newInstance(club);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
