@@ -3,8 +3,6 @@ package powerups.core.boardpowerup;
 import models.Club;
 import powerups.Powerup;
 
-import javax.xml.transform.Result;
-
 public class Board extends Powerup {
 
     public Board(Club club) {
@@ -14,7 +12,7 @@ public class Board extends Powerup {
     }
 
     @Override
-    public Result render() {
+    public play.mvc.Result render() {
         return null;
     }
 }
