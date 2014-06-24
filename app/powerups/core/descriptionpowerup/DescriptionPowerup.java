@@ -1,4 +1,4 @@
-package powerups.core.descriptionplugin;
+package powerups.core.descriptionpowerup;
 
 import models.Club;
 import powerups.Powerup;

@@ -1,4 +1,4 @@
-package powerups.core.descriptionplugin.models;
+package powerups.core.descriptionpowerup.models;
 
 import models.Club;
 import play.data.validation.Constraints;
