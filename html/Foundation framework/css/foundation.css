@@ -2645,7 +2645,7 @@ a {
   text-decoration: none;
   line-height: inherit; }
   a:hover, a:focus {
-    color: #000; }
+    color: #0078a0; }
   a img {
     border: none; }
 
@@ -2944,8 +2944,8 @@ blockquote p {
       display: block;
       background: #efefef;
       color: #222222;
-		padding: 1rem 0.7rem;
-		font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+      padding: 1rem 2rem;
+      font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
       font-size: 1rem; }
       .tabs dd > a:hover, .tabs .tab-title > a:hover {
         background: #e1e1e1; }
@@ -3590,7 +3590,7 @@ dialog[open] {
       .sub-nav dt a:hover,
       .sub-nav dd a:hover,
       .sub-nav li a:hover {
-        color: #000; }
+        color: #737373; }
     .sub-nav dt.active a,
     .sub-nav dd.active a,
     .sub-nav li.active a {

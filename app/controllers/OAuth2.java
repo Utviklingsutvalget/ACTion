@@ -30,6 +30,11 @@ public class OAuth2 extends Controller {
     /**Endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.*/
     public static GoogleUtility.DiscoveryDocument dd;
 
+
+    public static Result login() {
+        return ok(views.html.login.index.render());
+    }
+
     /**
      * Redirects the user to https://accounts.google.com/o/oauth2/auth with a
      * specific query for authentication.

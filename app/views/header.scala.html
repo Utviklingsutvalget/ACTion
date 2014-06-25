@@ -1,2 +1,67 @@
-<br/>&nbsp;&nbsp;
-<a href="/">Home</a> | <a href="@routes.Users.index()">Users</a> | <a href="@routes.Clubs.index()">Clubs</a>
+<div id="backgroundimglarge-underpage"></div>
+
+<!-- HEADER TEXT -->
+<div class="row">
+    <div class="small-12 small-centered columns headercolumn-underpage text-center ">
+        <a href='@routes.Application.index()'>
+            <h2 class="headertext"><strong>Studentportal for</strong></h2>
+            <h3 class="headertext"><em>Westerdals ACT Oslo</em></h3>
+        </a>
+    </div>
+</div>
+
+<!-- LINKS ON SMALL SCREENS -->
+<div class="row text-center hide-for-medium-up buttonpanel-underpage">
+    <div class="small-4 columns ">
+        <a class="headertext" href="../eventer/index.html">Eventer </a>
+    </div>
+
+    <div class="small-4 columns ">
+        <a class="headertext" href='@routes.Clubs.index()'>Utvalg </a>
+    </div>
+
+    <div class="small-4 columns ">
+        <a class="headertext" href="../feed/index.html">Feed </a>
+    </div>
+
+    <div class="small-4 columns  buttonpanelsmall">
+        <a class="headertext" href="../profil/index.html">Profil </a>
+    </div>
+
+    <div class="small-4 columns  buttonpanelsmall">
+        <a class="headertext" href="../fadderuka/index.html">Fadderuka</a>
+    </div>
+
+    <div class="small-4 columns  buttonpanelsmall">
+        <a class="headertext" href='@routes.OAuth2.authenticate()'>Login </a>
+    </div>
+</div>
+
+<!-- LINKS ON LARGE SCREENS -->
+<div class="row  text-center show-for-medium-up buttonpanellarge-underpage">
+    <div class="medium-9 medium-centered columns">
+        <div class="medium-2 columns">
+            <a class="headertext" href="../eventer/index.html">Eventer </a>
+        </div>
+
+        <div class="medium-2 columns">
+            <a class="headertext" href='@routes.Clubs.index()'>Utvalg </a>
+        </div>
+
+        <div class="medium-2 columns">
+            <a class="headertext" href="../feed/index.html">Feed </a>
+        </div>
+
+        <div class="medium-2 columns">
+            <a class="headertext" href="../profil/index.html">Profil </a>
+        </div>
+
+        <div class="medium-2 columns">
+            <a class="headertext" href="../fadderuke/index.html">Fadderuka </a>
+        </div>
+
+        <div class="medium-2 columns">
+            <a class="headertext" href='@routes.OAuth2.login()'>Login </a>
+        </div>
+    </div>
+</div>
