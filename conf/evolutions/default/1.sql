@@ -7,7 +7,15 @@ create table club (
   id                        bigint not null,
   name                      varchar(255),
   description               varchar(255),
+  location_id               bigint,
   constraint pk_club primary key (id))
+;
+
+create table location (
+  id                        bigint not null,
+  name                      varchar(255),
+  version                   timestamp not null,
+  constraint pk_location primary key (id))
 ;
 
 create table membership (
@@ -28,14 +36,18 @@ create table user (
 
 create sequence club_seq;
 
+create sequence location_seq;
+
 create sequence membership_seq;
 
 create sequence user_seq;
 
-alter table membership add constraint fk_membership_club_1 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_membership_club_1 on membership (club_id);
-alter table membership add constraint fk_membership_user_2 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_membership_user_2 on membership (user_id);
+alter table club add constraint fk_club_location_1 foreign key (location_id) references location (id) on delete restrict on update restrict;
+create index ix_club_location_1 on club (location_id);
+alter table membership add constraint fk_membership_club_2 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_membership_club_2 on membership (club_id);
+alter table membership add constraint fk_membership_user_3 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_membership_user_3 on membership (user_id);
 
 
 
@@ -45,6 +57,8 @@ SET REFERENTIAL_INTEGRITY FALSE;
 
 drop table if exists club;
 
+drop table if exists location;
+
 drop table if exists membership;
 
 drop table if exists user;
@@ -52,6 +66,8 @@ drop table if exists user;
 SET REFERENTIAL_INTEGRITY TRUE;
 
 drop sequence if exists club_seq;
+
+drop sequence if exists location_seq;
 
 drop sequence if exists membership_seq;
 

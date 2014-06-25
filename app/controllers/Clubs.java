@@ -11,15 +11,26 @@ import java.util.Map;
 
 public class Clubs extends Controller {
     public static Result index() {
-        final List<Club> clubs = Club.find.all();
         List<Location> locations = Location.find.all();
-        if(locations == null || locations.isEmpty()) {
+        if (locations == null || locations.isEmpty()) {
             locations = new ArrayList<>();
-            for(int i = 0 ; i < 3 ; i++) {
+            for (int i = 0; i < 3; i++) {
                 Location location = new Location();
-                location.name = "Location"+i;
-                Location.update(location);
+                location.id = (long) i;
+                location.name = "Location" + i;
                 locations.add(location);
+            }
+        }
+        List<Club> clubs = Club.find.all();
+
+        if (clubs == null || clubs.isEmpty()) {
+            clubs = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                Club club = new Club();
+                club.id = (long) i;
+                club.name = "utvalg" + (i + 1);
+                club.description = "Dette er utvalg nummer: " + (i + 1);
+                clubs.add(club);
             }
         }
         return ok(views.html.club.index.render(clubs));

@@ -28,6 +28,9 @@ public class Club extends Model {
     @Required
     public String description;
 
+    @ManyToOne
+    public Location location;
+
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "club")
     public List<Membership> members = new ArrayList<>();
 }

@@ -1,12 +1,13 @@
 package models;
 
 import com.avaje.ebean.Ebean;
-import play.data.validation.Constraints;
+import static play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 @Entity
 public class Location extends Model {
@@ -20,6 +21,9 @@ public class Location extends Model {
     @Id
     public long id;
 
-    @Constraints.Required
+    @Required
     public String name;
+
+    @Version
+    public java.util.Date version;
 }
