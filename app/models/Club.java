@@ -1,14 +1,13 @@
 package models;
 
 import com.avaje.ebean.Ebean;
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static play.data.validation.Constraints.Required;
 
 @Entity
 public class Club extends Model {
@@ -22,10 +21,10 @@ public class Club extends Model {
     @Id
     public Long id;
 
-    @Required
+    @Constraints.Required
     public String name;
 
-    @Required
+    @Constraints.Required
     public String description;
 
     @ManyToOne
@@ -33,4 +32,7 @@ public class Club extends Model {
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "club")
     public List<Membership> members = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.PERSIST)
+    public List<Activation> activations = new ArrayList<>();
 }
