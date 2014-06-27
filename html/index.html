@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="no"> 
+<html lang="nb_no"> 
 
 	<head>
 		<meta charset="UTF-8" />
@@ -9,6 +9,15 @@
 		<link rel="stylesheet" href="css/style.css" />
 		<script src="js/vendor/modernizr.js"></script>
 		
+		<link rel="stylesheet" type="text/css" href="css/addtohomescreen.css">
+		<script src="js/addtohomescreen.js"></script>
+		<script>
+			addToHomescreen({
+			   skipFirstVisit: true,
+			   maxDisplayCount: 1
+			   displayPace: 0
+			});
+		</script>
 	</head>
 	
 	<body>
