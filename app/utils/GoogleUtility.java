@@ -10,9 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
-/**
- * Created by Morten on 14.06.2014.
- */
 public class GoogleUtility {
 
     /**Issuer*/
@@ -62,7 +59,7 @@ public class GoogleUtility {
 
             JSONObject document = loadDiscoveryDocument();
 
-            issuer.put(ISSUER, document.getString(ISSUER));
+            issuer.put(ISSUER, document.get(ISSUER));
 
             endpoints.put(AUTHORIZATION_ENDPOINT, document.getString(AUTHORIZATION_ENDPOINT));
             endpoints.put(TOKEN_ENDPOINT, document.getString(TOKEN_ENDPOINT));
@@ -75,6 +72,8 @@ public class GoogleUtility {
             idTokenAlgValuesSupported = document.getJSONArray(ID_TOKEN_ALG_VALUES_SUPPORTED);
             tokenEndpointAuthMethodsSupported = document.getJSONArray(TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED);
         }
+
+        public String getIssuer(String key) {return issuer.getString(key);}
 
         public String getEndpoints(String key) {return endpoints.getString(key);}
 

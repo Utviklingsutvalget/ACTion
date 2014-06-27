@@ -31,16 +31,32 @@ public class User extends Model {
     @Constraints.Required
     public Gender gender;
 
+    @Constraints.Required
+    public String email;
+
+    @Constraints.Required
+    public String pictureUrl;
+
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "user")
     public List<Membership> memberships = new ArrayList<>();
 
-    public User(String id, String name, Gender gender) {
+    public User(String id, String name, Gender gender, String email, String picureUrl) {
 
         this.id = id;
         this.name = name;
         this.gender = gender;
+        this.email = email;
+        this.pictureUrl = picureUrl;
     }
 
+    public static User findById(String id) {return find.where().eq("id", id).findUnique();}
+
+    public static boolean exists(String id) {return find.where().eq("id", id).findRowCount() != 0;}
+
     @Transactional
-    public static void save(User user) {Ebean.save(user);}
+    public static void save(User user) {
+
+        if(!exists(user.id))
+            Ebean.save(user);
+    }
 }

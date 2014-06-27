@@ -2,14 +2,20 @@
 <table>
     <tbody>
         <tr>
+            <th>Id</th>
             <th>Name</th>
             <th>Gender</th>
+            <th>Email</th>
+            <th>Picture</th>
             <th>Manage</th>
         </tr>
         @for(user <- users) {
             <tr>
+                <td>@user.id</td>
                 <td>@user.name</td>
                 <td>@user.gender</td>
+                <td>@user.email</td>
+                <td><img src="@user.pictureUrl?sz=50"> </td>
                 <td><a href="@routes.Users.delete(user.id)">Delete</a> </td>
             </tr>
         }

@@ -1,0 +1,14 @@
+@(user: User, expire: Long)
+
+@main("Home") {
+
+    <strong>@user.name</strong>
+    <br>
+    <p>Seconds until session expire <b>@expire</b></p>
+    <br><br>
+    <img src="@user.pictureUrl?sz=200" />
+    <br><br>
+
+    <a href="@routes.Users.logout()">Logout</a>
+
+}

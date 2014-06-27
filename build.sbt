@@ -16,8 +16,10 @@ resolvers += Resolver.url("Objectify Play Snapshot Repository", url("http://scha
 
 libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-lang3" % "3.3.2",
+  "com.google.api-client" % "google-api-client" % "1.17.0-rc",
   "org.json" % "json" % "20140107",
   "be.objectify" %% "deadbolt-java" % "2.3.0-RC1",
+  "com.google.http-client" % "google-http-client-jackson2" % "1.11.0-beta",
   javaJdbc,
   javaEbean,
   cache,

@@ -12,7 +12,7 @@ create table club (
 
 create table membership (
   club_id                   bigint,
-  user_id                   bigint,
+  user_id                   varchar(255),
   level                     integer,
   constraint ck_membership_level check (level in (0,1,2,3,4,5)),
   constraint pk_membership primary key (club_id, user_id))
@@ -22,6 +22,8 @@ create table user (
   id                        varchar(255) not null,
   name                      varchar(255),
   gender                    integer,
+  email                     varchar(255),
+  picture_url               varchar(255),
   constraint ck_user_gender check (gender in (0,1)),
   constraint pk_user primary key (id))
 ;
