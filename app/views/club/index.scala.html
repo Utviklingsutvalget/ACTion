@@ -1,5 +1,40 @@
-@(clubs: List[Club])
-
+@(locations: List[Location])
 @main("Clubs") {
-    @club.list(clubs)
+
+    <!-- Select club for small screens -->
+    <div class="row">
+        <div class="small-12 columns hide-for-medium-up">
+            <dl class="accordion" data-accordion>
+            @for(location <- locations) {
+                <dd class="accordion-navigation">
+                    <a href="#panel@location.cssId"> @location.name </a>
+                    <div id="panel@location.cssId" class="content">
+                        <dl>
+                        @club.listsmall(location.clubs)
+                        </dl>
+                    </div>
+                </dd>
+            }
+            </dl>
+        </div>
+    </div>
+    <!-- CHOOSE UTVALG ON MEDIUM-UP SCREENS -->
+    <div class="row">
+        <div class="medium-10 small-centered columns show-for-medium-up">
+            <ul class="tabs vertical" data-tab>
+            @for(location <- locations) {
+                <li class="utvalg-width tab-title@if(location.cssId == 1) { active}"><a href="#panel@location.cssId">@location.name</a></li>
+            }
+            </ul>
+            <div class="tabs-content vertical">
+                @for(location <- locations) {
+                    <div class="content@if(location.cssId == 1) { active}" id="panel@location.cssId">
+                        <dl>
+                        @club.listlarge(location.clubs)
+                        </dl>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 }

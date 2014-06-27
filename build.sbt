@@ -6,7 +6,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val ACTion = (project in file(".")).enablePlugins(PlayJava)
 
-javacOptions in Compile ++= Seq("-source", "1.7", "-target", "1.7")
+javacOptions in Compile ++= Seq("-source", "1.8", "-target", "1.8")
 
 scalaVersion := "2.11.1"
 
@@ -19,6 +19,7 @@ libraryDependencies ++= Seq(
   "com.google.api-client" % "google-api-client" % "1.17.0-rc",
   "org.json" % "json" % "20140107",
   "be.objectify" %% "deadbolt-java" % "2.3.0-RC1",
+  "mysql" % "mysql-connector-java" % "5.1.6",
   "com.google.http-client" % "google-http-client-jackson2" % "1.11.0-beta",
   javaJdbc,
   javaEbean,
