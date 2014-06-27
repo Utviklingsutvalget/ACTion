@@ -13,7 +13,8 @@ GET         /users/logout                controllers.Users.logout()
 GET         /users/delete                controllers.Users.delete(id)
 
 # Google OAuth2 routes
-GET         /login                       controllers.OAuth2.authenticate()
+GET         /login                       controllers.OAuth2.login()
+GET         /login/authenticate          controllers.OAuth2.authenticate()
 GET         /login/oauth2callback        controllers.OAuth2.exchange()
 
 # Clubs
@@ -23,4 +24,3 @@ POST        /clubs                       controllers.Clubs.update()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                controllers.Assets.at(path="/public", file)
-

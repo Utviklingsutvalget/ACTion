@@ -40,8 +40,15 @@ public class OAuth2 extends Controller {
     /**Endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.*/
     public static GoogleUtility.DiscoveryDocument dd;
 
+
     /**A session lasts 2 hours*/
     private static final long EXPIRATION_TIME_IN_SECONDS = 2 * 60 * 60;
+
+
+    public static Result login() {
+        return ok(views.html.login.index.render());
+    }
+
 
     /**
      * Redirects the user to https://accounts.google.com/o/oauth2/auth with a
