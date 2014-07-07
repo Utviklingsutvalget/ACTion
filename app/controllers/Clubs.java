@@ -1,10 +1,15 @@
 package controllers;
 
+import models.Activation;
 import models.Club;
 import models.Location;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.ActivationSorter;
+import powerups.Powerup;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,8 +34,16 @@ public class Clubs extends Controller {
 
     public static Result show(String id) {
         final Long clubId = Long.valueOf(id);
+        Club club = Club.find.byId(clubId);
 
-        final Club club = Club.find.byId(clubId);
+        club.powerups = new ArrayList<>();
+        // Sort the activations by weight:
+        Collections.sort(club.activations, new ActivationSorter());
+
+        for(Activation activation : club.activations) {
+            Powerup powerup = activation.getPowerup();
+            club.powerups.add(powerup);
+        }
 
         return ok(views.html.club.show.render(club));
     }

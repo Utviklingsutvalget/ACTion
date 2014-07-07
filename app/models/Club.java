@@ -4,6 +4,8 @@ import com.avaje.ebean.Ebean;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
+import powerups.*;
+import powerups.Powerup;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -35,4 +37,7 @@ public class Club extends Model {
 
     @OneToMany(cascade = CascadeType.PERSIST)
     public List<Activation> activations = new ArrayList<>();
+
+    @Transient
+    public List<Powerup> powerups;
 }
