@@ -6,6 +6,7 @@
 create table activation (
   powerup_id                bigint,
   club_id                   bigint,
+  weight                    integer,
   constraint pk_activation primary key (powerup_id, club_id))
 ;
 

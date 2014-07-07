@@ -13,9 +13,11 @@ public class DescriptionPowerup extends Powerup {
 
     private final ClubDescription clubDesc;
 
+
     public DescriptionPowerup(Club club) {
         super(club);
         clubDesc = ClubDescription.find.byId(club.id);
+
     }
 
     @Override

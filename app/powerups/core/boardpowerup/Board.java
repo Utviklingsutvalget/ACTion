@@ -1,6 +1,7 @@
 package powerups.core.boardpowerup;
 
 import models.Club;
+import play.twirl.api.Html;
 import powerups.Powerup;
 
 public class Board extends Powerup {
@@ -12,7 +13,7 @@ public class Board extends Powerup {
     }
 
     @Override
-    public play.mvc.Result render() {
+    public Html render() {
         return null;
     }
 }
