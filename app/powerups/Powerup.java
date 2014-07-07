@@ -1,7 +1,7 @@
 package powerups;
 
 import models.Club;
-import play.mvc.Result;
+import play.twirl.api.Html;
 
 import java.io.Serializable;
 
@@ -13,9 +13,5 @@ public abstract class Powerup implements Serializable {
         this.club = club;
     }
 
-    public abstract Result render();
-
-    public static void install() {
-
-    }
+    public abstract Html render();
 }

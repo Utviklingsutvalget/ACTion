@@ -2,6 +2,7 @@ package powerups.core.descriptionpowerup;
 
 import models.Club;
 import play.mvc.Result;
+import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.descriptionpowerup.html.powerup;
 import powerups.models.ClubDescription;
@@ -18,7 +19,7 @@ public class DescriptionPowerup extends Powerup {
     }
 
     @Override
-    public Result render() {
-        return ok(powerup.render(clubDesc.description));
+    public Html render() {
+        return powerup.render(clubDesc.description);
     }
 }
