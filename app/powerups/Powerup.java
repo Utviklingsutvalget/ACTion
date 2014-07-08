@@ -24,7 +24,7 @@ public abstract class Powerup implements Serializable {
 
         try {
             @SuppressWarnings("unchecked")
-            Class<? extends Powerup> c = (Class<? extends Powerup>) Class.forName(powerupModel.className);
+            Class<? extends Powerup> c = (Class<? extends Powerup>) Class.forName("powerups." + powerupModel.className);
             Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class);
             return constructor.newInstance(club);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {

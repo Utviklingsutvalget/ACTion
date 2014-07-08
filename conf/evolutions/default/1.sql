@@ -24,6 +24,11 @@ create table pl_ClubDescription (
   constraint pk_pl_ClubDescription primary key (club_id))
 ;
 
+create table club_image (
+  club_id                   bigint auto_increment not null,
+  constraint pk_club_image primary key (club_id))
+;
+
 create table location (
   id                        bigint auto_increment not null,
   name                      varchar(255),
@@ -78,6 +83,8 @@ drop table activation;
 drop table club;
 
 drop table pl_ClubDescription;
+
+drop table club_image;
 
 drop table location;
 
