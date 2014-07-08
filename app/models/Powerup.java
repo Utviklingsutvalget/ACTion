@@ -3,10 +3,7 @@ package models;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +22,9 @@ public class Powerup extends Model {
 
     @Constraints.Required
     public boolean isMandatory;
+
+    @Basic(optional = true)
+    public boolean hasMenuEntry;
 
     @OneToMany(cascade = CascadeType.PERSIST)
     public List<Activation> activations = new ArrayList<>();
