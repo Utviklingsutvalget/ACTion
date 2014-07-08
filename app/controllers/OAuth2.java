@@ -31,15 +31,11 @@ import java.security.NoSuchAlgorithmException;
  */
 public class OAuth2 extends Controller {
 
-    /**Valid emails that can use this application*/
-    private static final String[] VALID_EMAILS = {"nith.no", "niss.no", "westd.no"};
-
     /**Secrets*/
     private static final Map<String, String> CONF = FileUtility.getMap("secrets/googleoauth", "=");
 
     /**Endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.*/
     public static GoogleUtility.DiscoveryDocument dd;
-
 
     /**A session lasts 2 hours*/
     private static final long EXPIRATION_TIME_IN_SECONDS = 2 * 60 * 60;
@@ -60,8 +56,14 @@ public class OAuth2 extends Controller {
      */
     public static Result authenticate() {
 
-        if(session().containsKey("id"))
-            return ok(index.render("Already logged in " + User.findById(session("id")).name));
+        if(session().containsKey("id")) {
+
+            User user = User.findById(session("id"));
+            if(user != null)
+                return ok(index.render("Already logged in " + User.findById(session("id")).firstName));
+
+            destroySessions();
+        }
 
         //The discovery document
         if(dd == null) {
@@ -75,16 +77,13 @@ public class OAuth2 extends Controller {
             //Create an anti-forgery state token
             createStateToken();
 
-            String emails = "";
-            for(int i = 0; i < VALID_EMAILS.length; i++) {emails += VALID_EMAILS[i] + " ";}
-
             //Redirect to google
             return redirect(dd.getEndpoints(GoogleUtility.AUTHORIZATION_ENDPOINT) + "?" +
                     "client_id=" + CONF.get("client_id") +
                     "&response_type=" + dd.getResponseTypes(GoogleUtility.CODE) +
                     "&scope=openid profile email" +
                     "&redirect_uri=http://localhost:9000/login/oauth2callback" +
-                    "&hd=" + emails +
+                    //"&hd=student.westerdals.no" + //This line cannot be used until all students have this email
                     "&access_type=online" + //We dont need offline access right now
                     "&state=" + session("state"));
 
@@ -199,9 +198,9 @@ public class OAuth2 extends Controller {
             //If user exists we dont need to use OpenId Connect
             if(User.exists(payload.getSubject())) {
 
-                //Create the necessary sessions
+                //Create the necessary sessionsd
                 createSessions(payload.getSubject());
-                return ok(index.render("Welcome back " + User.findById(payload.getSubject()).name));
+                return ok(index.render("Welcome back " + User.findById(payload.getSubject()).firstName));
             }
 
             //We need to OpenIdConnect to get email and profile information
@@ -252,17 +251,21 @@ public class OAuth2 extends Controller {
             //Create a new user
             User user = new User(
                     jsonObject.getString("sub"),
-                    jsonObject.getString("name"),
+                    jsonObject.getString("given_name"),
+                    jsonObject.getString("family_name"),
                     User.Gender.valueOf(jsonObject.getString("gender").toUpperCase()),
                     jsonObject.getString("email"),
                     jsonObject.getString("picture").split("\\?")[0]); //We dont want: ?sz=50(sets image size to 50)
 
-            User.save(user);
+            /*I fadderuka har ikke førsteklassingene fått noen egen epost konto fra skolen
+            Checks that this users name is not already in the db, preventing users from registering with
+            every single account they have.*/
+            if(User.findByName(user.firstName, user.lastName) != null)
+                return badRequest(error.render("Dine opplysninger finnes allerede i databasen. De som har likt fornavn og etternavn " +
+                        "må kontakte admin for registrering. Dette sikkerhets tiltaket vil forsvinne når fadderuken er over og alle har fått egen epost " +
+                        "konto fra skolen."));
 
-            //Create the necessary sessions
-            createSessions(jsonObject.getString("sub"));
-
-            return ok(index.render(user.name + ", Congratulations on your first login"));
+            return Registration.autofill(user);
 
         } catch(MalformedURLException e) {return badRequest(error.render("Malformed URL: " + e.getMessage()));
         } catch(ProtocolException e) {return badRequest(error.render("ProtocolException: " + e.getMessage()));
@@ -289,10 +292,11 @@ public class OAuth2 extends Controller {
      * expires is managing how long a one time session will
      * last.
      */
-    private static void createSessions(String id) {
+    public static void createSessions(String id) {
 
         long expires = System.currentTimeMillis() + (EXPIRATION_TIME_IN_SECONDS * 1000);
 
+        //These probably need some security messures
         session("id", id);
         session("expires", String.valueOf(expires));
         session().remove("state");
@@ -306,10 +310,7 @@ public class OAuth2 extends Controller {
      * @return   Result
      */
     public static void destroySessions() {
-
-        session().remove("id");
-        session().remove("state");
-        session().remove("expires");
+        session().clear();
     }
 
 }

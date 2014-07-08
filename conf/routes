@@ -9,6 +9,8 @@ GET         /                            controllers.Application.index()
 GET         /users                       controllers.Users.index()
 GET         /users/profile               controllers.Users.profile()
 GET         /users/logout                controllers.Users.logout()
+POST        /users/register              controllers.Registration.submit()
+GET         /users/register/terms        controllers.Registration.terms()
 # For debuging purposes
 GET         /users/delete                controllers.Users.delete(id)
 

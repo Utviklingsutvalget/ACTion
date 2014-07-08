@@ -47,7 +47,8 @@ create table powerup (
 
 create table user (
   id                        varchar(255) not null,
-  name                      varchar(255),
+  first_name                varchar(255),
+  last_name                 varchar(255),
   gender                    integer,
   email                     varchar(255),
   picture_url               varchar(255),
