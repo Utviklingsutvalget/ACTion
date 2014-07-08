@@ -17,8 +17,8 @@ public class DescriptionPowerup extends Powerup {
 
     private final ClubDescription clubDesc;
 
-    public DescriptionPowerup(Club club) {
-        super(club);
+    public DescriptionPowerup(Club club, models.Powerup model) {
+        super(club, model);
         clubDesc = ClubDescription.find.byId(club.id);
 
     }

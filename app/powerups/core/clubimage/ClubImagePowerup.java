@@ -9,8 +9,8 @@ public class ClubImagePowerup extends Powerup {
 
     private final ClubImage clubImage;
 
-    public ClubImagePowerup(Club club) {
-        super(club);
+    public ClubImagePowerup(Club club, models.Powerup model) {
+        super(club, model);
 
         clubImage = ClubImage.find.byId(club.id);
     }

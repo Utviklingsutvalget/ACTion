@@ -48,6 +48,7 @@ create table powerup (
   class_name                varchar(255),
   friendly_name             varchar(255),
   is_mandatory              tinyint(1) default 0,
+  has_menu_entry            tinyint(1) default 0,
   constraint pk_powerup primary key (id))
 ;
 

@@ -11,8 +11,9 @@ import java.lang.reflect.InvocationTargetException;
 public abstract class Powerup implements Serializable {
 
     Club club;
+    models.Powerup model;
 
-    public Powerup(Club club) {
+    public Powerup(Club club, models.Powerup model) {
         this.club = club;
     }
 
@@ -25,8 +26,8 @@ public abstract class Powerup implements Serializable {
         try {
             @SuppressWarnings("unchecked")
             Class<? extends Powerup> c = (Class<? extends Powerup>) Class.forName("powerups." + powerupModel.className);
-            Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class);
-            return constructor.newInstance(club);
+            Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class, models.Powerup.class);
+            return constructor.newInstance(club, powerupModel);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }

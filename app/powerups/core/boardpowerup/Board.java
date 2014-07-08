@@ -6,8 +6,8 @@ import powerups.Powerup;
 
 public class Board extends Powerup {
 
-    public Board(Club club) {
-        super(club);
+    public Board(Club club, models.Powerup model) {
+        super(club, model);
 
 
     }
