@@ -15,6 +15,7 @@ public abstract class Powerup implements Serializable {
 
     public Powerup(Club club, models.Powerup model) {
         this.club = club;
+        this.model = model;
     }
 
     public abstract Html render();
