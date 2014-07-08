@@ -7,10 +7,10 @@
             <dl class="accordion" data-accordion>
             @for(location <- locations) {
                 <dd class="accordion-navigation">
-                    <a href="#panel@location.cssId"> @location.name </a>
+                    <a href="#panel@location.cssId">@location.name</a>
                     <div id="panel@location.cssId" class="content">
                         <dl>
-                        @club.listsmall(location.clubs)
+                        @club.list(location.clubs)
                         </dl>
                     </div>
                 </dd>
@@ -27,13 +27,13 @@
             }
             </ul>
             <div class="tabs-content vertical">
-                @for(location <- locations) {
-                    <div class="content@if(location.cssId == 1) { active}" id="panel@location.cssId">
-                        <dl>
-                        @club.listlarge(location.clubs)
-                        </dl>
-                    </div>
-                }
+            @for(location <- locations) {
+                <div class="content@if(location.cssId == 1) { active}" id="panel@location.cssId">
+                    <dl>
+                    @club.list(location.clubs)
+                    </dl>
+                </div>
+            }
             </div>
         </div>
     </div>

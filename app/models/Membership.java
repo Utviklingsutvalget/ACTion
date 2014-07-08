@@ -27,7 +27,7 @@ public class Membership extends Model {
         BOARD,
         VICE,
         LEADER,
-        COUNCIL;
+        COUNCIL
     }
 
     @Embeddable
@@ -39,25 +39,6 @@ public class Membership extends Model {
 
         @Override
         public boolean equals(Object o) {
-
-            MembershipLevel myLevel = MembershipLevel.MEMBER;
-
-            switch (myLevel) {
-
-                case SUBSCRIBE:
-                    break;
-                case MEMBER:
-                    break;
-                case BOARD:
-                    break;
-                case VICE:
-                case LEADER:
-
-                    break;
-                case COUNCIL:
-                    break;
-            }
-
             if(this == o) {
                 return true;
             } else {

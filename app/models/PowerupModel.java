@@ -3,16 +3,14 @@ package models;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Powerup extends Model {
-    public static Model.Finder<Long, models.Powerup> find = new Model.Finder<>(Long.class, models.Powerup.class);
+@Table(name = "powerup")
+public class PowerupModel extends Model {
+    public static Model.Finder<Long, PowerupModel> find = new Model.Finder<>(Long.class, PowerupModel.class);
 
     @Id
     public Long id;
@@ -25,6 +23,9 @@ public class Powerup extends Model {
 
     @Constraints.Required
     public boolean isMandatory;
+
+    @Constraints.Required
+    public boolean hasMenuEntry;
 
     @OneToMany(cascade = CascadeType.PERSIST)
     public List<Activation> activations = new ArrayList<>();

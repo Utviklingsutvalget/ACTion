@@ -6,13 +6,14 @@
 create table activation (
   powerup_id                bigint,
   club_id                   bigint,
+  weight                    integer,
   constraint pk_activation primary key (powerup_id, club_id))
 ;
 
 create table club (
   id                        bigint auto_increment not null,
   name                      varchar(255),
-  description               varchar(255),
+  short_name                varchar(255),
   location_id               bigint,
   constraint pk_club primary key (id))
 ;
@@ -20,7 +21,13 @@ create table club (
 create table pl_ClubDescription (
   club_id                   bigint auto_increment not null,
   description               varchar(255),
+  list_description          varchar(255),
   constraint pk_pl_ClubDescription primary key (club_id))
+;
+
+create table club_image (
+  club_id                   bigint auto_increment not null,
+  constraint pk_club_image primary key (club_id))
 ;
 
 create table location (
@@ -42,6 +49,7 @@ create table powerup (
   class_name                varchar(255),
   friendly_name             varchar(255),
   is_mandatory              tinyint(1) default 0,
+  has_menu_entry            tinyint(1) default 0,
   constraint pk_powerup primary key (id))
 ;
 
@@ -55,10 +63,10 @@ create table user (
   constraint pk_user primary key (id))
 ;
 
-alter table activation add constraint fk_activation_powerup_1 foreign key (powerup_id) references powerup (id) on delete restrict on update restrict;
-create index ix_activation_powerup_1 on activation (powerup_id);
-alter table activation add constraint fk_activation_club_2 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_activation_club_2 on activation (club_id);
+alter table activation add constraint fk_activation_club_1 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_activation_club_1 on activation (club_id);
+alter table activation add constraint fk_activation_powerup_2 foreign key (powerup_id) references powerup (id) on delete restrict on update restrict;
+create index ix_activation_powerup_2 on activation (powerup_id);
 alter table club add constraint fk_club_location_3 foreign key (location_id) references location (id) on delete restrict on update restrict;
 create index ix_club_location_3 on club (location_id);
 alter table membership add constraint fk_membership_club_4 foreign key (club_id) references club (id) on delete restrict on update restrict;
@@ -77,6 +85,8 @@ drop table activation;
 drop table club;
 
 drop table pl_ClubDescription;
+
+drop table club_image;
 
 drop table location;
 
