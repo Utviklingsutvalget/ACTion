@@ -18,4 +18,7 @@ public class ClubDescription extends Model {
     @Constraints.Required
     public String description;
 
+    @Constraints.Required
+    public String listDescription;
+
 }

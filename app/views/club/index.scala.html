@@ -10,7 +10,7 @@
                     <a href="#panel@location.cssId">@location.name</a>
                     <div id="panel@location.cssId" class="content">
                         <dl>
-                        @club.listsmall(location.clubs)
+                        @club.list(location.clubs)
                         </dl>
                     </div>
                 </dd>
@@ -30,7 +30,7 @@
             @for(location <- locations) {
                 <div class="content@if(location.cssId == 1) { active}" id="panel@location.cssId">
                     <dl>
-                    @club.listlarge(location.clubs)
+                    @club.list(location.clubs)
                     </dl>
                 </div>
             }

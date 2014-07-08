@@ -13,7 +13,6 @@ create table activation (
 create table club (
   id                        bigint auto_increment not null,
   name                      varchar(255),
-  description               varchar(255),
   location_id               bigint,
   constraint pk_club primary key (id))
 ;
@@ -21,6 +20,7 @@ create table club (
 create table pl_ClubDescription (
   club_id                   bigint auto_increment not null,
   description               varchar(255),
+  list_description          varchar(255),
   constraint pk_pl_ClubDescription primary key (club_id))
 ;
 

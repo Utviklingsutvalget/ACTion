@@ -58,7 +58,7 @@ public class Clubs extends Controller {
         final Club club = Club.find.byId(id);
 
         club.name = newName;
-        club.description = newDescription;
+        //club.description = newDescription;
 
         Club.update(club);
 

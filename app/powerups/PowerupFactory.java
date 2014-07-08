@@ -2,6 +2,7 @@ package powerups;
 
 import models.Activation;
 import models.Club;
+import play.api.Play;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -14,8 +15,8 @@ public class PowerupFactory {
 
         try {
             @SuppressWarnings("unchecked")
-            Class<Powerup> c = (Class<Powerup>) Class.forName(powerupModel.className);
-            Constructor<Powerup> constructor = c.getDeclaredConstructor(Club.class);
+            Class<? extends Powerup> c = (Class<? extends Powerup>) Class.forName(powerupModel.className);
+            Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class);
             return constructor.newInstance(club);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
