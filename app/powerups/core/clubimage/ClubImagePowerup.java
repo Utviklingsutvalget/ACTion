@@ -3,15 +3,16 @@ package powerups.core.clubimage;
 import models.Club;
 import play.twirl.api.Html;
 import powerups.Powerup;
+import powerups.models.ClubImage;
 
-public class ClubImage extends Powerup {
+public class ClubImagePowerup extends Powerup {
 
     private final ClubImage clubImage;
 
-    public ClubImage(Club club) {
+    public ClubImagePowerup(Club club) {
         super(club);
 
-        clubImage = club.;
+        clubImage = ClubImage.find.byId(club.id);
     }
 
     @Override

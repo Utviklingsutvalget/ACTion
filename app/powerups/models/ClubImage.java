@@ -1,5 +1,6 @@
 package powerups.models;
 
+import models.UploadedFile;
 import play.db.ebean.Model;
 
 import javax.persistence.Id;
@@ -9,5 +10,7 @@ public class ClubImage extends Model {
 
     @Id
     public Long clubId;
+
+    public UploadedFile file;
 
 }

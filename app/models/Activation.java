@@ -48,6 +48,6 @@ public class Activation extends Model {
     }
 
     public powerups.Powerup getPowerup() {
-        return PowerupFactory.getPowerup(this);
+        return powerups.Powerup.getPowerup(this);
     }
 }
