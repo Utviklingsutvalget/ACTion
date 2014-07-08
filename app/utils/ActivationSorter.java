@@ -10,6 +10,6 @@ public class ActivationSorter implements Comparator<Activation> {
         if(o1 == o2 || o1.key.equals(o2.key)) {
             return 0;
         }
-        return o1.weight - o2.weight;
+        return o2.weight - o1.weight;
     }
 }

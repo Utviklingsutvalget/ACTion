@@ -28,6 +28,9 @@ public class Club extends Model {
     @Constraints.Required
     public String name;
 
+    @Constraints.Required
+    public String shortName;
+
     @ManyToOne
     public Location location;
 

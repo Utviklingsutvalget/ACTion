@@ -2,6 +2,7 @@ package powerups;
 
 import models.Activation;
 import models.Club;
+import models.PowerupModel;
 import play.twirl.api.Html;
 
 import java.io.Serializable;
@@ -11,9 +12,9 @@ import java.lang.reflect.InvocationTargetException;
 public abstract class Powerup implements Serializable {
 
     Club club;
-    models.Powerup model;
+    public PowerupModel model;
 
-    public Powerup(Club club, models.Powerup model) {
+    public Powerup(Club club, PowerupModel model) {
         this.club = club;
         this.model = model;
     }
@@ -21,13 +22,13 @@ public abstract class Powerup implements Serializable {
     public abstract Html render();
 
     public static Powerup getPowerup(Activation activation) {
-        models.Powerup powerupModel = models.Powerup.find.byId(activation.key.powerupId);
+        PowerupModel powerupModel = PowerupModel.find.byId(activation.key.powerupId);
         Club club = Club.find.byId(activation.key.clubId);
 
         try {
             @SuppressWarnings("unchecked")
             Class<? extends Powerup> c = (Class<? extends Powerup>) Class.forName("powerups." + powerupModel.className);
-            Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class, models.Powerup.class);
+            Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class, PowerupModel.class);
             return constructor.newInstance(club, powerupModel);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();

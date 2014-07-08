@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Powerup extends Model {
-    public static Model.Finder<Long, models.Powerup> find = new Model.Finder<>(Long.class, models.Powerup.class);
+@Table(name = "powerup")
+public class PowerupModel extends Model {
+    public static Model.Finder<Long, PowerupModel> find = new Model.Finder<>(Long.class, PowerupModel.class);
 
     @Id
     public Long id;
@@ -23,7 +24,7 @@ public class Powerup extends Model {
     @Constraints.Required
     public boolean isMandatory;
 
-    @Basic(optional = true)
+    @Constraints.Required
     public boolean hasMenuEntry;
 
     @OneToMany(cascade = CascadeType.PERSIST)

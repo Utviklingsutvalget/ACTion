@@ -18,6 +18,9 @@ public class Activation extends Model {
     @ManyToOne
     public Club club;
 
+    @ManyToOne
+    public PowerupModel powerup;
+
     // The weight specifies in which order items will be rendered. Lower numbers render before higher numbers.
     @Constraints.Required
     public int weight;

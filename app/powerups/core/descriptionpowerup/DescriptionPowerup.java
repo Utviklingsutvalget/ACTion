@@ -1,8 +1,7 @@
 package powerups.core.descriptionpowerup;
 
 import models.Club;
-import org.apache.commons.lang3.StringUtils;
-import play.mvc.Result;
+import models.PowerupModel;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.descriptionpowerup.html.listdesc;
@@ -17,7 +16,7 @@ public class DescriptionPowerup extends Powerup {
 
     private final ClubDescription clubDesc;
 
-    public DescriptionPowerup(Club club, models.Powerup model) {
+    public DescriptionPowerup(Club club, PowerupModel model) {
         super(club, model);
         clubDesc = ClubDescription.find.byId(club.id);
 

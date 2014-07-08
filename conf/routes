@@ -19,7 +19,7 @@ GET         /login/oauth2callback        controllers.OAuth2.exchange()
 
 # Clubs
 GET         /clubs                       controllers.Clubs.index()
-GET         /clubs/:id                   controllers.Clubs.show(id)
+GET         /clubs/:id                   controllers.Clubs.show(id: Long)
 POST        /clubs                       controllers.Clubs.update()
 
 # Map static resources from the /public folder to the /assets URL path

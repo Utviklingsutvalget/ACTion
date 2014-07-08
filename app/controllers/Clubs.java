@@ -32,9 +32,10 @@ public class Clubs extends Controller {
         return ok(views.html.club.index.render(locations));
     }
 
-    public static Result show(String id) {
-        final Long clubId = Long.valueOf(id);
-        Club club = Club.find.byId(clubId);
+    public static Result show(Long id) {
+        //final Long clubId = Long.valueOf(id);
+        Club club = Club.find.byId(id);
+        //club.stringId = id;
 
         club.powerups = new ArrayList<>();
         // Sort the activations by weight:
