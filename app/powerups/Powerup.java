@@ -10,7 +10,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * The class that every Powerup must extend. The nature of a powerup is fickle. Once its class name has been set in its
+ * The superclass of every Powerup. The nature of a powerup is fickle. Once its class name has been set in its
  * {@link models.PowerupModel}, this should never change post production. The class uses lazy loading to read its
  * model's class name, and thus must be properly set and qualified as documented in the PowerupModel class. Make sure
  * to properly read example powerups' documentation, as well as this one before attempting to use write a powerup.
