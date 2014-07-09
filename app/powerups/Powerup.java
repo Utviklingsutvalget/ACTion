@@ -9,6 +9,16 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * The class that every Powerup must extend. The nature of a powerup is fickle. Once its class name has been set in its
+ * {@link models.PowerupModel}, this should never change post production. The class uses lazy loading to read its
+ * model's class name, and thus must be properly set and qualified as documented in the PowerupModel class. Make sure
+ * to properly read example powerups' documentation, as well as this one before attempting to use write a powerup.
+ * As of 1.0-SNAPSHOT, there is no error handling for the powerup activation, so a user will not get any indication
+ * whether this powerup exists if it is not loaded properly.
+ * @since 1.0-SNAPSHOT
+ * @see models.PowerupModel
+ */
 public abstract class Powerup implements Serializable {
 
     /**
@@ -49,8 +59,8 @@ public abstract class Powerup implements Serializable {
      * @return The instantiated Powerup.
      */
     public static Powerup getPowerup(Activation activation) {
-        PowerupModel powerupModel = PowerupModel.find.byId(activation.key.powerupId);
-        Club club = Club.find.byId(activation.key.clubId);
+        PowerupModel powerupModel = activation.powerup;
+        Club club = activation.club;
 
         try {
             @SuppressWarnings("unchecked")
