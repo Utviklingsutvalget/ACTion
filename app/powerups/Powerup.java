@@ -11,16 +11,43 @@ import java.lang.reflect.InvocationTargetException;
 
 public abstract class Powerup implements Serializable {
 
-    Club club;
-    public PowerupModel model;
+    /**
+     * Private access as no Powerup should ever be able to change the name of a Club.
+     */
+    private final Club club;
 
+    /**
+     * Final, as no view should ever have access to modify its own model runtime.
+     */
+    public final PowerupModel model;
+
+    /**
+     * Boilerplate constructor used to set up a Powerup. This exposes some vital information for all Powerups.
+     * @param club The club referenced by the {@link models.Activation} used to instantiate the Powerup. It is saved
+     *             for reference.
+     * @param model The model referenced by the {@link models.Activation} used to instantiate the Powerup. It is saved
+     *              so that views may access the data held by the model.
+     * @see play.db.ebean.Model
+     */
     public Powerup(Club club, PowerupModel model) {
         this.club = club;
         this.model = model;
     }
 
+    /**
+     * Every powerup must implement a method to render its associated view. For now, only one view may be referenced,
+     * though this is likely to change as the API matures.
+     * @return The HTML to insert into the club's view.
+     * @see views.html.club.show
+     * @see play.twirl.api.Html
+     */
     public abstract Html render();
 
+    /**
+     * Lazily loads the {@link powerups.Powerup} associated with the {@link models.Activation}
+     * @param activation The activation used to instantiate the Powerup.
+     * @return The instantiated Powerup.
+     */
     public static Powerup getPowerup(Activation activation) {
         PowerupModel powerupModel = PowerupModel.find.byId(activation.key.powerupId);
         Club club = Club.find.byId(activation.key.clubId);
@@ -34,5 +61,9 @@ public abstract class Powerup implements Serializable {
             e.printStackTrace();
         }
         return null;
+    }
+
+    protected Club getClub() {
+        return club;
     }
 }
