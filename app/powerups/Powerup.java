@@ -16,6 +16,9 @@ import java.lang.reflect.InvocationTargetException;
  * to properly read example powerups' documentation, as well as this one before attempting to use write a powerup.
  * As of 1.0-SNAPSHOT, there is no error handling for the powerup activation, so a user will not get any indication
  * whether this powerup exists if it is not loaded properly.
+ *
+ * Each powerup must define its own view, using the render() method.
+ * Each powerup must define its own model(s) for use in the powerup.
  * @since 1.0-SNAPSHOT
  * @see models.PowerupModel
  */
@@ -33,6 +36,10 @@ public abstract class Powerup implements Serializable {
 
     /**
      * Boilerplate constructor used to set up a Powerup. This exposes some vital information for all Powerups.
+     * As all powerups are instantiated right before the view starts getting served, the implementing constructor of the
+     * powerup must readily complete its own objects or models prior to rendering as to avoid interrupting the page
+     * load. This way, you may also return an error view if something goes wrong, as long as this is precalculated to
+     * only read one variable.
      * @param club The club referenced by the {@link models.Activation} used to instantiate the Powerup. It is saved
      *             for reference.
      * @param model The model referenced by the {@link models.Activation} used to instantiate the Powerup. It is saved
@@ -45,7 +52,9 @@ public abstract class Powerup implements Serializable {
     }
 
     /**
-     * Every powerup must implement a method to render its associated view. For now, only one view may be referenced,
+     * Every powerup must implement a method to render its associated view. Make sure that no logic is done in render(),
+     * as render() is called only to serve the {@link play.twirl.api.Html} required by the club's view.
+     * For now, only one view may be referenced,
      * though this is likely to change as the API matures.
      * @return The HTML to insert into the club's view.
      * @see views.html.club.show
