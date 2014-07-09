@@ -16,11 +16,13 @@ import java.lang.reflect.InvocationTargetException;
  * to properly read example powerups' documentation, as well as this one before attempting to use write a powerup.
  * As of 1.0-SNAPSHOT, there is no error handling for the powerup activation, so a user will not get any indication
  * whether this powerup exists if it is not loaded properly.
+ * Please use {@link powerups.core.descriptionpowerup.DescriptionPowerup} for reference.
  *
  * Each powerup must define its own view, using the render() method.
  * Each powerup must define its own model(s) for use in the powerup.
  * @since 1.0-SNAPSHOT
  * @see models.PowerupModel
+ * @see powerups.core.descriptionpowerup.DescriptionPowerup
  */
 public abstract class Powerup implements Serializable {
 
