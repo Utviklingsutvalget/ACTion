@@ -43,4 +43,27 @@ public class Club extends Model {
     @Transient
     public List<Powerup> powerups;
 
+    @Transient
+    private Html listDesc;
+
+    // TODO FIND MORE LOGICAL WAY TO IMPLEMENT
+    public void setDescriptions() {
+        for(Activation activation : activations) {
+            Powerup powerup = activation.getPowerup();
+            if(powerup instanceof DescriptionPowerup) {
+                setListDesc(((DescriptionPowerup) powerup).renderList());
+            }
+        }
+    }
+
+    public Html getListDesc() {
+        if(listDesc == null) {
+            setDescriptions();
+        }
+        return listDesc;
+    }
+
+    private void setListDesc(Html listDesc) {
+        this.listDesc = listDesc;
+    }
 }
