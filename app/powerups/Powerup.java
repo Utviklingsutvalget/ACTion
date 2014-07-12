@@ -79,9 +79,19 @@ public abstract class Powerup implements Serializable {
             Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class, PowerupModel.class);
             return constructor.newInstance(club, powerupModel);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            PowerupModel errorModel = new PowerupModel();
+            errorModel.className = "";
+            errorModel.friendlyName = "ERROR";
+            errorModel.hasMenuEntry = false;
+            errorModel.isMandatory = false;
+            errorModel.id = Long.MAX_VALUE;
+            return new Powerup(club, new PowerupModel()) {
+                @Override
+                public Html render() {
+                    return new Html("An error activating plugin. Please contact your local administrator.");
+                }
+            };
         }
-        return null;
     }
 
     protected Club getClub() {
