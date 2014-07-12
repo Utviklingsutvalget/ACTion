@@ -24,6 +24,7 @@
             <div data-magellan-expedition="fixed">
                 <dl class="sub-nav">
                 @for(powerup <- club.powerups) {
+                    @powerup.model
                     @if(powerup.model.hasMenuEntry) {
                         <dd data-magellan-arrival="@powerup.model.id"><a href='#@powerup.model.id'>@powerup.model.friendlyName</a></dd>
                     }
