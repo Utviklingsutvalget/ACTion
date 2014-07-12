@@ -18,12 +18,15 @@ public class Board extends Model {
     public Long clubID;
 
     @OneToOne
+    @PrimaryKeyJoinColumn
     public Membership leader;
 
     @OneToOne
+    @PrimaryKeyJoinColumn
     public Membership vice;
 
     @OneToOne
+    @PrimaryKeyJoinColumn
     public Membership economy;
 
     @OneToMany(mappedBy = "board")

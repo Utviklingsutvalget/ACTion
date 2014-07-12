@@ -1,6 +1,11 @@
-@(board: List[BoardMember])
+@(board: List[powerups.core.boardpowerup.BoardMember])
+@import powerups.core.boardpowerup.BoardMember
+
+    <div id="test">hei</div>
 
 @for(member <- board) {
-
+    <div>
+        <h6>@member.getTitle()</h6>
+    </div>
 }
 
