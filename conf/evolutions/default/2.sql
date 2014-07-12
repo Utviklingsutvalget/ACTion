@@ -24,8 +24,16 @@ INSERT INTO `action`.`pl_clubdescription` (`club_id`, `description`, `list_descr
 Lang beskrivelse for Utviklingsutvalget.
 Lang beskrivelse for Utviklingsutvalget.Lang beskrivelse for Utviklingsutvalget.Lang beskrivelse for Utviklingsutvalget.', 'Veldig kort beskrivelse for Utviklingsutvalget.');
 
+
+INSERT INTO `action`.`user` (`id`, `name`, `gender`, `email`, `picture_url`) VALUES ('1', 'ragnar', '1', NULL, NULL), ('2', 'dsdsadsa', '0', NULL, NULL);
+
+INSERT INTO `action`.`board` (`club_id`, `leader_id`, `vice_id`, `economy_id`) VALUES ('1', '1', '2', '1');
+INSERT INTO `action`.`board_extras` (`club_id`, `extras_id`, `member_id`, `title`) VALUES ('1', '1', '1', 'løytnant');
+INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`) VALUES ('3', '1', '4');
+
 # --- !Downs
 
+SET FOREIGN_KEY_CHECKS=0;
 TRUNCATE TABLE `action`.`location`;
 TRUNCATE TABLE `action`.`club`;
 TRUNCATE TABLE `action`.`powerup`;
