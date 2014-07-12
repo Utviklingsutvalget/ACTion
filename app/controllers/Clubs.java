@@ -5,8 +5,9 @@ import models.Club;
 import models.Location;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.ActivationSorter;
 import powerups.Powerup;
+import scala.collection.JavaConverters;
+import utils.ActivationSorter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,11 +26,13 @@ public class Clubs extends Controller {
         locations.add(0, global);
 
         int cssId = 0;
-        for(Location location : locations) {
+        for (Location location : locations) {
             cssId++;
             location.cssId = cssId;
         }
-        return ok(views.html.club.index.render(locations));
+        scala.collection.immutable.List<Location> immutableLocations = JavaConverters.asScalaBufferConverter(locations).
+                asScala().toList();
+        return ok(views.html.club.index.render(immutableLocations));
     }
 
     public static Result show(Long id) {
@@ -41,7 +44,7 @@ public class Clubs extends Controller {
         // Sort the activations by weight:
         Collections.sort(club.activations, new ActivationSorter());
 
-        for(Activation activation : club.activations) {
+        for (Activation activation : club.activations) {
             Powerup powerup = activation.getPowerup();
             club.powerups.add(powerup);
         }
