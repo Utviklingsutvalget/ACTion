@@ -80,6 +80,11 @@ public abstract class Powerup implements Serializable {
             return constructor.newInstance(club, powerupModel);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             PowerupModel errorModel = new PowerupModel();
+            StringBuilder stackTraceBuilder = new StringBuilder();
+            for(StackTraceElement e1 : e.getStackTrace()) {
+                stackTraceBuilder.append(e1.toString()).append("<br>");
+            }
+            final String stackTrace = stackTraceBuilder.toString();
             errorModel.className = "";
             errorModel.friendlyName = "ERROR";
             errorModel.hasMenuEntry = false;
@@ -88,7 +93,7 @@ public abstract class Powerup implements Serializable {
             return new Powerup(club, new PowerupModel()) {
                 @Override
                 public Html render() {
-                    return new Html("An error activating plugin. Please contact your local administrator.");
+                    return new Html("An error activating plugin. Please contact your local administrator. Stacktrace: <br>" + stackTrace );
                 }
             };
         }
