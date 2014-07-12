@@ -7,5 +7,7 @@ import javax.persistence.Id;
 public class Event {
 
     @Id
-    public Long id;
+    public String id;
+
+    public String cover;
 }
