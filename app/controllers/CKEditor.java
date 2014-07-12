@@ -19,8 +19,12 @@ public class CKEditor extends Controller {
     }
 
     public static Result save() {
-        
-        final String[] segments = request().body().asFormUrlEncoded().get("editabledata");
+
+        final Map<String, String[]> map = request().body().asFormUrlEncoded();
+
+        final String[] segments = map.get("editabledata");
+
+        Logger.debug(map.get("id")[0]);
 
         StringBuilder builder = new StringBuilder();
         for(String s : segments) {builder.append(s);}
