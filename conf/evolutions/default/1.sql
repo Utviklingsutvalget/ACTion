@@ -18,6 +18,7 @@ create table board (
 
 create table board_extras (
   board_club_id             bigint,
+  club_id                   bigint,
   user_id                   varchar(255),
   title                     varchar(255))
 ;
@@ -79,24 +80,22 @@ alter table activation add constraint fk_activation_club_1 foreign key (club_id)
 create index ix_activation_club_1 on activation (club_id);
 alter table activation add constraint fk_activation_powerup_2 foreign key (powerup_id) references powerup (id) on delete restrict on update restrict;
 create index ix_activation_powerup_2 on activation (powerup_id);
-alter table board add constraint fk_board_council_3 foreign key (club_id,user_id) references membership (club_id,user_id) on delete restrict on update restrict;
-create index ix_board_council_3 on board (club_id,user_id);
-alter table board add constraint fk_board_leader_4 foreign key (club_id,user_id) references membership (club_id,user_id) on delete restrict on update restrict;
-create index ix_board_leader_4 on board (club_id,user_id);
-alter table board add constraint fk_board_vice_5 foreign key (club_id,user_id) references membership (club_id,user_id) on delete restrict on update restrict;
-create index ix_board_vice_5 on board (club_id,user_id);
-alter table board add constraint fk_board_economy_6 foreign key (club_id,user_id) references membership (club_id,user_id) on delete restrict on update restrict;
-create index ix_board_economy_6 on board (club_id,user_id);
-alter table board_extras add constraint fk_board_extras_board_7 foreign key (board_club_id) references board (club_id) on delete restrict on update restrict;
-create index ix_board_extras_board_7 on board_extras (board_club_id);
-alter table board_extras add constraint fk_board_extras_user_8 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_board_extras_user_8 on board_extras (user_id);
-alter table club add constraint fk_club_location_9 foreign key (location_id) references location (id) on delete restrict on update restrict;
-create index ix_club_location_9 on club (location_id);
-alter table membership add constraint fk_membership_club_10 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_membership_club_10 on membership (club_id);
-alter table membership add constraint fk_membership_user_11 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_membership_user_11 on membership (user_id);
+alter table board add constraint fk_board_leader_3 foreign key (club_id,user_id) references membership (club_id,user_id) on delete restrict on update restrict;
+create index ix_board_leader_3 on board (club_id,user_id);
+alter table board add constraint fk_board_vice_4 foreign key (club_id,user_id) references membership (club_id,user_id) on delete restrict on update restrict;
+create index ix_board_vice_4 on board (club_id,user_id);
+alter table board add constraint fk_board_economy_5 foreign key (club_id,user_id) references membership (club_id,user_id) on delete restrict on update restrict;
+create index ix_board_economy_5 on board (club_id,user_id);
+alter table board_extras add constraint fk_board_extras_board_6 foreign key (board_club_id) references board (club_id) on delete restrict on update restrict;
+create index ix_board_extras_board_6 on board_extras (board_club_id);
+alter table board_extras add constraint fk_board_extras_member_7 foreign key (club_id,user_id) references membership (club_id,user_id) on delete restrict on update restrict;
+create index ix_board_extras_member_7 on board_extras (club_id,user_id);
+alter table club add constraint fk_club_location_8 foreign key (location_id) references location (id) on delete restrict on update restrict;
+create index ix_club_location_8 on club (location_id);
+alter table membership add constraint fk_membership_club_9 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_membership_club_9 on membership (club_id);
+alter table membership add constraint fk_membership_user_10 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_membership_user_10 on membership (user_id);
 
 
 

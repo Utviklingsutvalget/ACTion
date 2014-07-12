@@ -10,7 +10,8 @@ VALUES ('1', 'Utviklingsutvalget', 'UU', '1'), ('2', 'Apple User Group', 'AUG', 
 
 INSERT INTO `action`.`powerup` (`id`, `class_name`, `friendly_name`, `is_mandatory`, `has_menu_entry`)
 VALUES ('1', 'core.descriptionpowerup.DescriptionPowerup', 'Beskrivelse', '1', '1'),
-  ('2', 'core.clubimage.ClubImagePowerup', NULL, '1', '0');
+  ('2', 'core.clubimage.ClubImagePowerup', NULL, '1', '0'),
+  ('3', 'core.boardpowerup.BoardPowerup', 'Styremedlemmer', '1', '1');
 
 INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`)
 VALUES ('1', '1', '0'), ('1', '2', '0'), ('2', '1', '1'), ('2', '2', '1');
@@ -22,3 +23,11 @@ Lang beskrivelse for Utviklingsutvalget.Lang beskrivelse for Utviklingsutvalget.
 INSERT INTO `action`.`pl_clubdescription` (`club_id`, `description`, `list_description`) VALUES ('2', 'Lang beskrivelse for Utviklingsutvalget. Lang beskrivelse for Utviklingsutvalget.
 Lang beskrivelse for Utviklingsutvalget.
 Lang beskrivelse for Utviklingsutvalget.Lang beskrivelse for Utviklingsutvalget.Lang beskrivelse for Utviklingsutvalget.', 'Veldig kort beskrivelse for Utviklingsutvalget.');
+
+# --- !Downs
+
+TRUNCATE TABLE `action`.`location`;
+TRUNCATE TABLE `action`.`club`;
+TRUNCATE TABLE `action`.`powerup`;
+TRUNCATE TABLE `action`.`activation`;
+TRUNCATE TABLE `action`.`pl_clubdescription`;
