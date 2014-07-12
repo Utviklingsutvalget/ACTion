@@ -33,9 +33,7 @@ public class Clubs extends Controller {
     }
 
     public static Result show(Long id) {
-        //final Long clubId = Long.valueOf(id);
         Club club = Club.find.byId(id);
-        //club.stringId = id;
 
         club.powerups = new ArrayList<>();
         // Sort the activations by weight:
