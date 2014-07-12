@@ -2,6 +2,7 @@ package powerups.core.boardpowerup;
 
 import models.Club;
 import models.PowerupModel;
+import models.User;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.boardpowerup.html.powerup;
@@ -14,13 +15,15 @@ import java.util.List;
 public class BoardPowerup extends Powerup {
 
     private final Board board;
-    List<BoardMember> boardList;
+    public List<BoardMember> boardList;
 
     public BoardPowerup(Club club, PowerupModel model) {
         super(club, model);
         boardList = new ArrayList<>();
 
         board = Board.find.byId(club.id);
+
+        boardList.add(new BoardMember(new User("fds", "π", User.Gender.MALE, "dsad", "dsa"), "ting"));
 
         boardList.add(new BoardMember(board.leader.user, "Leder"));
         boardList.add(new BoardMember(board.vice.user, "Nestleder"));
@@ -35,6 +38,6 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public Html render() {
-        return powerup.render();
+        return powerup.render(boardList);
     }
 }

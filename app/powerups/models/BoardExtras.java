@@ -16,6 +16,7 @@ public class BoardExtras extends Model {
 
     @Constraints.Required
     @OneToOne
+    @PrimaryKeyJoinColumn
     public Membership member;
 
     @Constraints.Required
