@@ -13,23 +13,38 @@ import java.util.List;
 public class Board extends Model {
     public static Finder<Long, Board> find = new Finder<>(Long.class, Board.class);
 
-    @Id
+    @EmbeddedId
+    public BoardKey key;
+
     @OneToOne
-    public Long clubID;
+    public Club club;
 
     @OneToOne
     @PrimaryKeyJoinColumn
-    public Membership leader;
+    public User leader;
 
     @OneToOne
     @PrimaryKeyJoinColumn
-    public Membership vice;
+    public User vice;
 
     @OneToOne
     @PrimaryKeyJoinColumn
-    public Membership economy;
+    public User economy;
 
     @OneToMany(mappedBy = "board")
     public List<BoardExtras> boardExtra;
 
+    @Embeddable
+    public class BoardKey {
+
+        public Long clubId;
+
+        public boolean equals(Object other) {
+            return other == this || other instanceof BoardKey && ((BoardKey) other).clubId.equals(this.clubId);
+        }
+
+        public int hashCode() {
+            return super.hashCode();
+        }
+    }
 }
