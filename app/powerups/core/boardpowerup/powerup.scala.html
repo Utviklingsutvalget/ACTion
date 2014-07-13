@@ -1,11 +1,12 @@
 @(board: List[powerups.core.boardpowerup.BoardMember])
 @import powerups.core.boardpowerup.BoardMember
 
-    <div id="test">hei</div>
 
-@for(member <- board) {
-    <div>
+<div id="boardmembers">
+    @for(member <- board) {
+        <img src="@member.getMember().pictureUrl">
+        <h6>@member.getMember().name</h6>
         <h6>@member.getTitle()</h6>
-    </div>
-}
+    }
+</div>
 
