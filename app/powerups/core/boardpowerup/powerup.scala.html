@@ -2,11 +2,43 @@
 @import powerups.core.boardpowerup.BoardMember
 
 
+
 <div id="boardmembers">
+
+    @*
+        @for((boardItem, index) <- board.zipWithIndex){
+
+            @if(index == 3){
+
+                <div style="float:left;">
+                    <img src="@boardItem.getMember().pictureUrl">
+                    <h6>@boardItem.getMember().name</h6>
+                    <h6>@boardItem.getTitle()</h6>
+                </div>
+
+            }else{
+
+                <div style="float:left;">
+                    <img src="@boardItem.getMember().pictureUrl">
+                    <h6>@boardItem.getMember().name</h6>
+                    <h6>@boardItem.getTitle()</h6>
+                </div>
+            }
+
+
+        }
+    *@
+
+
+
     @for(member <- board) {
-        <img src="@member.getMember().pictureUrl">
-        <h6>@member.getMember().name</h6>
-        <h6>@member.getTitle()</h6>
+
+        <div style="float:left;">
+            <img src="@member.getMember().pictureUrl">
+            <h6>@member.getMember().name</h6>
+            <h6>@member.getTitle()</h6>
+        </div>
     }
+
 </div>
 
