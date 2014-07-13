@@ -1,4 +1,4 @@
-@(club: Club)
+@(club: Club, context: util.Context)
 
 @main(club.name) {
 
@@ -6,15 +6,31 @@
 
         <h1>@club.name</h1>
 
-        <div id="id1" contenteditable="true">
+        <div id="powerup-desc" data-context="@context">
             <p>@club.description</p>
         </div>
 
+        <div id="content" data-context="@context">
+            <h1>The main content of the club</h1>
+            <p>This is mandotory for all clubs but not part of a powerup.</p>
+        </div>
     </div>
-
-
 }
 
-<script src="@routes.Assets.at("ckeditor/ckeditor.js")"></script>
 <script src="@routes.Assets.at("javascripts/vendor/jquery.js")"></script>
-<script>var dump_file="@routes.CKEditor.save()";</script>
+<script src="@routes.Assets.at("ckeditor/ckeditor.js")"></script>
+<script>
+
+CKEDITOR.disableAutoInline = true;
+    @if(context.getSender() != null && context.getResource() != null && context.getAction() != null) {
+
+        //if(user has privlages to change content)
+        var dump_file="@routes.CKEditor.save()";
+
+        CKEDITOR.inline('powerup-desc');
+        $('#powerup-desc').attr('contenteditable', 'true');
+
+        CKEDITOR.inline('content');
+        $('#content').attr('contenteditable', 'true');
+    }
+</script>

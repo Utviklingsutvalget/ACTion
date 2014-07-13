@@ -24,11 +24,13 @@ public class CKEditor extends Controller {
 
         final String[] segments = map.get("editabledata");
 
-        Logger.debug(map.get("id")[0]);
+        Logger.debug(map.get("context")[0]);
 
         StringBuilder builder = new StringBuilder();
         for(String s : segments) {builder.append(s);}
 
-        return ok(builder.toString());
+        Logger.debug("Content: " +builder.toString());
+
+        return ok();
     }
 }

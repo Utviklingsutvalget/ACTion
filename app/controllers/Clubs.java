@@ -2,8 +2,12 @@ package controllers;
 
 import models.Club;
 import models.Location;
+import models.User;
 import play.mvc.Controller;
 import play.mvc.Result;
+import util.Action;
+import util.Context;
+import utils.Authorization;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +36,11 @@ public class Clubs extends Controller {
 
         final Club club = Club.find.byId(clubId);
 
-        return ok(views.html.club.show.render(club));
+        //Would this make sense?
+        User user = Authorization.authorizeUserSession();
+        Context context = new Context(user, club, Action.UPDATE);
+
+        return ok(views.html.club.show.render(club, context));
     }
 
     public static Result update() {
