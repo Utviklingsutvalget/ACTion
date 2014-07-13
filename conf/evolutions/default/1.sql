@@ -11,7 +11,7 @@ create table activation (
 ;
 
 create table board (
-  club_id                   bigint,
+  club_id                   bigint auto_increment not null,
   leader_id                 varchar(255),
   vice_id                   varchar(255),
   economy_id                varchar(255),
@@ -21,6 +21,7 @@ create table board (
 create table board_extras (
   club_id                   bigint,
   extras_id                 integer,
+  board_club_id             bigint,
   member_id                 varchar(255),
   title                     varchar(255),
   constraint pk_board_extras primary key (club_id, extras_id))
@@ -91,8 +92,8 @@ alter table board add constraint fk_board_vice_5 foreign key (vice_id) reference
 create index ix_board_vice_5 on board (vice_id);
 alter table board add constraint fk_board_economy_6 foreign key (economy_id) references user (id) on delete restrict on update restrict;
 create index ix_board_economy_6 on board (economy_id);
-alter table board_extras add constraint fk_board_extras_board_7 foreign key (club_id) references board (club_id) on delete restrict on update restrict;
-create index ix_board_extras_board_7 on board_extras (club_id);
+alter table board_extras add constraint fk_board_extras_board_7 foreign key (board_club_id) references board (club_id) on delete restrict on update restrict;
+create index ix_board_extras_board_7 on board_extras (board_club_id);
 alter table board_extras add constraint fk_board_extras_member_8 foreign key (member_id) references user (id) on delete restrict on update restrict;
 create index ix_board_extras_member_8 on board_extras (member_id);
 alter table club add constraint fk_club_location_9 foreign key (location_id) references location (id) on delete restrict on update restrict;

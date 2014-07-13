@@ -13,8 +13,8 @@ import java.util.List;
 public class Board extends Model {
     public static Finder<Long, Board> find = new Finder<>(Long.class, Board.class);
 
-    @EmbeddedId
-    public BoardKey key;
+    @Id
+    public Long clubID;
 
     @OneToOne
     public Club club;

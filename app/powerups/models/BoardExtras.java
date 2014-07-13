@@ -29,7 +29,6 @@ public class BoardExtras extends Model {
     public class BoardKey {
 
         public Long clubId;
-
         public Integer extrasId;
 
         public boolean equals(Object other) {

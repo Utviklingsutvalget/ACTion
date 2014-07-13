@@ -2,19 +2,17 @@ package powerups.core.boardpowerup;
 
 import models.Club;
 import models.PowerupModel;
-import models.User;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.boardpowerup.html.powerup;
-import powerups.models.Board;
 import powerups.models.BoardExtras;
-
 import java.util.ArrayList;
 import java.util.List;
+import powerups.models.Board;
 
 public class BoardPowerup extends Powerup {
 
-    private final Board board;
+    private Board board;
     public List<BoardMember> boardList;
 
     public BoardPowerup(Club club, PowerupModel model) {
@@ -23,17 +21,14 @@ public class BoardPowerup extends Powerup {
 
         board = Board.find.byId(club.id);
 
-        boardList.add(new BoardMember(new User("fds", "π", User.Gender.MALE, "dsad", "dsa"), "ting"));
-
-        boardList.add(new BoardMember(board.leader.user, "Leder"));
-        boardList.add(new BoardMember(board.vice.user, "Nestleder"));
-        boardList.add(new BoardMember(board.economy.user, "Økonomiansvarlig"));
+        boardList.add(new BoardMember(board.leader, "Leder"));
+        boardList.add(new BoardMember(board.vice, "Nestleder"));
+        boardList.add(new BoardMember(board.economy, "Økonomiansvarlig"));
 
         for(BoardExtras boardExtras : board.boardExtra){
 
-            boardList.add(new BoardMember(boardExtras.member.user, boardExtras.title));
+            boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
         }
-
     }
 
     @Override
