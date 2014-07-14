@@ -62,9 +62,8 @@ create table membership (
 ;
 
 create table pending (
-  user_id                   varchar(255),
-  club_id                   bigint,
-  constraint pk_pending primary key (user_id, club_id))
+  pending_id                bigint auto_increment not null,
+  constraint pk_pending primary key (pending_id))
 ;
 
 create table powerup (
