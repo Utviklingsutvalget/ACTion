@@ -33,8 +33,8 @@
 
     @for(member <- board) {
 
-        <div style="float:left;">
-            <img src="@member.getMember().pictureUrl">
+        <div style="display:inline-block;">
+            <img src="@member.getMember().pictureUrl" width="250px" height="250px">
             <h6>@member.getMember().name</h6>
             <h6>@member.getTitle()</h6>
         </div>

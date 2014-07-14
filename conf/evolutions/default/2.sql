@@ -25,7 +25,7 @@ Lang beskrivelse for Apple user group.
 Lang beskrivelse for Apple user group.Lang beskrivelse for Apple user group.Lang beskrivelse for Apple user group.', 'Veldig kort beskrivelse for Apple user group.');
 
 
-INSERT INTO `action`.`user` (`id`, `name`, `gender`, `email`, `picture_url`) VALUES ('1', 'ragnar', '1', NULL, NULL), ('2', 'dsdsadsa', '0', NULL, NULL);
+INSERT INTO `action`.`user` (`id`, `name`, `gender`, `email`, `picture_url`) VALUES ('1', 'ragnar', '1', NULL, 'http://www.catchwallpapers.com/wp-content/uploads/2013/03/HBO-drama-Game-of-Thrones-Season-3-HD-characters-wallpaper-1600x1200-10-765x400.jpg'), ('2', 'dsdsadsa', '0', NULL, NULL);
 
 INSERT INTO `action`.`board` (`club_id`, `leader_id`, `vice_id`, `economy_id`) VALUES ('1', '1', '2', '1');
 INSERT INTO `action`.`board_extras` (`club_id`, `extras_id`, `member_id`, `title`) VALUES ('1', '1', '1', 'løytnant');
@@ -37,12 +37,12 @@ INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`) VALUES ('3
 INSERT INTO `action`.`board` (`club_id`, `leader_id`, `vice_id`, `economy_id`) VALUES ('2', '2', '3', '6');
 
 UPDATE `action`.`board` SET `leader_id` = '3', `economy_id` = '6' WHERE `board`.`club_id` = 1;
-UPDATE `action`.`user` SET `picture_url` = 'http://readyupgaming.com/wp-content/uploads/2013/04/389379_10151080964612283_17018176_a.png' WHERE `user`.`id` = '3';
+UPDATE `action`.`user` SET `picture_url` = 'http://www.catchwallpapers.com/wp-content/uploads/2013/03/HBO-drama-Game-of-Thrones-Season-3-HD-characters-wallpaper-1600x1200-07.jpg' WHERE `user`.`id` = '3';
 UPDATE `action`.`user` SET `picture_url` = 'http://i3.bebo.com/044/1/mediuml/2008/09/18/18/573747691a8917801913ml.jpg' WHERE `user`.`id` = '6';
 UPDATE `action`.`user` SET `picture_url` = 'http://mobilwi.typepad.com/.a/6a0120a6dde087970b013485bca6ed970c-500wi' WHERE `user`.`id` = '2';
 UPDATE `action`.`board_extras` SET `board_club_id` = '1' WHERE `board_extras`.`club_id` = 1 AND `board_extras`.`extras_id` = 1;
-UPDATE `action`.`user` SET `picture_url` = 'https://lh3.googleusercontent.com/-MLByg2vkjcI/AAAAAAAAAAI/AAAAAAAAAAA/gQ44mxZhX-E/photo.jpg ' WHERE `user`.`id` = '1';
 UPDATE `action`.`board` SET `leader_id` = '1' WHERE `board`.`club_id` = 2;
+
 
 # --- !Downs
 
