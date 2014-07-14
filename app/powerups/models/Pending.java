@@ -15,9 +15,6 @@ public class Pending extends Model {
     @Id
     public Long pendingId;
 
-    @
-
-
 
     /****Solution One******/
 
