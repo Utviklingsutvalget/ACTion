@@ -23,5 +23,9 @@ GET         /clubs                       controllers.Clubs.index()
 GET         /clubs/:id                   controllers.Clubs.show(id: Long)
 POST        /clubs                       controllers.Clubs.update()
 
+#CK Editor
+GET         /ckeditor                    controllers.CKEditor.test()
+POST        /ckeditor/save               controllers.CKEditor.save()
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                controllers.Assets.at(path="/public", file)

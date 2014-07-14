@@ -2,8 +2,10 @@ package powerups;
 
 import models.Activation;
 import models.Club;
+import models.Membership;
 import models.PowerupModel;
 import play.twirl.api.Html;
+import util.Context;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -37,6 +39,11 @@ public abstract class Powerup implements Serializable {
     public final PowerupModel model;
 
     /**
+     * The request context
+     */
+    private final Context context;
+
+    /**
      * Boilerplate constructor used to set up a Powerup. This exposes some vital information for all Powerups.
      * As all powerups are instantiated right before the view starts getting served, the implementing constructor of the
      * powerup must readily complete its own objects or models prior to rendering as to avoid interrupting the page
@@ -51,6 +58,7 @@ public abstract class Powerup implements Serializable {
     public Powerup(Club club, PowerupModel model) {
         this.club = club;
         this.model = model;
+        context = Context.getContext(club);
     }
 
     /**
@@ -97,4 +105,9 @@ public abstract class Powerup implements Serializable {
     protected Club getClub() {
         return club;
     }
+
+    public Context getContext() {
+        return context;
+    }
+
 }

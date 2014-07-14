@@ -3,9 +3,13 @@ package controllers;
 import models.Activation;
 import models.Club;
 import models.Location;
+import models.User;
 import play.mvc.Controller;
 import play.mvc.Result;
+import util.Action;
+import util.Context;
 import utils.ActivationSorter;
+import utils.Authorization;
 import powerups.Powerup;
 
 import java.util.ArrayList;
@@ -33,7 +37,6 @@ public class Clubs extends Controller {
     }
 
     public static Result show(Long id) {
-        //final Long clubId = Long.valueOf(id);
         Club club = Club.find.byId(id);
         //club.stringId = id;
 

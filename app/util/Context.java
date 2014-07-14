@@ -1,7 +1,10 @@
 package util;
 
+import models.Club;
+import models.Membership;
 import models.User;
 import play.db.ebean.Model;
+import utils.Authorization;
 
 /**
  * An objective representation of what a user intends to do.
@@ -9,8 +12,7 @@ import play.db.ebean.Model;
 public class Context {
 
     private final User sender;
-    private final Model resource;
-    private final Action action;
+    private final Membership.MembershipLevel memberLevel;
 
     /**
      *
@@ -18,10 +20,17 @@ public class Context {
      * @param resource The resource the user wishes to perform an action upon
      * @param action The type of action the user wishes to perform
      */
-    public Context(User sender, Model resource, Action action) {
+    public Context(User sender, Club resource) {
         this.sender = sender;
-        this.resource = resource;
-        this.action = action;
+
+        Membership membership = null;
+        for(Membership listMembership : sender.memberships) {
+            if(listMembership.club.equals(resource)) {
+                membership = listMembership;
+            }
+        }
+        memberLevel = membership != null ? membership.level : null;
+
     }
 
     /**
@@ -31,14 +40,13 @@ public class Context {
         return sender;
     }
 
-    /**
-     * @return The resource the user wishes to perform the request upon. If null
-     */
-    public Model getResource() {
-        return resource;
+    public static Context getContext(Club club) {
+        //Would this make sense?
+        User user = Authorization.authorizeUserSession();
+        return new Context(user, club);
     }
 
-    public Action getAction() {
-        return action;
+    public Membership.MembershipLevel getMemberLevel() {
+        return memberLevel;
     }
 }
