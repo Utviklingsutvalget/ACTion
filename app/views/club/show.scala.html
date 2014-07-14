@@ -24,7 +24,7 @@
             <div data-magellan-expedition="fixed">
                 <dl class="sub-nav">
                 @for(powerup <- club.powerups) {
-                    @powerup.model
+                    @* @powerup.model *@
                     @if(powerup.model.hasMenuEntry) {
                         <dd data-magellan-arrival="@powerup.model.id"><a href='#@powerup.model.id'>@powerup.model.friendlyName</a></dd>
                     }
@@ -38,7 +38,7 @@
             <div class="row">
                 <div class="medium-10 medium-centered columns">
                     @if(powerup.model.friendlyName != null) {
-                        <h6>@powerup.model.friendlyName</h6>
+                        @*<h6>@powerup.model.friendlyName</h6>*@
                     }
                     @powerup.render()
                 </div>
