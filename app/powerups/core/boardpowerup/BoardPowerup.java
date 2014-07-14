@@ -18,7 +18,7 @@ public class BoardPowerup extends Powerup {
     public BoardPowerup(Club club, PowerupModel model) {
         super(club, model);
         boardList = new ArrayList<>();
-        
+
         board = Board.find.byId(club.id);
 
         boardList.add(new BoardMember(board.leader, "Leder"));

@@ -2,17 +2,38 @@
 @import powerups.core.boardpowerup.BoardMember
 
 
+<div id="members" data-magellan-destination="members">
+    <div class="row">
+        <div class="medium-12 medium-centered columns utvalg-content-placement">
+            <div class="row">
+                <br />
+                <div class="small-4 columns">
+                    <div id="line" class="lineright"></div>
+                </div>
+                <div class="small-4 columns text-center">
+                    <h5><strong>Styret<br /><br /></strong></h5>
+                </div>
 
-<div id="boardmembers">
-
-    @for(member <- board) {
-
-        <div style="display:inline-block; width:250px; height:250px;">
-            <img src="@member.getMember().pictureUrl" width="100%" height="100%">
-            <h6>@member.getMember().name</h6>
-            <h6>@member.getTitle()</h6>
+                <div class="small-4 columns">
+                    <div id="line" class="lineleft"></div>
+                </div>
+            </div>
         </div>
-    }
+    </div>
 
+    <div class="row">
+        <div class="medium-10 columns medium-centered text-center">
+
+            @for(member <- board){
+                <div class="medium-4 columns left">
+                    <img class="profile-photo" src="@member.getMember().pictureUrl" alt="" />
+                    <br /><br />
+                    <h5><a href="mailto:@member.getMember().email" >@member.getMember().name</a><br />(@member.getTitle())</h5>
+                </div>
+            }
+
+        </div>
+    </div>
 </div>
+
 
