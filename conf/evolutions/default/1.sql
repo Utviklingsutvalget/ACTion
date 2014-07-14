@@ -61,6 +61,12 @@ create table membership (
   constraint pk_membership primary key (club_id, user_id))
 ;
 
+create table pending (
+  user_id                   varchar(255),
+  club_id                   bigint,
+  constraint pk_pending primary key (user_id, club_id))
+;
+
 create table powerup (
   id                        bigint auto_increment not null,
   class_name                varchar(255),
@@ -124,6 +130,8 @@ drop table club_image;
 drop table location;
 
 drop table membership;
+
+drop table pending;
 
 drop table powerup;
 
