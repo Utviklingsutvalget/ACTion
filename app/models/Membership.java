@@ -22,12 +22,22 @@ public class Membership extends Model {
     public MembershipLevel level;
 
     public enum MembershipLevel {
-        SUBSCRIBE,
-        MEMBER,
-        BOARD,
-        VICE,
-        LEADER,
-        COUNCIL
+        SUBSCRIBE(0),
+        MEMBER(1),
+        BOARD(2),
+        VICE(3),
+        LEADER(4),
+        COUNCIL(5);
+
+        private final int level;
+
+        MembershipLevel(int level) {
+            this.level = level;
+        }
+
+        public int getLevel() {
+            return level;
+        }
     }
 
     @Embeddable

@@ -1,6 +1,7 @@
 package powerups.core.descriptionpowerup;
 
 import models.Club;
+import models.Membership;
 import models.PowerupModel;
 import play.twirl.api.Html;
 import powerups.Powerup;
@@ -22,14 +23,18 @@ public class DescriptionPowerup extends Powerup {
      */
     private final ClubDescription clubDesc;
 
+    private final boolean editable;
+
     public DescriptionPowerup(Club club, PowerupModel model) {
         super(club, model);
         clubDesc = ClubDescription.find.byId(club.id);
+
+        editable = this.getContext().getMemberLevel().getLevel() >= Membership.MembershipLevel.BOARD.getLevel();
     }
 
     @Override
     public Html render() {
-        return powerup.render(clubDesc.description);
+        return powerup.render(clubDesc.description, !editable);
     }
 
     /**
