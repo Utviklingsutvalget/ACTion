@@ -14,7 +14,7 @@ VALUES ('1', 'core.descriptionpowerup.DescriptionPowerup', 'Beskrivelse', '1', '
   ('3', 'core.boardpowerup.BoardPowerup', 'Styremedlemmer', '1', '1');
 
 INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`)
-VALUES ('1', '1', '0'), ('1', '2', '0'), ('2', '1', '1'), ('2', '2', '1');
+VALUES ('1', '1', '3'), ('1', '2', '3'), ('2', '1', '4'), ('2', '2', '4');
 
 INSERT INTO `action`.`pl_clubdescription` (`club_id`, `description`, `list_description`) VALUES ('1', 'Lang beskrivelse for Utviklingsutvalget. Lang beskrivelse for Utviklingsutvalget.
 Lang beskrivelse for Utviklingsutvalget.
@@ -29,11 +29,11 @@ INSERT INTO `action`.`user` (`id`, `name`, `gender`, `email`, `picture_url`) VAL
 
 INSERT INTO `action`.`board` (`club_id`, `leader_id`, `vice_id`, `economy_id`) VALUES ('1', '1', '2', '1');
 INSERT INTO `action`.`board_extras` (`club_id`, `extras_id`, `member_id`, `title`) VALUES ('1', '1', '1', 'løytnant');
-INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`) VALUES ('3', '1', '4');
+INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`) VALUES ('3', '1', '0');
 
 INSERT INTO `action`.`user` (`id`, `name`, `gender`, `email`, `picture_url`) VALUES ('3', 'Kjell', '1', NULL, NULL), ('4', 'Berit', '0', NULL, NULL);
 INSERT INTO `action`.`user` (`id`, `name`, `gender`, `email`, `picture_url`) VALUES ('5', 'Hanne', NULL, NULL, NULL), ('6', 'Arne', NULL, NULL, NULL);
-INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`) VALUES ('3', '2', '4');
+INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`) VALUES ('3', '2', '0');
 INSERT INTO `action`.`board` (`club_id`, `leader_id`, `vice_id`, `economy_id`) VALUES ('2', '2', '3', '6');
 
 UPDATE `action`.`board` SET `leader_id` = '3', `economy_id` = '6' WHERE `board`.`club_id` = 1;
