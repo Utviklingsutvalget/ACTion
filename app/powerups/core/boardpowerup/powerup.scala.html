@@ -5,36 +5,10 @@
 
 <div id="boardmembers">
 
-    @*
-        @for((boardItem, index) <- board.zipWithIndex){
-
-            @if(index == 3){
-
-                <div style="float:left;">
-                    <img src="@boardItem.getMember().pictureUrl">
-                    <h6>@boardItem.getMember().name</h6>
-                    <h6>@boardItem.getTitle()</h6>
-                </div>
-
-            }else{
-
-                <div style="float:left;">
-                    <img src="@boardItem.getMember().pictureUrl">
-                    <h6>@boardItem.getMember().name</h6>
-                    <h6>@boardItem.getTitle()</h6>
-                </div>
-            }
-
-
-        }
-    *@
-
-
-
     @for(member <- board) {
 
-        <div style="display:inline-block;">
-            <img src="@member.getMember().pictureUrl" width="250px" height="250px">
+        <div style="display:inline-block; width:250px; height:250px;">
+            <img src="@member.getMember().pictureUrl" width="100%" height="100%">
             <h6>@member.getMember().name</h6>
             <h6>@member.getTitle()</h6>
         </div>
