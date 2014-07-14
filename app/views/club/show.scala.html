@@ -10,7 +10,6 @@
         <div class="small-4 columns text-center show-for-medium-up">
             <h4><strong>@club.name <br /> <br /></strong></h4>
         </div>
-
         <div class="small-4 columns text-center hide-for-medium-up">
             <h4><strong>@club.shortName <br /> <br /></strong></h4>
         </div>
@@ -18,7 +17,6 @@
             <div id="line" class="lineleft"></div>
         </div>
     </div>
-
     <div class="row">
         <div class="medium-10 columns medium-centered">
             <div data-magellan-expedition="fixed">
@@ -33,16 +31,24 @@
         </div>
     </div>
     @for(powerup <- club.powerups) {
-        <div id="@powerup.model.id" data-magellan-destination="@powerup.model.id">
-            <div class="row">
-                <div class="medium-10 medium-centered columns">
-                    @if(powerup.model.friendlyName != null) {
-                        <h6>@powerup.model.friendlyName</h6>
-                    }
-                    @powerup.render()
-                </div>
+        @if(powerup.model.hasMenuEntry) {
+            <div id="@powerup.model.id" data-magellan-destination="@powerup.model.id">
+            } else {
+            <div>
+            }
+        <div class="row">
+            <div class="medium-10 medium-centered columns">
+                @if(powerup.model.friendlyName != null) {
+                    <h6>@powerup.model.friendlyName</h6>
+                }
+                @powerup.render()
             </div>
         </div>
+        @if(powerup.model.hasMenuEntry) {
+        </div>
+        } else {
+        </div>
+        }
     }
 
 }
