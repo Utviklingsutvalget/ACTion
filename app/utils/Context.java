@@ -1,10 +1,8 @@
-package util;
+package utils;
 
 import models.Club;
 import models.Membership;
 import models.User;
-import play.db.ebean.Model;
-import utils.Authorization;
 
 /**
  * An objective representation of what a user intends to do.
