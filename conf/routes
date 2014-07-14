@@ -18,6 +18,10 @@ GET         /login                       controllers.OAuth2.login()
 GET         /login/authenticate          controllers.OAuth2.authenticate()
 GET         /login/oauth2callback        controllers.OAuth2.exchange()
 
+# Google OAuth2 routes
+GET         /facebook                    controllers.FacebookApp.authenticate()
+GET         /facebook/callbackhandler    controllers.FacebookApp.exchange()
+
 # Clubs
 GET         /clubs                       controllers.Clubs.index()
 GET         /clubs/:id                   controllers.Clubs.show(id: Long)

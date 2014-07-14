@@ -21,6 +21,7 @@ libraryDependencies ++= Seq(
   "be.objectify" %% "deadbolt-java" % "2.3.0-RC1",
   "mysql" % "mysql-connector-java" % "5.1.6",
   "com.google.http-client" % "google-http-client-jackson2" % "1.11.0-beta",
+  "com.restfb" % "restfb" % "1.6.14",
   javaJdbc,
   javaEbean,
   cache,
