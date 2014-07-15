@@ -5,7 +5,7 @@ import models.PowerupModel;
 import models.User;
 import play.twirl.api.Html;
 import powerups.Powerup;
-import powerups.models.Pending;
+import sun.security.krb5.internal.AuthorizationData;
 
 public class RecruitPowerup extends Powerup {
 
@@ -15,6 +15,7 @@ public class RecruitPowerup extends Powerup {
     public RecruitPowerup(Club club, PowerupModel powerupModel){
         super(club, powerupModel);
 
+        Authorization.
     }
 
     @Override
