@@ -2,33 +2,80 @@
 
 @import helper._
 
-@main("Create an Event") {
-
-    <h1>Add an Event</h1>
+@main("Post Event") {
 
     @form(routes.Events.save()) {
 
-        <fieldset>
+        <form>
+            <input type="hidden" name="id" value="@eventForm("id").value">
 
-            @inputText(eventForm("name"), '_label -> "Computer name")
-            @inputText(eventForm("introduced"), '_label -> "Introduced date")
-            @inputText(eventForm("discontinued"), '_label -> "Discontinued date")
+            <div class="row">
+                <div class="large-8 columns">
 
-            @select(
-                computerForm("company.id"),
-                options(Company.options),
-                '_label -> "Company", '_default -> "-- Choose a company --",
-                '_showConstraints -> false
-            )
+                @inputText(
+                    eventForm("name"),
+                    '_label -> "Event Name",
+                    'class -> "input-xlarge",
+                    '_showConstraints -> false,
+                    '_error -> eventForm.globalError
+                )
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="large-8 columns">
+                @textarea(
+                    eventForm("description"),
+                    '_label -> "Event Description",
+                    'placeholder -> "Fortell litt om Eventen...",
+                    'rows -> 5,
+                    'cols -> 60,
+                    'class -> "input-xlarge",
+                    '_showConstraints -> false,
+                    '_error -> eventForm.globalError
+                )
+                </div>
+            </div>
 
-        </fieldset>
+            <div class="row">
+                <div class="large-4 columns">
+                @inputDate(
+                    eventForm("startTime"),
+                    'label -> "Start Date",
+                    '_showConstraints -> false
+                )
+                </div>
 
-        <div class="actions">
-            <input type="submit" value="Create this computer" class="btn primary"> or
-            <a href="@routes.Application.list()" class="btn">Cancel</a>
-        </div>
+                <div class="large-4 columns">
+                @inputDate(
+                    eventForm("endTime"),
+                    'label -> "End Date",
+                    '_showConstraints -> false
+                )
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="large-8 columns">
+                @inputText(
+                    eventForm("location"),
+                    '_label -> "Event Location",
+                    'class -> "input-xlarge",
+                    '_showConstraints -> false,
+                    '_error -> eventForm.globalError
+                )
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="large-4 columns">
+                    <input type="submit" class="button large" value="Post Event">
+                </div>
+
+                <div class="large-4 columns">
+                    <a href="@routes.Events.index()" class="button tiny alert">Avbryt</a>
+                </div>
+            </div>
+        </form>
     }
-
 }

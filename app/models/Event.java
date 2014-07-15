@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Ebean;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
@@ -28,9 +29,11 @@ public class Event extends Model {
     public String description;
 
     @Constraints.Required
+    //@Formats.DateTime(pattern="dd-MM-yyyy")
     public Date startTime;
 
     @Constraints.Required
+    //@Formats.DateTime(pattern="dd-MM-yyyy")
     public Date endTime;
 
     @Constraints.Required

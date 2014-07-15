@@ -30,6 +30,16 @@ create table club_image (
   constraint pk_club_image primary key (club_id))
 ;
 
+create table event (
+  id                        bigint auto_increment not null,
+  name                      varchar(255),
+  description               varchar(255),
+  start_time                datetime,
+  end_time                  datetime,
+  location                  varchar(255),
+  constraint pk_event primary key (id))
+;
+
 create table location (
   id                        bigint auto_increment not null,
   name                      varchar(255),
@@ -87,6 +97,8 @@ drop table club;
 drop table pl_ClubDescription;
 
 drop table club_image;
+
+drop table event;
 
 drop table location;
 

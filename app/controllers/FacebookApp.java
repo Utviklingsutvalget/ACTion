@@ -34,8 +34,7 @@ public class FacebookApp extends Controller {
         return redirect("https://www.facebook.com/dialog/oauth?" +
                 "client_id=" + CONF.get("client_id") +
                 "&redirect_uri=http://localhost:9000/facebook/callbackhandler" +
-                "&scope=rsvp_event");
-
+                "&scope=manage_pages");
     }
 
     public static Result exchange() {
@@ -92,21 +91,15 @@ public class FacebookApp extends Controller {
         String accessToken = response.split("&")[0].split("=")[1];
 
         FacebookClient client = new DefaultFacebookClient(accessToken);
-        com.restfb.types.User user = client.fetchObject("601916376573321", com.restfb.types.User.class);
+        com.restfb.types.Page page = client.fetchObject("601916376573321", com.restfb.types.Page.class);
 
-        Connection<Event> connection = client.fetchConnection("search/events", Event.class);
+        Logger.debug(page.getName());
 
+        Connection<Event> connection = client.fetchConnection("me/events", Event.class);
         List<Event> events = connection.getData();
-
         Logger.debug("Going trough events, size: " + connection.getData().size());
-        for(Event event : events) {
+        for(Event event : events) {Logger.debug(event.getName());}
 
-            Logger.debug(event.getName());
-        }
-
-        String fql = "SELECT daily_active_users, weekly_active_users, monthly_active_users FROM application WHERE app_id = 601916376573321";
-
-
-        return ok(error.render(user.getName()));
+        return ok(error.render(page.getCategory()));
     }
 }

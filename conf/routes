@@ -30,11 +30,11 @@ POST        /clubs                           controllers.Clubs.update()
 
 # Events
 GET         /events                          controllers.Events.index()
-POST        /events/new                      controllers.Events.create()
-GET         /events/:id                      controllers.Events.edit()
-POST        /events/:id                      controllers.Events.update()
+GET         /events/new                      controllers.Events.create()
+POST        /events/save                     controllers.Events.save()
 GET         /events/:id/show                 controllers.Events.show(id: Long)
-POST        /users/:id/delete                controllers.Users.delete(id)
+# For debuging purposes
+GET         /events/delete                   controllers.Events.delete(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                    controllers.Assets.at(path="/public", file)
