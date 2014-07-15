@@ -1,0 +1,24 @@
+@(events: List[Event])
+<table>
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Start Time</th>
+            <th>Start Time</th>
+            <th>Location</th>
+        </tr>
+        @for(event <- events) {
+            <tr>
+                <td>@event.id</td>
+                <td>@event.name</td>
+                <td>@event.description</td>
+                <td>@event.startTime</td>
+                <td>@event.endTime</td>
+                <td>@event.location</td>
+            </tr>
+        }
+    </tbody>
+
+</table>

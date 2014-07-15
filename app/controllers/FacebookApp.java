@@ -1,7 +1,10 @@
 package controllers;
 
+import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.json.JsonObject;
+import com.restfb.types.Event;
 import com.restfb.types.User;
 import play.Logger;
 import play.mvc.Controller;
@@ -17,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 public class FacebookApp extends Controller {
@@ -88,11 +92,21 @@ public class FacebookApp extends Controller {
         String accessToken = response.split("&")[0].split("=")[1];
 
         FacebookClient client = new DefaultFacebookClient(accessToken);
-        com.restfb.types.User user = client.fetchObject("me", com.restfb.types.User.class);
+        com.restfb.types.User user = client.fetchObject("601916376573321", com.restfb.types.User.class);
 
-        if(1 == 1)
-            return ok(error.render(user.getFirstName()));
+        Connection<Event> connection = client.fetchConnection("search/events", Event.class);
 
-        return ok(error.render(accessToken));
+        List<Event> events = connection.getData();
+
+        Logger.debug("Going trough events, size: " + connection.getData().size());
+        for(Event event : events) {
+
+            Logger.debug(event.getName());
+        }
+
+        String fql = "SELECT daily_active_users, weekly_active_users, monthly_active_users FROM application WHERE app_id = 601916376573321";
+
+
+        return ok(error.render(user.getName()));
     }
 }
