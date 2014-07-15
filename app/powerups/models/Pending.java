@@ -5,22 +5,22 @@ import models.User;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
-import javax.persistence.Id;
 
 @Entity
 public class Pending extends Model {
 
-    /****Solution Two******/
+    public static Finder<PendingKey, Pending> find = new Finder<>(PendingKey.class, Pending.class);
 
-    @Id
-    public Long pendingId;
-
-
-    /****Solution One******/
-
-    /*
     @EmbeddedId
     public PendingKey key;
+
+    @MapsId("clubId")
+    @ManyToOne
+    public Club club;
+
+    @MapsId("userId")
+    @ManyToOne
+    public User user;
 
     @Embeddable
     public class PendingKey{
@@ -53,6 +53,6 @@ public class Pending extends Model {
                 return false;
             }
         }
-    }*/
+    }
 
 }
