@@ -3,8 +3,10 @@ package controllers;
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.Parameter;
 import com.restfb.json.JsonObject;
 import com.restfb.types.Event;
+import com.restfb.types.FacebookType;
 import com.restfb.types.User;
 import play.Logger;
 import play.mvc.Controller;
@@ -20,6 +22,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +37,7 @@ public class FacebookApp extends Controller {
         return redirect("https://www.facebook.com/dialog/oauth?" +
                 "client_id=" + CONF.get("client_id") +
                 "&redirect_uri=http://localhost:9000/facebook/callbackhandler" +
-                "&scope=manage_pages");
+                "&scope=manage_groups");
     }
 
     public static Result exchange() {
@@ -91,15 +94,18 @@ public class FacebookApp extends Controller {
         String accessToken = response.split("&")[0].split("=")[1];
 
         FacebookClient client = new DefaultFacebookClient(accessToken);
-        com.restfb.types.Page page = client.fetchObject("601916376573321", com.restfb.types.Page.class);
 
-        Logger.debug(page.getName());
+        Date tomorrow = new Date(System.currentTimeMillis() + 1000L * 60L * 60L * 24L);
+        Date twoDaysFromNow = new Date(System.currentTimeMillis() + 1000L * 60L * 60L * 48L);
 
-        Connection<Event> connection = client.fetchConnection("me/events", Event.class);
-        List<Event> events = connection.getData();
-        Logger.debug("Going trough events, size: " + connection.getData().size());
-        for(Event event : events) {Logger.debug(event.getName());}
+        FacebookType publishEventResponse = client.publish("me/events", FacebookType.class,
+                Parameter.with("name", "test"),
+                Parameter.with("description", "description"),
+                Parameter.with("start_time", tomorrow),
+                Parameter.with("end_time", twoDaysFromNow));
 
-        return ok(error.render(page.getCategory()));
+        Logger.debug("Published event ID: " + publishEventResponse.getId());
+
+        return ok(error.render(""));
     }
 }
