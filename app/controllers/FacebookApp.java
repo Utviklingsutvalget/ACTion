@@ -37,7 +37,7 @@ public class FacebookApp extends Controller {
         return redirect("https://www.facebook.com/dialog/oauth?" +
                 "client_id=" + CONF.get("client_id") +
                 "&redirect_uri=http://localhost:9000/facebook/callbackhandler" +
-                "&scope=manage_groups");
+                "&scope=user_events");
     }
 
     public static Result exchange() {
