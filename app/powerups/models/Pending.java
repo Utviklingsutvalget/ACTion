@@ -5,6 +5,7 @@ import models.User;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
+import javax.persistence.Id;
 
 @Entity
 public class Pending extends Model {

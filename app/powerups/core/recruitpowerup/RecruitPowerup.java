@@ -15,7 +15,6 @@ public class RecruitPowerup extends Powerup {
     public RecruitPowerup(Club club, PowerupModel powerupModel){
         super(club, powerupModel);
 
-        Authorization.
     }
 
     @Override
