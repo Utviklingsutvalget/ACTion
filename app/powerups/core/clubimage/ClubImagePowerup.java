@@ -2,6 +2,7 @@ package powerups.core.clubimage;
 
 import models.Club;
 import models.PowerupModel;
+import org.json.JSONObject;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.models.ClubImage;
@@ -18,6 +19,11 @@ public class ClubImagePowerup extends Powerup {
 
     @Override
     public Html render() {
+        return null;
+    }
+
+    @Override
+    public Html update(JSONObject updateContent) {
         return null;
     }
 }

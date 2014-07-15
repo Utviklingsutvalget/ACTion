@@ -1,7 +1,6 @@
 @(club: Club)
 
 @main(club.name) {
-
     <div class="row">
         <br />
         <div class="small-4 columns">
@@ -17,6 +16,7 @@
             <div id="line" class="lineleft"></div>
         </div>
     </div>
+
     <div class="row">
         <div class="medium-10 columns medium-centered">
             <div data-magellan-expedition="fixed">
@@ -30,18 +30,21 @@
             </div>
         </div>
     </div>
+    <div class="powerupContainer" data-powerups-for='@club.id'>
     @for(powerup <- club.powerups) {
         @if(powerup.model.hasMenuEntry) {
             <div id="@powerup.model.id" data-magellan-destination="@powerup.model.id">
             } else {
             <div>
             }
-        <div class="row">
+        <div class="row powerup" data-powerup-id="@powerup.model.id">
             <div class="medium-10 medium-centered columns">
                 @if(powerup.model.friendlyName != null) {
                     <h6>@powerup.model.friendlyName</h6>
                 }
-                @powerup.render()
+                <div class="powerupContent">
+                    @powerup.render()
+                </div>
             </div>
         </div>
         @if(powerup.model.hasMenuEntry) {
@@ -49,6 +52,11 @@
         } else {
         </div>
         }
+
     }
+        <script>
+            $(document ).ready(powerup())
+        </script>
+    </div>
 
 }

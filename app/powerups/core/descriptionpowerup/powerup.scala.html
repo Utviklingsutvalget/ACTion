@@ -1,5 +1,10 @@
 @(description: String, editable: Boolean)
 
 <div id="inline-container" contenteditable='@editable.toString' class="cke_editable cke_editable_inline cke_contents_ltr cke_show_borders" role="textbox" aria-label="Utvalgsbeskrivelse" title="Utvalgsbeskrivelse" aria-describedby="cke_289">
-    <p>@description</p>
+    <p data-powerup-field="description">@description</p>
 </div>
+@if(editable) {
+<script>
+    createButton(getId($('.cke_editable')));
+</script>
+}

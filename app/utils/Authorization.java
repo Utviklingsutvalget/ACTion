@@ -1,9 +1,7 @@
 package utils;
 
 import controllers.OAuth2;
-import controllers.routes;
 import models.User;
-import views.html.user.profile;
 
 import static play.mvc.Controller.session;
 

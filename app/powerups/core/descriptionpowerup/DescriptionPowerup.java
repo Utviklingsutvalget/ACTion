@@ -1,13 +1,14 @@
 package powerups.core.descriptionpowerup;
 
 import models.Club;
-import models.Membership;
 import models.PowerupModel;
+import org.json.JSONObject;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.descriptionpowerup.html.listdesc;
 import powerups.core.descriptionpowerup.html.powerup;
 import powerups.models.ClubDescription;
+import scala.collection.immutable.Seq;
 
 import static play.mvc.Results.ok;
 
@@ -29,12 +30,18 @@ public class DescriptionPowerup extends Powerup {
         super(club, model);
         clubDesc = ClubDescription.find.byId(club.id);
 
-        editable = this.getContext().getMemberLevel().getLevel() >= Membership.MembershipLevel.BOARD.getLevel();
+        editable = true;
+        //editable = this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel();
     }
 
     @Override
     public Html render() {
-        return powerup.render(clubDesc.description, !editable);
+        return powerup.render(clubDesc.description, editable);
+    }
+
+    @Override
+    public Html update(JSONObject updateContent) {
+        return null;
     }
 
     /**

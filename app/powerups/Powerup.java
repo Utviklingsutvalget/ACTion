@@ -2,10 +2,10 @@ package powerups;
 
 import models.Activation;
 import models.Club;
-import models.Membership;
 import models.PowerupModel;
+import org.json.JSONObject;
 import play.twirl.api.Html;
-import util.Context;
+import utils.Context;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -72,6 +72,8 @@ public abstract class Powerup implements Serializable {
      */
     public abstract Html render();
 
+    public abstract Html update(JSONObject updateContent);
+
     /**
      * Lazily loads the {@link powerups.Powerup} associated with the {@link models.Activation}
      * @param activation The activation used to instantiate the Powerup.
@@ -88,6 +90,12 @@ public abstract class Powerup implements Serializable {
             return constructor.newInstance(club, powerupModel);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             PowerupModel errorModel = new PowerupModel();
+            StringBuilder stackTraceBuilder = new StringBuilder();
+            stackTraceBuilder.append(e.getClass().toString() + "<br>");
+            for(StackTraceElement e1 : e.getStackTrace()) {
+                stackTraceBuilder.append(e1.toString()).append("<br>");
+            }
+            final String stackTrace = stackTraceBuilder.toString();
             errorModel.className = "";
             errorModel.friendlyName = "ERROR";
             errorModel.hasMenuEntry = false;
@@ -96,8 +104,14 @@ public abstract class Powerup implements Serializable {
             return new Powerup(club, new PowerupModel()) {
                 @Override
                 public Html render() {
-                    return new Html("An error activating plugin. Please contact your local administrator.");
+                    return new Html("An error activating plugin. Please contact your local administrator. Stacktrace: <br>" + stackTrace );
                 }
+
+                @Override
+                public Html update(JSONObject updateContent) {
+                    return null;
+                }
+
             };
         }
     }

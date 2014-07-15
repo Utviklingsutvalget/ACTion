@@ -10,21 +10,22 @@ import models.User;
 public class Context {
 
     private final User sender;
-    private final Membership.MembershipLevel memberLevel;
+    private final MembershipLevel memberLevel;
 
     /**
      *
      * @param sender The user whose action we wish to authorize
      * @param resource The resource the user wishes to perform an action upon
-     * @param action The type of action the user wishes to perform
      */
     public Context(User sender, Club resource) {
         this.sender = sender;
 
         Membership membership = null;
-        for(Membership listMembership : sender.memberships) {
-            if(listMembership.club.equals(resource)) {
-                membership = listMembership;
+        if(sender != null) {
+            for (Membership listMembership : sender.memberships) {
+                if (listMembership.club.equals(resource)) {
+                    membership = listMembership;
+                }
             }
         }
         memberLevel = membership != null ? membership.level : null;
@@ -44,7 +45,7 @@ public class Context {
         return new Context(user, club);
     }
 
-    public Membership.MembershipLevel getMemberLevel() {
+    public MembershipLevel getMemberLevel() {
         return memberLevel;
     }
 }

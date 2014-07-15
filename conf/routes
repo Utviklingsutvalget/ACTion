@@ -22,6 +22,7 @@ GET         /login/oauth2callback        controllers.OAuth2.exchange()
 GET         /clubs                       controllers.Clubs.index()
 GET         /clubs/:id                   controllers.Clubs.show(id: Long)
 POST        /clubs                       controllers.Clubs.update()
+PUT         /clubs/:clubId/:powerupId    controllers.Clubs.updatePowerup(clubId: Long, powerupId: Long)
 
 #CK Editor
 GET         /ckeditor                    controllers.CKEditor.test()

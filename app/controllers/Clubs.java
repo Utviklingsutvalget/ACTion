@@ -1,16 +1,18 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Activation;
 import models.Club;
 import models.Location;
-import models.User;
+import org.json.JSONObject;
+import play.api.Play;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
-import util.Action;
-import util.Context;
+import scala.Function0;
 import utils.ActivationSorter;
-import utils.Authorization;
 import powerups.Powerup;
+import views.html.index;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,4 +69,25 @@ public class Clubs extends Controller {
 
         return redirect(routes.Clubs.index());
     }
+
+
+    public static Result updatePowerup(Long clubId, Long powerupId) {
+        JsonNode json = request().body().asJson();
+        if(json == null) {
+            return badRequest("Expecting Json data");
+        }
+        Club club = Club.find.byId(clubId);
+
+
+        for(Activation activation : club.activations) {
+
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("JSON as follows: ");
+        stringBuilder.append(json.toString());
+
+
+        return ok(stringBuilder.toString());
+    }
+
 }
