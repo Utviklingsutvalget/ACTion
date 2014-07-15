@@ -13,14 +13,22 @@ VALUES ('1', 'core.descriptionpowerup.DescriptionPowerup', 'Beskrivelse', '1', '
   ('2', 'core.clubimage.ClubImagePowerup', NULL, '1', '0'),
   ('3', 'core.boardpowerup.BoardPowerup', 'Styremedlemmer', '1', '1');
 
+INSERT INTO `action`.`powerup` (`id`, `class_name`, `friendly_name`, `is_mandatory`, `has_menu_entry`)
+VALUES (NULL, 'core.recruitpowerup.RecruitPowerup', 'Innmelding', '1', '1');
+
 INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`)
 VALUES ('1', '1', '3'), ('1', '2', '3'), ('2', '1', '4'), ('2', '2', '4');
 
-INSERT INTO `action`.`pl_clubdescription` (`club_id`, `description`, `list_description`) VALUES ('1', 'Lang beskrivelse for Utviklingsutvalget. Lang beskrivelse for Utviklingsutvalget.
+INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`)
+VALUES ('4', '1', '2'), ('4', '2', '2');
+
+INSERT INTO `action`.`pl_clubdescription` (`club_id`, `description`, `list_description`)
+VALUES ('1', 'Lang beskrivelse for Utviklingsutvalget. Lang beskrivelse for Utviklingsutvalget.
 Lang beskrivelse for Utviklingsutvalget.
 Lang beskrivelse for Utviklingsutvalget.Lang beskrivelse for Utviklingsutvalget.Lang beskrivelse for Utviklingsutvalget.', 'Veldig kort beskrivelse for Utviklingsutvalget.');
 
-INSERT INTO `action`.`pl_clubdescription` (`club_id`, `description`, `list_description`) VALUES ('2', 'Lang beskrivelse for Apple user group. Lang beskrivelse for Apple user group.
+INSERT INTO `action`.`pl_clubdescription` (`club_id`, `description`, `list_description`)
+VALUES ('2', 'Lang beskrivelse for Apple user group. Lang beskrivelse for Apple user group.
 Lang beskrivelse for Apple user group.
 Lang beskrivelse for Apple user group.Lang beskrivelse for Apple user group.Lang beskrivelse for Apple user group.', 'Veldig kort beskrivelse for Apple user group.');
 

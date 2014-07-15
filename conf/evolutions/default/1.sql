@@ -64,6 +64,7 @@ create table membership (
 create table pending (
   user_id                   varchar(255),
   club_id                   bigint,
+  application_message       varchar(100),
   constraint pk_pending primary key (user_id, club_id))
 ;
 

@@ -1,11 +1,12 @@
 package powerups.models;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.annotation.Transactional;
 import models.Club;
 import models.User;
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
-
 import javax.persistence.*;
-import javax.persistence.Id;
 
 @Entity
 public class Pending extends Model {
@@ -15,6 +16,11 @@ public class Pending extends Model {
     @EmbeddedId
     public PendingKey key;
 
+    @Constraints.Required
+    @Constraints.MaxLength(100)
+    @Column(length=100)
+    public String applicationMessage;
+
     @MapsId("clubId")
     @ManyToOne
     public Club club;
@@ -22,6 +28,17 @@ public class Pending extends Model {
     @MapsId("userId")
     @ManyToOne
     public User user;
+
+    public Pending(Club club, User user) {
+        this.user = user;
+        this.club = club;
+        this.key = new PendingKey(user, club);
+    }
+
+    @Transactional
+    public static void update(Pending pending){
+        Ebean.save(pending);
+    }
 
     @Embeddable
     public class PendingKey{
