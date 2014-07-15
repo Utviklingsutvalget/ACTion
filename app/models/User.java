@@ -1,55 +1,60 @@
 package models;
 
 import com.avaje.ebean.Ebean;
+import org.hibernate.validator.constraints.Email;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
 public class User extends Model {
 
-    public enum Gender {
-        FEMALE, MALE;
-    }
-
     public static Finder<String, User> find = new Finder<>(String.class, User.class);
 
+    public enum Gender {
+        MALE, FEMALE;
+    }
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "user")
+    public List<Membership> memberships = new ArrayList<>();
+
     @Id
-    @Constraints.Min(10)
-    public String id; //Unique sub id from google
+    @Constraints.Required
+    public String id;
 
     @Constraints.Required
-    public String name;
+    public String firstName;
+
+    @Constraints.Required
+    public String lastName;
 
     @Constraints.Required
     public Gender gender;
 
     @Constraints.Required
+    @Email
     public String email;
 
     @Constraints.Required
     public String pictureUrl;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "user")
-    public List<Membership> memberships = new ArrayList<>();
-
-    public User(String id, String name, Gender gender, String email, String picureUrl) {
+    public User(String id, String firstName, String lastName, Gender gender, String email, String picureUrl) {
 
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.gender = gender;
         this.email = email;
         this.pictureUrl = picureUrl;
     }
 
     public static User findById(String id) {return find.where().eq("id", id).findUnique();}
+    public static User findByName(String firstName, String lastName) {
+        return find.where().eq("firstName", firstName).eq("lastName", lastName).findUnique();
+    }
 
     public static boolean exists(String id) {return find.where().eq("id", id).findRowCount() != 0;}
 
@@ -58,5 +63,12 @@ public class User extends Model {
 
         if(!exists(user.id))
             Ebean.save(user);
+    }
+
+    public static List<String> genderAsList(){
+        ArrayList<String> list = new ArrayList<>();
+
+        for(Gender gender : Gender.values()) { list.add(gender.name());}
+        return list;
     }
 }
