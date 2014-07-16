@@ -2942,7 +2942,7 @@ blockquote p {
     float: left; }
     .tabs dd > a, .tabs .tab-title > a {
       display: block;
-      background: #efefef;
+      background: #dfdfdf;
       color: #222222;
 		padding: 1rem 0.7rem;
 		font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
@@ -2950,7 +2950,7 @@ blockquote p {
       .tabs dd > a:hover, .tabs .tab-title > a:hover {
         background: #e1e1e1; }
     .tabs dd.active a, .tabs .tab-title.active a {
-      background: white;
+      background: #f2f2f2;
       color: #222222; }
   .tabs.radius dd:first-child a, .tabs.radius .tab:first-child a {
     border-bottom-left-radius: 3px;
