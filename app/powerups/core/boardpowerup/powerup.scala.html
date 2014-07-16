@@ -1,0 +1,41 @@
+@(board: List[powerups.core.boardpowerup.BoardMember])
+@import powerups.core.boardpowerup.BoardMember
+
+
+    <!-- THIS DISPLAYS THE HEADER ABOVE BOARD -->
+<div id="members" data-magellan-destination="members">
+    <div class="row">
+        <div class="medium-12 medium-centered columns utvalg-content-placement">
+            <div class="row">
+                <br />
+                <div class="small-4 columns">
+                    <div id="line" class="lineright"></div>
+                </div>
+                <div class="small-4 columns text-center">
+                    <h5><strong>Styret<br /><br /></strong></h5>
+                </div>
+
+                <div class="small-4 columns">
+                    <div id="line" class="lineleft"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- displays each boardmember -->
+    <div class="row">
+        <div class="medium-10 columns medium-centered text-center">
+
+            @for(member <- board){
+                <div class="medium-4 columns left">
+                    <img class="profile-photo" src="@member.getMember().pictureUrl" alt="" />
+                    <br /><br />
+                    <h5><a href="mailto:@member.getMember.email" >@member.getMember.firstName</a><br />@member.getTitle</h5>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+

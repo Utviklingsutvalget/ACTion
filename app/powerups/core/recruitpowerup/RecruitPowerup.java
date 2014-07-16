@@ -1,22 +1,25 @@
-package powerups.core.boardpowerup;
+package powerups.core.recruitpowerup;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
+import models.User;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
 
-public class Board extends Powerup {
+public class RecruitPowerup extends Powerup {
 
-    public Board(Club club, PowerupModel model) {
-        super(club, model);
+    private User user;
+
+    public RecruitPowerup(Club club, PowerupModel powerupModel){
+        super(club, powerupModel);
 
 
     }
 
     @Override
-    public Html render() {
+    public Html render(){
         return null;
     }
 
@@ -24,4 +27,5 @@ public class Board extends Powerup {
     public Result update(JsonNode updateContent) {
         return null;
     }
+
 }

@@ -6,6 +6,7 @@ import models.Club;
 import models.PowerupModel;
 import play.twirl.api.Html;
 import utils.Context;
+import play.mvc.Result;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -72,7 +73,7 @@ public abstract class Powerup implements Serializable {
      */
     public abstract Html render();
 
-    public abstract play.mvc.Result update(JsonNode updateContent);
+    public abstract Result update(JsonNode updateContent);
 
     /**
      * The method that a powerup should override if it wants to render a unique view for use in admin panels. Defaults
@@ -118,7 +119,7 @@ public abstract class Powerup implements Serializable {
                 }
 
                 @Override
-                public play.mvc.Result update(JsonNode updateContent) {
+                public Result update(JsonNode updateContent) {
                     return null;
                 }
 
