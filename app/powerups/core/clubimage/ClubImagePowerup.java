@@ -1,8 +1,8 @@
 package powerups.core.clubimage;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
-import org.json.JSONObject;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.models.ClubImage;
@@ -23,7 +23,7 @@ public class ClubImagePowerup extends Powerup {
     }
 
     @Override
-    public Html update(JSONObject updateContent) {
+    public play.mvc.Result update(JsonNode updateContent) {
         return null;
     }
 }

@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-    <div class="powerupContainer" data-powerups-for='@club.id'>
+    <div class="powerup-container" data-powerups-for='@club.id'>
     @for(powerup <- club.powerups) {
         @if(powerup.model.hasMenuEntry) {
             <div id="@powerup.model.id" data-magellan-destination="@powerup.model.id">
@@ -42,7 +42,7 @@
                 @if(powerup.model.friendlyName != null) {
                     <h6>@powerup.model.friendlyName</h6>
                 }
-                <div class="powerupContent">
+                <div class="powerup-content">
                     @powerup.render()
                 </div>
             </div>

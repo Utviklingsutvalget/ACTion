@@ -1,52 +1,25 @@
 function powerup() {
 
-    $(document).on('click', '.updatepowerup', function(e) {
+    $(document).on('click', '.updatepowerup', function (e) {
         e.preventDefault();
-        var container = $(document).find('.powerupContainer');
+        var container = $(document).find('.powerup-container');
         var clubId = container.data('powerups-for');
         var powerupId = $(this).closest('.powerup').data('powerup-id');
         var powerup = new PowerupClass();
         powerup.id = powerupId;
         powerup.club = clubId;
 
-        var powerupHtml = getPowerupHtml(powerupId);
-        console.log(powerupHtml);
-        var dataItems = {};
-        powerupHtml.children().each(function() {
-            console.log($(this));
-            var fieldName = $(this).data('powerup-field');
-            if(fieldName !== null) {
-                console.log($(this).text());
-                dataItems[fieldName] = $(this).text();
-            }
-        });
-        console.log(dataItems);
-
-        var jqhxr = $.ajax({
-            url: window.location.pathname + "/" + powerupId,
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify(dataItems),
-            dataType: 'json'
-        }).done(function() {
-            console.log("Successfully sent AJAX");
-        }).always(function() {
-            console.log("Sent")
-        });
-        console.log(jqhxr);
-
-
+        powerup.update();
     });
 }
 function getPowerupHtml(id) {
-    var container = $(document).find('.powerupContainer');
+    var container = $(document).find('.powerup-container');
     var htmlPowerups = container.find('.powerup');
     var htmlPowerup = null;
-    htmlPowerups.each(function() {
+    htmlPowerups.each(function () {
         var tempPowerup = $(this);
-        if(tempPowerup.data('powerup-id') === id) {
+        if (tempPowerup.data('powerup-id') === id) {
             htmlPowerup = $(this);
-            console.log("Setting a powerup");
         }
     });
     return htmlPowerup;
@@ -54,7 +27,7 @@ function getPowerupHtml(id) {
 
 function createButton(powerupId) {
     var htmlPowerup = getPowerupHtml(powerupId);
-    var insertInto = htmlPowerup.find('.powerupContent');
+    var insertInto = htmlPowerup.find('.powerup-content');
     insertInto.append("<button class=\"updatepowerup button small radius\">Save changes</button>");
     //var scriptTag = insertInto.find('script');
     //scriptTag.remove();
@@ -66,11 +39,40 @@ function getId(fromLocation) {
 }
 
 function PowerupClass() {
-    var id = 0;
-    var club = 0;
+    this.id = 0;
+    this.club = 0;
+
+    this.update = update;
+    this.invalidate = invalidate;
 
     function update() {
+        var powerupHtml = getPowerupHtml((this).id);
+        var powerupContent = powerupHtml.find('.powerup-content');
+        var dataObject = {};
+        powerupContent.find('.powerup-node').each(function () {
+            console.log("testing if a field has class:");
+            console.log($(this).html());
+            if ($(this).hasClass('powerup-node')) {
+                console.log($(this));
+                var field = ($(this)).data('powerup-field');
+                console.log(field);
+                dataObject[field] = $(this).html();
+            }
+        });
+        console.log(dataObject);
 
+        var jqhxr = $.ajax({
+            url: window.location.pathname + "/" + (this).id,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(dataObject),
+            dataType: 'json'
+        }).done(function () {
+            console.log("Successfully sent AJAX");
+        }).always(function () {
+            console.log("Sent")
+        });
+        console.log(jqhxr);
     }
 
     function invalidate() {

@@ -5,14 +5,10 @@ import models.Activation;
 import models.Club;
 import models.Location;
 import org.json.JSONObject;
-import play.api.Play;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
-import scala.Function0;
-import utils.ActivationSorter;
 import powerups.Powerup;
-import views.html.index;
+import utils.ActivationSorter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,8 +54,6 @@ public class Clubs extends Controller {
 
         final Long id = Long.valueOf(postValues.get("id")[0]);
         final String newName = postValues.get("name")[0];
-        final String newDescription = postValues.get("description")[0];
-
         final Club club = Club.find.byId(id);
 
         club.name = newName;
@@ -73,21 +67,20 @@ public class Clubs extends Controller {
 
     public static Result updatePowerup(Long clubId, Long powerupId) {
         JsonNode json = request().body().asJson();
-        if(json == null) {
+
+        if(json == null || json.isNull()) {
             return badRequest("Expecting Json data");
         }
-        Club club = Club.find.byId(clubId);
-
-
+        final Club club = Club.find.byId(clubId);
+        Powerup powerup = null;
         for(Activation activation : club.activations) {
-
+            if(activation.powerup.id.equals(powerupId)) {
+                powerup = activation.getPowerup();
+            }
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("JSON as follows: ");
-        stringBuilder.append(json.toString());
-
-
-        return ok(stringBuilder.toString());
+        if(powerup == null) {
+            return badRequest("No such powerup for " + club.shortName);
+        } else return powerup.update(json);
     }
 
 }

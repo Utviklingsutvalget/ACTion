@@ -1,9 +1,9 @@
 package powerups;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Activation;
 import models.Club;
 import models.PowerupModel;
-import org.json.JSONObject;
 import play.twirl.api.Html;
 import utils.Context;
 
@@ -72,7 +72,17 @@ public abstract class Powerup implements Serializable {
      */
     public abstract Html render();
 
-    public abstract Html update(JSONObject updateContent);
+    public abstract play.mvc.Result update(JsonNode updateContent);
+
+    /**
+     * The method that a powerup should override if it wants to render a unique view for use in admin panels. Defaults
+     * to rendering the default render method, as some powerups may have in-place editing, allowing them to use the
+     * same method for admin panels.
+     * @return The HTML to insert into the admin panel.
+     */
+    public Html renderAdmin() {
+        return this.render();
+    }
 
     /**
      * Lazily loads the {@link powerups.Powerup} associated with the {@link models.Activation}
@@ -108,7 +118,7 @@ public abstract class Powerup implements Serializable {
                 }
 
                 @Override
-                public Html update(JSONObject updateContent) {
+                public play.mvc.Result update(JsonNode updateContent) {
                     return null;
                 }
 

@@ -1,8 +1,9 @@
 package powerups.core.boardpowerup;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
-import org.json.JSONObject;
+import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
 
@@ -20,7 +21,7 @@ public class Board extends Powerup {
     }
 
     @Override
-    public Html update(JSONObject updateContent) {
+    public Result update(JsonNode updateContent) {
         return null;
     }
 }
