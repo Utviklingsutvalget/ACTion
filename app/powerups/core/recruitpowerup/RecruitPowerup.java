@@ -1,7 +1,7 @@
 package powerups.core.recruitpowerup;
 
-import com.avaje.ebean.Ebean;
 import models.Club;
+import models.Membership;
 import models.PowerupModel;
 import models.User;
 import play.twirl.api.Html;
@@ -26,30 +26,23 @@ public class RecruitPowerup extends Powerup {
         user = Authorization.authorizeUserSession();
 
         if(user != null){
-            alreadyMember();
+            alreadyPending();
         }
     }
 
-    public boolean alreadyMember(){
+    public boolean alreadyPending(){
 
         if(user != null){
 
-            Pending entry = Pending.find.byId(new Pending(club, user).key);
+            Pending pendingEntry = Pending.find.byId(new Pending(club, user).key);
+            Membership membershipEntry = Membership.find.byId(new Membership(club, user).id);
 
-            if(entry != null){
+            if(pendingEntry != null || membershipEntry != null){
                 this.isMember = true;
             }
         }
 
         return false;
-    }
-
-    public void insertToPending(){
-
-        if(user != null){
-
-            Ebean.update(new Pending(club, user));
-        }
     }
 
     @Override

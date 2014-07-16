@@ -9,6 +9,14 @@ import javax.persistence.*;
 @Entity
 public class Membership extends Model {
 
+    public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
+
+    public Membership(Club club, User user){
+        this.club = club;
+        this.user = user;
+        this.id = new MembershipKey(club, user);
+    }
+
     @EmbeddedId
     public MembershipKey id;
 
@@ -36,6 +44,11 @@ public class Membership extends Model {
         public Long clubId;
 
         public String userId;
+
+        public MembershipKey(Club club, User user){
+            this.clubId = club.id;
+            this.userId = user.id;
+        }
 
         @Override
         public boolean equals(Object o) {

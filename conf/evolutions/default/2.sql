@@ -11,10 +11,8 @@ VALUES ('1', 'Utviklingsutvalget', 'UU', '1'), ('2', 'Apple User Group', 'AUG', 
 INSERT INTO `action`.`powerup` (`id`, `class_name`, `friendly_name`, `is_mandatory`, `has_menu_entry`)
 VALUES ('1', 'core.descriptionpowerup.DescriptionPowerup', 'Beskrivelse', '1', '1'),
   ('2', 'core.clubimage.ClubImagePowerup', NULL, '1', '0'),
-  ('3', 'core.boardpowerup.BoardPowerup', 'Styremedlemmer', '1', '1');
-
-INSERT INTO `action`.`powerup` (`id`, `class_name`, `friendly_name`, `is_mandatory`, `has_menu_entry`)
-VALUES (NULL, 'core.recruitpowerup.RecruitPowerup', 'Innmelding', '1', '1');
+  ('3', 'core.boardpowerup.BoardPowerup', 'Styremedlemmer', '1', '1'),
+  (NULL, 'core.recruitpowerup.RecruitPowerup', 'Innmelding', '1', '0');
 
 INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`)
 VALUES ('1', '1', '3'), ('1', '2', '3'), ('2', '1', '4'), ('2', '2', '4');
