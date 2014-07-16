@@ -12,10 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import powerups.models.Board;
 
+import static play.mvc.Results.badRequest;
+import static play.mvc.Results.ok;
+
 public class BoardPowerup extends Powerup {
 
     private Board board;
     public List<BoardMember> boardList;
+
+    private final boolean editable;
 
     public BoardPowerup(Club club, PowerupModel model) {
         super(club, model);
@@ -31,6 +36,10 @@ public class BoardPowerup extends Powerup {
 
             boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
         }
+
+        // TODO REPLACE WITH WORKING CONTEXT LOGIC AFTER BRANCH MERGE
+        editable = true;
+        //editable = this.getContext().getMemberLevel().getLevel() == MembershipLevel.VICE.getLevel();
     }
 
     @Override
@@ -40,6 +49,12 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public Result update(JsonNode updateContent) {
-        return null;
+
+        // TESTING
+        if(updateContent != null){
+            return ok("hei");
+        }else{
+            return badRequest("Error");
+        }
     }
 }

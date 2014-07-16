@@ -1,0 +1,15 @@
+@(board: List[powerups.core.boardpowerup.BoardMember])
+@import powerups.core.boardpowerup.BoardMember
+
+<div class="row">
+    <div class="large-12 columns">
+        <label>Select Box
+            <select>
+
+            @for(member <- board){
+                <option value="@member.getMember().id">@member.getMember().firstName title: @member.getTitle()</option>
+            }
+            </select>
+        </label>
+    </div>
+</div>
