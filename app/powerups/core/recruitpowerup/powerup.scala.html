@@ -1,48 +1,56 @@
-<div id="signup" data-magellan-destination="signup">
-    <div class="row">
-        <div class="medium-12 medium-centered columns utvalg-content-placement">
-            <div class="row">
-                <br />
-                <div class="small-4 columns">
-                    <div id="line" class="lineright"></div>
-                </div>
-                <div class="small-4 columns text-center">
-                    <h5><strong>Innmelding<br /><br /></strong></h5>
-                </div>
+@(isMember : Boolean)
+@import powerups.core.recruitpowerup.RecruitPowerup
+@import powerups.core.recruitpowerup
 
-                <div class="small-4 columns">
-                    <div id="line" class="lineleft"></div>
+@* ---- If user is a member of the club, hide the recruitpowerup ---- *@
+@if(!isMember) {
+    <div id="signup" data-magellan-destination="signup">
+        <div class="row">
+            <div class="medium-12 medium-centered columns utvalg-content-placement">
+                <div class="row">
+                    <br />
+                    <div class="small-4 columns">
+                        <div id="line" class="lineright"></div>
+                    </div>
+
+                    <div class="small-4 columns text-center">
+                        <h5><strong>Innmelding<br /><br /></strong></h5>
+                    </div>
+                    <div class="small-4 columns">
+                        <div id="line" class="lineleft"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="small-12 text-center">
+        <div class="row">
+            <div class="small-12 text-center">
 
-            <div class="row">
-                <div class="small-12 columns small-centered text-center loginbutton">
-                    <a href="#" data-reveal-id="myModal" class="button merium radius">Meld deg inn her</a>
+                <div class="row">
+                    <div class="small-12 columns small-centered text-center loginbutton">
 
-                    <div id="myModal" class="reveal-modal medium" data-reveal>
-                        <h2>Innmelding for Apple User Group</h2>
-                        <p class="lead">Skriv noe fornuftig her</p>
+                        <a href="#" data-reveal-id="myModal" class="button merium radius">Meld deg inn her</a>
 
-                        <form>
-                            <div class="row">
+                        <div id="myModal" class="reveal-modal medium" data-reveal>
+                            <h2>Innmelding for Apple User Group</h2>
+                            <p class="lead">Skriv noe fornuftig her</p>
 
-                                <textarea maxlength="100" id="commentfield" placeholder="Skriv en kort kommentar om deg selv her"></textarea>
-                                <div id="textarea_feedback"></div>
+                            <form>
+                                <div class="row">
 
+                                    <textarea maxlength="100" id="commentfield" placeholder="Skriv en kort kommentar om deg selv her"></textarea>
+                                    <div id="textarea_feedback"></div>
+
+                                </div>
+                            </form>
+                            <div class="small12 columns small-centered text-center loginbutton">
+                                <a href="#" data-reveal-id="myModal" class="button merium radius">Send søknad</a>
                             </div>
-                        </form>
-                        <div class="small12 columns small-centered text-center loginbutton">
-                            <a href="#" data-reveal-id="myModal" class="button merium radius">Send søknad</a>
+                            <a class="close-reveal-modal">&#215;</a>
                         </div>
-                        <a class="close-reveal-modal">&#215;</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}

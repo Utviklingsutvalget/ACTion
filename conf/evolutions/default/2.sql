@@ -44,6 +44,7 @@ INSERT INTO `action`.`user` (`id`, `first_name`, `gender`, `email`, `picture_url
 INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`) VALUES ('3', '2', '0');
 INSERT INTO `action`.`board` (`club_id`, `leader_id`, `vice_id`, `economy_id`) VALUES ('2', '2', '3', '6');
 
+
 UPDATE `action`.`board` SET `leader_id` = '3', `economy_id` = '6' WHERE `board`.`club_id` = 1;
 UPDATE `action`.`user` SET `picture_url` = 'http://www.catchwallpapers.com/wp-content/uploads/2013/03/HBO-drama-Game-of-Thrones-Season-3-HD-characters-wallpaper-1600x1200-07.jpg' WHERE `user`.`id` = '3';
 UPDATE `action`.`user` SET `picture_url` = 'http://i3.bebo.com/044/1/mediuml/2008/09/18/18/573747691a8917801913ml.jpg' WHERE `user`.`id` = '6';

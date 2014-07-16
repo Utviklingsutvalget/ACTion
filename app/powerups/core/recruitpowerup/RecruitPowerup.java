@@ -10,32 +10,55 @@ import powerups.core.recruitpowerup.html.powerup;
 import powerups.models.Pending;
 import utils.Authorization;
 
+
 public class RecruitPowerup extends Powerup {
 
     private User user;
     private Club club;
+    private boolean isMember;
 
     public RecruitPowerup(Club club, PowerupModel powerupModel){
         super(club, powerupModel);
 
         this.club = club;
+        this.isMember = false;
+
+        user = Authorization.authorizeUserSession();
+
+        if(user != null){
+            alreadyMember();
+        }
+    }
+
+    public boolean alreadyMember(){
+
+        if(user != null){
+
+            Pending entry = Pending.find.byId(new Pending(club, user).key);
+
+            if(entry != null){
+                this.isMember = true;
+            }
+        }
+
+        return false;
     }
 
     public void insertToPending(){
 
-        User loggedInUser = Authorization.authorizeUserSession();
+        if(user != null){
 
-        if(loggedInUser != null){
-
-            user = User.find.byId(loggedInUser.id);
             Ebean.update(new Pending(club, user));
-
         }
+    }
+
+    public Html renderSomething(boolean val){
+        return powerup.render(val);
     }
 
     @Override
     public Html render(){
-        return powerup.render();
+        return powerup.render(isMember);
     }
 
 }

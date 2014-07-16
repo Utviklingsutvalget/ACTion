@@ -35,6 +35,10 @@ public class Pending extends Model {
         this.key = new PendingKey(user, club);
     }
 
+    public User getUser(){
+        return this.user;
+    }
+
     @Transactional
     public static void update(Pending pending){
         Ebean.save(pending);
