@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Activation;
 import models.Club;
 import models.Location;
-import org.json.JSONObject;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
@@ -31,8 +30,6 @@ public class Clubs extends Controller {
             cssId++;
             location.cssId = cssId;
         }
-        scala.collection.immutable.List<Location> immutableLocations = JavaConverters.asScalaBufferConverter(locations).
-                asScala().toList();
         return ok(views.html.club.index.render(locations));
     }
 
