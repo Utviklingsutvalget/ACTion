@@ -1,9 +1,12 @@
 package powerups;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Activation;
 import models.Club;
 import models.PowerupModel;
 import play.twirl.api.Html;
+import utils.Context;
+import play.mvc.Result;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -37,6 +40,11 @@ public abstract class Powerup implements Serializable {
     public final PowerupModel model;
 
     /**
+     * The request context
+     */
+    private final Context context;
+
+    /**
      * Boilerplate constructor used to set up a Powerup. This exposes some vital information for all Powerups.
      * As all powerups are instantiated right before the view starts getting served, the implementing constructor of the
      * powerup must readily complete its own objects or models prior to rendering as to avoid interrupting the page
@@ -51,6 +59,7 @@ public abstract class Powerup implements Serializable {
     public Powerup(Club club, PowerupModel model) {
         this.club = club;
         this.model = model;
+        context = Context.getContext(club);
     }
 
     /**
@@ -63,6 +72,18 @@ public abstract class Powerup implements Serializable {
      * @see play.twirl.api.Html
      */
     public abstract Html render();
+
+    public abstract Result update(JsonNode updateContent);
+
+    /**
+     * The method that a powerup should override if it wants to render a unique view for use in admin panels. Defaults
+     * to rendering the default render method, as some powerups may have in-place editing, allowing them to use the
+     * same method for admin panels.
+     * @return The HTML to insert into the admin panel.
+     */
+    public Html renderAdmin() {
+        return this.render();
+    }
 
     /**
      * Lazily loads the {@link powerups.Powerup} associated with the {@link models.Activation}
@@ -81,6 +102,7 @@ public abstract class Powerup implements Serializable {
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             PowerupModel errorModel = new PowerupModel();
             StringBuilder stackTraceBuilder = new StringBuilder();
+            stackTraceBuilder.append(e.getClass().toString() + "<br>");
             for(StackTraceElement e1 : e.getStackTrace()) {
                 stackTraceBuilder.append(e1.toString()).append("<br>");
             }
@@ -95,6 +117,12 @@ public abstract class Powerup implements Serializable {
                 public Html render() {
                     return new Html("An error activating plugin. Please contact your local administrator. Stacktrace: <br>" + stackTrace );
                 }
+
+                @Override
+                public Result update(JsonNode updateContent) {
+                    return null;
+                }
+
             };
         }
     }
@@ -102,4 +130,9 @@ public abstract class Powerup implements Serializable {
     protected Club getClub() {
         return club;
     }
+
+    public Context getContext() {
+        return context;
+    }
+
 }

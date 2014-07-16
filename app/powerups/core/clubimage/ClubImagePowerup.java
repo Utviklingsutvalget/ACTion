@@ -1,5 +1,6 @@
 package powerups.core.clubimage;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
 import play.twirl.api.Html;
@@ -22,5 +23,10 @@ public class ClubImagePowerup extends Powerup {
 
         //*********** FOR TESTING PURPOSES ****************
         return powerup.render("http://images4.fanpop.com/image/photos/20100000/Game-of-Thrones-game-of-thrones-20131987-1680-1050.jpg");
+    }
+
+    @Override
+    public play.mvc.Result update(JsonNode updateContent) {
+        return null;
     }
 }

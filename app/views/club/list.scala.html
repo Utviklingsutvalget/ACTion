@@ -1,4 +1,4 @@
-@(clubs: List[Club])
+@(clubs: java.util.List[Club])
 @for(club <- clubs) {
     <dt><a href='@routes.Clubs.show(club.id)'>@club.name</a></dt>
     @club.getListDesc

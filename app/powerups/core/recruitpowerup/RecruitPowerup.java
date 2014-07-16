@@ -1,9 +1,11 @@
 package powerups.core.recruitpowerup;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.Membership;
 import models.PowerupModel;
 import models.User;
+import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.recruitpowerup.html.powerup;
@@ -48,6 +50,11 @@ public class RecruitPowerup extends Powerup {
     @Override
     public Html render(){
         return powerup.render(isMember);
+    }
+
+    @Override
+    public Result update(JsonNode updateContent) {
+        return null;
     }
 
 }

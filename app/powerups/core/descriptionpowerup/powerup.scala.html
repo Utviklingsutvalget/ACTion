@@ -1,10 +1,6 @@
-@(clubdescription: String)
+@(description: String, editable: Boolean, fieldString: String)
 
-<div id="about" data-magellan-destination="about">
-    <div class="row">
-        <div class="medium-10 medium-centered columns">
-                <!--OM UTVALGET-->
-            <p>@clubdescription</p>
-        </div>
-    </div>
-</div>
+<div id="inline-container" contenteditable='@(editable.toString)' data-powerup-field='@(fieldString)' class="powerup-node cke_editable cke_editable_inline cke_contents_ltr cke_show_borders" role="textbox" aria-label="Utvalgsbeskrivelse" title="Utvalgsbeskrivelse" aria-describedby="cke_289">@description</div>
+@if(editable) {<script>
+    createButton(getId($('.cke_editable')));
+</script>}

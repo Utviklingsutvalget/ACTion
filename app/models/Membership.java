@@ -1,13 +1,20 @@
 package models;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.annotation.Transactional;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+import utils.MembershipLevel;
 
 import javax.persistence.*;
 
 @Entity
 public class Membership extends Model {
+    @Transactional
+    public static void update(Membership membership) {
+        Ebean.save(membership);
+    }
 
     public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
 
@@ -28,15 +35,6 @@ public class Membership extends Model {
 
     @Constraints.Required
     public MembershipLevel level;
-
-    public enum MembershipLevel {
-        SUBSCRIBE,
-        MEMBER,
-        BOARD,
-        VICE,
-        LEADER,
-        COUNCIL
-    }
 
     @Embeddable
     public class MembershipKey {
