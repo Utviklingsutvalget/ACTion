@@ -1,0 +1,39 @@
+@(events: List[Event])
+
+@main("Events") {
+
+    <a href="@routes.Events.create()">Create new Event</a>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Start Time</th>
+                <th>Start Time</th>
+                <th>Location</th>
+                <th>Manage</th>
+            </tr>
+            @for(event <- events) {
+                <tr>
+                    <td>@event.id</td>
+                    <td>@event.name</td>
+                    <td>@event.description</td>
+                    <td>@event.startTime</td>
+                    <td>@event.endTime</td>
+                    <td>@event.location</td>
+                    <td>
+                        <a href="@routes.Events.edit(event.id)">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Suksess! </strong> @flash.get("success")
+        </div>
+    }
+}

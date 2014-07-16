@@ -31,6 +31,8 @@ public class Clubs extends Controller {
             cssId++;
             location.cssId = cssId;
         }
+        scala.collection.immutable.List<Location> immutableLocations = JavaConverters.asScalaBufferConverter(locations).
+                asScala().toList();
         return ok(views.html.club.index.render(locations));
     }
 
