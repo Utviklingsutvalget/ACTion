@@ -72,8 +72,10 @@ create table membership (
 ;
 
 create table pending (
-  pending_id                bigint auto_increment not null,
-  constraint pk_pending primary key (pending_id))
+  user_id                   varchar(255),
+  club_id                   bigint,
+  application_message       varchar(100),
+  constraint pk_pending primary key (user_id, club_id))
 ;
 
 create table powerup (
@@ -118,6 +120,10 @@ alter table membership add constraint fk_membership_club_10 foreign key (club_id
 create index ix_membership_club_10 on membership (club_id);
 alter table membership add constraint fk_membership_user_11 foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_membership_user_11 on membership (user_id);
+alter table pending add constraint fk_pending_club_12 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_pending_club_12 on pending (club_id);
+alter table pending add constraint fk_pending_user_13 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_pending_user_13 on pending (user_id);
 
 
 

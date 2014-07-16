@@ -41,7 +41,16 @@
         <div class="row powerup" data-powerup-id="@powerup.model.id">
             <div class="medium-10 medium-centered columns">
                 @if(powerup.model.friendlyName != null) {
-                    <h6>@powerup.model.friendlyName</h6>
+                    <div class="small-4 columns">
+                        <div id="line" class="lineright"></div>
+                    </div>
+                    <div class="small-4 columns text-center">
+                        <h5><strong>@powerup.model.friendlyName<br /><br /></strong></h5>
+                    </div>
+
+                    <div class="small-4 columns">
+                        <div id="line" class="lineleft"></div>
+                    </div>
                 }
                 <div class="powerup-content">
                     @powerup.render()
