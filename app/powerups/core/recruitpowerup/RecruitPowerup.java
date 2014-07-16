@@ -52,10 +52,6 @@ public class RecruitPowerup extends Powerup {
         }
     }
 
-    public Html renderSomething(boolean val){
-        return powerup.render(val);
-    }
-
     @Override
     public Html render(){
         return powerup.render(isMember);
