@@ -2,6 +2,8 @@
 
 @main("Events") {
 
+    <a href="@routes.Events.create()">Create new Event</a>
+
     <table>
         <tbody>
             <tr>
@@ -21,7 +23,9 @@
                     <td>@event.startTime</td>
                     <td>@event.endTime</td>
                     <td>@event.location</td>
-                    <td><a href="@routes.Events.delete(event.id)">Delete</a> </td>
+                    <td>
+                        <a href="@routes.Events.edit(event.id)">Edit</a>
+                    </td>
                 </tr>
             }
         </tbody>

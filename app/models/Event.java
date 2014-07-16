@@ -5,15 +5,9 @@ import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
-import play.twirl.api.Html;
-import powerups.*;
-import powerups.Powerup;
-import powerups.core.descriptionpowerup.DescriptionPowerup;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class Event extends Model {
@@ -41,6 +35,6 @@ public class Event extends Model {
 
     @Transactional
     public static void update(Event event) {
-        Ebean.update(club);
+        Ebean.update(event);
     }
 }

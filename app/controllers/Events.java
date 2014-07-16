@@ -24,8 +24,6 @@ public class Events extends Controller {
 
     public static Result create() {
 
-
-
         Form<Event> eventForm = form(Event.class);
         return ok(views.html.event.createForm.render(eventForm));
     }
@@ -37,13 +35,33 @@ public class Events extends Controller {
         }
 
         eventForm.get().save();
-        flash("success", "Event " + eventForm.get().name + " har blitt posted.");
+        flash("success", "Event " + eventForm.get().name + " has been created.");
+        return index();
+    }
+
+    public static Result edit(Long id) {
+        Form<Event> eventForm = form(Event.class).fill(
+                Event.find.byId(id));
+
+        return ok(views.html.event.editForm.render(id, eventForm));
+    }
+
+    public static Result update(Long id) {
+        Form<Event> eventForm = form(Event.class).bindFromRequest();
+        if(eventForm.hasErrors()) {
+            return badRequest(views.html.event.editForm.render(id, eventForm));
+        }
+        eventForm.get().update(id);
+        flash("success", "Event " + eventForm.get().name + " has been updated");
         return index();
     }
 
     public static Result delete(Long id) {
 
-        Event.find.byId(id).delete();
+        Event event = Event.find.byId(id);
+        Event.find.ref(id).delete();
+        flash("success", "Event " + event.name + " has been deleted");
+
         return index();
     }
 }

@@ -1,10 +1,10 @@
-@(eventForm: Form[Event])
+@(id: Long, eventForm: Form[Event])
 
 @import helper._
 
 @main("Post Event") {
 
-    @form(routes.Events.save()) {
+    @form(routes.Events.update(id)) {
 
         <div class="row">
             <div class="large-8 columns">
@@ -74,4 +74,12 @@
             </div>
         </div>
     }
+
+    <div class="row">
+        <div class="large-4 columns">
+        @form(routes.Events.delete(id)) {
+            <input type="submit" value="Delete this Event" class="button small alert">
+            }
+        </div>
+    </div>
 }
