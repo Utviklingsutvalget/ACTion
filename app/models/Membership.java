@@ -1,13 +1,20 @@
 package models;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.annotation.Transactional;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+import utils.MembershipLevel;
 
 import javax.persistence.*;
 
 @Entity
 public class Membership extends Model {
+    @Transactional
+    public static void update(Membership membership) {
+        Ebean.save(membership);
+    }
 
     @EmbeddedId
     public MembershipKey id;
@@ -18,17 +25,14 @@ public class Membership extends Model {
     @ManyToOne
     public User user;
 
+    public Membership(Club club, User user) {
+        this.user = user;
+        this.club = club;
+        this.id = new MembershipKey(club.id, user.id);
+    }
+
     @Constraints.Required
     public MembershipLevel level;
-
-    public enum MembershipLevel {
-        SUBSCRIBE,
-        MEMBER,
-        BOARD,
-        VICE,
-        LEADER,
-        COUNCIL
-    }
 
     @Embeddable
     public class MembershipKey {
@@ -36,6 +40,11 @@ public class Membership extends Model {
         public Long clubId;
 
         public String userId;
+
+        public MembershipKey(Long clubId, String userId) {
+            this.clubId = clubId;
+            this.userId = userId;
+        }
 
         @Override
         public boolean equals(Object o) {

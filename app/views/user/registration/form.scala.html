@@ -1,0 +1,84 @@
+@(registrationForm: Form[User])
+
+@import helper._
+
+@main("Registering") {
+
+    @helper.form(action = routes.Registration.submit) {
+
+        <div class="row">
+            <div class="large-12 columns">
+                <p class="panel">Vennligst kontroller at informasjonen vi har fått fra Google er riktig.
+                    Ved feil må en endre sine Google opplysninger, om dette fortsatt ikke løser problemet
+                    ta kontakt med administrasjonen.</p>
+            </div>
+        </div>
+
+        <form>
+            <input type="hidden" name="id" value="@registrationForm("id").value">
+
+            <div class="row">
+                <div class="large-4 columns">
+
+                @inputText(
+                    registrationForm("firstName"),
+                    '_label -> "First Name",
+                    'class -> "input-xlarge",
+                    'readonly -> "readonly",
+                    '_showConstraints -> false,
+                    '_error -> registrationForm.globalError
+                )
+
+                </div>
+                <div class="large-4 columns">
+
+                @inputText(
+                    registrationForm("lastName"),
+                    '_label -> "Last Name",
+                    'class -> "input-xlarge",
+                    'readonly -> "readonly",
+                    '_showConstraints -> false,
+                    '_error -> registrationForm.globalError
+                )
+                </div>
+
+                <div class="large-8 columns">
+                @select(
+                    registrationForm("gender"),
+                    options = options(User.genderAsList()),
+                    'label -> "Gender",
+                    'disabled -> "disabled", //When disabled this input always gives an error
+                    '_showConstraints -> false
+                )
+                </div>
+                <!-- That is why we need this hidden input with gender value -->
+                <input type="hidden" name="gender" value="@registrationForm("gender").value">
+
+                <div class="large-8 columns">
+                @inputText(
+                    registrationForm("email"),
+                    'readonly -> "readonly",
+                    '_showConstraints -> false,
+                    '_label -> "Email"
+                )
+                </div>
+
+                <div class="large-8 columns">
+                    <input type="hidden" name="pictureUrl" value="@registrationForm("pictureUrl").value" />
+                    <img src="@registrationForm("pictureUrl").value?sz=100" />
+                </div>
+
+                <div class="large-8 columns">
+                    @checkbox(
+                        registrationForm("accept"),
+                        '_label -> None, '_text -> "Du samtykker i at du har lest og godtatt brukeravtalen",
+                        '_showConstraints -> false
+                    )
+                    <a href="@routes.Registration.terms()" target="_blank">Brukeravtalen</a>
+                </div>
+
+                <input type="submit" class="button large" value="Bli med">
+                <a href="@routes.Application.index()" class="button tiny alert">Avbryt</a>
+        </form>
+    }
+}
