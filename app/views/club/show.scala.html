@@ -2,27 +2,10 @@
 
 @main(club.name) {
     <div class="row">
-        <br />
-        <div class="small-4 columns">
-            <div id="line" class="lineright"></div>
-        </div>
-        <div class="small-4 columns text-center show-for-medium-up">
-            <h4><strong>@club.name <br /> <br /></strong></h4>
-        </div>
-        <div class="small-4 columns text-center hide-for-medium-up">
-            <h4><strong>@club.shortName <br /> <br /></strong></h4>
-        </div>
-        <div class="small-4 columns">
-            <div id="line" class="lineleft"></div>
-        </div>
-    </div>
-
-    <div class="row">
         <div class="medium-10 columns medium-centered">
             <div data-magellan-expedition="fixed">
                 <dl class="sub-nav">
                 @for(powerup <- club.powerups) {
-                    @* @powerup.model *@
                     @if(powerup.model.hasMenuEntry) {
                         <dd data-magellan-arrival="@powerup.model.id"><a href='#@powerup.model.id'>@powerup.model.friendlyName</a></dd>
                     }
@@ -64,7 +47,9 @@
         }
     }
         <script>
-            $(document ).ready(powerup())
+            $(document ).ready(powerup());
+            //noinspection BadExpressionStatementJS
+            $( '#alt-title' ).replaceWith( "<strong>@(club.shortName)</strong>");
         </script>
     </div>
 
