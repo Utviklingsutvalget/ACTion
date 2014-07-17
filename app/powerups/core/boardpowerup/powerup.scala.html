@@ -1,10 +1,8 @@
-@(board: List[powerups.core.boardpowerup.BoardMember])
+@(board: List[powerups.core.boardpowerup.BoardMember], editable : Boolean, memberList : List[Membership], leaderTitle : String)
 @import powerups.core.boardpowerup.BoardMember
 
 
     <!-- THIS DISPLAYS THE HEADER ABOVE BOARD -->
-
-
     <!-- displays each boardmember -->
     <div class="row">
         <div class="medium-10 columns medium-centered text-center">
@@ -20,7 +18,34 @@
     </div>
 
 
+    <div class="row boardecho">
+        <div class="large-4 columns">
+            <label>
 
+                @for(member <- board){
+
+                    @if(!editable && member.getTitle.equalsIgnoreCase(leaderTitle)){
+
+                        <div class="powerup-node" data-powerup-field='@member.getMember.id' id="@member.getTitle">@member.getTitle</div>
+                        <a href="#" class="button disabled" id="@member.getMember.id">@member.getMember.firstName @member.getMember.lastName</a>
+
+                    }else{
+
+                        <div class="powerup-node" data-powerup-field='@member.getMember.id' id="@member.getTitle">@member.getTitle</div>
+                        <select>
+                        @for(member <- memberList){
+                            <option value="@member.user.id">@member.user.firstName @member.user.lastName</option>
+                        }
+                        </select>
+                    }
+                }
+            </label>
+        </div>
+    </div>
+
+@if(editable) {<script>
+createButton(getId($('.boardecho')));
+</script>}
 
 
 

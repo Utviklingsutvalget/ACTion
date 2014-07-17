@@ -3,11 +3,12 @@
 
 <div class="row">
     <div class="large-12 columns">
-        <label>Select Box
+        <label>Styret
             <select>
 
             @for(member <- board){
-                <option value="@member.getMember().id">@member.getMember().firstName title: @member.getTitle()</option>
+                <option value="@member.getMember().id">@member.getMember().firstName</option>
+                <option value="@member.getMember().id">@member.getTitle()</option>
             }
             </select>
         </label>
