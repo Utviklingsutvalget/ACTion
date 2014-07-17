@@ -260,11 +260,12 @@ public class OAuth2 extends Controller {
             /*I fadderuka har ikke førsteklassingene fått noen egen epost konto fra skolen
             Checks that this users name is not already in the db, preventing users from registering with
             every single account they have.*/
+            /*
             if(User.findByName(user.firstName, user.lastName) != null)
                 return badRequest(error.render("Dine opplysninger finnes allerede i databasen. De som har likt fornavn og etternavn " +
                         "må kontakte admin for registrering. Dette sikkerhets tiltaket vil forsvinne når fadderuken er over og alle har fått egen epost " +
                         "konto fra skolen."));
-
+            */
             return Registration.autofill(user);
 
         } catch(MalformedURLException e) {return badRequest(error.render("Malformed URL: " + e.getMessage()));

@@ -1,42 +1,71 @@
 package controllers;
 
 import models.Event;
+import models.User;
+import play.Logger;
 import play.data.*;
 import static play.data.Form.*;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.Authorization;
+import views.html.error;
 
 import java.util.List;
 
 public class Events extends Controller {
 
-    public static Result index() {
+    public static final int EVENTS_PER_PAGE = 10;
 
-        List<Event> events = Event.find.all();
-        return ok(views.html.event.index.render(events));
+    public static Result index() {
+        return list(0, "name", "asc", "");
+    }
+
+    public static Result list(int page, String sortBy, String order, String filter) {
+
+        return ok(views.html.event.list.render(
+                Event.page(page, EVENTS_PER_PAGE, sortBy, order, filter),sortBy, order, filter));
     }
 
     public static Result show(Long id) {
 
         Event event = Event.find.byId(id);
-        return ok(views.html.event.show.render(event));
+
+        try {
+            User user =  new Authorization.UserSession().getUser();
+            return ok(views.html.event.show.render(event, user));
+
+        } catch(Authorization.SessionException e) {return ok(views.html.event.show.render(event, null));}
+
     }
 
     public static Result create() {
 
-        Form<Event> eventForm = form(Event.class);
-        return ok(views.html.event.createForm.render(eventForm));
+        try {
+            User user =  new Authorization.UserSession().getUser();
+
+            Form<Event> eventForm = form(Event.class);
+            return ok(views.html.event.createForm.render(eventForm));
+
+        } catch(Authorization.SessionException e) {return badRequest(error.render(e.getMessage()));}
     }
 
     public static Result save() {
-        Form<Event> eventForm = form(Event.class).bindFromRequest();
-        if(eventForm.hasErrors()) {
-            return badRequest(views.html.event.createForm.render(eventForm));
-        }
 
-        eventForm.get().save();
-        flash("success", "Event " + eventForm.get().name + " has been created.");
-        return index();
+        try {
+            User user =  new Authorization.UserSession().getUser();
+
+            Form<Event> eventForm = form(Event.class).bindFromRequest();
+            if(eventForm.hasErrors()) {
+                return badRequest(views.html.event.createForm.render(eventForm));
+            }
+
+            eventForm.get().save();
+            flash("success", "Event " + eventForm.get().name + " has been created.");
+            return index();
+
+        } catch(Authorization.SessionException e) {return badRequest(error.render(e.getMessage()));}
+
+
     }
 
     public static Result edit(Long id) {

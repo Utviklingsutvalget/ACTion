@@ -7,23 +7,74 @@ import static play.mvc.Controller.session;
 
 public class Authorization {
 
-    public static User authorizeUserSession() {
+    public static class UserSession {
 
-        if(session().containsKey("id") && session().containsKey("expires")) {
+        private User user;
+        private Long expire;
 
-            long expire = Long.parseLong(session().get("expires"));
+        public UserSession() throws SessionException {
+
+            if(!sessionsExists())
+                throw new SessionException("Session are not set");
+
+            this.user = User.findById(session("id"));
+            this.expire = Long.parseLong(session("expires"));
+        }
+
+        public boolean isLoggedIn() {
+            return !hasExpired();
+        }
+
+        private boolean hasExpired() {
+
             long now = System.currentTimeMillis();
-
             long secondsLeft = (expire - now) / 1000;
 
-            if (secondsLeft < 0) {
+            if(secondsLeft >= 0)
+                return false;
 
-                OAuth2.destroySessions();
-                return null;
-            }
-
-            return User.findById(session().get("id"));
+            endSession();
+            return true;
         }
-        return null;
+
+        private boolean sessionsExists() {
+            return(session().containsKey("id") && session().containsKey("expires"));
+        }
+
+        private void endSession() {
+            OAuth2.destroySessions();
+        }
+
+        public User getUser() {
+            return isLoggedIn() ? user : null;
+        }
+    }
+
+    public static class SessionException extends Exception {
+
+        private String exception;
+
+        public SessionException() {
+            super();
+        }
+
+        public SessionException(String exception) {
+            super(exception);
+            this.exception = exception;
+        }
+
+        public SessionException(Throwable cause) {
+            super(cause);
+        }
+
+        @Override
+        public String toString() {
+            return exception;
+        }
+
+        @Override
+        public String getMessage() {
+            return exception;
+        }
     }
 }

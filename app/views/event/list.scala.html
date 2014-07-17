@@ -1,0 +1,124 @@
+@(currentPage: com.avaje.ebean.Page[Event], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+    @*Navigation link*@
+    @link(newPage:Int, newSortBy:String) = @{
+
+        var sortBy = currentSortBy
+        var order = currentOrder
+
+        if(newSortBy != null) {
+            sortBy = newSortBy
+            if(currentSortBy == newSortBy) {
+                if(currentOrder == "asc") {
+                    order = "desc"
+                } else {
+                    order = "asc"
+                }
+            } else {
+                order = "asc"
+            }
+        }
+    }
+
+    @*Helper Generating table headers*@
+    @header(key:String, title:String) = {
+        <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+            <a href="@link(0, key)">@title</a>
+        </th>
+    }
+
+@main("Eventer") {
+
+    <div class="row text-center">
+        <h1>Westerdals Eventer</h1>
+        <div class="small-12">
+            <p class="panel">
+                Her kan du velge hvilke eventer du vil se på eller delta i.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-8 columns">
+            <p><strong>Sortere Eventer?</strong></p>
+            <a href="@link(0, "name")" class="button small success">Name</a>
+            <a href="@link(0, "description")" class="button small success">Description</a>
+            <a href="@link(0, "startTime")" class="button small success">Starter</a>
+            <a href="@link(0, "endTime")" class="button small success">Slutter</a>
+            <a href="@link(0, "location")" class="button small success">Plassering</a>
+            <a href="@link(0, "club.name")" class="button small success">Utvalg</a>
+        </div>
+
+        <div class="large-4 columns">
+            <form action="@link(0, "name")" method="GET">
+                <input type="submit" id="searchsubmit" value="Filter" class="button radius round right">
+                <input type="search" id="searchbox" name="f" size="2" value="@currentFilter" placeholder="Filtrer event navn">
+            </form>
+        </div>
+    </div>
+
+    @for(event <- currentPage.getList) {
+
+        <div class="row">
+            <div class="small-8 columns">
+                <a href="@routes.Events.show(event.id)"><h3>@event.name</h3></a>
+            </div>
+            <div class="small-4 columns">
+                <p>@event.privacy</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-2 columns">
+                @if(event.coverUrl == null) {<a href="@routes.Events.show(event.id)"><img src="https://lh4.googleusercontent.com/-ygA6-w_L9Ok/AAAAAAAAAAI/AAAAAAAAAAA/hmsXCF4KZ8k/s120-c/photo.jpg" width="100" height="100" /></a>}
+                @if(event.coverUrl != null) {<a href="@routes.Events.show(event.id)"><img src="@event.coverUrl" width="100" height="100" /></a>}
+            </div>
+            <div class="small-8 columns">
+                <p class="left">@event.description</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-4 columns right">
+                <ul>
+                    @for(participant <- event.participants.subList(0, if(event.participants.size() < 5) event.participants.size() else 5 )) {
+                        <li>@participant.user.firstName</li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-4 columns right">
+                <p class="panel">@event.club.name</p>
+            </div>
+            <div class="small-4 columns right">
+                <p class="panel callout radius">@event.startTime</p>
+            </div>
+            <div class="small-4 columns right">
+                <p class="panel callout radius">@event.endTime</p>
+            </div>
+        </div>
+        <div class="row">
+            <hr>
+        </div>
+    }
+
+    <div class="row">
+        <div class="large-6 columns">
+            <ul class="pagination large-centered">
+                @if(currentPage.hasPrev) {
+                    <li class="arrow"><a href="@link(currentPage.getPageIndex -1, null)">&laquo;</a></li>
+                } else {
+                    <li class="arrow unavailable"><a href="#">&laquo;</a></li>
+                }
+                <li class="current">
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" til "," av ")</a>
+                </li>
+
+                @if(currentPage.hasNext) {
+                    <li class="arrow"><a href="@link(currentPage.getPageIndex +1, null)">&raquo;</a></li>
+                } else {
+                    <li class="arrow unavailable"><a href="#">&raquo;</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}

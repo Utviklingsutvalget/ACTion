@@ -1,16 +1,47 @@
-@(event: Event)
+@(event: Event, user: User)
 
 @main(event.name) {
 
     <div class="row">
+        <h1>@event.name</h1>
 
-        <div class="small-4 columns text-center show-for-medium-up">
-            <h4><strong>@event.name <br /> <br /></strong></h4>
+        <div class="large-2 columns">
+            @if(event.coverUrl == null) {<img src="https://lh4.googleusercontent.com/-ygA6-w_L9Ok/AAAAAAAAAAI/AAAAAAAAAAA/hmsXCF4KZ8k/s120-c/photo.jpg" width="100" height="100" />}
+            @if(event.coverUrl != null) {<img src="@event.coverUrl" width="200" height="200" />}
         </div>
-
-        <div class="small-4 columns text-center hide-for-medium-up">
-            <h4><strong>@event.description <br /> <br /></strong></h4>
+        <div class="large-6 columns left">
+            <p>@event.description</p>
         </div>
+    </div>
+    <div class="row">
+        <p class="panel callout radius">Det er totalt @event.participants.size() brukere som har meldt seg på.</p>
+        <hr>
+    </div>
 
+    <div class="row">
+        <p>Noen av de påmeldte</p>
+        <ul class="large-block-grid-4">
+        @for(participant <- event.participants.subList(0, if(event.participants.size() < 8) event.participants.size() else 8 )) {
+            <li>
+                <div>
+                    <img src="@participant.user.pictureUrl" width="100" height="100" />
+                    <p>@participant.user.firstName @participant.user.lastName</p>
+                </div>
+            </li>
+        }
+        </ul>
+        <hr>
+    </div>
+
+    <div class="row">
+    @if(user != null) {
+        <p>@user.id</p>
+        <p>@event.club.id</p>
+        @if(event.club.members.contains(user)) {
+
+            <p>Bruker er medlem av utvalget</p>
+        }
+
+    }
     </div>
 }

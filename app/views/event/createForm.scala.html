@@ -8,6 +8,17 @@
 
         <div class="row">
             <div class="large-8 columns">
+            @select(
+                eventForm("privacy"),
+                options = options(utils.Model.getEnumAsList(Enum<Event.Privacy>)),
+                'label -> "Privacy",
+                '_showConstraints -> false
+            )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-8 columns">
 
             @inputText(
                 eventForm("name"),
@@ -57,6 +68,18 @@
             @inputText(
                 eventForm("location"),
                 '_label -> "Event Location",
+                'class -> "input-xlarge",
+                '_showConstraints -> false,
+                '_error -> eventForm.globalError
+            )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-8 columns">
+            @inputText(
+                eventForm("coverUrl"),
+                '_label -> "Cover Url",
                 'class -> "input-xlarge",
                 '_showConstraints -> false,
                 '_error -> eventForm.globalError

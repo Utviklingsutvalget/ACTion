@@ -11,6 +11,9 @@ import javax.persistence.*;
 
 @Entity
 public class Membership extends Model {
+
+    public static Finder<Long, Membership> find = new Finder<>(Long.class, Membership.class);
+
     @Transactional
     public static void update(Membership membership) {
         Ebean.save(membership);
