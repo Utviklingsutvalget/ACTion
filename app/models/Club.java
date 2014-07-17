@@ -15,6 +15,9 @@ import java.util.List;
 
 @Entity
 public class Club extends Model {
+
+    public static Finder<Long, Club> find = new Finder<>(Long.class, Club.class);
+
     @Transactional
     public static void update(Club club) {
         Ebean.update(club);
