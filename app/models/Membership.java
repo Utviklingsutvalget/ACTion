@@ -16,6 +16,14 @@ public class Membership extends Model {
         Ebean.save(membership);
     }
 
+    public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
+
+    public Membership(Club club, User user){
+        this.club = club;
+        this.user = user;
+        this.id = new MembershipKey(club, user);
+    }
+
     @EmbeddedId
     public MembershipKey id;
 
@@ -24,12 +32,6 @@ public class Membership extends Model {
 
     @ManyToOne
     public User user;
-
-    public Membership(Club club, User user) {
-        this.user = user;
-        this.club = club;
-        this.id = new MembershipKey(club.id, user.id);
-    }
 
     @Constraints.Required
     public MembershipLevel level;
@@ -41,9 +43,9 @@ public class Membership extends Model {
 
         public String userId;
 
-        public MembershipKey(Long clubId, String userId) {
-            this.clubId = clubId;
-            this.userId = userId;
+        public MembershipKey(Club club, User user){
+            this.clubId = club.id;
+            this.userId = user.id;
         }
 
         @Override
