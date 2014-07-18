@@ -8,6 +8,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import models.User;
 import org.json.JSONObject;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.FileUtility;
@@ -251,6 +252,10 @@ public class OAuth2 extends Controller {
             JSONObject jsonObject = new JSONObject(response.toString());
 
             String gender = jsonObject.get("gender") == null ? "MALE" : jsonObject.getString("gender").toUpperCase();
+
+            //byte[] bytes = jsonObject.getString("family_name").getBytes("UTF-8");
+            //String name = new String(bytes,"UTF-8");
+            //Logger.debug("The Name: " +name);
 
             //Create a new user
             User user = new User(
