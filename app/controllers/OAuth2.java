@@ -234,6 +234,7 @@ public class OAuth2 extends Controller {
             connection.setRequestMethod("GET");
             connection.setRequestProperty("User-Agent", USER_AGENT);
             connection.setRequestProperty("Content-length", "0");
+            connection.setRequestProperty("Accept-Charset", "UTF-8");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("Authorization", "Bearer " + accessToken);
 
@@ -247,6 +248,10 @@ public class OAuth2 extends Controller {
                 response.append(inputLine);
             }
             br.close();
+
+            //DEBUG THINGY
+            if(1 == 1)
+                return ok(error.render(response.toString()));
 
             //Key value use of the profile information
             JSONObject jsonObject = new JSONObject(response.toString());
