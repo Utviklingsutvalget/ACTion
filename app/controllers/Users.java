@@ -5,6 +5,7 @@ import models.User;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
+import utils.Authorization;
 import views.html.index;
 import views.html.user.profile;
 
@@ -43,24 +44,14 @@ public class Users extends Controller {
      */
     public static Result profile() {
 
-        if(session().containsKey("id") && session().containsKey("expires")) {
+        try {
+            Authorization.UserSession session = new Authorization.UserSession();
 
-            long expire = Long.parseLong(session().get("expires"));
-            long now = System.currentTimeMillis();
-
-            long secondsLeft = (expire-now) / 1000;
-
-            if(secondsLeft < 0) {
-
-                OAuth2.destroySessions();
-                return Results.redirect(controllers.routes.OAuth2.authenticate());
+            if(session.isLoggedIn()) {
+                return ok(profile.render(session.getUser(), session.getSecondsLeft()));
             }
+        } catch(Authorization.SessionException e) {}
 
-            User user = User.findById(session().get("id"));
-
-            if(user != null)
-                return ok(profile.render(user, secondsLeft));
-        }
         return Results.redirect(controllers.routes.OAuth2.authenticate());
     }
 

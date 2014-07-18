@@ -15,7 +15,7 @@ import utils.Authorization;
 
 public class RecruitPowerup extends Powerup {
 
-    private User user;
+    private Authorization.UserSession session;
     private Club club;
     private boolean isMember;
 
@@ -25,19 +25,19 @@ public class RecruitPowerup extends Powerup {
         this.club = club;
         this.isMember = false;
 
-        user = Authorization.authorizeUserSession();
-
-        if(user != null){
+        try {
+            session = new Authorization.UserSession();
             alreadyPending();
-        }
+
+        } catch(Authorization.SessionException e) {}
     }
 
     public boolean alreadyPending(){
 
-        if(user != null){
+        if(session.isLoggedIn()){
 
-            Pending pendingEntry = Pending.find.byId(new Pending(club, user).key);
-            Membership membershipEntry = Membership.find.byId(new Membership(club, user).id);
+            Pending pendingEntry = Pending.find.byId(new Pending(club, session.getUser()).key);
+            Membership membershipEntry = Membership.find.byId(new Membership(club, session.getUser()).id);
 
             if(pendingEntry != null || membershipEntry != null){
                 this.isMember = true;
