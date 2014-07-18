@@ -75,17 +75,16 @@
                 @if(event.coverUrl == null) {<a href="@routes.Events.show(event.id)"><img src="https://lh4.googleusercontent.com/-ygA6-w_L9Ok/AAAAAAAAAAI/AAAAAAAAAAA/hmsXCF4KZ8k/s120-c/photo.jpg" width="100" height="100" /></a>}
                 @if(event.coverUrl != null) {<a href="@routes.Events.show(event.id)"><img src="@event.coverUrl" width="100" height="100" /></a>}
             </div>
-            <div class="small-8 columns">
-                <p class="left">@event.description</p>
+            <div class="small-8 columns left">
+                <p>@event.description</p>
             </div>
         </div>
         <div class="row">
             <div class="small-4 columns right">
-                <ul>
-                    @for(participant <- event.participants.subList(0, if(event.participants.size() < 5) event.participants.size() else 5 )) {
-                        <li>@participant.user.firstName</li>
-                    }
-                </ul>
+                <p>Det er totalt @event.participants.size() deltakere.</p>
+            </div>
+            <div class="small-4 columns left">
+                @event.location
             </div>
         </div>
         <div class="row">
@@ -110,7 +109,7 @@
                 @if(currentPage.hasPrev) {
                     <li class="arrow"><a href="@link(currentPage.getPageIndex -1, null)">&laquo;</a></li>
                 } else {
-                    <li class="arrow unavailable"><a href="#">&laquo;</a></li>
+                    <li class="arrow unavailable"><p>&laquo;</p></li>
                 }
                 <li class="current">
                     <a>Displaying @currentPage.getDisplayXtoYofZ(" til "," av ")</a>
@@ -119,7 +118,7 @@
                 @if(currentPage.hasNext) {
                     <li class="arrow"><a href="@link(currentPage.getPageIndex +1, null)">&raquo;</a></li>
                 } else {
-                    <li class="arrow unavailable"><a href="#">&raquo;</a></li>
+                    <li class="arrow unavailable"><p>&raquo;</p></li>
                 }
             </ul>
         </div>

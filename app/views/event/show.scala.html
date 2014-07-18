@@ -35,13 +35,37 @@
 
     <div class="row">
     @if(user != null) {
-        <p>@user.id</p>
-        <p>@event.club.id</p>
-        @if(event.club.members.contains(user)) {
 
-            <p>Bruker er medlem av utvalget</p>
+        @if(!UsersInEvent.userIsParticipatingEvent(event.id, user.id)) {
+
+            @if(!Membership.userHasMembershipInClubWithLevel(event.club.id, user.id, utils.MembershipLevel.MEMBER) &&
+                    event.privacy == Event.Privacy.MEDLEMMER) {
+
+                <p class="panel">Denne eventen er desverre kun for medlemmer av utvalget @event.club.name</p>
+
+            } else {
+
+                <form action="@routes.Events.participate()" method="POST">
+
+                    <input type="hidden" id="event_id" name="event_id" value="@event.id">
+                    <input type="hidden" id="user_id" name="user_id" value="@user.id">
+
+                    <input type="submit" value="Delta" class="button radius round left">
+                </form>
+            }
+
+        } else {
+
+            <form action="@routes.Events.unparticipate()" method="POST">
+
+                <input type="hidden" id="uie_id" name="uie_id" value="@UsersInEvent.getUserInEventId(event.id, user.id)">
+
+                <input type="submit" value="Meld Av" class="button radius round alert left">
+            </form>
         }
+    } else {
 
+        <p class="panel">Du må være inlogget for å melde deg på @event.name</p>
     }
     </div>
 }

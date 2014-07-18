@@ -3,11 +3,13 @@ package models;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import play.Logger;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import utils.MembershipLevel;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Membership extends Model {
@@ -66,6 +68,24 @@ public class Membership extends Model {
                     .append(getClass().getName())
                     .toHashCode();
         }
+    }
+
+    public static boolean userHasMembershipInClubWithLevel(Long club_id, String user_id, MembershipLevel requiredLevel) {
+
+        Membership membership = find
+                .fetch("club")
+                .fetch("user")
+                .where().eq("club.id", club_id)
+                .where().eq("user.id", user_id)
+                .findUnique();
+
+        if(membership == null)
+            return false;
+
+        if(membership.level.compareTo(requiredLevel) >= 0)
+            return true;
+
+        return false;
     }
 
 }

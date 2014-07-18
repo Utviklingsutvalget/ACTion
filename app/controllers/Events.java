@@ -1,16 +1,23 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Event;
+import models.Membership;
 import models.User;
+import models.UsersInEvent;
 import play.Logger;
 import play.data.*;
 import static play.data.Form.*;
+
+import play.mvc.BodyParser;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import utils.Authorization;
 import views.html.error;
 
 import java.util.List;
+import java.util.Map;
 
 public class Events extends Controller {
 
@@ -92,5 +99,32 @@ public class Events extends Controller {
         flash("success", "Event " + event.name + " has been deleted");
 
         return index();
+    }
+
+    public static Result participate() {
+
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+
+        Long eventId = Long.parseLong(params.get("event_id")[0]);
+        String userId = params.get("user_id")[0];
+
+        Event event = Event.find.byId(eventId);
+        User user = User.findById(userId);
+
+        UsersInEvent.save(new UsersInEvent(event, user));
+
+        return show(event.id);
+    }
+
+    public static Result unparticipate() {
+
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+
+        Long uieId = Long.parseLong(params.get("uie_id")[0]);
+
+        Long eventId = UsersInEvent.find.byId(uieId).event.id;
+        UsersInEvent.find.byId(uieId).delete();
+
+        return show(eventId);
     }
 }
