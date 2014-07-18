@@ -49,7 +49,12 @@ function PowerupClass() {
         powerupContent.find('.powerup-node').each(function () {
             if ($(this).hasClass('powerup-node')) {
                 var field = ($(this)).data('powerup-field');
-                dataObject[field] = $(this).html();
+                if($(this).data('powerup-value') !== undefined) {
+                    dataObject[field] = $(this).data('powerup-value');
+                }
+                else {
+                    dataObject[field] = $(this).html();
+                }
             }
         });
         console.log(dataObject);
