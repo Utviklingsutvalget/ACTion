@@ -265,10 +265,15 @@ public class OAuth2 extends Controller {
                     jsonObject.getString("email"),
                     jsonObject.getString("picture").split("\\?")[0]); //We dont want: ?sz=50(sets image size to 50)
 
+            if(!user.email.matches("([a-z0-9]*)@(student\\.|)westerdals.no")) {
+                return ok(views.html.notAuthorizedPage.render("Din e-postaddresse stemmer ikke med kravene. Vennligst logg på med en e-post addresse hos domenet westerdals.no"));
+            }
+
             if(update) {
 
-                if(!session().get("id").equals(jsonObject.getString("sub")))
+                if(!session().get("id").equals(jsonObject.getString("sub"))) {
                     return badRequest(error.render("Kan ikke oppdatere en bruker med en opplysninger fra en annen bruker."));
+                }
 
                 return Registration.autoUpdate(user);
             }
@@ -276,10 +281,11 @@ public class OAuth2 extends Controller {
             /*I fadderuka har ikke førsteklassingene fått noen egen epost konto fra skolen
             Checks that this users name is not already in the db, preventing users from registering with
             every single account they have.*/
-            if(User.findByName(user.firstName, user.lastName) != null)
+            if(User.findByName(user.firstName, user.lastName) != null) {
                 return badRequest(error.render("Dine opplysninger finnes allerede i databasen. De som har likt fornavn og etternavn " +
                         "må kontakte admin for registrering. Dette sikkerhets tiltaket vil forsvinne når fadderuken er over og alle har fått egen epost " +
                         "konto fra skolen."));
+            }
 
             return Registration.autofill(user);
 
@@ -323,7 +329,6 @@ public class OAuth2 extends Controller {
      * is deleted from the db or revokes access for
      * this application.
      *
-     * @return   Result
      */
     public static void destroySessions() {
         session().clear();
