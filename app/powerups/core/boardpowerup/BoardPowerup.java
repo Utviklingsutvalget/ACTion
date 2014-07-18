@@ -1,27 +1,18 @@
 package powerups.core.boardpowerup;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.SqlQuery;
-import com.avaje.ebean.annotation.Sql;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.Membership;
 import models.PowerupModel;
 import models.User;
-import org.json.JSONObject;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.boardpowerup.html.powerup;
 import powerups.models.BoardExtras;
-
-import java.lang.reflect.Field;
 import java.util.*;
-
 import powerups.models.Board;
 import utils.MembershipLevel;
-
-import static play.mvc.Results.*;
 
 public class BoardPowerup extends Powerup {
 
@@ -65,6 +56,8 @@ public class BoardPowerup extends Powerup {
         return powerup.render(boardList, editable, memberList, LEADER_STRING);
     }
 
+
+    // Check for new titles, titles with a new associated ID, or titles removed. Return a map of updates
     private Map<String, String> getMapUpdates(Map<String, String> existing, Map<String, String> updates) {
         Map<String, String> changes = new HashMap<>();
 
@@ -78,6 +71,7 @@ public class BoardPowerup extends Powerup {
             // Update post if the post is changed
             if(updates.containsKey(key) && !updates.get(key).equals(existing.get(key))) {
                 changes.put(key, updates.get(key));
+                //updates.remove(key);
             }
         }
 
@@ -98,6 +92,7 @@ public class BoardPowerup extends Powerup {
             Map<String, String> changes;
             List<String> mandatoryPositions = board.getMandatoryPositions();
             Iterator<String> stringIterator = updateContent.fieldNames();
+
             for (BoardMember member : boardList) {
                 existing.put(member.getTitle(), member.getMember().id);
             }
@@ -110,51 +105,18 @@ public class BoardPowerup extends Powerup {
             changes = getMapUpdates(existing, updates);
 
             for(String key : changes.keySet()) {
+
+                //boardtitle changed id
                 if(mandatoryPositions.contains(key)) {
                     updateMandatory(key, changes.get(key));
 
                 } else {
 
+                    //Boardextra changed id
                     updateExtras();
                 }
             }
         }
-
-
-
-
-
-
-        /*
-        if(updateContent != null){
-
-            Iterator<String> iter = updateContent.fieldNames();
-
-            while(iter.hasNext()){
-
-                String fieldName = iter.next();
-                String field = updateContent.get(fieldName).asText();
-
-                for(BoardMember b : boardList){
-
-                    if(b.getTitle().equals(field)){
-
-                        if(!(b.getMember().id.equals(fieldName))){
-
-                            String title = b.getTitle();
-                            User user = User.find.byId(b.getMember().id);
-
-
-
-                            //SHIT HAS BEEN CHANGED
-                            b.setTitle("ananas");
-                            Ebean.update(b);
-                        }
-                    }
-                }
-            }
-        }
-        */
 
         return null;
 
@@ -171,8 +133,10 @@ public class BoardPowerup extends Powerup {
         for(Membership member : memberList) {
             if(member.user.id.equals(userId)) {
                 user = member.user;
+                break;
             }
         }
+
         if(user != null) {
             for (String boardTitle : board.getMandatoryPositions()) {
                 if (title.equals(boardTitle)) {

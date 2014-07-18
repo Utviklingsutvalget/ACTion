@@ -26,7 +26,7 @@
 
                     @if(!editable && member.getTitle.equalsIgnoreCase(leaderTitle)){
 
-                        <div class="powerup-node" data-powerup-field='@member.getMember.id' id="@member.getTitle">@member.getTitle</div>
+                        <div class="powerup-node" data-powerup-field='@member.getTitle' id="@member.getTitle">@member.getTitle</div>
                         <a href="#" class="button disabled" id="@member.getMember.id">@member.getMember.firstName @member.getMember.lastName</a>
 
                     }else{
