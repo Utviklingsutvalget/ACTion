@@ -49,10 +49,14 @@ function PowerupClass() {
         powerupContent.find('.powerup-node').each(function () {
             if ($(this).hasClass('powerup-node')) {
                 var field = ($(this)).data('powerup-field');
-                if($(this).data('powerup-value') !== undefined) {
+                if($(this).data('powerup-select') !== undefined) {
+                    var targetSelector = $(this).data('powerup-select');
+                    var targetObject = $(this).find(targetSelector);
+                    var selectedValue = $('option:selected', targetObject);
+                    dataObject[field] = selectedValue.val();
+                } else if($(this).data('powerup-value') !== undefined) {
                     dataObject[field] = $(this).data('powerup-value');
-                }
-                else {
+                } else {
                     dataObject[field] = $(this).html();
                 }
             }
