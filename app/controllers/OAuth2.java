@@ -6,6 +6,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.common.base.Utf8;
 import models.User;
 import org.json.JSONObject;
 import play.Logger;
@@ -19,6 +20,7 @@ import views.html.index;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.util.*;
 import java.security.NoSuchAlgorithmException;
@@ -242,25 +244,17 @@ public class OAuth2 extends Controller {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(connection.getInputStream()));
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
 
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
             br.close();
 
-            //DEBUG THINGY
-            if(1 == 1)
-                return ok(error.render(response.toString()));
-
             //Key value use of the profile information
-            JSONObject jsonObject = new JSONObject(response.toString());
+            JSONObject jsonObject = new JSONObject(new String(response.toString().getBytes(), "UTF-8"));
 
-            String gender = jsonObject.get("gender") == null ? "MALE" : jsonObject.getString("gender").toUpperCase();
-
-            //byte[] bytes = jsonObject.getString("family_name").getBytes("UTF-8");
-            //String name = new String(bytes,"UTF-8");
-            //Logger.debug("The Name: " +name);
+            String gender = !jsonObject.has("gender") ? "MALE" : jsonObject.getString("gender").toUpperCase();
 
             //Create a new user
             User user = new User(
