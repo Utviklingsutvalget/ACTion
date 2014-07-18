@@ -53,7 +53,7 @@ public class Users extends Controller {
             if(secondsLeft < 0) {
 
                 OAuth2.destroySessions();
-                return Results.redirect(controllers.routes.OAuth2.authenticate());
+                return Results.redirect(controllers.routes.OAuth2.authenticate(0));
             }
 
             User user = User.findById(session().get("id"));
@@ -61,7 +61,7 @@ public class Users extends Controller {
             if(user != null)
                 return ok(profile.render(user, secondsLeft));
         }
-        return Results.redirect(controllers.routes.OAuth2.authenticate());
+        return Results.redirect(controllers.routes.OAuth2.authenticate(0));
     }
 
     /**
