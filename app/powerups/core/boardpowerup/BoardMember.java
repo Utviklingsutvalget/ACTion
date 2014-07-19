@@ -6,10 +6,15 @@ public class BoardMember {
 
     private final User member;
 
-    private final String title;
+    //in order to set new titles
+    private String title;
 
     public BoardMember(User member, String title) {
         this.member = member;
+        this.title = title;
+    }
+
+    public void setTitle(String title){
         this.title = title;
     }
 

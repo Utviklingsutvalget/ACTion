@@ -51,6 +51,9 @@ public class Context {
     }
 
     public MembershipLevel getMemberLevel() {
+        if(memberLevel == null) {
+            return MembershipLevel.SUBSCRIBE;
+        }
         return memberLevel;
     }
 }

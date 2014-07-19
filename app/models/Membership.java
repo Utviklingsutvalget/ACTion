@@ -8,6 +8,8 @@ import play.db.ebean.Model;
 import utils.MembershipLevel;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Membership extends Model {

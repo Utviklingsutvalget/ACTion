@@ -41,7 +41,7 @@ INSERT INTO `action`.`user` (`id`, `first_name`, `gender`, `email`, `picture_url
 INSERT INTO `action`.`user` (`id`, `first_name`, `gender`, `email`, `picture_url`) VALUES ('5', 'Hanne', NULL, NULL, NULL), ('6', 'Arne', NULL, NULL, NULL);
 INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`) VALUES ('3', '2', '0');
 INSERT INTO `action`.`board` (`club_id`, `leader_id`, `vice_id`, `economy_id`) VALUES ('2', '2', '3', '6');
-
+INSERT INTO `action`.`membership` (`club_id`, `user_id`, `level`) VALUES ('1', '6', '2'), ('1', '4', '1');
 
 UPDATE `action`.`board` SET `leader_id` = '3', `economy_id` = '6' WHERE `board`.`club_id` = 1;
 UPDATE `action`.`user` SET `picture_url` = 'http://www.catchwallpapers.com/wp-content/uploads/2013/03/HBO-drama-Game-of-Thrones-Season-3-HD-characters-wallpaper-1600x1200-07.jpg' WHERE `user`.`id` = '3';
@@ -49,7 +49,8 @@ UPDATE `action`.`user` SET `picture_url` = 'http://i3.bebo.com/044/1/mediuml/200
 UPDATE `action`.`user` SET `picture_url` = 'http://mobilwi.typepad.com/.a/6a0120a6dde087970b013485bca6ed970c-500wi' WHERE `user`.`id` = '2';
 UPDATE `action`.`board_extras` SET `board_club_id` = '1' WHERE `board_extras`.`club_id` = 1 AND `board_extras`.`extras_id` = 1;
 UPDATE `action`.`board` SET `leader_id` = '1' WHERE `board`.`club_id` = 2;
-
+UPDATE `action`.`board` SET `event_id` = '4' WHERE `board`.`club_id` = 1;
+UPDATE `action`.`board` SET `event_id` = '5' WHERE `board`.`club_id` = 2;
 
 # --- !Downs
 
