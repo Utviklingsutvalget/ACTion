@@ -1,3 +1,10 @@
 @main("Login") {
-    @login()
+    <div class="row">
+        <div class="small-12 columns small-centered text-center">
+            <p>
+                Alle studenter ved Westerdals Oslo School of Art, Communication and Technology disponerer en konto hos Google.
+            </p>
+            <a href='@routes.OAuth2.authenticate(0)' class="button merium radius">Logg inn med Google</a>
+        </div>
+    </div>
 }

@@ -6,9 +6,9 @@
     <br>
     <p>Seconds until session expire <b>@expire</b></p>
     <br><br>
-    <img src="@user.pictureUrl?sz=200" />
+    <img src="@user.pictureUrl" width="200" height="200" />
     <br><br>
 
-    <a href="@routes.Users.logout()">Logout</a>
+    <a href="@routes.Users.logout()">Logout</a> | <a href="@routes.OAuth2.authenticate(1)">Refetch Data</a>
 
 }

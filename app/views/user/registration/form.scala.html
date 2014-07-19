@@ -47,12 +47,9 @@
                     registrationForm("gender"),
                     options = options(User.genderAsList()),
                     'label -> "Gender",
-                    'disabled -> "disabled", //When disabled this input always gives an error
                     '_showConstraints -> false
                 )
                 </div>
-                <!-- That is why we need this hidden input with gender value -->
-                <input type="hidden" name="gender" value="@registrationForm("gender").value">
 
                 <div class="large-8 columns">
                 @inputText(

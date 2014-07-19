@@ -50,7 +50,13 @@ body{
 
 .headertext{
 	color: #fff;
+	size: 50px;
 	text-shadow: 1px 1px 1px #888888;
+}
+
+.headertextbig{
+	font-size: 70px;
+	text-transform: uppercase;
 }
 
 #backgroundimglarge{
@@ -96,7 +102,7 @@ body{
 
 #footer{
 	background-color: black;
-	height: 200px;
+
 	width: 100%;
 	padding-top: 30px;
 }
@@ -180,6 +186,14 @@ body{
 	margin-left: 5%;
 }
 
+.footer-photos{
+	border-radius: 100%;
+	width: 70%;
+	height: 70%;
+	margin-right: 15%;
+	margin-left: 15%;
+}
+
 #bold-line{
 	height: 2px;
 	width: 20%;
@@ -231,10 +245,18 @@ body{
 
 .button-photochange{
 	position: absolute;
-	bottom: 15px;
-	right: 30px;
+	bottom: 25px;
+	left: 30px;
 	-moz-box-shadow: 0 0 10px #000000;
 	box-shadow: 0 0 10px #000000;
 	height: 33px;
 	opacity: 1;
+}
+
+.img-gallery{
+	padding-bottom: 15px;
+}
+
+img.img-gallery:hover{
+	opacity: 0.8;
 }
