@@ -65,6 +65,11 @@ public class User extends Model {
             Ebean.save(user);
     }
 
+    @Transactional
+    public static void update(User user) {
+        Ebean.update(user);
+    }
+
     public static List<String> genderAsList(){
         ArrayList<String> list = new ArrayList<>();
 

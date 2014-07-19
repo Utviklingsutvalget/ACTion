@@ -3,12 +3,12 @@ package powerups.core.recruitpowerup;
 import models.Club;
 import models.User;
 
-public class Pending {
+public class PendingUser {
 
     public String userID;
     public Long clubId;
 
-    public Pending(User user, Club club){
+    public PendingUser(User user, Club club){
         this.clubId = club.id;
         this.userID = user.id;
     }

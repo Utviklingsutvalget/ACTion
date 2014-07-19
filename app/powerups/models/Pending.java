@@ -1,26 +1,48 @@
 package powerups.models;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.annotation.Transactional;
 import models.Club;
 import models.User;
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
-
 import javax.persistence.*;
-import javax.persistence.Id;
 
 @Entity
 public class Pending extends Model {
 
-    /****Solution Two******/
+    public static Finder<PendingKey, Pending> find = new Finder<>(PendingKey.class, Pending.class);
 
-    @Id
-    public Long pendingId;
-
-
-    /****Solution One******/
-
-    /*
     @EmbeddedId
     public PendingKey key;
+
+    @Constraints.Required
+    @Constraints.MaxLength(100)
+    @Column(length=100)
+    public String applicationMessage;
+
+    @MapsId("clubId")
+    @ManyToOne
+    public Club club;
+
+    @MapsId("userId")
+    @ManyToOne
+    public User user;
+
+    public Pending(Club club, User user) {
+        this.user = user;
+        this.club = club;
+        this.key = new PendingKey(user, club);
+    }
+
+    public User getUser(){
+        return this.user;
+    }
+
+    @Transactional
+    public static void update(Pending pending){
+        Ebean.save(pending);
+    }
 
     @Embeddable
     public class PendingKey{
@@ -53,6 +75,6 @@ public class Pending extends Model {
                 return false;
             }
         }
-    }*/
+    }
 
 }

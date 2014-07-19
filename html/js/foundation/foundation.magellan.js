@@ -100,7 +100,8 @@
             placeholder.attr(self.add_namespace('data-magellan-expedition-clone'),'');
             expedition.before(placeholder);
           }
-          expedition.css({position:'fixed', top: self.settings.fixed_top});
+//          expedition.css({position:'fixed', top: self.settings.fixed_top});
+			expedition.css({position:'fixed', top: settings.fixed_top, minWidth: 0, width: expedition.outerWidth() + 'px'});
         } else {
           expedition.prev('[' + self.add_namespace('data-magellan-expedition-clone') + ']').remove();
           expedition.attr('style','').removeClass('fixed');

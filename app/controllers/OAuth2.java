@@ -6,8 +6,10 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.common.base.Utf8;
 import models.User;
 import org.json.JSONObject;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.FileUtility;
@@ -18,6 +20,7 @@ import views.html.index;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.util.*;
 import java.security.NoSuchAlgorithmException;
@@ -40,11 +43,11 @@ public class OAuth2 extends Controller {
     /**A session lasts 2 hours*/
     private static final long EXPIRATION_TIME_IN_SECONDS = 2 * 60 * 60;
 
+    private static boolean update;
 
     public static Result login() {
         return ok(views.html.login.index.render());
     }
-
 
     /**
      * Redirects the user to https://accounts.google.com/o/oauth2/auth with a
@@ -54,10 +57,11 @@ public class OAuth2 extends Controller {
      *
      * @return  Result
      */
-    public static Result authenticate() {
+    public static Result authenticate(int _update) {
+
+        update = _update == 1;
 
         if(session().containsKey("id")) {
-
             User user = User.findById(session("id"));
             if(user != null)
                 return ok(index.render("Already logged in " + User.findById(session("id")).firstName));
@@ -196,7 +200,7 @@ public class OAuth2 extends Controller {
                 return unauthorized(error.render("Please verify your Google email and try again"));
 
             //If user exists we dont need to use OpenId Connect
-            if(User.exists(payload.getSubject())) {
+            if(User.exists(payload.getSubject()) && !update) {
 
                 //Create the necessary sessionsd
                 createSessions(payload.getSubject());
@@ -231,6 +235,7 @@ public class OAuth2 extends Controller {
             connection.setRequestMethod("GET");
             connection.setRequestProperty("User-Agent", USER_AGENT);
             connection.setRequestProperty("Content-length", "0");
+            connection.setRequestProperty("Accept-Charset", "UTF-8");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("Authorization", "Bearer " + accessToken);
 
@@ -238,7 +243,7 @@ public class OAuth2 extends Controller {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(connection.getInputStream()));
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
 
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
@@ -246,26 +251,41 @@ public class OAuth2 extends Controller {
             br.close();
 
             //Key value use of the profile information
-            JSONObject jsonObject = new JSONObject(response.toString());
+            JSONObject jsonObject = new JSONObject(new String(response.toString().getBytes(), "UTF-8"));
+
+            String gender = !jsonObject.has("gender") ? "MALE" : jsonObject.getString("gender").toUpperCase();
 
             //Create a new user
             User user = new User(
                     jsonObject.getString("sub"),
                     jsonObject.getString("given_name"),
                     jsonObject.getString("family_name"),
-                    User.Gender.valueOf(jsonObject.getString("gender").toUpperCase()),
+                    User.Gender.valueOf(gender),
                     jsonObject.getString("email"),
                     jsonObject.getString("picture").split("\\?")[0]); //We dont want: ?sz=50(sets image size to 50)
+
+            if(!user.email.matches("([a-z0-9]*)@(student\\.|)westerdals.no")) {
+                return ok(views.html.notAuthorizedPage.render("Din e-postaddresse stemmer ikke med kravene. Vennligst logg på med en e-post addresse hos domenet westerdals.no"));
+            }
+
+            if(update) {
+
+                if(!session().get("id").equals(jsonObject.getString("sub"))) {
+                    return badRequest(error.render("Kan ikke oppdatere en bruker med en opplysninger fra en annen bruker."));
+                }
+
+                return Registration.autoUpdate(user);
+            }
 
             /*I fadderuka har ikke førsteklassingene fått noen egen epost konto fra skolen
             Checks that this users name is not already in the db, preventing users from registering with
             every single account they have.*/
-            /*
-            if(User.findByName(user.firstName, user.lastName) != null)
+            if(User.findByName(user.firstName, user.lastName) != null) {
                 return badRequest(error.render("Dine opplysninger finnes allerede i databasen. De som har likt fornavn og etternavn " +
                         "må kontakte admin for registrering. Dette sikkerhets tiltaket vil forsvinne når fadderuken er over og alle har fått egen epost " +
                         "konto fra skolen."));
-            */
+            }
+
             return Registration.autofill(user);
 
         } catch(MalformedURLException e) {return badRequest(error.render("Malformed URL: " + e.getMessage()));
@@ -308,7 +328,6 @@ public class OAuth2 extends Controller {
      * is deleted from the db or revokes access for
      * this application.
      *
-     * @return   Result
      */
     public static void destroySessions() {
         session().clear();

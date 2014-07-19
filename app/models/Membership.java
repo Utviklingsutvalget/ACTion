@@ -9,16 +9,25 @@ import play.db.ebean.Model;
 import utils.MembershipLevel;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Membership extends Model {
 
-    public static Finder<Long, Membership> find = new Finder<>(Long.class, Membership.class);
+    //public static Finder<Long, Membership> find = new Finder<>(Long.class, Membership.class);
 
     @Transactional
     public static void update(Membership membership) {
         Ebean.save(membership);
+    }
+
+    public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
+
+    public Membership(Club club, User user){
+        this.club = club;
+        this.user = user;
+        this.id = new MembershipKey(club, user);
     }
 
     @EmbeddedId
@@ -30,12 +39,6 @@ public class Membership extends Model {
     @ManyToOne
     public User user;
 
-    public Membership(Club club, User user) {
-        this.user = user;
-        this.club = club;
-        this.id = new MembershipKey(club.id, user.id);
-    }
-
     @Constraints.Required
     public MembershipLevel level;
 
@@ -46,9 +49,9 @@ public class Membership extends Model {
 
         public String userId;
 
-        public MembershipKey(Long clubId, String userId) {
-            this.clubId = clubId;
-            this.userId = userId;
+        public MembershipKey(Club club, User user){
+            this.clubId = club.id;
+            this.userId = user.id;
         }
 
         @Override

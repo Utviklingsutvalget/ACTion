@@ -42,16 +42,18 @@ public class Context {
     public static Context getContext(Club club) {
 
         try {
-
-            Authorization.UserSession session = new Authorization.UserSession();
-            User user = session.getUser();
-
+            User user = new Authorize.UserSession().getUser();
             return new Context(user, club);
 
-        } catch(Authorization.SessionException e) {return null;}
+        } catch(Authorize.SessionException e) {
+            return new Context(null, club);
+        }
     }
 
     public MembershipLevel getMemberLevel() {
+        if(memberLevel == null) {
+            return MembershipLevel.SUBSCRIBE;
+        }
         return memberLevel;
     }
 }
