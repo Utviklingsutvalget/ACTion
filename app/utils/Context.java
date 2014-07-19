@@ -42,10 +42,10 @@ public class Context {
     public static Context getContext(Club club) {
 
         try {
-            User user = new Authorize.UserSession().getUser();
+            User user = new Authorization.UserSession().getUser();
             return new Context(user, club);
 
-        } catch(Authorize.SessionException e) {
+        } catch(Authorization.SessionException e) {
             return new Context(null, club);
         }
     }

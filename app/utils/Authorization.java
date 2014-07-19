@@ -6,7 +6,7 @@ import play.Logger;
 
 import static play.mvc.Controller.session;
 
-public class Authorize {
+public class Authorization {
 
     public static class UserSession {
 
@@ -23,7 +23,6 @@ public class Authorize {
         }
 
         public boolean isLoggedIn() {
-
             return !hasExpired();
         }
 
@@ -53,12 +52,8 @@ public class Authorize {
             OAuth2.destroySessions();
         }
 
-        public User getUser() throws SessionException {
-
-            if(!isLoggedIn())
-                throw new SessionException("User is not logged in");
-
-            return user;
+        public User getUser() {
+            return isLoggedIn() ? user : null;
         }
     }
 

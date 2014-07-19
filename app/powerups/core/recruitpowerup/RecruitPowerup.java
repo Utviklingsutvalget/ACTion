@@ -4,17 +4,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.Membership;
 import models.PowerupModel;
+import models.User;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.recruitpowerup.html.powerup;
 import powerups.models.Pending;
-import utils.Authorize;
+import utils.Authorization;
 
 
 public class RecruitPowerup extends Powerup {
 
-    private Authorize.UserSession session;
+    private Authorization.UserSession session;
     private Club club;
     private boolean isMember;
 
@@ -25,15 +26,15 @@ public class RecruitPowerup extends Powerup {
         this.isMember = false;
 
         try {
-            session = new Authorize.UserSession();
+            session = new Authorization.UserSession();
             alreadyPending();
 
-        } catch(Authorize.SessionException e) {}
+        } catch(Authorization.SessionException e) {}
     }
 
     public boolean alreadyPending(){
 
-        try {
+        if(session.isLoggedIn()){
 
             Pending pendingEntry = Pending.find.byId(new Pending(club, session.getUser()).key);
             Membership membershipEntry = Membership.find.byId(new Membership(club, session.getUser()).id);
@@ -41,10 +42,6 @@ public class RecruitPowerup extends Powerup {
             if(pendingEntry != null || membershipEntry != null){
                 this.isMember = true;
             }
-
-        } catch(Authorize.SessionException e) {
-
-            //User not logged in
         }
 
         return false;
