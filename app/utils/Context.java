@@ -40,9 +40,14 @@ public class Context {
     }
 
     public static Context getContext(Club club) {
-        //Would this make sense?
-        User user = Authorization.authorizeUserSession();
-        return new Context(user, club);
+
+        try {
+            User user = new Authorize.UserSession().getUser();
+            return new Context(user, club);
+
+        } catch(Authorize.SessionException e) {
+            return new Context(null, club);
+        }
     }
 
     public MembershipLevel getMemberLevel() {

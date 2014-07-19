@@ -1,6 +1,7 @@
 package controllers;
 
 import models.User;
+import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -35,6 +36,13 @@ public class Registration extends Controller {
 
         Form<User> filledForm = registrationForm.fill(user);
         return ok(form.render(filledForm));
+
+    }
+
+    public static Result autoUpdate(User user) {
+
+        User.update(user);
+        return ok(index.render("Din bruker er oppdatert"));
 
     }
 

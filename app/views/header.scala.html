@@ -1,3 +1,4 @@
+@(title: String)
 <div id="backgroundimglarge-underpage"></div>
 
 <!-- HEADER TEXT -->
@@ -63,5 +64,20 @@
         <div class="medium-2 columns">
             <a class="headertext" href='@routes.OAuth2.login()'>Login </a>
         </div>
+    </div>
+</div>
+<div class="row">
+    <br />
+    <div class="small-4 columns">
+        <div id="line" class="lineright"></div>
+    </div>
+    <div class="small-4 columns text-center show-for-medium-up">
+        <h4><strong>@title<br /> <br /></strong></h4>
+    </div>
+    <div class="small-4 columns text-center hide-for-medium-up">
+        <h4><strong id="alt-title">@title<br /> <br /></strong></h4>
+    </div>
+    <div class="small-4 columns">
+        <div id="line" class="lineleft"></div>
     </div>
 </div>
