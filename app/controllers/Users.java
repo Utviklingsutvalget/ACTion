@@ -1,11 +1,10 @@
 package controllers;
 
-import controllers.*;
 import models.User;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
-import utils.Authorization;
+import utils.Authorize;
 import views.html.index;
 import views.html.user.profile;
 
@@ -45,14 +44,12 @@ public class Users extends Controller {
     public static Result profile() {
 
         try {
-            Authorization.UserSession session = new Authorization.UserSession();
+            Authorize.UserSession session = new Authorize.UserSession();
+            return ok(profile.render(session.getUser(), session.getSecondsLeft()));
 
-            if(session.isLoggedIn()) {
-                return ok(profile.render(session.getUser(), session.getSecondsLeft()));
-            }
-        } catch(Authorization.SessionException e) {}
-
-        return Results.redirect(controllers.routes.OAuth2.authenticate());
+        } catch(Authorize.SessionException e) {
+            return Results.redirect(controllers.routes.OAuth2.authenticate());
+        }
     }
 
     /**
