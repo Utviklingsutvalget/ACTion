@@ -21,7 +21,7 @@ create table board (
 
 create table board_extras (
   club_id                   bigint,
-  extras_id                 integer,
+  extras_id                 varchar(255),
   board_club_id             bigint,
   member_id                 varchar(255),
   title                     varchar(255),

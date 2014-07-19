@@ -2,9 +2,7 @@ package powerups.models;
 
 
 import models.Club;
-import models.Membership;
 import models.User;
-import org.apache.commons.lang3.ArrayUtils;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
@@ -43,7 +41,9 @@ public class Board extends Model {
     public static final String EVENT_COL = "event";
 
     public void setByName(final String name, final User user) {
-        switch (name) {
+
+        //switch on stirng case sensitive
+        switch (name.toLowerCase()) {
             case LEADER_COL : leader = user;
                 break;
             case VICE_COL : vice = user;
