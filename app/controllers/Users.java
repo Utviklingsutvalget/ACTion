@@ -48,7 +48,7 @@ public class Users extends Controller {
             return ok(profile.render(session.getUser(), session.getSecondsLeft()));
 
         } catch(Authorize.SessionException e) {
-            return Results.redirect(controllers.routes.OAuth2.authenticate());
+            return Results.redirect(routes.OAuth2.authenticate(0));
         }
     }
 
