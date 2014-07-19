@@ -4,12 +4,14 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
+import play.Logger;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.descriptionpowerup.html.listdesc;
 import powerups.core.descriptionpowerup.html.powerup;
 import powerups.models.ClubDescription;
+import utils.MembershipLevel;
 
 import static play.mvc.Results.badRequest;
 import static play.mvc.Results.internalServerError;
@@ -33,9 +35,7 @@ public class DescriptionPowerup extends Powerup {
         super(club, model);
         clubDesc = ClubDescription.find.byId(club.id);
 
-        // TODO REPLACE WITH WORKING CONTEXT LOGIC AFTER BRANCH MERGE
-        editable = true;
-        //editable = this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel();
+        editable = this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel();
     }
 
     @Override
