@@ -64,7 +64,7 @@ public class OAuth2 extends Controller {
         if(session().containsKey("id")) {
             User user = User.findById(session("id"));
             if(user != null)
-                return ok(index.render("Already logged in " + User.findById(session("id")).firstName));
+                return Application.index();
 
             destroySessions();
         }
