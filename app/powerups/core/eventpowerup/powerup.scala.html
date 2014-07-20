@@ -1,0 +1,6 @@
+@(events: java.util.List[Event], userPresent: Boolean)
+@if(!events.isEmpty) {
+    @views.html.event.list(events, userPresent, false)
+} else {
+    <p>Ingen eventer å vise</p>
+}
