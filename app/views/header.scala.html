@@ -1,4 +1,4 @@
-@(title: String)
+@(title: String)(implicit user: User = User.findById(session.get("id")))
 <div id="backgroundimglarge-underpage"></div>
 
 <!-- HEADER TEXT -->
@@ -25,17 +25,20 @@
         <a class="headertext" href="../feed/index.html">Feed </a>
     </div>
 
-    <div class="small-4 columns  buttonpanelsmall">
-        <a class="headertext" href="../profil/index.html">Profil </a>
-    </div>
+    @if(user != null) {
+        <div class="small-4 columns  buttonpanelsmall">
+            <a class="headertext" href="@routes.Users.profile()">Profil </a>
+        </div>
+    } else {
+        <div class="small-4 columns  buttonpanelsmall">
+            <a class="headertext" href='@routes.OAuth2.authenticate()'>Login </a>
+        </div>
+    }
 
     <div class="small-4 columns  buttonpanelsmall">
         <a class="headertext" href="../fadderuka/index.html">Fadderuka</a>
     </div>
 
-    <div class="small-4 columns  buttonpanelsmall">
-        <a class="headertext" href='@routes.OAuth2.authenticate()'>Login </a>
-    </div>
 </div>
 
 <!-- LINKS ON LARGE SCREENS -->
@@ -54,16 +57,17 @@
         </div>
 
         <div class="medium-2 columns">
-            <a class="headertext" href="../profil/index.html">Profil </a>
-        </div>
-
-        <div class="medium-2 columns">
             <a class="headertext" href="../fadderuke/index.html">Fadderuka </a>
         </div>
-
-        <div class="medium-2 columns">
-            <a class="headertext" href='@routes.OAuth2.login()'>Login </a>
-        </div>
+        @if(user != null) {
+            <div class="medium-4 columns left">
+                <a class="headertext" href="@routes.Users.profile()">Profil </a>
+            </div>
+        } else {
+            <div class="medium-4 columns left">
+                <a class="headertext" href='@routes.OAuth2.login()'>Login </a>
+            </div>
+        }
     </div>
 </div>
 <div class="row">

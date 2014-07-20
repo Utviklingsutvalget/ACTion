@@ -29,7 +29,6 @@ public class Events extends Controller {
             user = new Authorize.UserSession().getUser();
             for (Event e : events) {
                 String timeString = e.startTime.toString();
-                e.setTimeString(timeString);
                 Participation participation = new Participation(e, user);
                 int i;
                 if (e.participants.contains(participation)) {
