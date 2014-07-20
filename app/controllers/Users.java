@@ -7,6 +7,7 @@ import play.mvc.Results;
 import utils.Authorize;
 import views.html.index;
 import views.html.user.profile;
+import views.html.user.show;
 
 import java.util.List;
 
@@ -45,10 +46,25 @@ public class Users extends Controller {
 
         try {
             Authorize.UserSession session = new Authorize.UserSession();
-            return ok(profile.render(session.getUser(), session.getSecondsLeft()));
+            return ok(profile.render(session.getUser()));
 
         } catch(Authorize.SessionException e) {
             return Results.redirect(routes.OAuth2.authenticate(0));
+        }
+    }
+
+    public static Result show(final String id) {
+        User user = User.findById(id);
+        User loggedInUser = null;
+        try {
+            loggedInUser = new Authorize.UserSession().getUser();
+        } catch (Authorize.SessionException e) {
+            return redirect(routes.OAuth2.authenticate(0));
+        }
+        if(user == null || user.equals(loggedInUser)) {
+            return redirect(routes.Users.profile());
+        } else {
+            return ok(show.render(user));
         }
     }
 

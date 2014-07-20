@@ -60,7 +60,7 @@
                 <ul class="small-block-grid-5 medium-block-grid-4 large-block-grid-5">
                     @for(part <- event.participants) {
                         @if(part.getRvsp) {
-                            <li class="skal-bilder"><img src="@part.user.pictureUrl" alt="" /></li>
+                            <li class="skal-bilder"><a href="@routes.Users.show(part.user.id)"><img src="@part.user.pictureUrl" alt="" /></a></li>
                         }
                     }
                 </ul>
@@ -75,7 +75,7 @@
                 <ul class="small-block-grid-5 medium-block-grid-4 large-block-grid-5">
                     @for(part <- event.participants) {
                         @if(!part.getRvsp) {
-                            <li class="skal-bilder"><img src="@part.user.pictureUrl" alt="" /></li>
+                            <li class="skal-bilder"><a href="@routes.Users.show(part.user.id)"><img src="@part.user.pictureUrl" alt="" /></a></li>
                         }
                     }
                 </ul>
