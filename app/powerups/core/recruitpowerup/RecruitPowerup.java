@@ -26,7 +26,7 @@ public class RecruitPowerup extends Powerup {
 
         try {
             session = new Authorize.UserSession();
-            alreadyPending();
+            //alreadyPending();
 
         } catch(Authorize.SessionException e) {}
     }

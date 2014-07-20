@@ -1,16 +1,4 @@
-@(event: Event)
+@(event: Event, user: User)
 
 @main(event.name) {
-
-    <div class="row">
-
-        <div class="small-4 columns text-center show-for-medium-up">
-            <h4><strong>@event.name <br /> <br /></strong></h4>
-        </div>
-
-        <div class="small-4 columns text-center hide-for-medium-up">
-            <h4><strong>@event.description <br /> <br /></strong></h4>
-        </div>
-
-    </div>
 }

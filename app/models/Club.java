@@ -15,6 +15,7 @@ import java.util.List;
 
 @Entity
 public class Club extends Model {
+
     public static Finder<Long, Club> find = new Finder<>(Long.class, Club.class);
 
     @Transactional
@@ -39,6 +40,9 @@ public class Club extends Model {
 
     @OneToMany(cascade = CascadeType.PERSIST)
     public List<Activation> activations = new ArrayList<>();
+
+    @OneToMany
+    public List<Event> events = new ArrayList<>();
 
     @Transient
     public List<Powerup> powerups;
