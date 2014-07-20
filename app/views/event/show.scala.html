@@ -1,4 +1,86 @@
-@(event: Event, user: User)
+@(event: Event, loggedIn: Boolean)
 
 @main(event.name) {
+    <div class="row">
+        <div class="large-12 columns small-centered">
+            <img height="200px" src="@event.coverUrl" />
+            <br /><br /><br />
+        </div>
+
+            <!-- DATE -->
+        <div class="large-2 columns text-left paragraph-date">
+            <h5>@event.getDateString, @event.getTimeString</h5>
+        </div>
+
+            <!-- TEXT -->
+        <div class="large-10 columns">
+                <!-- HEADER -->
+            <h3>@event.name</h3>
+
+                <!-- PARAGRAPH -->
+            <p>@event.description</p>
+
+            @if(loggedIn) {
+                @eventbutton(event.id, event.isUserAttending, false)
+            }
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="medium-12 medium-centered columns utvalg-content-placement">
+            <div class="row">
+                <br />
+                <div class="small-4 columns">
+                    <div id="line" class="lineright"></div>
+                </div>
+                <div class="small-4 columns text-center">
+                    <h5><strong>Deltakere<br /><br /></strong></h5>
+                </div>
+
+                <div class="small-4 columns">
+                    <div id="line" class="lineleft"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="medium-10 columns small-centered">
+
+            <div class="medium-5 columns">
+
+                <div class="text-center">
+                    <p><strong>Skal</strong></p>
+                </div>
+
+                <div id="bold-line"></div>
+
+                <ul class="small-block-grid-5 medium-block-grid-4 large-block-grid-5">
+                    @for(part <- event.participants) {
+                        @if(part.getRvsp) {
+                            <li class="skal-bilder"><img src="@part.user.pictureUrl" alt="" /></li>
+                        }
+                    }
+                </ul>
+
+            </div>
+
+            <div class="medium-5 columns text-center right">
+                <p><strong>Skal ikke</strong></p>
+
+                <div id="bold-line"></div>
+
+                <ul class="small-block-grid-5 medium-block-grid-4 large-block-grid-5">
+                    @for(part <- event.participants) {
+                        @if(!part.getRvsp) {
+                            <li class="skal-bilder"><img src="@part.user.pictureUrl" alt="" /></li>
+                        }
+                    }
+                </ul>
+
+            </div>
+        </div>
+    </div>
 }

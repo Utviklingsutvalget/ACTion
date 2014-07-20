@@ -28,7 +28,6 @@ public class Events extends Controller {
         try {
             user = new Authorize.UserSession().getUser();
             for (Event e : events) {
-                String timeString = e.startTime.toString();
                 Participation participation = new Participation(e, user);
                 int i;
                 if (e.participants.contains(participation)) {
@@ -53,13 +52,20 @@ public class Events extends Controller {
     public static Result show(Long id) {
 
         Event event = Event.find.byId(id);
-
+        User user = null;
         try {
-            User user = new Authorize.UserSession().getUser();
-            return ok(views.html.event.show.render(event, user));
-
-        } catch (Authorize.SessionException e) {
-            return ok(views.html.event.show.render(event, null));
+            user = new Authorize.UserSession().getUser();
+        } catch (Authorize.SessionException ignored) {}
+        Participation participation = new Participation(event, user);
+        if(event.participants.contains(participation)) {
+            int i = event.participants.indexOf(participation);
+            participation = event.participants.get(i);
+            event.setUserAttending(event.participants.get(i).getRvsp());
+        }
+        if(user != null) {
+            return ok(views.html.event.show.render(event, true));
+        } else {
+            return ok(views.html.event.show.render(event, false));
         }
 
     }
