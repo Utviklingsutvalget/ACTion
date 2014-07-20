@@ -260,22 +260,24 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 							
 							    	<div class="row collapse">
 							    	  	<div class="small-7 columns">
-							    	  		<label>Bruker
-							    	    		<input type="text" placeholder="nortom13">
+							    	  		<label>
+							    	  			<span data-tooltip class="has-tip tip-right" title="Endre bruker som har denne stillingen.">Bruker</span>							    	    		<input type="text" placeholder="nortom13">
 							    	   	</div>
 							    	    <div class="small-5 columns">
 							    	    <label> <br/>
 							    	    	<span class="postfix radius">@student.westerdals.no</span>
 							    	    </div>
 							    	</div>
-							    	<label>Visningsmail
+							    	<label>
+							    		<span data-tooltip class="has-tip tip-right" title="Endre mail som vises på utvalgssiden.">Visningsmail</span>
 							      		<input type="text" placeholder="nortom13@student.westerdals.no">
 							    	</label>
 							    	
 							    	<div class="row">
 							    		
 							    		<div class="medium-4 columns">
-							    	      	<label>Plassering på siden
+							    	      	<label>
+							    	      		<span data-tooltip class="has-tip tip-right" title="Endre hvor denne stillingen skal plasseres ifht til andre. Andre styrestillinger må justeres deretter.">Bruker</span>
 							    	        	<select>
 							    	          		<option value="1">1</option>
 							    	          		<option value="2">2</option>
@@ -299,7 +301,8 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 							
 							    	<div class="row collapse">
 							    	  	<div class="small-7 columns">
-							    	  		<label>Bruker
+							    	  		<label>
+							    	  			<span data-tooltip class="has-tip tip-right" title="Endre bruker som har denne stillingen.">Bruker</span>
 							    	    		<input type="text" placeholder="norlin13">
 							    	   	</div>
 							    	    <div class="small-5 columns">
@@ -309,14 +312,15 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 							    	</div>
 							    	
 							    								    	
-							    	<label>Visningsmail
-							      		<input type="text" placeholder="norlin13@student.westerdals.no">
-							    	</label>
+							    	<label>
+							    		<span data-tooltip class="has-tip tip-right" title="Endre mail som vises på utvalgssiden.">Visningsmail</span>
+							    			<input type="text" placeholder="nortom13@student.westerdals.no">
 							    	
 							    	<div class="row">
 							    		
 							    		<div class="medium-4 columns">
-							    	      	<label>Plassering på siden
+							    	      	<label>
+							    	      		<span data-tooltip class="has-tip tip-right" title="Endre hvor denne stillingen skal plasseres ifht til andre. Andre styrestillinger må justeres deretter.">Bruker</span>
 							    	        	<select>
 							    	          		<option value="1">1</option>
 							    	          		<option value="2">2</option>
@@ -364,9 +368,17 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 						</div>
 					</div>
 					
-					<div class="medium-2 columns panel"></div>
+					<div class="row">
 					
-					<div class="medium-10 columns">
+					<div class="medium-3 columns">
+						<a class="button dropdown tiny disabled">Aktiv</a><br>
+						<ul id="drop2" data-dropdown-content class="f-dropdown">
+							<li><a href="#">Aktiv</a></li>
+						  	<li><a href="#">Ikke akitv</a></li>
+						</ul>
+					</div>
+					
+					<div class="medium-9 columns">
 					
 						<dl>
 						  <dt>Bilde</dt>
@@ -375,9 +387,15 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 						
 					</div>
 					
-					<div class="medium-2 columns panel"></div>
+					<div class="medium-3 columns">
+						<a class="button dropdown tiny disabled">Aktiv</a><br>
+						<ul id="drop3" data-dropdown-content class="f-dropdown">
+							<li><a href="#">Aktiv</a></li>
+						  	<li><a href="#">Ikke akitv</a></li>
+						</ul>
+					</div>
 					
-					<div class="medium-10 columns">
+					<div class="medium-9 columns">
 					
 						<dl>
 						  <dt>Beskrivelse</dt>
@@ -387,9 +405,15 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 						
 					</div>
 					
-					<div class="medium-2 columns panel"></div>
+					<div class="medium-3 columns">
+						<a class="button dropdown tiny disabled">Aktiv</a><br>
+						<ul id="drop4" data-dropdown-content class="f-dropdown">
+							<li><a href="#">Aktiv</a></li>
+						  	<li><a href="#">Ikke akitv</a></li>
+						</ul>
+					</div>
 					
-					<div class="medium-10 columns">
+					<div class="medium-9 columns">
 					
 						<dl>
 						  <dt>Styremedlemmer</dt>
@@ -399,9 +423,15 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 					</div>
 					
 										
-					<div class="medium-2 columns panel"></div>
+					<div class="medium-3 columns">
+						<a class="button dropdown tiny disabled">Aktiv</a><br>
+						<ul id="drop5" data-dropdown-content class="f-dropdown">
+							<li><a href="#">Aktiv</a></li>
+						  	<li><a href="#">Ikke akitv</a></li>
+						</ul>
+					</div>
 					
-					<div class="medium-10 columns">
+					<div class="medium-9 columns">
 					
 						<dl>
 						  <dt>Innmelding</dt>
@@ -410,7 +440,59 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 						
 					</div>
 					
+					<div class="medium-3 columns">
+						<a href="#" data-dropdown="drop6" class="button dropdown tiny">Aktiv</a><br>
+						<ul id="drop6" data-dropdown-content class="f-dropdown">
+							<li><a href="#">Aktiv</a></li>
+						  	<li><a href="#">Ikke aktiv</a></li>
+						</ul>
+					</div>
 					
+					<div class="medium-9 columns">
+					
+						<dl>
+						  <dt>XP-system</dt>
+						  <dd>Gir brukere mulighet til å se opptjent XP på utvalgssiden. Admin-panelet gir deg som administrator mulighet til å gi hvert medlem XP.</dd>
+						</dl>
+						
+					</div>
+					
+					<div class="medium-3 columns">
+						<a href="#" data-dropdown="drop7" class="button dropdown tiny alert">Ikke aktiv</a><br>
+						<ul id="drop7" data-dropdown-content class="f-dropdown">
+							<li><a href="#">Aktiv</a></li>
+						  	<li><a href="#">Ikke aktiv</a></li>
+						</ul>
+					</div>
+					
+					<div class="medium-9 columns">
+					
+						<dl>
+						  <dt>Spørrekjema</dt>
+						  <dd>Et spørrekjema med så mange alternativ du vil. Resultat vil du se på admin-siden</dd>
+						</dl>
+						
+					</div>
+					
+					<div class="medium-3 columns">
+						<a href="#" data-dropdown="drop8" class="button dropdown tiny">Aktiv</a><br>
+						<ul id="drop8" data-dropdown-content class="f-dropdown">
+							<li><a href="#">Aktiv</a></li>
+						  	<li><a href="#">Ikke aktiv</a></li>
+						</ul>
+					</div>
+					
+					<div class="medium-9 columns">
+					
+						<dl>
+						  <dt>Påmeldingsskjema</dt>
+						  <dd>Dette kan brukes til hva du vil. Et eksempel er påmelding til et nyhetsbrev, hvor de skriver inn e-posten de vil motta nyhetsbrevet på</dd>
+						</dl>
+						
+					</div>
+					
+					
+					</div>
 					<a href="#" data-reveal-id="powerups-chooser" class="button tiny">+ legg til...</a>
 					<div id="powerups-chooser" class="reveal-modal medium" data-reveal>
 					  	<h2>Tiljengelige powerups</h2>
