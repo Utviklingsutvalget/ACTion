@@ -274,3 +274,8 @@ img.img-gallery:hover{
 	opacity: 0.8;
 	
 }
+
+.add-button{
+	right: 0px;
+	margin-right: 0;
+}

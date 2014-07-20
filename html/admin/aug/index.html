@@ -93,6 +93,13 @@
 			</div> 
 		</div>
 		
+		<div class="row">
+		
+			<div class="medium-10 columns medium-centered">
+				<p>Kort beskrivelse av powerups, hvordan de fungerer, og hvordan admin-panel fungerer.</p>
+			</div>
+		</div>
+		
 		<div class="row hide-for-medium-up">
 			<div class="small-10 columns small-centered">
 			<div data-alert class="alert-box alert round">
@@ -132,7 +139,7 @@
 						<div class="medium-12 columns">
 							<div id="om-bilde">
 								
-								<h4 class="subheader">Bilde (1220x400)</h1>
+								<h4 class="subheader">Bilde (1220x400)</h4>
 								<img src="../../img/aug.jpg" />
 						
 								<div class="button-photochange">
@@ -191,11 +198,12 @@
 					
 					<!-- Core - BESKRIVELSE -->
 					<div class="row">
-						<div id="" class="medium-12 columns">
+						<div class="medium-12 columns">
 						
 							<br /><br />
+							
+							<div id="om-beskrivelse"></div>
 							<h4 class="subheader">Lang beskrivelse (ca. 500 tegn)</h4>
-							<div id="om-beskrivelse" data-magellan-destination="om-beskrivelse"></div>
 							<form>
 								<textarea rows="7" id="textfield-longdescription commentfield" placeholder="Skriv en beskrivelse av utvalget her">Apple User Group representerer en gruppe studenter på skolen som har økt dramatisk i antall de siste par årene: Brukere av Apple-produkter.
 
@@ -208,6 +216,7 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 					<div class="row">
 						<div class="medium-12 columns">
 							<br /><br />
+							<div id="om-beskrivelse-kort"></div>
 							<h4 class="subheader">Kort beskrivelse (ca. 200 tegn)</h4>
 							<form>
 								<textarea rows="3"></textarea>
@@ -238,6 +247,8 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 					<div class="row">
 						<div class="medium-12 columns">
 							<br /><br />
+							
+							<div id="styret-stillinger"></div>
 							<h4 class="subheader">Stillinger</h4>
 							
 						
@@ -348,12 +359,128 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 					<div class="row">
 						<div class="medium-12 columns">
 							<br /><br />
+							<div id="powerups-administrere"></div>
 							<h4 class="subheader">Administrere</h4>
 						</div>
 					</div>
+					
+					<div class="medium-2 columns panel"></div>
+					
+					<div class="medium-10 columns">
+					
+						<dl>
+						  <dt>Bilde</dt>
+						  <dd>Headerbilde på utvalget</dd>
+						</dl>
+						
+					</div>
+					
+					<div class="medium-2 columns panel"></div>
+					
+					<div class="medium-10 columns">
+					
+						<dl>
+						  <dt>Beskrivelse</dt>
+						  <dd>Lang beskrivelse av utvalget</dd>
+						</dl>
+						
+						
+					</div>
+					
+					<div class="medium-2 columns panel"></div>
+					
+					<div class="medium-10 columns">
+					
+						<dl>
+						  <dt>Styremedlemmer</dt>
+						  <dd>Oversikt over styremedlemmer i utvalget</dd>
+						</dl>
+						
+					</div>
+					
+										
+					<div class="medium-2 columns panel"></div>
+					
+					<div class="medium-10 columns">
+					
+						<dl>
+						  <dt>Innmelding</dt>
+						  <dd>En enkel innmeldingsknapp, som åpner et innmeldingsskjema om den trykkes på</dd>
+						</dl>
+						
+					</div>
+					
+					
+					<a href="#" data-reveal-id="powerups-chooser" class="button tiny">+ legg til...</a>
+					<div id="powerups-chooser" class="reveal-modal medium" data-reveal>
+					  	<h2>Tiljengelige powerups</h2>
+					  	<p class="lead"> </p>
+					 	<div class="row">
+					 	
+					 		<div class="small-2 columns">
+					 			<a href="#" class="button radius tiny secondary right">+</a>
+					 		</div>
+					  		<div class="small-10 columns">
+					  	
+					  			<h5><strong>XP-system</strong></h5>
+					  			<p>Gir brukere mulighet til å se opptjent XP på utvalgssiden. Admin-panelet gir deg som administrator mulighet til å gi hvert medlem XP.</p>
+					  		</div>
+					  		
+					  		
+					  		<div class="small-2 columns">
+					  			<a href="#" class="button radius tiny right secondary">+</a>
+					  		</div>
+					  		<div class="small-10 columns">
+					  	
+					  			<h5><strong>Embedded video</strong></h5>
+					  			<p>Gir deg muligheten til å embedde en YouTube-video på utvalgssiden</p>
+					  		</div>
+					  		
+					  		<div class="small-2 columns">
+					  			<a href="#" class="button radius tiny right secondary">+</a>
+					  		</div>
+					  		<div class="small-10 columns">
+					  	
+					  			<h5><strong>Spørrekjema</strong></h5>
+					  			<p>Et spørrekjema med så mange alternativ du vil. Resultat vil du se på admin-siden</p>
+					  		</div>
+					  		
+					  		<div class="small-2 columns">
+					  			<a href="#" class="button radius tiny right secondary">+</a>
+					  		</div>
+					  		<div class="small-10 columns">
+					  	
+					  			<h5><strong>Bilde-slideshow</strong></h5>
+					  			<p>Legger til et slideshow på utvalgssiden, bilder velger du på admin-siden</p>
+					  		</div>
+					  		
+					  		<div class="small-2 columns">
+					  			<a href="#" class="button radius tiny right secondary">+</a>
+					  		</div>
+					  		<div class="small-10 columns">
+					  	
+				 				<h5><strong>Påmeldingsskjema</strong></h5>
+				 				<p>Dette kan brukes til hva du vil. Et eksempel er påmelding til et nyhetsbrev, hvor de skriver inn e-posten de vil motta nyhetsbrevet på</p>
+				  			</div>
+				  		
+					  		
+					  		
+					  		
+					  
+					  	</div>
+					  
+					  
+					  
+					  <a class="close-reveal-modal">&#215;</a>
+					</div>
+					<br />
+					
+					<a href="#" class="button radius small">Oppdater..</a>
+					
 					<div class="row">
 						<div class="medium-12 columns">
 							<br /><br />
+							<div id="powerups-plassering"></div>
 							<h4 class="subheader">Plassering</h4>
 						</div>
 					</div>
@@ -369,24 +496,24 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 					  	
 					    <dd><strong>Om utvalget</strong></dd>
 					    <br />
-					    <dd data-magellan-arrival="om-bilde"><a href="#om-bilde">Bilde</a></dd>
+					    <dd><a href="#om-bilde">Bilde</a></dd>
 					    <br />
-					    <dd data-magellan-arrival="om-beskrivelse"><a href="#om-beskrivelse">Beskrivelse</a></dd>
+					    <dd><a href="#om-beskrivelse">Lang beskrivelse</a></dd>
 					    <br />
-					    <dd data-magellan-arrival="om-beskrivelse-kort"><a href="#om-beskrivelse-kort">Kort beskrivelse</a></dd>
+					    <dd><a href="#om-beskrivelse-kort">Kort beskrivelse</a></dd>
 					    <br />
 					    
 					    <dd><strong>Styret</strong></dd>
 					    <br />
-					    <dd data-magellan-arrival="styret-medlemmer"><a href="#styret-medlemmer">Stillinger</a></dd>
+					    <dd><a href="#styret-stillinger">Stillinger</a></dd>
 					    <br />
 					    
 					    
 					    <dd ><strong>Powerups</strong></dd>
 					    <br />
-					    <dd data-magellan-arrival="powerups-administrere"><a href="#powerups-administrere">Administrere</a></dd>
+					    <dd><a href="#powerups-administrere">Administrere</a></dd>
 					    <br />
-					    <dd data-magellan-arrival="powerups-plassering"><a href="#powerups-plassering">Plassering</a>
+					    <dd><a href="#powerups-plassering">Plassering</a>
 					    <br />
 					    
 					  </dl>
