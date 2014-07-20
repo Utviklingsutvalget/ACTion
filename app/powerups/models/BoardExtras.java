@@ -7,33 +7,37 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
+import java.util.List;
+
 
 @Entity
 public class BoardExtras extends Model {
 
-    public static Finder<BoardKey, BoardExtras> find = new Finder<>(BoardKey.class, BoardExtras.class);
+    public static Finder<Long, BoardExtras> find = new Finder<>(Long.class, BoardExtras.class);
+    public static final String BOARDCOLUMNSTRING = "board_club_id";
+    public static final String MEMBERCOLUMNSTRING = "member_id";
+    public static final String TITLECOLUMNSTRING = "title";
 
-    @EmbeddedId
-    public BoardKey key;
+    @Id
+    public Long boardExtraId;
 
     @ManyToOne
+    @Column(name = BOARDCOLUMNSTRING)
     public Board board;
 
     @Constraints.Required
     @OneToOne
     @PrimaryKeyJoinColumn
+    @Column(name = MEMBERCOLUMNSTRING)
     public User member;
 
-    public Club club;
-
     @Constraints.Required
+    @Column(name = TITLECOLUMNSTRING)
     public String title;
 
-    public BoardExtras(User user, String title, Board board){
-        this.board = board;
+    public BoardExtras(User user, String title){
         this.member = user;
         this.title = title;
-        this.key = new BoardKey(board.clubID, user.id);
     }
 
     public void setTitle(String title, User user){
@@ -41,24 +45,10 @@ public class BoardExtras extends Model {
         this.member = user;
     }
 
-    @Embeddable
-    public class BoardKey {
-
-        public Long clubId;
-        public String extrasId;
-
-        public BoardKey(Long clubId, String extrasId){
-            this.clubId =  clubId;
-            this.extrasId = extrasId;
-        }
-
-        public boolean equals(Object other) {
-            return other == this || other instanceof BoardKey && ((BoardKey) other).clubId.equals(this.clubId);
-        }
-
-        public int hashCode() {
-            return super.hashCode();
-        }
+    public static List<BoardExtras> findTitlesByBoard(Board board, String title){
+        return find.where().eq(BOARDCOLUMNSTRING, board.clubID).eq(TITLECOLUMNSTRING, title).findList();
     }
+
+
 
 }

@@ -20,12 +20,11 @@ create table board (
 ;
 
 create table board_extras (
-  club_id                   bigint,
-  extras_id                 varchar(255),
+  board_extra_id            bigint auto_increment not null,
   board_club_id             bigint,
   member_id                 varchar(255),
   title                     varchar(255),
-  constraint pk_board_extras primary key (club_id, extras_id))
+  constraint pk_board_extras primary key (board_extra_id))
 ;
 
 create table club (

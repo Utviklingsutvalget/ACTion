@@ -13,14 +13,10 @@ import powerups.Powerup;
 import powerups.core.boardpowerup.html.powerup;
 import powerups.models.BoardExtras;
 
-import java.lang.reflect.Member;
 import java.util.*;
 
 import powerups.models.Board;
 import utils.MembershipLevel;
-
-import static play.mvc.Results.badRequest;
-import static play.mvc.Results.internalServerError;
 import static play.mvc.Results.ok;
 
 public class BoardPowerup extends Powerup {
@@ -125,6 +121,7 @@ public class BoardPowerup extends Powerup {
 
                 //boardtitle changed id
                 if (mandatoryPositions.contains(key)) {
+
                     updateMandatory(key, changes.get(key));
 
                 } else {
@@ -132,6 +129,7 @@ public class BoardPowerup extends Powerup {
                     //Boardextra changed id
                     updateExtras(key, changes.get(key));
                 }
+
             }
         }
 
@@ -140,22 +138,51 @@ public class BoardPowerup extends Powerup {
 
     public void updateExtras(String title, String userId) {
 
-        for(BoardExtras boardExtras : board.boardExtra){
+        Logger.info("entered updateExtras, title: " + title + ", userId: " + userId);
+        User user = User.find.byId(userId);
 
-            //title has new ownerId
-            if(boardExtras.title.equals(title) && !boardExtras.member.id.equals(userId)) {
+        // If user connected to a title is removed and no other user is being given.
+        // Delete row with title in entity.
+        if((userId == null || userId.equals("")) && title != null){
 
-                boardExtras.setTitle(title, User.find.byId(userId));
-                break;
+            for(BoardExtras boardExtras : board.boardExtra){
 
+                if(boardExtras.title.equals(title)){
+
+                    Ebean.delete(boardExtras);
+                    return;
+                }
             }
         }
 
-        // TODO TEST PROPERLY
-        board.boardExtra.add(new BoardExtras(User.find.byId(userId), title, board));
+        if(title != null && !title.equals("")){
 
-        // TODO PUT BEFORE BREAK TO ENSURE LESS DATABASE QUERIES?
-        Ebean.update(board);
+            // Update existing title with new member
+            for(BoardExtras boardExtras : board.boardExtra){
+
+                if(boardExtras.title.equals(title) && !boardExtras.member.id.equals(userId)) {
+
+                    boardExtras.setTitle(title, User.find.byId(userId));
+
+                    Ebean.update(board);
+
+                    return;
+
+                }
+            }
+        }
+
+
+        if(title != null && !title.equals("")){
+            // If the titles sent in is not associated with this board, create new entry in board.boardextra
+            if(BoardExtras.findTitlesByBoard(board, title).size() == 0){
+
+                Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.clubID);
+                board.boardExtra.add(new BoardExtras(user, title));
+
+                Ebean.update(board);
+            }
+        }
     }
 
     // TODO REVERSE LOGIC TO BE EFFICIENT
@@ -173,7 +200,7 @@ public class BoardPowerup extends Powerup {
             for (String boardTitle : board.getMandatoryPositions()) {
                 if (title.equals(boardTitle)) {
                     this.board.setByName(columnMap.get(boardTitle), user);
-                    Logger.warn("Board: " + board + " & title: " + columnMap.get(boardTitle) + ", & user: " + user.id);
+                    //Logger.warn("Board: " + board + " & title: " + columnMap.get(boardTitle) + ", & user: " + user.id);
                 }
             }
 
