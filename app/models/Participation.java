@@ -13,7 +13,9 @@ public class Participation extends Model {
     public Participation(Event event, User user){
         this.event = event;
         this.user = user;
-        this.id = new ParticipationKey(event.id, user.id);
+        if(user != null && event != null) {
+            this.id = new ParticipationKey(event.id, user.id);
+        }
     }
 
     @EmbeddedId

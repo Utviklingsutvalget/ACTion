@@ -2,28 +2,21 @@
 
 @for(event <- events) {
     <div class="row">
-
             <!-- DATE -->
         <div class="large-2 columns text-left paragraph-date">
-            <h5>@event.startTime</h5>
+            <h5>@event.getDateString<br>@event.getTimeString</h5>
         </div>
-
             <!-- TEXT -->
         <div class="large-10 columns">
-
                 <!-- HEADER -->
             <h3>@event.name</h3>
-
                 <!-- PARAGRAPH -->
             <p>@event.description</p>
-
             @if(loggedIn) {
                 @eventbutton(event.id, event.isUserAttending, secondSet)
             }
-
         </div>
     </div>
-
     <!-- LINE SEPARATOR -->
     <div class="row">
         <div class="small-12 columns">

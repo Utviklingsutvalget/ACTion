@@ -1,13 +1,79 @@
 @(user: User, expire: Long)
 
-@main("Home") {
+@main("Min profil") {
 
-    <strong>@user.firstName</strong>
-    <br>
-    <p>Seconds until session expire <b>@expire</b></p>
-    <br><br>
-    <img src="@user.pictureUrl" width="200" height="200" />
-    <br><br>
+    <div class="row">
+        <div class="medium-10 columns medium-centered text-center">
+            <div class="medium-6 columns small-centered">
+                <img class="profile-photo" src="@(user.pictureUrl)" alt="" />
+            </div>
+            <br /><br />
+            <h1>@(user.firstName + " " + user.lastName)</h1>
+            <h5><em>@user.email</em></h5>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="medium-12 medium-centered columns utvalg-content-placement">
+            <div class="row">
+                <br />
+                <div class="small-4 columns">
+                    <div id="line" class="lineright"></div>
+                </div>
+                <div class="small-4 columns text-center">
+                    <h5><strong>Oversikt<br /><br /></strong></h5>
+                </div>
+
+                <div class="small-4 columns">
+                    <div id="line" class="lineleft"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @if(!user.memberships.isEmpty) {
+            <div class="medium-4 columns text-center">
+                <p><strong>Utvalg jeg er medlem av</strong></p>
+
+                <div id="bold-line"></div>
+
+                <ul class="no-bullet">
+            @for(membership <- user.memberships) {
+                @if(membership.level.getLevel > 0) {
+                    <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                }
+            }
+                </ul>
+            </div>
+            <div class="medium-4 columns text-center">
+                <p><strong>Utvalg jeg abbonerer på</strong></p>
+
+                <div id="bold-line"></div>
+
+                <ul class="no-bullet">
+            @for(membership <- user.memberships) {
+                @if(membership.level.getLevel == 0) {
+                    <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                }
+            }
+                </ul>
+            </div>
+        }
+        <div class="medium-4 columns text-center">
+            <p><strong>Kommende eventer</strong></p>
+
+            <div id="bold-line"></div>
+
+            <ul class="no-bullet">
+                @for(participation <- user.participations) {
+                    @if(participation.getRvsp) {
+                        <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
 
     <a href="@routes.Users.logout()">Logout</a> | <a href="@routes.OAuth2.authenticate(1)">Refetch Data</a>
 
