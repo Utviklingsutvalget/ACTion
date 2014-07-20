@@ -6,6 +6,7 @@ function powerup() {
         var clubId = container.data('powerups-for');
         var powerupId = $(this).closest('.powerup').data('powerup-id');
         var powerup = new PowerupClass();
+
         powerup.id = powerupId;
         powerup.club = clubId;
 
@@ -45,19 +46,49 @@ function PowerupClass() {
     function update() {
         var powerupHtml = getPowerupHtml((this).id);
         var powerupContent = powerupHtml.find('.powerup-content');
+
         var dataObject = {};
+        var newTitleNode = 'newTitleNode';
+        var newTitleInput = '#newTitleInput';
+
         powerupContent.find('.powerup-node').each(function () {
+
             if ($(this).hasClass('powerup-node')) {
-                var field = ($(this)).data('powerup-field');
-                if($(this).data('powerup-select') !== undefined) {
+
+                if($(this).prop('id') === newTitleNode){
+
+                    var field = ($(this).find(newTitleInput).val());
+
+                    console.log("success: " + field);
+
+                }else{
+
+                    var field = ($(this)).data('powerup-field');
+
+                }
+
+                if ($(this).data('powerup-select') !== undefined) {
+
                     var targetSelector = $(this).data('powerup-select');
                     var targetObject = $(this).find(targetSelector);
                     var selectedValue = $('option:selected', targetObject);
+
+                    console.log("targetselector: " + targetSelector);
+
                     dataObject[field] = selectedValue.val();
-                } else if($(this).data('powerup-value') !== undefined) {
+
+                } else if ($(this).data('powerup-value') !== undefined) {
+
                     dataObject[field] = $(this).data('powerup-value');
+
+                } else if($(this).data('powerup-input') !== undefined) {
+                    var targetSelector = $(this).data('powerup-input');
+                    var targetObject = $(this).find(targetSelector);
+                    dataObject[field] = targetObject.val();
+
                 } else {
                     dataObject[field] = $(this).html();
+
                 }
             }
         });

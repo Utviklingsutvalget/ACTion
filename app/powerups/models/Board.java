@@ -42,7 +42,7 @@ public class Board extends Model {
 
     public void setByName(final String name, final User user) {
 
-        //switch on stirng case sensitive
+        //switch on string case sensitive
         switch (name.toLowerCase()) {
             case LEADER_COL : leader = user;
                 break;
