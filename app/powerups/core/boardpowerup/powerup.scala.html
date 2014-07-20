@@ -1,0 +1,57 @@
+@(board: List[powerups.core.boardpowerup.BoardMember], editable : Boolean, memberList : List[Membership], leaderTitle : String)
+@import powerups.core.boardpowerup.BoardMember
+
+
+    <!-- THIS DISPLAYS THE HEADER ABOVE BOARD -->
+    <!-- displays each boardmember -->
+    <div class="row">
+        <div class="medium-10 columns medium-centered text-center">
+
+            @for(member <- board){
+                <div class="medium-4 columns left">
+                    <img class="profile-photo" src="@member.getMember.pictureUrl" alt="" />
+                    <br /><br />
+                    <h5><a href="mailto:@member.getMember.email">@member.getMember.firstName</a><br />@member.getTitle</h5>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <!-- Displays each title in the board and list of members beneath it -->
+    <div class="row boardecho">
+        <div class="large-4 columns">
+            <label>
+
+                @for(member <- board){
+
+                    @if(!editable && member.getTitle.equalsIgnoreCase(leaderTitle)){
+
+                        <div>@member.getTitle</div>
+                        <a href="#" class="button disabled" id="@member.getMember.id">@member.getMember.firstName @member.getMember.lastName</a>
+
+                    }else{
+
+                        <!-- Link data-powerup-field in one div with data-powerup-value in another div -->
+
+                        <div id="@member.getTitle" class='powerup-node' data-powerup-field='@member.getTitle' data-powerup-select='.@(member.getTitle)Select'>@member.getTitle
+                            <select class='@(member.getTitle)Select'>
+                            @for(clubMember <- memberList){
+                                <option data-powerup-value='@clubMember.user.id' value='@clubMember.user.id'>@clubMember.user.firstName @clubMember.user.lastName</option>
+                            }
+                            </select>
+                        </div>
+                    }
+                }
+            </label>
+        </div>
+    </div>
+
+@if(editable) {<script>
+createButton(getId($('.boardecho')));
+</script>}
+
+
+
+
+

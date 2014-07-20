@@ -41,6 +41,10 @@ public class User extends Model {
     @Constraints.Required
     public String pictureUrl;
 
+    @OneToMany(mappedBy = "user")
+    public List<Participation> participations = new ArrayList<>();
+
+
     public User(String id, String firstName, String lastName, Gender gender, String email, String picureUrl) {
 
         this.id = id;
@@ -75,5 +79,24 @@ public class User extends Model {
 
         for(Gender gender : Gender.values()) { list.add(gender.name());}
         return list;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        final User user = (User) o;
+
+        return id.equalsIgnoreCase(user.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id.hashCode();
+        return result;
     }
 }

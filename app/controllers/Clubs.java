@@ -1,10 +1,16 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import models.Activation;
 import models.Club;
 import models.Location;
 import play.mvc.Controller;
 import play.mvc.Result;
+import powerups.Powerup;
+import utils.ActivationSorter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,10 +33,17 @@ public class Clubs extends Controller {
         return ok(views.html.club.index.render(locations));
     }
 
-    public static Result show(String id) {
-        final Long clubId = Long.valueOf(id);
+    public static Result show(Long id) {
+        Club club = Club.find.byId(id);
 
-        final Club club = Club.find.byId(clubId);
+        club.powerups = new ArrayList<>();
+        // Sort the activations by weight:
+        Collections.sort(club.activations, new ActivationSorter());
+
+        for(Activation activation : club.activations) {
+            Powerup powerup = activation.getPowerup();
+            club.powerups.add(powerup);
+        }
 
         return ok(views.html.club.show.render(club));
     }
@@ -40,15 +53,33 @@ public class Clubs extends Controller {
 
         final Long id = Long.valueOf(postValues.get("id")[0]);
         final String newName = postValues.get("name")[0];
-        final String newDescription = postValues.get("description")[0];
-
         final Club club = Club.find.byId(id);
 
         club.name = newName;
-        club.description = newDescription;
+        //club.description = newDescription;
 
         Club.update(club);
 
         return redirect(routes.Clubs.index());
     }
+
+
+    public static Result updatePowerup(Long clubId, Long powerupId) {
+        JsonNode json = request().body().asJson();
+
+        if(json == null || json.isNull()) {
+            return badRequest("Expecting Json data");
+        }
+        final Club club = Club.find.byId(clubId);
+        Powerup powerup = null;
+        for(Activation activation : club.activations) {
+            if(activation.powerup.id.equals(powerupId)) {
+                powerup = activation.getPowerup();
+            }
+        }
+        if(powerup == null) {
+            return badRequest("No such powerup for " + club.shortName);
+        } else return powerup.update(json);
+    }
+
 }

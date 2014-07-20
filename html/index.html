@@ -7,6 +7,7 @@
 		<title>Studentportal Westerdals ACT Oslo</title>
 		<link rel="stylesheet" href="css/foundation.css" />
 		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="slick/slick.css"/>
 		<script src="js/vendor/modernizr.js"></script>
 		
 		<link rel="stylesheet" type="text/css" href="css/addtohomescreen.css">
@@ -22,16 +23,21 @@
 	
 	<body>
 	
-		<!-- CHANGE BG IMG IN CSS DIV #backgroundimglarge AND #backgroundimsmall -->
+		<!-- CHANGE BG IMG IN CSS DIV #backgroundimglarge AND #backgroundimsmall-->
 		<div id="backgroundimglarge" class="show-for-medium-up"></div>
 		<div id="backgroundimgsmall" class="hide-for-medium-up"></div>
-	
+		
+
+		
 		<!-- HEADER TEXT -->
 		<div class="row">
 			<div class="small-12 small-centered columns headercolumn text-center">
-				<h5 class="headertext">Studentersamfunnet presenterer</h5>
-				<h1 class="headertext"><strong>Studentportal for</strong></h1>
+				<h1 class="headertext"><strong>Studentportal</strong></h1>
 				<h3 class="headertext">Westerdals Oslo ACT</h3>
+				<br /><br /><br />
+				<div class="medium-10 columns medium-centered">
+					<a href="#" class="button expand round">Expanded Button</a>
+				</div>
 			</div>
 		</div>
 		
@@ -103,6 +109,7 @@
 				</div>
 			</div>
 		
+		<!-- SLUTT PÅ HEADER FRONT -->
 		
 		<!-- HEADER TEXT  -->
 		<div class="row">
@@ -147,6 +154,38 @@
 				
 				<!-- PARAGRAPH -->
 				<h6>Finans Norge og Forbrukerombudet har utviklet Økonomilappen som blant annet omfatter en online kunnskapstest. NITH-studentene i emnet Webutvikling 2 skulle komme med forslag til en ny versjon av testen som er mer interaktiv og visuelt tiltrekkende for målgruppen som er i alderen 18-25 år.<br /><br /></h6>
+				
+			</div>	
+			
+		</div>
+		
+		<!-- LINE SEPARATOR -->
+		<div class="row">
+			<div class="small-12 columns">
+				<div id="line-separator" class="line-separator-mid"></div>
+				<br />
+			</div>
+		</div>
+		
+		<!-- NEWS -->
+		<div class="row">
+		
+			<!-- DATE -->
+			<div class="large-2 columns text-left paragraph-date">
+				<h5>12. aug, 12:26</h5>
+			</div>
+			
+			<!-- TEXT -->
+			<div class="large-10 columns">
+			
+				<!-- HEADER -->
+				<h3>Slideshow</h3>
+				
+				<div class="your-class">
+				  <div>your content</div>
+				  <div>your content</div>
+				  <div>your content</div>
+				</div>
 				
 			</div>	
 			
@@ -235,7 +274,33 @@
 		<div id="footer" >
 			<div class="row">
 				<div class="large-12 columns text-center">
-					<h5 class="footertext">Følg oss</h5>
+					<h4 class="footertext">Kontakt oss</h5>
+					<h6 class="footertext">Studentersamfunnet sitt øverste organ er AU. De er delt opp i 3 forskjellige lokasjoner, for hvert campus. </h5>
+					
+					<br /><br /><br />
+					
+					<div class="row">
+						<div class="medium-10 columns medium-centered text-center">
+							<div class="medium-4 columns left">
+								<img class="footer-photos" src="img/aug_tommy.jpg" alt="" />
+								<br /><br />
+								<h5><a href="mailto:nortom13@nith.no" >Tommy Nordli </a><br /> (leder)</h5>
+							</div>
+							<div class="medium-4 columns left">
+								<img class="footer-photos" src="img/aug_mats.jpg" alt="" />
+								<br /><br />
+								<h5><a href="mailto:nortom13@nith.no" >Mats Abrahamsen </a><br /> (nester)</h5>
+							</div>
+							<div class="medium-4 columns left">
+								<img class="footer-photos" src="img/aug_pia.jpg" alt="" />
+								<br /><br />
+								<h5><a href="mailto:nortom13@nith.no" >Pia Dokken </a><br /> (økonomi)</h5>
+							</div>
+							
+							
+							
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -246,6 +311,17 @@
 	<script>
 	  $(document).foundation();
 	</script>
-		
+	
+	<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script type="text/javascript" src="slick/slick.min.js"></script>
+	
+	<script type="text/javascript">
+	        $(document).ready(function(){
+	            $('.your-item').slick();
+	        });
+    </script>
+  
+
 	</body>
 </html>	

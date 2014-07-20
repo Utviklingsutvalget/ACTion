@@ -1,3 +1,9 @@
-@(description: String)
+@(description: String, editable: Boolean, fieldString: String)
 
-<strong>@description</strong>
+<div id="inline-container" contenteditable='@(editable.toString)' data-powerup-field='@(fieldString)' class="powerup-node cke_editable cke_editable_inline cke_contents_ltr cke_show_borders" role="textbox" aria-label="Utvalgsbeskrivelse" title="Utvalgsbeskrivelse" aria-describedby="cke_289">@Html(description)</div>
+
+
+@if(editable) {<script>
+    createButton(getId($('.cke_editable')));
+</script>}
+

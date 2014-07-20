@@ -1,0 +1,107 @@
+@(id: Long, eventForm: Form[Event])
+
+@import helper._
+
+@main("Post Event") {
+
+    @form(routes.Events.update(id)) {
+
+        <div class="row">
+            <div class="large-8 columns">
+            @select(
+                eventForm("privacy"),
+                options = options(Event.getPrivacyAsList()),
+                'label -> "Privacy",
+                '_showConstraints -> false
+            )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-8 columns">
+            @inputText(
+                eventForm("name"),
+                '_label -> "Event Name",
+                'class -> "input-xlarge",
+                '_showConstraints -> false,
+                '_error -> eventForm.globalError
+            )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-8 columns">
+            @textarea(
+                eventForm("description"),
+                '_label -> "Event Description",
+                'placeholder -> "Fortell litt om Eventen...",
+                'rows -> 5,
+                'cols -> 60,
+                'class -> "input-xlarge",
+                '_showConstraints -> false,
+                '_error -> eventForm.globalError
+            )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-4 columns">
+            @inputDate(
+                eventForm("startTime"),
+                'label -> "Start Date",
+                '_showConstraints -> false
+            )
+            </div>
+
+            <div class="large-4 columns">
+            @inputDate(
+                eventForm("endTime"),
+                'label -> "End Date",
+                '_showConstraints -> false
+            )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-8 columns">
+            @inputText(
+                eventForm("location"),
+                '_label -> "Event Location",
+                'class -> "input-xlarge",
+                '_showConstraints -> false,
+                '_error -> eventForm.globalError
+            )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-8 columns">
+            @inputText(
+                eventForm("coverUrl"),
+                '_label -> "Cover Url",
+                'class -> "input-xlarge",
+                '_showConstraints -> false,
+                '_error -> eventForm.globalError
+            )
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-4 columns">
+                <input type="submit" class="button large" value="Post Event">
+            </div>
+
+            <div class="large-4 columns">
+                <a href="@routes.Events.index()" class="button tiny alert">Avbryt</a>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="large-4 columns">
+        @form(routes.Events.delete(id)) {
+            <input type="submit" value="Delete this Event" class="button small alert">
+            }
+        </div>
+    </div>
+}

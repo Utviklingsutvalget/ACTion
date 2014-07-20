@@ -1,13 +1,34 @@
 package models;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.annotation.Transactional;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import play.Logger;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+import utils.MembershipLevel;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Membership extends Model {
+
+    //public static Finder<Long, Membership> find = new Finder<>(Long.class, Membership.class);
+
+    @Transactional
+    public static void update(Membership membership) {
+        Ebean.save(membership);
+    }
+
+    public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
+
+    public Membership(Club club, User user){
+        this.club = club;
+        this.user = user;
+        this.id = new MembershipKey(club, user);
+    }
 
     @EmbeddedId
     public MembershipKey id;
@@ -21,15 +42,6 @@ public class Membership extends Model {
     @Constraints.Required
     public MembershipLevel level;
 
-    public enum MembershipLevel {
-        SUBSCRIBE,
-        MEMBER,
-        BOARD,
-        VICE,
-        LEADER,
-        COUNCIL;
-    }
-
     @Embeddable
     public class MembershipKey {
 
@@ -37,27 +49,13 @@ public class Membership extends Model {
 
         public String userId;
 
+        public MembershipKey(Club club, User user){
+            this.clubId = club.id;
+            this.userId = user.id;
+        }
+
         @Override
         public boolean equals(Object o) {
-
-            MembershipLevel myLevel = MembershipLevel.MEMBER;
-
-            switch (myLevel) {
-
-                case SUBSCRIBE:
-                    break;
-                case MEMBER:
-                    break;
-                case BOARD:
-                    break;
-                case VICE:
-                case LEADER:
-
-                    break;
-                case COUNCIL:
-                    break;
-            }
-
             if(this == o) {
                 return true;
             } else {
@@ -73,6 +71,24 @@ public class Membership extends Model {
                     .append(getClass().getName())
                     .toHashCode();
         }
+    }
+
+    public static boolean userHasMembershipInClubWithLevel(Long club_id, String user_id, MembershipLevel requiredLevel) {
+
+        Membership membership = find
+                .fetch("club")
+                .fetch("user")
+                .where().eq("club.id", club_id)
+                .where().eq("user.id", user_id)
+                .findUnique();
+
+        if(membership == null)
+            return false;
+
+        if(membership.level.compareTo(requiredLevel) >= 0)
+            return true;
+
+        return false;
     }
 
 }

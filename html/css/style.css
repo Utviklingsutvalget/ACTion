@@ -1,3 +1,7 @@
+body{
+	background-color: #ffffff;
+}
+
 .headercolumn{
 	top: 100px;
 }
@@ -46,7 +50,13 @@
 
 .headertext{
 	color: #fff;
+	size: 50px;
 	text-shadow: 1px 1px 1px #888888;
+}
+
+.headertextbig{
+	font-size: 70px;
+	text-transform: uppercase;
 }
 
 #backgroundimglarge{
@@ -92,7 +102,7 @@
 
 #footer{
 	background-color: black;
-	height: 200px;
+
 	width: 100%;
 	padding-top: 30px;
 }
@@ -176,10 +186,77 @@
 	margin-left: 5%;
 }
 
+.footer-photos{
+	border-radius: 100%;
+	width: 70%;
+	height: 70%;
+	margin-right: 15%;
+	margin-left: 15%;
+}
+
+#bold-line{
+	height: 2px;
+	width: 20%;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: black;
+	margin-bottom: 15px;
+}
+
 .utvalg-content-placement{
 	margin-top: 20px;
 }
 
 .utvalg-width{
 	width: 90%;
+}
+
+.event_img{
+	max-height: 200px;
+}
+
+.week_nr{
+	margin-left: 10px;
+	margin-top: 50px;
+}
+
+.week_dates{
+	margin-left: 10px;
+}
+
+.week_content{
+	margin-top: 40px;
+}
+
+#commentfield{
+	max-width: 100%;
+}
+
+.horizontal-separator{
+	width: 1px;
+	height: 100%;
+	background-color: black;
+	float: none;
+	position: absolute;
+	top: 0;
+	opacity: 0.3;
+	right: 40px;
+}
+
+.button-photochange{
+	position: absolute;
+	bottom: 25px;
+	left: 30px;
+	-moz-box-shadow: 0 0 10px #000000;
+	box-shadow: 0 0 10px #000000;
+	height: 33px;
+	opacity: 1;
+}
+
+.img-gallery{
+	padding-bottom: 15px;
+}
+
+img.img-gallery:hover{
+	opacity: 0.8;
 }

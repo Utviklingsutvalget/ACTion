@@ -1,6 +1,56 @@
 @(club: Club)
 
 @main(club.name) {
-    @* Full qualifier because the stupid variable has the same name as the package containing the view. TODO: Find a convention. *@
-    @views.html.club.form(club)
+    <div class="row">
+        <div class="medium-10 columns medium-centered">
+            <div data-magellan-expedition="fixed">
+                <dl class="sub-nav">
+                @for(powerup <- club.powerups) {
+                    @if(powerup.model.hasMenuEntry) {
+                        <dd data-magellan-arrival="@powerup.model.id"><a href='#@powerup.model.id'>@powerup.model.friendlyName</a></dd>
+                    }
+                }
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="powerup-container" data-powerups-for='@club.id'>
+    @for(powerup <- club.powerups) {
+        @if(powerup.model.hasMenuEntry) {
+            <div id="@powerup.model.id" data-magellan-destination="@powerup.model.id">
+            } else {
+            <div>
+            }
+        <div class="row powerup" data-powerup-id="@powerup.model.id">
+            <div class="medium-10 medium-centered columns">
+                @if(powerup.model.friendlyName != null) {
+                    <div class="small-4 columns">
+                        <div id="line" class="lineright"></div>
+                    </div>
+                    <div class="small-4 columns text-center">
+                        <h5><strong>@powerup.model.friendlyName<br /><br /></strong></h5>
+                    </div>
+
+                    <div class="small-4 columns">
+                        <div id="line" class="lineleft"></div>
+                    </div>
+                }
+                <div class="powerup-content medium-12 columns">
+                    @powerup.render()
+                </div>
+            </div>
+        </div>
+        @if(powerup.model.hasMenuEntry) {
+        </div>
+        } else {
+        </div>
+        }
+    }
+        <script>
+            $(document ).ready(powerup());
+            //noinspection BadExpressionStatementJS
+            $( '#alt-title' ).replaceWith( "<strong>@(club.shortName)</strong>");
+        </script>
+    </div>
+
 }

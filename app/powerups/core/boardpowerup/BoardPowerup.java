@@ -1,0 +1,183 @@
+package powerups.core.boardpowerup;
+
+import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
+import models.Club;
+import models.Membership;
+import models.PowerupModel;
+import models.User;
+import play.Logger;
+import play.mvc.Result;
+import play.twirl.api.Html;
+import powerups.Powerup;
+import powerups.core.boardpowerup.html.powerup;
+import powerups.models.BoardExtras;
+
+import java.lang.reflect.Member;
+import java.util.*;
+
+import powerups.models.Board;
+import utils.MembershipLevel;
+
+import static play.mvc.Results.badRequest;
+import static play.mvc.Results.internalServerError;
+import static play.mvc.Results.ok;
+
+public class BoardPowerup extends Powerup {
+
+
+    public static final String LEADER = "Leder";
+    public static final String VICE = "Nestleder";
+    public static final String ECON = "Økonomiansvarlig";
+    public static final String EVENT = "Eventansvarlig";
+
+    private Board board;
+    public List<BoardMember> boardList;
+    private final boolean editable;
+    private List<Membership> memberList;
+
+    public BoardPowerup(Club club, PowerupModel model) {
+        super(club, model);
+        boardList = new ArrayList<>();
+
+        board = Board.find.byId(club.id);
+
+        boardList.add(new BoardMember(board.leader, LEADER));
+        boardList.add(new BoardMember(board.vice, VICE));
+        boardList.add(new BoardMember(board.economy, ECON));
+        boardList.add(new BoardMember(board.event, EVENT));
+
+        for (BoardExtras boardExtras : board.boardExtra) {
+
+            boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
+        }
+
+        memberList = new ArrayList<>();
+
+        for (Membership m : Membership.find.all()) {
+            if (m.club.equals(club) && m.level.getLevel() >= MembershipLevel.MEMBER.getLevel()) {
+                memberList.add(m);
+            }
+        }
+
+        // TODO REPLACE WITH WORKING CONTEXT LOGIC AFTER BRANCH MERGE
+        editable = true;
+        //editable = this.getContext().getMemberLevel().getLevel() == MembershipLevel.VICE.getLevel();
+    }
+
+    @Override
+    public Html render() {
+        return powerup.render(boardList, editable, memberList, LEADER);
+    }
+
+
+    // Check for new titles, titles with a new associated ID, or titles removed. Return a map of updates
+    private Map<String, String> getMapUpdates(Map<String, String> existing, Map<String, String> updates) {
+        Map<String, String> changes = new HashMap<>();
+
+        for (String key : existing.keySet()) {
+
+            // Delete post if we can and it is empty
+            if (!updates.containsKey(key)) {
+                changes.put(key, null);
+            }
+
+            // Update post if the post is changed
+            if (updates.containsKey(key)) {
+                if (!updates.get(key).equals(existing.get(key))) {
+                    changes.put(key, updates.get(key));
+                    //updates.remove(key);
+                }
+            }
+        }
+
+        for (String key : updates.keySet()) {
+            if (!existing.containsKey(key)) {
+                // Add new posts to key
+                changes.put(key, updates.get(key));
+            }
+        }
+        return changes;
+    }
+
+    @Override
+    public Result update(JsonNode updateContent) {
+        if (updateContent != null) {
+            Map<String, String> existing = new HashMap<>();
+            Map<String, String> updates = new HashMap<>();
+            Map<String, String> changes;
+            List<String> mandatoryPositions = board.getMandatoryPositions();
+            Iterator<String> stringIterator = updateContent.fieldNames();
+
+            for (BoardMember member : boardList) {
+                existing.put(member.getTitle(), member.getMember().id);
+            }
+
+            while (stringIterator.hasNext()) {
+                String fieldName = stringIterator.next();
+                updates.put(fieldName, updateContent.get(fieldName).asText());
+                Logger.warn("key: " + fieldName + " & value: " + updates.get(fieldName));
+            }
+
+            changes = getMapUpdates(existing, updates);
+
+            for (String key : changes.keySet()) {
+
+                //boardtitle changed id
+                if (mandatoryPositions.contains(key)) {
+                    updateMandatory(key, changes.get(key));
+
+                } else {
+
+                    //Boardextra changed id
+                    updateExtras(key, changes.get(key));
+                }
+            }
+        }
+
+        return ok("something");
+    }
+
+    public void updateExtras(String title, String userId) {
+
+        for(BoardExtras boardExtras : board.boardExtra){
+
+            //title has new ownerId
+            if(boardExtras.title.equals(title) && !boardExtras.member.id.equals(userId)) {
+
+                boardExtras.setTitle(title, User.find.byId(userId));
+                break;
+
+            }
+        }
+
+        // TODO TEST PROPERLY
+        board.boardExtra.add(new BoardExtras(User.find.byId(userId), title, board));
+
+        // TODO PUT BEFORE BREAK TO ENSURE LESS DATABASE QUERIES?
+        Ebean.update(board);
+    }
+
+    // TODO REVERSE LOGIC TO BE EFFICIENT
+    public void updateMandatory(String title, String userId) {
+        Map<String, String> columnMap = board.getTitleColumns();
+        User user = null;
+        for (Membership member : memberList) {
+            if (member.user.id.equals(userId)) {
+                user = member.user;
+                break;
+            }
+        }
+
+        if (user != null) {
+            for (String boardTitle : board.getMandatoryPositions()) {
+                if (title.equals(boardTitle)) {
+                    this.board.setByName(columnMap.get(boardTitle), user);
+                    Logger.warn("Board: " + board + " & title: " + columnMap.get(boardTitle) + ", & user: " + user.id);
+                }
+            }
+
+            Ebean.update(board);
+        }
+    }
+}
