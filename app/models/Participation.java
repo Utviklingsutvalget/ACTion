@@ -1,55 +1,49 @@
 package models;
 
-import com.avaje.ebean.Ebean;
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
-import play.db.ebean.Transactional;
 
 import javax.persistence.*;
 
 @Entity
 public class Participation extends Model {
 
-    public static Finder<Long, Participation> find = new Finder<>(Long.class, Participation.class);
+    public static Finder<ParticipationKey, Participation> find = new Finder<>(ParticipationKey.class, Participation.class);
 
     public Participation(Event event, User user){
         this.event = event;
         this.user = user;
-        this.key = new ParticipationKey(event, user);
+        this.id = new ParticipationKey(event.id, user.id);
     }
 
     @EmbeddedId
-    public ParticipationKey key;
+    public ParticipationKey id;
 
     @ManyToOne
-    public User user;
-
-    @ManyToOne
+    @JoinColumn(name = "event_id", insertable = false, updatable = false)
     public Event event;
 
-    @Transactional
-    public static void save(Participation uie) {
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    public User user;
 
-        if(!exists(uie.event.id, uie.user.id))
-            Ebean.save(uie);
+    @Constraints.Required
+    public Status rvsp;
+
+    public void setRvsp(boolean newRvsp) {
+        if(newRvsp) {
+            this.rvsp = Status.ATTENDING;
+        } else {
+            this.rvsp = Status.NOT_ATTENDING;
+        }
     }
 
-    public static boolean exists(Long eventId, String userId) {
-
-        return find
-                .where().eq("event_id", eventId)
-                .where().eq("user_id", userId)
-                .findRowCount() > 0;
-
+    public boolean getRvsp() {
+        return rvsp == Status.ATTENDING;
     }
 
-    public static boolean userIsParticipatingEvent(Long event_id, String user_id) {
-
-        return find
-                .fetch("event")
-                .fetch("user")
-                .where().eq("event.id", event_id)
-                .where().eq("user.id", user_id)
-                .findRowCount() > 0;
+    public enum Status {
+        NOT_ATTENDING, ATTENDING
     }
 
     @Embeddable
@@ -59,9 +53,9 @@ public class Participation extends Model {
 
         public String userId;
 
-        public ParticipationKey(final Event event, final User user) {
-            this.eventId = event.id;
-            this.userId = user.id;
+        public ParticipationKey(final Long eventId, final String userId) {
+            this.eventId = eventId;
+            this.userId = userId;
         }
 
         @Override

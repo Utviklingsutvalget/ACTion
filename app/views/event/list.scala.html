@@ -1,4 +1,4 @@
-@(events: List[Event]))
+@(events: List[Event], loggedIn: Boolean, secondSet: Boolean)
 
 @for(event <- events) {
     <div class="row">
@@ -15,8 +15,11 @@
             <h3>@event.name</h3>
 
                 <!-- PARAGRAPH -->
-            <p>@event.description
-            <br /><br /></p>
+            <p>@event.description</p>
+
+            @if(loggedIn) {
+                @eventbutton(event.id, event.isUserAttending, secondSet)
+            }
 
         </div>
     </div>

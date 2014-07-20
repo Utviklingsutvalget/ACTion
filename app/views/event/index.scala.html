@@ -1,4 +1,4 @@
-@(events: java.util.List[Event], attendingEvents: java.util.List[Event])
+@(events: java.util.List[Event], attendingEvents: java.util.List[Event], loggedIn: Boolean)
 
 @main("Eventer") {
     <div class="row">
@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    @if(!attendingEvents.isEmpty) {
+    @if(loggedIn && !attendingEvents.isEmpty) {
         <div class="row">
             <div class="medium-8 columns medium-centered">
                 <ul class="tabs button-group round even-2" data-tab>
@@ -20,12 +20,12 @@
 
     <div class="tabs-content">
         <div class="content active" id="panel1">
-            @list(events);
+            @list(events, loggedIn, false);
         </div>
 
-    @if(!attendingEvents.isEmpty) {
+    @if(loggedIn && !attendingEvents.isEmpty) {
         <div class="content" id="panel2">
-            @list(attendingEvents)
+            @list(attendingEvents, loggedIn, true)
         </div>
     }
     </div>

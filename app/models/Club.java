@@ -41,6 +41,9 @@ public class Club extends Model {
     @OneToMany(cascade = CascadeType.PERSIST)
     public List<Activation> activations = new ArrayList<>();
 
+    @OneToMany
+    public List<Event> events = new ArrayList<>();
+
     @Transient
     public List<Powerup> powerups;
 

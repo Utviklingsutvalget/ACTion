@@ -16,9 +16,9 @@ GET         /users/register/terms            controllers.Registration.terms()
 GET         /users/delete                    controllers.Users.delete(id)
 
 # Google OAuth2 routes
-GET         /login                       controllers.OAuth2.login()
-GET         /login/authenticate          controllers.OAuth2.authenticate(update:Int ?= 0)
-GET         /login/oauth2callback        controllers.OAuth2.exchange()
+GET         /login                           controllers.OAuth2.login()
+GET         /login/authenticate              controllers.OAuth2.authenticate(update:Int ?= 0)
+GET         /login/oauth2callback            controllers.OAuth2.exchange()
 
 # Clubs
 GET         /clubs                           controllers.Clubs.index()
@@ -34,8 +34,8 @@ POST        /ckeditor/save                   controllers.CKEditor.save()
 GET         /events                          controllers.Events.index()
 GET         /events/new                      controllers.Events.create()
 POST        /events/save                     controllers.Events.save()
-POST        /events/participate              controllers.Events.participate()
-POST        /events/unparticipate              controllers.Events.unparticipate()
+POST        /events/attend                   controllers.Events.attend()
+
 GET         /events/:id                      controllers.Events.edit(id:Long)
 POST        /events/:id                      controllers.Events.update(id:Long)
 GET         /events/:id/show                 controllers.Events.show(id: Long)

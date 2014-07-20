@@ -41,6 +41,10 @@ public class User extends Model {
     @Constraints.Required
     public String pictureUrl;
 
+    @OneToMany(mappedBy = "user")
+    public List<Participation> participations = new ArrayList<>();
+
+
     public User(String id, String firstName, String lastName, Gender gender, String email, String picureUrl) {
 
         this.id = id;

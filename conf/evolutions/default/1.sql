@@ -79,6 +79,8 @@ create table membership (
 create table participation (
   event_id                  bigint,
   user_id                   varchar(255),
+  rvsp                      integer,
+  constraint ck_participation_rvsp check (rvsp in (0,1)),
   constraint pk_participation primary key (event_id, user_id))
 ;
 
@@ -135,10 +137,10 @@ alter table membership add constraint fk_membership_club_12 foreign key (club_id
 create index ix_membership_club_12 on membership (club_id);
 alter table membership add constraint fk_membership_user_13 foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_membership_user_13 on membership (user_id);
-alter table participation add constraint fk_participation_user_14 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_participation_user_14 on participation (user_id);
-alter table participation add constraint fk_participation_event_15 foreign key (event_id) references event (id) on delete restrict on update restrict;
-create index ix_participation_event_15 on participation (event_id);
+alter table participation add constraint fk_participation_event_14 foreign key (event_id) references event (id) on delete restrict on update restrict;
+create index ix_participation_event_14 on participation (event_id);
+alter table participation add constraint fk_participation_user_15 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_participation_user_15 on participation (user_id);
 alter table pending add constraint fk_pending_club_16 foreign key (club_id) references club (id) on delete restrict on update restrict;
 create index ix_pending_club_16 on pending (club_id);
 alter table pending add constraint fk_pending_user_17 foreign key (user_id) references user (id) on delete restrict on update restrict;

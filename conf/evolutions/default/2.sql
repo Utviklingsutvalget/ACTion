@@ -33,7 +33,7 @@ Lang beskrivelse for Apple user group.Lang beskrivelse for Apple user group.Lang
 
 INSERT INTO `action`.`user` (`id`, `first_name`, `gender`, `email`, `picture_url`) VALUES ('1', 'ragnar', '1', NULL, 'http://www.catchwallpapers.com/wp-content/uploads/2013/03/HBO-drama-Game-of-Thrones-Season-3-HD-characters-wallpaper-1600x1200-10-765x400.jpg'), ('2', 'dsdsadsa', '0', NULL, NULL);
 
-INSERT INTO `action`.`board` (`club_id`, `leader_id`, `vice_id`, `economy_id`) VALUES ('1', '1', '2', '1');
+INSERT INTO `action`.`board` (`club_id`, `leader_id`, `vice_id`, `economy_id`) VALUES ('1', '118106314260578391537', '2', '1');
 INSERT INTO `action`.`board_extras` (`club_id`, `extras_id`, `member_id`, `title`) VALUES ('1', '1', '1', 'løytnant');
 INSERT INTO `action`.`activation` (`powerup_id`, `club_id`, `weight`) VALUES ('3', '1', '0');
 

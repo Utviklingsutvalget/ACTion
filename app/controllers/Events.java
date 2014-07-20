@@ -1,41 +1,54 @@
 package controllers;
 
-import models.Participation;
+import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Event;
+import models.Participation;
 import models.User;
+import play.Logger;
 import play.data.Form;
+import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.Authorize;
 import utils.EventSorter;
 import views.html.error;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static play.data.Form.form;
 
 public class Events extends Controller {
 
     public static Result index() {
+        //Calendar cal =Calendar.getInstance(Locale.forLanguageTag("no_NO"));
         List<Event> events = Event.find.all();
         List<Event> attendingEvents = new ArrayList<>();
-        User user;
+        User user = null;
         try {
             user = new Authorize.UserSession().getUser();
-            if(user != null) {
-                for (Event e : events) {
-                    if (e.participants.contains(new Participation(e, user))) {
+            for (Event e : events) {
+                String timeString = e.startTime.toString();
+                e.setTimeString(timeString);
+                Participation participation = new Participation(e, user);
+                int i;
+                if (e.participants.contains(participation)) {
+                    i = e.participants.indexOf(participation);
+                    participation = e.participants.get(i);
+                    if(participation.getRvsp()) {
                         attendingEvents.add(e);
                     }
+                    e.setUserAttending(participation.getRvsp());
+                } else {
+                    e.setUserAttending(false);
                 }
             }
-        } catch (Authorize.SessionException ignored) {}
-        events.sort(new EventSorter());
+        } catch (Authorize.SessionException ignored) {
 
-        return ok(views.html.event.index.render(events, attendingEvents));
+        }
+        events.sort(new EventSorter());
+        final boolean loggedIn = user != null;
+        return ok(views.html.event.index.render(events, attendingEvents, loggedIn));
     }
 
     public static Result show(Long id) {
@@ -43,31 +56,35 @@ public class Events extends Controller {
         Event event = Event.find.byId(id);
 
         try {
-            User user =  new Authorize.UserSession().getUser();
+            User user = new Authorize.UserSession().getUser();
             return ok(views.html.event.show.render(event, user));
 
-        } catch(Authorize.SessionException e) {return ok(views.html.event.show.render(event, null));}
+        } catch (Authorize.SessionException e) {
+            return ok(views.html.event.show.render(event, null));
+        }
 
     }
 
     public static Result create() {
 
         try {
-            User user =  new Authorize.UserSession().getUser();
+            User user = new Authorize.UserSession().getUser();
 
             Form<Event> eventForm = form(Event.class);
             return ok(views.html.event.createForm.render(eventForm));
 
-        } catch(Authorize.SessionException e) {return badRequest(error.render(e.getMessage()));}
+        } catch (Authorize.SessionException e) {
+            return badRequest(error.render(e.getMessage()));
+        }
     }
 
     public static Result save() {
 
         try {
-            User user =  new Authorize.UserSession().getUser();
+            User user = new Authorize.UserSession().getUser();
 
             Form<Event> eventForm = form(Event.class).bindFromRequest();
-            if(eventForm.hasErrors()) {
+            if (eventForm.hasErrors()) {
                 return badRequest(views.html.event.createForm.render(eventForm));
             }
 
@@ -75,7 +92,9 @@ public class Events extends Controller {
             flash("success", "Event " + eventForm.get().name + " has been created.");
             return index();
 
-        } catch(Authorize.SessionException e) {return badRequest(error.render(e.getMessage()));}
+        } catch (Authorize.SessionException e) {
+            return badRequest(error.render(e.getMessage()));
+        }
 
 
     }
@@ -89,7 +108,7 @@ public class Events extends Controller {
 
     public static Result update(Long id) {
         Form<Event> eventForm = form(Event.class).bindFromRequest();
-        if(eventForm.hasErrors()) {
+        if (eventForm.hasErrors()) {
             return badRequest(views.html.event.editForm.render(id, eventForm));
         }
         eventForm.get().update(id);
@@ -106,30 +125,33 @@ public class Events extends Controller {
         return index();
     }
 
-    public static Result participate() {
-
-        Map<String, String[]> params = request().body().asFormUrlEncoded();
-
-        Long eventId = Long.parseLong(params.get("event_id")[0]);
-        String userId = params.get("user_id")[0];
-
+    @BodyParser.Of(BodyParser.Json.class)
+    public static Result attend() {
+        User user;
+        try {
+            user = new Authorize.UserSession().getUser();
+        } catch (Authorize.SessionException e) {
+            return unauthorized();
+        }
+        JsonNode json = request().body().asJson();
+        Long eventId = json.findValue("event").asLong();
+        boolean newRvsp = json.findValue("attend").asBoolean();
         Event event = Event.find.byId(eventId);
-        User user = User.findById(userId);
-
-        Participation.save(new Participation(event, user));
-
-        return show(event.id);
+        if(event == null) {
+            return internalServerError("No such event");
+        }
+        Participation participation = Participation.find.byId(new Participation(event, user).id);
+        if(participation == null) {
+            participation = new Participation(event, user);
+            participation.setRvsp(newRvsp);
+            Ebean.save(participation);
+        } else {
+            if(participation.getRvsp() != newRvsp) {
+                participation.setRvsp(newRvsp);
+                Ebean.update(participation);
+            }
+        }
+        return ok();
     }
 
-    public static Result unparticipate() {
-
-        Map<String, String[]> params = request().body().asFormUrlEncoded();
-
-        Long uieId = Long.parseLong(params.get("uie_id")[0]);
-
-        Long eventId = Participation.find.byId(uieId).event.id;
-        Participation.find.byId(uieId).delete();
-
-        return show(eventId);
-    }
 }
