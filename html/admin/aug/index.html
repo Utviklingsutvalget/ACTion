@@ -238,48 +238,58 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 					<div class="row">
 						<div class="medium-12 columns">
 							<br /><br />
-							<h4 class="subheader">Styremedlemmer</h4>
+							<h4 class="subheader">Stillinger</h4>
 							
 						
 							<form data-abide>
 							  	<fieldset>
-							    	<legend>Tommy Nordli</legend>
+							    	<legend>Utvalgsleder</legend>
+							
+									<h4>Tommy Nordli</h4>
 							
 							    	<div class="row collapse">
 							    	  	<div class="small-7 columns">
-							    	  		<label>Mail
-							    	    		<input type="text" required pattern="(tommy|nortom)" required placeholder="nortom">
-							    	    	
-							    	    	<small class="error">Denne mailen eksisterer ikke på nortom13</small>
+							    	  		<label>Bruker
+							    	    		<input type="text" placeholder="nortom13">
 							    	   	</div>
 							    	    <div class="small-5 columns">
 							    	    <label> <br/>
 							    	    	<span class="postfix radius">@student.westerdals.no</span>
 							    	    </div>
 							    	</div>
-							    	
-							    								    	
-							    	
-							    	
-							    	<label>Tittel
-							      		<input type="text" placeholder="Utvalgsleder" disabled>
+							    	<label>Visningsmail
+							      		<input type="text" placeholder="nortom13@student.westerdals.no">
 							    	</label>
+							    	
+							    	<div class="row">
+							    		
+							    		<div class="medium-4 columns">
+							    	      	<label>Plassering på siden
+							    	        	<select>
+							    	          		<option value="1">1</option>
+							    	          		<option value="2">2</option>
+							    	          		<option value="3">3</option>
+							    	          		<option value="4">4</option>
+							    	        	</select>
+							    	      	</label>
+							    	    </div>
+							    	    
+							    		</div>
+							    		
 							  </fieldset>
-							  
-							
 							</form>
 							
 							
 							<form data-abide>
 							  	<fieldset>
-							    	<legend>Line Amelia Nordengen</legend>
+							    	<legend>Nestleder</legend>
+							
+									<h4>Line Amelia</h4>
 							
 							    	<div class="row collapse">
 							    	  	<div class="small-7 columns">
-							    	  		<label>Mail
-							    	    		<input type="text" required pattern="(line|norlin13)" required placeholder="norlin13">
-							    	    	
-							    	    	<small class="error">Denne mailen eksisterer ikke på norlin13</small>
+							    	  		<label>Bruker
+							    	    		<input type="text" placeholder="norlin13">
 							    	   	</div>
 							    	    <div class="small-5 columns">
 							    	    <label> <br/>
@@ -288,48 +298,33 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 							    	</div>
 							    	
 							    								    	
-							    	
-							    	
-							    	<label>Tittel
-							      		<input type="text" placeholder="Utvalgsleder">
+							    	<label>Visningsmail
+							      		<input type="text" placeholder="norlin13@student.westerdals.no">
 							    	</label>
-							  </fieldset>
-							  
-							
+							    	
+							    	<div class="row">
+							    		
+							    		<div class="medium-4 columns">
+							    	      	<label>Plassering på siden
+							    	        	<select>
+							    	          		<option value="1">1</option>
+							    	          		<option value="2">2</option>
+							    	          		<option value="3">3</option>
+							    	          		<option value="4">4</option>
+							    	        	</select>
+							    	      	</label>
+							    	    </div>
+							    	    
+							  		</div>
+							  	</fieldset>
 							</form>
 							
-							<div class="row">
-							<form data-abide>
-								<div class="large-12 columns">
-							    	<div class="row collapse">
-							    		
-							        	<div class="small-5 columns">
-							          		<input type="text" required pattern="(nortom13|tommy|eivind)" required placeholder="nortom13 / tommy / eivind">
-							          		
-							          		<small class="error">Denne mailen tilhører ikke et medlem</small>
-							        	</div>
-							        	<div class="small-5 columns">
-							            	<span class="postfix">@student.westerdals.no</span>
-							        	</div>
-							        	<div class="small-2 columns">
-							        		<a href="#" class="button postfix">+ legg til</a>
-							        	</div>
-							        	</form>
-							        	
-							        	<span data-tooltip class="has-tip tip-right" title="Når + legg til trykkes på, opprettes en ny styremedlem. De skal vises tilsvarende de over. <br /> Navn og mail skal hentes fra database. Om personen er noen av de stillingene som ikke skal <br />kunne endres (leder, nestleder osv), så må det settes fra databasen på den brukeren manuelt,<br /> så det kommer opp her. For å disable text-field setter dere bare disabled etter det i html<br /> (se hvordan jeg har gjort det). Så, om tittel på den personen i databsen er en av de som ikke<br />skal kunne endres, så vil det endres her i koden. Dette kan selvfølgelig endres om man går <br />inn i inspect element, og fjerner disabled. Det må gjøres sånn at om personen har den tittelen,<br /> kan den heller ikke endres i databasen, med mindre det gjøres fra en med de rettighetene. <br />Hvordan alt dette skal gjøres får bli opp til dere, om vi i det heletatt skal ha begrensning <br />på å endre tittel på noen av styremedlemmene. Personlig mener jeg det ikke er behov <br />for det, da det gjør det en del vanskeligere. Hvilken mail som vises på utvalgssiden på<br /> det styremedlemmet skal kunne endres. Dette endres ikke i databasen, bare mail som vises. <br />Om det først skal søke om den mailen er knyttet til den brukeren, og kun da gi han mulighet <br />til å endre får bli opp til dere. Spør om dere lurer på hva jeg prøver å si her :P">Hover meg!</span>
-							        	
-							        	
-							      	</div>
-							    </div>
-							</div>
+					
+							
+							<a href="#" class="button small radius">Oppdater..</a>
 						</div>
 					</div>
-					<div class="row">
-						<div class="medium-12 columns">
-							<br /><br />
-							<h4 class="subheader">Plassering</h4>
-						</div>
-					</div>
+					
 					
 					<!-- TITTEL - STYRET -->
 					<div class="row">
@@ -383,12 +378,9 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 					    
 					    <dd><strong>Styret</strong></dd>
 					    <br />
-					    <dd data-magellan-arrival="styret-medlemmer"><a href="#styret-medlemmer">Medlemmer</a></dd>
+					    <dd data-magellan-arrival="styret-medlemmer"><a href="#styret-medlemmer">Stillinger</a></dd>
 					    <br />
-					    <dd data-magellan-arrival="styret-bilder"><a href="#styret-bilder">Bilder</a></dd>
-					    <br />
-					    <dd data-magellan-arrival="styret-plassering"><a href="#styret-plassering">Plassering</a></dd>
-					    <br />
+					    
 					    
 					    <dd ><strong>Powerups</strong></dd>
 					    <br />
@@ -411,7 +403,6 @@ Utvalgets jobb er å assistere disse studentene slik at de har like mye utnytte 
 	<script>
 	  $(document).foundation();
 	</script>
-	
 		
 	</body>
 </html>		
