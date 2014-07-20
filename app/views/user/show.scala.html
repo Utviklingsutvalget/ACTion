@@ -1,7 +1,6 @@
 @(user: User)
 
-@main("Min profil") {
-
+@main(user.firstName + " " + user.lastName) {
     <div class="row">
         <div class="medium-10 columns medium-centered text-center">
             <div class="medium-6 columns small-centered">
@@ -32,49 +31,33 @@
     </div>
 
     <div class="row">
-        @if(!user.memberships.isEmpty) {
-            <div class="medium-4 columns text-center">
-                <p><strong>Utvalg jeg er medlem av</strong></p>
+    @if(!user.memberships.isEmpty) {
+        <div class="medium-4 columns text-center">
+            <p><strong>Utvalg @user.firstName er medlem av</strong></p>
 
-                <div id="bold-line"></div>
+            <div id="bold-line"></div>
 
-                <ul class="no-bullet">
+            <ul class="no-bullet">
             @for(membership <- user.memberships) {
                 @if(membership.level.getLevel > 0) {
                     <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
                 }
             }
-                </ul>
-            </div>
-            <div class="medium-4 columns text-center">
-                <p><strong>Utvalg jeg abbonerer på</strong></p>
-
-                <div id="bold-line"></div>
-
-                <ul class="no-bullet">
-            @for(membership <- user.memberships) {
-                @if(membership.level.getLevel == 0) {
-                    <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
-                }
-            }
-                </ul>
-            </div>
-        }
+            </ul>
+        </div>
+    }
         <div class="medium-4 columns text-center">
             <p><strong>Kommende eventer</strong></p>
 
             <div id="bold-line"></div>
 
             <ul class="no-bullet">
-                @for(participation <- user.participations) {
-                    @if(participation.getRvsp) {
-                        <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
-                    }
+            @for(participation <- user.participations) {
+                @if(participation.getRvsp) {
+                    <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
                 }
+            }
             </ul>
         </div>
     </div>
-
-    <a href="@routes.Users.logout()">Logout</a> | <a href="@routes.OAuth2.authenticate(1)">Refetch Data</a>
-
 }
