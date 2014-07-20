@@ -260,3 +260,22 @@ body{
 img.img-gallery:hover{
 	opacity: 0.8;
 }
+
+.skal-bilder{
+	padding-bottom: 25px;
+}
+
+.skal-bilder img{
+	-moz-box-shadow: 0 0 3px #000000;
+	box-shadow: 0 0 3px #000000;
+}
+
+.skal-bilder img:hover{
+	opacity: 0.8;
+	
+}
+
+.add-button{
+	right: 0px;
+	margin-right: 0;
+}
