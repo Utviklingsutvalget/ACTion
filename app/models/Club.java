@@ -70,4 +70,8 @@ public class Club extends Model {
     private void setListDesc(Html listDesc) {
         this.listDesc = listDesc;
     }
+
+    public int getNumberOfMembers() {
+        return members.size();
+    }
 }

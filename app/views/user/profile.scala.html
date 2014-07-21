@@ -1,4 +1,5 @@
 @(user: User)
+@import utils.MembershipLevel
 
 @main("Min profil") {
 
@@ -39,11 +40,11 @@
                 <div id="bold-line"></div>
 
                 <ul class="no-bullet">
-            @for(membership <- user.memberships) {
-                @if(membership.level.getLevel > 0) {
-                    <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                @for(membership <- user.memberships) {
+                    @if(membership.level.getLevel > 0) {
+                        <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                    }
                 }
-            }
                 </ul>
             </div>
             <div class="medium-4 columns text-center">
@@ -52,11 +53,11 @@
                 <div id="bold-line"></div>
 
                 <ul class="no-bullet">
-            @for(membership <- user.memberships) {
-                @if(membership.level.getLevel == 0) {
-                    <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                @for(membership <- user.memberships) {
+                    @if(membership.level.getLevel == 0) {
+                        <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                    }
                 }
-            }
                 </ul>
             </div>
         }
@@ -66,15 +67,41 @@
             <div id="bold-line"></div>
 
             <ul class="no-bullet">
-                @for(participation <- user.participations) {
-                    @if(participation.getRvsp) {
-                        <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
-                    }
+            @for(participation <- user.participations) {
+                @if(participation.getRvsp) {
+                    <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
                 }
+            }
             </ul>
         </div>
     </div>
 
     <a href="@routes.Users.logout()">Logout</a> | <a href="@routes.OAuth2.authenticate(1)">Refetch Data</a>
+
+    <div class="row">
+        <div class="medium-8 columns medium-centered hide-for-medium-up">
+            <div data-alert class="alert-box warning round">
+                Vi kan dessverre garantere at admin-panelet fungerer på mobile enheter.
+                <a href="#" class="close">&times;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="medium-12 columns">
+        @for(membership <- user.memberships) {
+            @if(membership.level.getLevel >= MembershipLevel.BOARD.getLevel) {
+                <div class="medium-12 columns">
+                    <ul class="pricing-table">
+                        <li class="title">@membership.level.getTitle</li>
+                        <li class="price">@membership.club.name</li>
+                        <li class="bullet-item">@membership.club.getNumberOfMembers</li>
+                        <li class="cta-button"><a class="button" href="@routes.Administration.showClub(membership.club.id)">Administrer</a></li>
+                    </ul>
+                </div>
+            }
+        }
+        </div>
+    </div>
 
 }

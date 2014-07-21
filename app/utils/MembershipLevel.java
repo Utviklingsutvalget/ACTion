@@ -19,4 +19,14 @@ public enum MembershipLevel {
             default: return 0;
         }
     }
+    public String getTitle() {
+        switch(this) {
+            case MEMBER: return "Medlem";
+            case BOARD: return "Styremedlem";
+            case VICE: return "Nestleder";
+            case LEADER: return "Leder";
+            case COUNCIL: return "Studentrådsleder";
+            default: return "Ikke medlem";
+        }
+    }
 }
