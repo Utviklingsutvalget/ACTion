@@ -14,6 +14,7 @@ import powerups.core.boardpowerup.html.powerup;
 import powerups.models.BoardExtras;
 
 import java.util.*;
+import powerups.core.boardpowerup.html.*;
 
 import powerups.models.Board;
 import utils.MembershipLevel;
@@ -62,8 +63,13 @@ public class BoardPowerup extends Powerup {
     }
 
     @Override
+    public Html renderAdmin(){
+        return admin.render(boardList, true, memberList);
+    }
+
+    @Override
     public Html render() {
-        return powerup.render(boardList, editable, memberList, LEADER);
+        return powerup.render(boardList);
     }
 
     @Override
