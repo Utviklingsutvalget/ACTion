@@ -57,13 +57,18 @@ public class BoardPowerup extends Powerup {
         }
 
         // TODO REPLACE WITH WORKING CONTEXT LOGIC AFTER BRANCH MERGE
-        editable = true;
+        editable = false;
         //editable = this.getContext().getMemberLevel().getLevel() == MembershipLevel.VICE.getLevel();
     }
 
     @Override
+    public Html renderAdmin(){
+        return powerup.render(boardList, true, memberList);
+    }
+
+    @Override
     public Html render() {
-        return powerup.render(boardList, editable, memberList, LEADER);
+        return powerup.render(boardList, editable, memberList);
     }
 
 
@@ -98,6 +103,8 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public Result update(JsonNode updateContent) {
+
+        // Testing access limitation
         if (updateContent != null) {
             Map<String, String> existing = new HashMap<>();
             Map<String, String> updates = new HashMap<>();
@@ -132,8 +139,8 @@ public class BoardPowerup extends Powerup {
 
             }
         }
-
         return ok("something");
+
     }
 
     public void updateExtras(String title, String userId) {
