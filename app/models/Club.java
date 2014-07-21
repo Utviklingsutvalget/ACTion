@@ -8,10 +8,12 @@ import play.twirl.api.Html;
 import powerups.*;
 import powerups.Powerup;
 import powerups.core.descriptionpowerup.DescriptionPowerup;
+import utils.MembershipLevel;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Club extends Model {
@@ -57,6 +59,18 @@ public class Club extends Model {
             if(powerup instanceof DescriptionPowerup) {
                 setListDesc(((DescriptionPowerup) powerup).renderList());
             }
+        }
+    }
+
+    public Club(String name, String shortName, Long locationId) {
+        this.name = name;
+        this.shortName = shortName;
+
+        Location location = Location.find.byId(locationId);
+        if(location == null) {
+            this.location = null;
+        } else {
+            this.location = location;
         }
     }
 

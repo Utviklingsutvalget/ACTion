@@ -1,8 +1,11 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import controllers.routes;
 import models.Membership;
 import models.User;
+import play.Logger;
+import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -86,6 +89,35 @@ public class Users extends Controller {
 
         OAuth2.destroySessions();
         return ok(index.render("Logged Out"));
+    }
+
+    @BodyParser.Of(BodyParser.Json.class)
+    public static Result hasUserEmail() {
+        Logger.warn("RECEIVED REQUEST");
+        User user;
+        try {
+            user = new Authorize.UserSession().getUser();
+            boolean authorized = false;
+            JsonNode json = request().body().asJson();
+            String email = json.findValue("email").asText();
+            Logger.warn(email);
+            for(Membership mem : user.memberships) {
+                if(mem.level == MembershipLevel.COUNCIL) {
+                    authorized = true;
+                    break;
+                }
+            }
+            if(!authorized) {
+                throw new Authorize.SessionException();
+            }
+            User targetUser = User.findByEmail(email);
+            if(targetUser != null) {
+                return ok();
+            }
+        } catch (Authorize.SessionException e) {
+            return unauthorized();
+        }
+    return notFound();
     }
 
 }

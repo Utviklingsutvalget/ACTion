@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Activation;
 import models.Club;
 import models.Location;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
@@ -61,6 +62,12 @@ public class Clubs extends Controller {
         Club.update(club);
 
         return redirect(routes.Clubs.index());
+    }
+
+    public static Result create() {
+        //Form<Club> clubForm = Form.form(Club.class);
+        //Club club = clubForm.bindFromRequest().get();
+        return null;
     }
 
 

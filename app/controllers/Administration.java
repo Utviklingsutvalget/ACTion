@@ -1,9 +1,7 @@
 package controllers;
 
-import models.Activation;
-import models.Club;
-import models.Membership;
-import models.User;
+import models.*;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
@@ -11,8 +9,7 @@ import utils.ActivationSorter;
 import utils.Authorize;
 import utils.MembershipLevel;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class Administration extends Controller {
 
@@ -44,15 +41,20 @@ public class Administration extends Controller {
     public static Result showSite() {
         try {
             User user = new Authorize.UserSession().getUser();
+            List<Location> locationList = Location.find.all();
             for (Membership mem : user.memberships) {
                 if (mem.level == MembershipLevel.COUNCIL) {
-                    return ok(views.html.admin.site.render());
+                    return ok(views.html.admin.site.render(locationList));
                 }
             }
         } catch (Authorize.SessionException e) {
             return forbidden("fu");
         }
         return forbidden("fu");
+    }
+
+    public static Result updateLocation() {
+        return null;
     }
 
 }

@@ -34,6 +34,17 @@ public class Activation extends Model {
     @Constraints.Required
     public int weight;
 
+    public Activation(Club club, PowerupModel model) {
+        this(club, model, 0);
+    }
+
+    public Activation(Club club, PowerupModel model, int weight) {
+        this.club = club;
+        this.powerup = model;
+        this.weight = weight;
+        this.key = new ActivationKey(club.id, model.id);
+    }
+
     /**
      * The embeddable key used to arrange the relations in this model.
      * @see play.db.ebean.Model
@@ -45,6 +56,11 @@ public class Activation extends Model {
         public Long powerupId;
 
         public Long clubId;
+
+        public ActivationKey(Long clubId, Long powerupId) {
+            this.clubId = clubId;
+            this.powerupId = powerupId;
+        }
 
         @Override
         public boolean equals(Object o) {

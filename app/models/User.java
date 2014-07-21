@@ -14,8 +14,12 @@ public class User extends Model {
 
     public static Finder<String, User> find = new Finder<>(String.class, User.class);
 
+    public static User findByEmail(String email) {
+        return find.where().eq("email", email).findUnique();
+    }
+
     public enum Gender {
-        MALE, FEMALE;
+        MALE, FEMALE
     }
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "user")

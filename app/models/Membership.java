@@ -25,8 +25,13 @@ public class Membership extends Model {
     public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
 
     public Membership(Club club, User user){
+        this(club, user, MembershipLevel.MEMBER);
+    }
+
+    public Membership(Club club, User user, MembershipLevel level) {
         this.club = club;
         this.user = user;
+        this.level = level;
         this.id = new MembershipKey(club, user);
     }
 
