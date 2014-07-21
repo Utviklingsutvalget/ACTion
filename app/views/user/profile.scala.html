@@ -1,4 +1,4 @@
-@(user: User)
+@(user: User, admin: Boolean)
 @import utils.MembershipLevel
 
 @main("Min profil") {
@@ -76,8 +76,6 @@
         </div>
     </div>
 
-    <a href="@routes.Users.logout()">Logout</a> | <a href="@routes.OAuth2.authenticate(1)">Refetch Data</a>
-
     <div class="row">
         <div class="medium-8 columns medium-centered hide-for-medium-up">
             <div data-alert class="alert-box warning round">
@@ -89,13 +87,18 @@
 
     <div class="row">
         <div class="medium-12 columns">
+            @if(admin) {
+                <div class="medium-12 columns">
+                    <a href="@routes.Administration.showSite()">Administrer nettsiden</a>
+                </div>
+            }
         @for(membership <- user.memberships) {
             @if(membership.level.getLevel >= MembershipLevel.BOARD.getLevel) {
                 <div class="medium-12 columns">
                     <ul class="pricing-table">
                         <li class="title">@membership.level.getTitle</li>
                         <li class="price">@membership.club.name</li>
-                        <li class="bullet-item">@membership.club.getNumberOfMembers</li>
+                        <li class="bullet-item">@membership.club.getNumberOfMembers medlemmer</li>
                         <li class="cta-button"><a class="button" href="@routes.Administration.showClub(membership.club.id)">Administrer</a></li>
                     </ul>
                 </div>
@@ -103,5 +106,5 @@
         }
         </div>
     </div>
-
+    <a href="@routes.Users.logout()">Logout</a> | <a href="@routes.OAuth2.authenticate(1)">Refetch Data</a>
 }

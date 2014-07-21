@@ -10,7 +10,6 @@ import powerups.Powerup;
 import utils.ActivationSorter;
 import utils.Authorize;
 import utils.MembershipLevel;
-import views.html.club.admin.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,17 +22,31 @@ public class Administration extends Controller {
         // Sort the activations by weight:
         Collections.sort(club.activations, new ActivationSorter());
 
-        for(Activation activation : club.activations) {
+        for (Activation activation : club.activations) {
             Powerup powerup = activation.getPowerup();
             club.powerups.add(powerup);
         }
         try {
             User user = new Authorize.UserSession().getUser();
-            for(Membership mem : user.memberships) {
-                if(mem.level == MembershipLevel.BOARD) {
+            for (Membership mem : user.memberships) {
+                if (mem.level == MembershipLevel.COUNCIL) {
                     return ok(views.html.club.admin.show.render(club));
-                } else if(mem.club.equals(club) && mem.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
+                } else if (mem.club.equals(club) && mem.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
                     return ok(views.html.club.admin.show.render(club));
+                }
+            }
+        } catch (Authorize.SessionException e) {
+            return forbidden("fu");
+        }
+        return forbidden("fu");
+    }
+
+    public static Result showSite() {
+        try {
+            User user = new Authorize.UserSession().getUser();
+            for (Membership mem : user.memberships) {
+                if (mem.level == MembershipLevel.COUNCIL) {
+                    return ok(views.html.admin.site.render());
                 }
             }
         } catch (Authorize.SessionException e) {

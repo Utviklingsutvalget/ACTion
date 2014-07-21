@@ -1,10 +1,13 @@
 package controllers;
 
+import controllers.routes;
+import models.Membership;
 import models.User;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
 import utils.Authorize;
+import utils.MembershipLevel;
 import views.html.index;
 import views.html.user.profile;
 import views.html.user.show;
@@ -45,11 +48,17 @@ public class Users extends Controller {
     public static Result profile() {
 
         try {
-            Authorize.UserSession session = new Authorize.UserSession();
-            return ok(profile.render(session.getUser()));
-
+            User user = new Authorize.UserSession().getUser();
+            boolean admin = false;
+            for(Membership mem : user.memberships) {
+                if(mem.level == MembershipLevel.COUNCIL) {
+                    admin = true;
+                    break;
+                }
+            }
+            return ok(profile.render(user, admin));
         } catch(Authorize.SessionException e) {
-            return Results.redirect(routes.OAuth2.authenticate(0));
+            return Results.redirect(controllers.routes.OAuth2.authenticate(0));
         }
     }
 

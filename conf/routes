@@ -43,6 +43,7 @@ GET         /events/:id/show                 controllers.Events.show(id: Long)
 POST        /events/:id/delete               controllers.Events.delete(id: Long)
 
 GET         /admin/clubs/:id                 controllers.Administration.showClub(id: Long)
+GET         /admin/site                      controllers.Administration.showSite()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                    controllers.Assets.at(path="/public", file)

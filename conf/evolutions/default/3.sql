@@ -8,4 +8,4 @@ INSERT INTO `event` (`id`, `privacy`, `name`, `description`, `start_time`, `end_
 (5, 0, 'Pizzakveld', 'ffdsfsfdfs fsf.df ds.fd.fsfsdfdfdfds.fdsff sfds fsdfdsfsfsd,fdsf .df.dsfdfdsfdsfsfsd.', '2014-07-30 00:00:00', '2014-07-31 00:00:00', 'Peppez Jernbanetorget', NULL, 4);
 
 UPDATE `action`.`board` SET `leader_id` = '118106314260578391537' WHERE `board`.`club_id` = 1;
-INSERT INTO `action`.`membership` (`club_id`, `user_id`, `level`) VALUES ('1', '118106314260578391537', '4');
+INSERT INTO `action`.`membership` (`club_id`, `user_id`, `level`) VALUES ('1', '118106314260578391537', '5');
