@@ -1,6 +1,19 @@
 @(club: Club)
 
-@main(club.name) {
+@main("Administrasjon - " + club.shortName) {
+    <div class="row">
+        <div class="medium-10 columns medium-centered">
+            <p>Kort beskrivelse av powerups, hvordan de fungerer, og hvordan admin-panel fungerer.</p>
+        </div>
+    </div>
+    <div class="row hide-for-medium-up">
+        <div class="small-10 columns small-centered">
+            <div data-alert class="alert-box alert round">
+                Vi kan dessverre ikke garantere funksjonalitet for admin-panelet på Mobile enheter.
+                <a href="#" class="close">&times;</a>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="medium-10 columns medium-centered">
             <div data-magellan-expedition="fixed">
