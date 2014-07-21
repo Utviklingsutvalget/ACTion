@@ -39,21 +39,38 @@ public class BoardPowerup extends Powerup {
 
         board = Board.find.byId(club.id);
 
-        boardList.add(new BoardMember(board.leader, LEADER));
-        boardList.add(new BoardMember(board.vice, VICE));
-        boardList.add(new BoardMember(board.economy, ECON));
-        boardList.add(new BoardMember(board.event, EVENT));
+        if(board.leader == null) {
+            for(int i = 0; i < 4; i++){
 
-        for (BoardExtras boardExtras : board.boardExtra) {
+                Integer n = i;
+                User dummyUser = new User(n.toString(), "dummy", "dummy",
+                        User.Gender.FEMALE, "dummy@gmail.com",
+                        "http://www.technobuffalo.com/wp-content/uploads/2012/09/steve-wozniak.jpeg");
 
-            boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
+                boardList.add(new BoardMember(dummyUser, "title" + i));
+            }
+
+        }else{
+            boardList.add(new BoardMember(board.leader, LEADER));
+            boardList.add(new BoardMember(board.vice, VICE));
+            boardList.add(new BoardMember(board.economy, ECON));
+            boardList.add(new BoardMember(board.event, EVENT));
+        }
+
+        if(board.boardExtra != null){
+            for (BoardExtras boardExtras : board.boardExtra) {
+
+                boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
+            }
         }
 
         memberList = new ArrayList<>();
 
-        for (Membership m : Membership.find.all()) {
-            if (m.club.equals(club) && m.level.getLevel() >= MembershipLevel.MEMBER.getLevel()) {
-                memberList.add(m);
+        if(Membership.find.all() != null){
+            for (Membership m : Membership.find.all()) {
+                if (m.club.equals(club) && m.level.getLevel() >= MembershipLevel.MEMBER.getLevel()) {
+                    memberList.add(m);
+                }
             }
         }
 

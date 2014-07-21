@@ -1,37 +1,42 @@
-@(isMember : Boolean)
+@(isMember : Boolean, club : Club, user : User, pending : Boolean)
 @import powerups.core.recruitpowerup.RecruitPowerup
 @import powerups.core.recruitpowerup
 
 @* ---- If user  of the club, hide the recruitpowerup ---- *@
-@if(!isMember) {
 
-        <div class="row">
-            <div class="small-12 text-center">
+@if(user != null){
+    @if(!isMember && !pending) {
+        <div class="row appMessageNode">
+            <form class="powerup-node" id="appMessageNode" data-powerup-value="@user.id">
+                <div class="row">
+                    <h3>Innmelding for @club.name</h3>
+                    <p class="lead">Skriv noe fornuftig her</p>
+
+                    <textarea maxlength="100" id="application_message" placeholder="Skriv en kort kommentar om deg selv her" required></textarea>
+                    <div id="textarea_feedback"></div>
+                </div>
+
+                <div class="submitApplication"></div>
+            </form>
+            <script>
+            createButton ( getId ( $ ( '.appMessageNode' ) ) ) ;
+            </script>
+        </div>
+    }else{
+
+        @if(isMember && !pending){
+            <div class="row">
+                <h6>Du er allerede medlem av @club.name</h6>
+            </div>
+
+        }else{
+
+            @if(!isMember && pending){
 
                 <div class="row">
-                    <div class="small-12 columns small-centered text-center loginbutton">
-
-                        <a href="#" data-reveal-id="myModal" class="button medium radius">Meld deg inn her</a>
-
-                        <div id="myModal" class="reveal-modal medium" data-reveal>
-                            <h2>Innmelding for Apple User Group</h2>
-                            <p class="lead">Skriv noe fornuftig her</p>
-
-                            <form>
-                                <div class="row">
-
-                                    <textarea maxlength="100" id="commentfield" placeholder="Skriv en kort kommentar om deg selv her"></textarea>
-                                    <div id="textarea_feedback"></div>
-
-                                </div>
-                            </form>
-                            <div class="small12 columns small-centered text-center loginbutton">
-                                <a href="#" data-reveal-id="myModal" class="button merium radius">Send søknad</a>
-                            </div>
-                            <a class="close-reveal-modal">&#215;</a>
-                        </div>
-                    </div>
+                    <h6>Ditt medlemskap er under vurdering</h6>
                 </div>
-            </div>
-        </div>
+            }
+        }
+    }
 }
