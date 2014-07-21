@@ -6,3 +6,6 @@ INSERT INTO `event` (`id`, `privacy`, `name`, `description`, `start_time`, `end_
 (3, 0, 'Workshop', 'Spillutvikling i XCode IOS. fdsf dsf sdf d fsdf sdf df dfd fdfdfdsfddsfdf.sdf dfs fsdf dsfsd fdsf dfdsfdsfsd.dfdsfdsfdsfsdfdfdsfdsfsd.', '2014-07-28 00:00:00', '2014-07-29 00:00:00', 'NITH Rom 41', NULL, 2),
 (4, 0, 'Lese kveld', 'dfdsfdfdsfdsfdfsfsdfdsfsdf.dsfdf dsf dfds s fdffdsfddsf.d fdsf dfd fsfdsffsd.', '2014-07-18 00:00:00', '2014-07-19 00:00:00', 'GrÃ¸nland Bibliotek', NULL, 3),
 (5, 0, 'Pizzakveld', 'ffdsfsfdfs fsf.df ds.fd.fsfsdfdfdfds.fdsff sfds fsdfdsfsfsd,fdsf .df.dsfdfdsfdsfsfsd.', '2014-07-30 00:00:00', '2014-07-31 00:00:00', 'Peppez Jernbanetorget', NULL, 4);
+
+UPDATE `action`.`board` SET `leader_id` = '118106314260578391537' WHERE `board`.`club_id` = 1;
+INSERT INTO `action`.`membership` (`club_id`, `user_id`, `level`) VALUES ('1', '118106314260578391537', '4');
