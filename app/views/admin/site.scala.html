@@ -19,10 +19,25 @@
                             <input type="text" name="shortName" value="Forkortelse">
                         </label>
                     </li>
-                    <li>
-                        <label class="bullet-item">
+                    <li class="small-12 columns">
+                        <label class="bullet-item small-7 columns">
                             Leders e-post
-                            <input id="leader-email" type="text" name="leader" value="leder@@student.westerdals.no">
+                            <input id="leader-email" type="text" name="leader" value="leder">
+                        </label>
+                        <div class="small-5 columns">
+                            <span class="postfix">@@student.westerdals.no</span>
+                            <input id="emailpostfix" type="hidden" name="postfix" value="@@student.westerdals.no">
+                        </div>
+                    </li>
+                    <li class="bullet-item">
+                        <label>
+                            Lokasjon
+                            <select name="location">
+                                <option value="-1">Felles</option>
+                                @for(location <- locations) {
+                                    <option value="@location.id">@location.name</option>
+                                }
+                            </select>
                         </label>
                     </li>
                     <li class="cta-button">

@@ -1,8 +1,7 @@
 function admin() {
 
     $(document).on('click', '.newclub', function(e) {
-        e.preventDefault();
-        var email = $('#leader-email').val();
+        var email = $('#leader-email').val() + $('#emailpostfix').val();
         console.log(email);
 
         var dataObject = {};
@@ -15,10 +14,7 @@ function admin() {
             dataType: 'json'
         }).always(function() {
             if(jqhxr.status !== 200) {
-                console.log("EMAIL NOT FOUND");
                 e.preventDefault();
-            } else {
-                console.log("FOUND EMAIL");
             }
         });
     });

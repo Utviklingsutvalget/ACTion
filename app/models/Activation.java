@@ -4,10 +4,7 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import powerups.*;
 
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * The Activation model represents an activation of a {@link PowerupModel} that is used to instantiate a
@@ -25,9 +22,11 @@ public class Activation extends Model {
     public ActivationKey key;
 
     @ManyToOne
+    @JoinColumn(name = "club_id", insertable = false, updatable = false)
     public Club club;
 
     @ManyToOne
+    @JoinColumn(name = "powerup_id", insertable = false, updatable = false)
     public PowerupModel powerup;
 
     // The weight specifies in which order items will be rendered. Lower numbers render before higher numbers.
@@ -64,20 +63,21 @@ public class Activation extends Model {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            } else {
-                return o instanceof ActivationKey &&
-                        ((ActivationKey) o).powerupId.equals(this.powerupId) &&
-                        ((ActivationKey) o).clubId.equals(this.clubId);
-            }
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ActivationKey that = (ActivationKey) o;
+
+            return clubId.equals(that.clubId) && powerupId.equals(that.powerupId);
+
         }
 
         @Override
         public int hashCode() {
-            return super.hashCode();
+            int result = powerupId.hashCode();
+            result = 31 * result + clubId.hashCode();
+            return result;
         }
-
     }
 
     public powerups.Powerup getPowerup() {

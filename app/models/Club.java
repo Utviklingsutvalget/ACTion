@@ -37,10 +37,10 @@ public class Club extends Model {
     @ManyToOne
     public Location location;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "club")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "club")
     public List<Membership> members = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "club")
     public List<Activation> activations = new ArrayList<>();
 
     @OneToMany
@@ -62,16 +62,10 @@ public class Club extends Model {
         }
     }
 
-    public Club(String name, String shortName, Long locationId) {
+    public Club(String name, String shortName, Location location) {
         this.name = name;
         this.shortName = shortName;
-
-        Location location = Location.find.byId(locationId);
-        if(location == null) {
-            this.location = null;
-        } else {
-            this.location = location;
-        }
+        this.location = location;
     }
 
     public Html getListDesc() {

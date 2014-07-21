@@ -1,14 +1,15 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import models.Activation;
-import models.Club;
-import models.Location;
+import models.*;
+import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
 import utils.ActivationSorter;
+import utils.Authorize;
+import utils.MembershipLevel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,9 +66,50 @@ public class Clubs extends Controller {
     }
 
     public static Result create() {
-        //Form<Club> clubForm = Form.form(Club.class);
-        //Club club = clubForm.bindFromRequest().get();
-        return null;
+        try {
+            User user = new Authorize.UserSession().getUser();
+            boolean authorized = false;
+            for (Membership mem : user.memberships) {
+                if (mem.level == MembershipLevel.COUNCIL) {
+                    authorized = true;
+                    break;
+                }
+            }
+            if(!authorized) {
+                return unauthorized();
+            }
+        } catch (Authorize.SessionException e) {
+            e.printStackTrace();
+        }
+
+        Map<String, String[]> form = request().body().asFormUrlEncoded();
+        for(String key : form.keySet()) {
+            Logger.warn(key + ":" + form.get(key)[0]);
+        }
+        String name = form.get("name")[0];
+        String shortName = form.get("shortName")[0];
+        String email = form.get("leader")[0] + form.get("postfix")[0];
+        Long locationId = Long.valueOf(form.get("location")[0]);
+
+        Location location = Location.find.byId(locationId);
+
+        Club club = new Club(name, shortName, location);
+        club.save();
+        Membership membership = new Membership(club, User.findByEmail(email), MembershipLevel.LEADER);
+        club.members.add(membership);
+        ArrayList<Activation> activations = new ArrayList<>();
+        for(PowerupModel model : PowerupModel.find.all()) {
+            if(model.isMandatory) {
+                Activation activation = new Activation(club, model, 0);
+                club.activations.add(activation);
+                activations.add(activation);
+            }
+        }
+        membership.save();
+        for(Activation activation : activations) {
+            activation.save();
+        }
+        return ok(club.name);
     }
 
 
