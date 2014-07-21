@@ -66,6 +66,19 @@ public class BoardPowerup extends Powerup {
         return powerup.render(boardList, editable, memberList, LEADER);
     }
 
+    @Override
+    public void activate() {
+        this.board = new Board();
+        this.board.clubId = this.getClub().id;
+        for(Membership membership : this.getClub().members) {
+            if(membership.level == MembershipLevel.LEADER) {
+                board.leader = membership.user;
+                break;
+            }
+        }
+        Ebean.save(board);
+    }
+
 
     // Check for new titles, titles with a new associated ID, or titles removed. Return a map of updates
     private Map<String, String> getMapUpdates(Map<String, String> existing, Map<String, String> updates) {
@@ -177,7 +190,7 @@ public class BoardPowerup extends Powerup {
             // If the titles sent in is not associated with this board, create new entry in board.boardextra
             if(BoardExtras.findTitlesByBoard(board, title).size() == 0){
 
-                Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.clubID);
+                Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.clubId);
                 board.boardExtra.add(new BoardExtras(user, title));
 
                 Ebean.update(board);

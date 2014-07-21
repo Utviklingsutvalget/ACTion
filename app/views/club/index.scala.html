@@ -32,7 +32,11 @@
             @for(location <- locations) {
                 <div class="content@if(location.cssId == 1) { active}" id="panel@location.cssId">
                     <dl>
-                    @club.list(location.clubs)
+                    @if(location.clubs.isEmpty) {
+                        Denne lokasjonen har ingen utvalg.
+                    } else {
+                        @club.list(location.clubs)
+                    }
                     </dl>
                 </div>
             }

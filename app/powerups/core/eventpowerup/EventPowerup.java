@@ -53,6 +53,11 @@ public class EventPowerup extends Powerup {
     }
 
     @Override
+    public void activate() {
+
+    }
+
+    @Override
     public Result update(JsonNode updateContent) {
         return null;
     }

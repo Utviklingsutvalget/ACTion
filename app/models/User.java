@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Email;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
+import utils.MembershipLevel;
 
 import javax.persistence.*;
 import java.util.*;
@@ -102,5 +103,19 @@ public class User extends Model {
         int result = super.hashCode();
         result = 31 * result + id.hashCode();
         return result;
+    }
+
+    public boolean isAdmin() {
+        SuperUser su = SuperUser.find.byId(new SuperUser(this).key);
+        boolean admin = su != null && su.user.equals(this);
+        if(!admin) {
+            for (Membership mem : this.memberships) {
+                if (mem.level == MembershipLevel.COUNCIL) {
+                    admin = true;
+                    break;
+                }
+            }
+        }
+        return admin;
     }
 }

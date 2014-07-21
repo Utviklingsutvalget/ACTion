@@ -56,10 +56,8 @@ public class Board extends Model {
     }
 
     @Id
-    public Long clubID;
-
     @OneToOne
-    public Club club;
+    public Long clubId;
 
     @OneToOne
     @PrimaryKeyJoinColumn

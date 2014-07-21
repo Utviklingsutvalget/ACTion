@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.routes;
 import models.Membership;
+import models.SuperUser;
 import models.User;
 import play.Logger;
 import play.mvc.BodyParser;
@@ -52,13 +53,7 @@ public class Users extends Controller {
 
         try {
             User user = new Authorize.UserSession().getUser();
-            boolean admin = false;
-            for(Membership mem : user.memberships) {
-                if(mem.level == MembershipLevel.COUNCIL) {
-                    admin = true;
-                    break;
-                }
-            }
+            boolean admin = user.isAdmin();
             return ok(profile.render(user, admin));
         } catch(Authorize.SessionException e) {
             return Results.redirect(controllers.routes.OAuth2.authenticate(0));

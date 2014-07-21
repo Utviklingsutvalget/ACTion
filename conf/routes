@@ -12,7 +12,7 @@ GET         /users/profile/:id               controllers.Users.show(id: String)
 GET         /users/logout                    controllers.Users.logout()
 POST        /users/register                  controllers.Registration.submit()
 GET         /users/register/terms            controllers.Registration.terms()
-POST         /users/find                     controllers.Users.hasUserEmail()
+POST        /users/find                      controllers.Users.hasUserEmail()
 
 # For debuging purposes
 GET         /users/delete                    controllers.Users.delete(id)
@@ -47,6 +47,8 @@ POST        /events/:id/delete               controllers.Events.delete(id: Long)
 GET         /admin/clubs/:id                 controllers.Administration.showClub(id: Long)
 GET         /admin/site                      controllers.Administration.showSite()
 POST        /admin/site                      controllers.Administration.updateLocation()
+
+GET         /admin/action                    controllers.Administration.makeAdmin()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                    controllers.Assets.at(path="/public", file)

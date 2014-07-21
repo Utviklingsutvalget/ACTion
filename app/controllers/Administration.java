@@ -1,5 +1,6 @@
 package controllers;
 
+import com.avaje.ebean.Ebean;
 import models.*;
 import play.data.Form;
 import play.mvc.Controller;
@@ -26,7 +27,7 @@ public class Administration extends Controller {
         try {
             User user = new Authorize.UserSession().getUser();
             for (Membership mem : user.memberships) {
-                if (mem.level == MembershipLevel.COUNCIL) {
+                if (user.isAdmin()) {
                     return ok(views.html.club.admin.show.render(club));
                 } else if (mem.club.equals(club) && mem.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
                     return ok(views.html.club.admin.show.render(club));
@@ -42,10 +43,8 @@ public class Administration extends Controller {
         try {
             User user = new Authorize.UserSession().getUser();
             List<Location> locationList = Location.find.all();
-            for (Membership mem : user.memberships) {
-                if (mem.level == MembershipLevel.COUNCIL) {
-                    return ok(views.html.admin.site.render(locationList));
-                }
+            if(user.isAdmin()) {
+                return ok(views.html.admin.site.render(locationList));
             }
         } catch (Authorize.SessionException e) {
             return forbidden("fu");
@@ -55,6 +54,21 @@ public class Administration extends Controller {
 
     public static Result updateLocation() {
         return null;
+    }
+
+    public static Result makeAdmin() {
+        try {
+            User user = new Authorize.UserSession().getUser();
+            List<SuperUser> superUsers = SuperUser.find.all();
+            if(superUsers.isEmpty()) {
+                SuperUser superUser = new SuperUser(user);
+                superUser.user = user;
+                Ebean.save(superUser);
+            }
+        } catch (Authorize.SessionException e) {
+            return notFound();
+        }
+        return Application.index();
     }
 
 }

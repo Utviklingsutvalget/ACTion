@@ -68,13 +68,7 @@ public class Clubs extends Controller {
     public static Result create() {
         try {
             User user = new Authorize.UserSession().getUser();
-            boolean authorized = false;
-            for (Membership mem : user.memberships) {
-                if (mem.level == MembershipLevel.COUNCIL) {
-                    authorized = true;
-                    break;
-                }
-            }
+            boolean authorized = user.isAdmin();
             if(!authorized) {
                 return unauthorized();
             }
@@ -98,16 +92,15 @@ public class Clubs extends Controller {
         Membership membership = new Membership(club, User.findByEmail(email), MembershipLevel.LEADER);
         club.members.add(membership);
         ArrayList<Activation> activations = new ArrayList<>();
-        for(PowerupModel model : PowerupModel.find.all()) {
-            if(model.isMandatory) {
-                Activation activation = new Activation(club, model, 0);
-                club.activations.add(activation);
-                activations.add(activation);
-            }
-        }
+        PowerupModel.find.all().stream().filter(model -> model.isMandatory).forEach(model -> {
+            Activation activation = new Activation(club, model, model.defaultWeight);
+            club.activations.add(activation);
+            activations.add(activation);
+        });
         membership.save();
         for(Activation activation : activations) {
             activation.save();
+            activation.getPowerup().activate();
         }
         return ok(club.name);
     }

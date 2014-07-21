@@ -1,5 +1,6 @@
 package powerups.core.clubimage;
 
+import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
@@ -23,6 +24,13 @@ public class ClubImagePowerup extends Powerup {
 
         //*********** FOR TESTING PURPOSES ****************
         return powerup.render("http://images4.fanpop.com/image/photos/20100000/Game-of-Thrones-game-of-thrones-20131987-1680-1050.jpg");
+    }
+
+    @Override
+    public void activate() {
+        ClubImage clubImage = new ClubImage();
+        clubImage.clubId = this.getClub().id;
+        Ebean.save(clubImage);
     }
 
     @Override

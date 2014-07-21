@@ -73,6 +73,8 @@ public abstract class Powerup implements Serializable {
      */
     public abstract Html render();
 
+    public abstract void activate();
+
     public abstract Result update(JsonNode updateContent);
 
     /**
@@ -116,6 +118,11 @@ public abstract class Powerup implements Serializable {
                 @Override
                 public Html render() {
                     return new Html("An error activating plugin. Please contact your local administrator. Stacktrace: <br>" + stackTrace );
+                }
+
+                @Override
+                public void activate() {
+
                 }
 
                 @Override
