@@ -40,6 +40,16 @@ public class Event extends Model {
     @Transient
     private boolean userAttending;
 
+    public Event(String name, String description, Date startTime, String location, String coverUrl, Club club) {
+
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+        this.location = location;
+        this.coverUrl = coverUrl;
+        this.club = club;
+    }
+
     public static List<String> getPrivacyAsList() {
         ArrayList<String> list = new ArrayList<>();
 

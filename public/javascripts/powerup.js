@@ -95,7 +95,7 @@ function PowerupClass() {
         console.log(dataObject);
 
         var jqhxr = $.ajax({
-            url: window.location.pathname + "/" + (this).id,
+            url:  "/clubs/" + (this).club + "/" + (this).id,
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(dataObject),

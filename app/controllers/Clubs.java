@@ -108,7 +108,7 @@ public class Clubs extends Controller {
 
     public static Result updatePowerup(Long clubId, Long powerupId) {
         JsonNode json = request().body().asJson();
-
+        Logger.warn("RECEIVED JSON");
         if(json == null || json.isNull()) {
             return badRequest("Expecting Json data");
         }
