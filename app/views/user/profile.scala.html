@@ -89,7 +89,12 @@
         <div class="medium-12 columns">
             @if(admin) {
                 <div class="medium-12 columns">
-                    <a href="@routes.Administration.showSite()">Administrer nettsiden</a>
+                    <ul class="pricing-table">
+                        <li class="title">Administrator</li>
+                        <li class="bullet-item">Du har tilgang til å administrere nettsiden.</li>
+                        <li class="cta-button"><a class="button" href="@routes.Administration.showSite()">Administrer nettsiden</a></li>
+
+                    </ul>
                 </div>
             }
         @for(membership <- user.memberships) {
