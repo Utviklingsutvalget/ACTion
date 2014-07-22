@@ -46,7 +46,7 @@ public class BoardExtras extends Model {
     }
 
     public static List<BoardExtras> findTitlesByBoard(Board board, String title){
-        return find.where().eq(BOARDCOLUMNSTRING, board.clubId).eq(TITLECOLUMNSTRING, title).findList();
+        return find.where().eq(BOARDCOLUMNSTRING, board.club.id).eq(TITLECOLUMNSTRING, title).findList();
     }
 
 

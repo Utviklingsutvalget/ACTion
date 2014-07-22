@@ -3,6 +3,7 @@ package powerups.models;
 
 import models.Club;
 import models.User;
+import play.Logger;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
@@ -35,6 +36,21 @@ public class Board extends Model {
 
     }
 
+    public Board(User leader, User vice, User economy, User event){
+        this.leader = leader;
+        this.vice = vice;
+        this.economy = economy;
+        this.event = event;
+
+        this.key = new BoardKey(this.club.id);
+    }
+
+    public Board(Club club){
+        this.club = club;
+
+        this.key = new BoardKey(this.club.id);
+    }
+
     public static final String LEADER_COL = "leader";
     public static final String VICE_COL = "vice";
     public static final String ECON_COL = "economy";
@@ -55,9 +71,12 @@ public class Board extends Model {
         }
     }
 
-    @Id
+    @EmbeddedId
+    public BoardKey key;
+
     @OneToOne
-    public Long clubId;
+    @JoinColumn(name = "club_id", insertable = false, updatable = false)
+    public Club club;
 
     @OneToOne
     @PrimaryKeyJoinColumn
@@ -87,12 +106,24 @@ public class Board extends Model {
 
         public Long clubId;
 
-        public boolean equals(Object other) {
-            return other == this || other instanceof BoardKey && ((BoardKey) other).clubId.equals(this.clubId);
+        public BoardKey(Long clubId) {
+            this.clubId = clubId;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            BoardKey boardKey = (BoardKey) o;
+
+            return clubId.equals(boardKey.clubId);
+
+        }
+
+        @Override
         public int hashCode() {
-            return super.hashCode();
+            return clubId.hashCode();
         }
     }
 

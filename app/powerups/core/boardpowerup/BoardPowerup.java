@@ -2,10 +2,7 @@ package powerups.core.boardpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import models.Club;
-import models.Membership;
-import models.PowerupModel;
-import models.User;
+import models.*;
 import play.Logger;
 import play.mvc.Result;
 import play.twirl.api.Html;
@@ -37,27 +34,37 @@ public class BoardPowerup extends Powerup {
         super(club, model);
         boardList = new ArrayList<>();
 
-        board = Board.find.byId(club.id);
+        User user1 = new User("1", "dummyUser", "dummyUser", User.Gender.FEMALE, "dummy@student.westerdals.no",
+                "http://resources1.news.com.au/images/2011/10/06/1226160/340797-steve-jobs-and-steve-wozniak.jpg");
+        Ebean.save(user1);
 
-        if(board.leader == null) {
-            for(int i = 0; i < 4; i++){
+        User user2 = new User("2", "dummyUser", "dummyUser", User.Gender.FEMALE, "dummy@student.westerdals.no",
+                "http://resources1.news.com.au/images/2011/10/06/1226160/340797-steve-jobs-and-steve-wozniak.jpg");
+        Ebean.save(user2);
 
-                Integer n = i;
-                User dummyUser = new User(n.toString(), "dummy", "dummy",
-                        User.Gender.FEMALE, "dummy@gmail.com",
-                        "http://www.technobuffalo.com/wp-content/uploads/2012/09/steve-wozniak.jpeg");
+        User user3 = new User("3", "dummyUser", "dummyUser", User.Gender.FEMALE, "dummy@student.westerdals.no",
+                "http://resources1.news.com.au/images/2011/10/06/1226160/340797-steve-jobs-and-steve-wozniak.jpg");
+        Ebean.save(user3);
 
-                boardList.add(new BoardMember(dummyUser, "title" + i));
-            }
+        User user4 = new User("4", "dummyUser", "dummyUser", User.Gender.FEMALE, "dummy@student.westerdals.no",
+                "http://resources1.news.com.au/images/2011/10/06/1226160/340797-steve-jobs-and-steve-wozniak.jpg");
+        Ebean.save(user4);
 
-        }else{
+        
+
+        Ebean.save(board);
+
+        if(board.leader != null && board.vice != null && board.economy != null && board.event != null) {
             boardList.add(new BoardMember(board.leader, LEADER));
             boardList.add(new BoardMember(board.vice, VICE));
             boardList.add(new BoardMember(board.economy, ECON));
             boardList.add(new BoardMember(board.event, EVENT));
+
         }
 
         if(board.boardExtra != null){
+            Logger.info("board.boardextra is not null");
+
             for (BoardExtras boardExtras : board.boardExtra) {
 
                 boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
@@ -91,8 +98,7 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public void activate() {
-        this.board = new Board();
-        this.board.clubId = this.getClub().id;
+        this.board = new Board(this.getClub());
         for(Membership membership : this.getClub().members) {
             if(membership.level == MembershipLevel.LEADER) {
                 board.leader = membership.user;
@@ -213,7 +219,7 @@ public class BoardPowerup extends Powerup {
             // If the titles sent in is not associated with this board, create new entry in board.boardextra
             if(BoardExtras.findTitlesByBoard(board, title).size() == 0){
 
-                Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.clubId);
+                Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.club.id);
                 board.boardExtra.add(new BoardExtras(user, title));
 
                 Ebean.update(board);

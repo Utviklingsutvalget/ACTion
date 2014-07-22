@@ -1,9 +1,5 @@
 # --- !Ups
 
-INSERT INTO `action`.`user` (`id`, `first_name`, `last_name`, `gender`, `email`, `picture_url`) VALUES
-  ('118106314260578391537', 'Eivind', 'Vegsundvåg', '0', 'vegeiv13@student.westerdals.no',
-   'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg');
-
 INSERT INTO `action`.`location` (`id`, `name`)
 VALUES (1, 'Campus Gallerigata'), (2, 'Campus Grønland'), (3, 'Campus Vulkan');
 
