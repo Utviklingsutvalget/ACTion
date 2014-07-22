@@ -1,8 +1,18 @@
-@(imageLink: String)
+@(imageLink: String, editable: Boolean)
 
-    <div class="row">
-        <div class="medium-10 medium-centered columns">
-
-            <img src="@imageLink">
-        </div>
+<div class="row">
+    <div class="medium-10 medium-centered columns">
+        <img src="@(imageLink)">
     </div>
+</div>
+@if(editable) {
+    <div class="change-image">
+        <label class="powerup-node" data-powerup-field="link" data-powerup-input=".image-link">
+            Endre bilde:
+            <input class="image-link" type="text">
+        </label>
+    </div>
+    <script>
+    createButton ( getId ( $ ( '.change-image' ) ) ) ;
+    </script>
+}

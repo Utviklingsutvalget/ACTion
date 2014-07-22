@@ -43,7 +43,8 @@ create table pl_ClubDescription (
 ;
 
 create table club_image (
-  club_id                   bigint auto_increment not null,
+  club_id                   bigint,
+  image_url                 varchar(255),
   constraint pk_club_image primary key (club_id))
 ;
 
@@ -134,22 +135,24 @@ alter table board_extras add constraint fk_board_extras_member_8 foreign key (me
 create index ix_board_extras_member_8 on board_extras (member_id);
 alter table club add constraint fk_club_location_9 foreign key (location_id) references location (id) on delete restrict on update restrict;
 create index ix_club_location_9 on club (location_id);
-alter table event add constraint fk_event_club_10 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_event_club_10 on event (club_id);
-alter table membership add constraint fk_membership_club_11 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_membership_club_11 on membership (club_id);
-alter table membership add constraint fk_membership_user_12 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_membership_user_12 on membership (user_id);
-alter table participation add constraint fk_participation_event_13 foreign key (event_id) references event (id) on delete restrict on update restrict;
-create index ix_participation_event_13 on participation (event_id);
-alter table participation add constraint fk_participation_user_14 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_participation_user_14 on participation (user_id);
-alter table pending add constraint fk_pending_club_15 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_pending_club_15 on pending (club_id);
-alter table pending add constraint fk_pending_user_16 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_pending_user_16 on pending (user_id);
-alter table super_user add constraint fk_super_user_user_17 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_super_user_user_17 on super_user (user_id);
+alter table club_image add constraint fk_club_image_club_10 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_club_image_club_10 on club_image (club_id);
+alter table event add constraint fk_event_club_11 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_event_club_11 on event (club_id);
+alter table membership add constraint fk_membership_club_12 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_membership_club_12 on membership (club_id);
+alter table membership add constraint fk_membership_user_13 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_membership_user_13 on membership (user_id);
+alter table participation add constraint fk_participation_event_14 foreign key (event_id) references event (id) on delete restrict on update restrict;
+create index ix_participation_event_14 on participation (event_id);
+alter table participation add constraint fk_participation_user_15 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_participation_user_15 on participation (user_id);
+alter table pending add constraint fk_pending_club_16 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_pending_club_16 on pending (club_id);
+alter table pending add constraint fk_pending_user_17 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_pending_user_17 on pending (user_id);
+alter table super_user add constraint fk_super_user_user_18 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_super_user_user_18 on super_user (user_id);
 
 
 

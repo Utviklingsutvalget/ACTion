@@ -22,7 +22,7 @@
             </label>
             <label class="powerup-node" data-powerup-field="time" data-powerup-input=".event-time">
                 Tidspunkt:
-                <input class="event-time" type="datetime-local">
+                <input id="event-date-time" class="event-time" type="text">
             </label>
             <label class="powerup-node"  data-powerup-field="imagelink" data-powerup-input=".event-image">
                 Link til bilde:
@@ -32,4 +32,7 @@
     </div>
 <script>
 createButton(getId($('.event-create')));
+$(document).ready(function() {
+    $('#event-date-time').datetimepicker();
+});
 </script>

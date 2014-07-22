@@ -4,10 +4,12 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
+import play.mvc.Results;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.clubimage.html.powerup;
 import powerups.models.ClubImage;
+import utils.MembershipLevel;
 
 public class ClubImagePowerup extends Powerup {
 
@@ -16,25 +18,33 @@ public class ClubImagePowerup extends Powerup {
     public ClubImagePowerup(Club club, PowerupModel model) {
         super(club, model);
 
-        clubImage = ClubImage.find.byId(club.id);
+        clubImage = ClubImage.find.byId(new ClubImage(this.getClub(), "").key);
     }
 
     @Override
     public Html render() {
+        return powerup.render(this.clubImage.imageUrl, false);
+    }
 
-        //*********** FOR TESTING PURPOSES ****************
-        return powerup.render("http://images4.fanpop.com/image/photos/20100000/Game-of-Thrones-game-of-thrones-20131987-1680-1050.jpg");
+    @Override
+    public Html renderAdmin() {
+        return powerup.render(this.clubImage.imageUrl, true);
     }
 
     @Override
     public void activate() {
-        ClubImage clubImage = new ClubImage();
-        clubImage.clubId = this.getClub().id;
+        ClubImage clubImage = new ClubImage(this.getClub(), "");
         Ebean.save(clubImage);
     }
 
     @Override
     public play.mvc.Result update(JsonNode updateContent) {
-        return null;
+        if (!(this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
+            return Results.unauthorized();
+        }
+        this.clubImage.imageUrl = updateContent.get("link").asText();
+        Ebean.update(clubImage);
+        return Results.ok();
     }
+
 }

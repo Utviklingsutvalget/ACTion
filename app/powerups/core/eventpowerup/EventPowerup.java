@@ -39,13 +39,13 @@ public class EventPowerup extends Powerup {
         List<Event> tempEvents = getClub().events;
         tempEvents.sort(new EventSorter());
         Logger.warn("Didn't fail yet2");
-        tempEvents.stream().filter(e -> e.startTime.getTime() < new Date().getTime()).forEach(tempEvents::remove);
+        tempEvents.stream().filter(e -> e.startTime.isBeforeNow()).forEach(tempEvents::remove);
         events = new ArrayList<>();
         Logger.warn("Didn't fail yet3");
         if(tempEvents.size() < MAX_EVENTS) {
             events.addAll(tempEvents);
         } else if(!tempEvents.isEmpty()) {
-            events.addAll(tempEvents.subList(0, MAX_EVENTS-1));
+            events.addAll(tempEvents.subList(0, MAX_EVENTS));
         }
         Logger.warn("Didn't fail yet4");
         User user = getContext().getSender();
@@ -78,16 +78,17 @@ public class EventPowerup extends Powerup {
         String location = updateContent.get("location").asText();
         String time = updateContent.get("time").asText();
         String coverUrl = updateContent.get("imagelink").asText();
-        String[] timeSplits = time.split("T");
 
-        DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
 
-        DateTime dateTime = format.parseDateTime(timeSplits[0] + " " + timeSplits[1]);
-        Date startTime = dateTime.toDate();
+        DateTimeFormatter format = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
+        DateTime dateTime = format.parseDateTime(time);
+        if(dateTime.isBeforeNow()) {
+            return Results.badRequest();
+        }
 
-        Event e = new Event(name, description, startTime, location, coverUrl, this.getClub());
+        Event e = new Event(name, description, dateTime, location, coverUrl, this.getClub());
         Ebean.save(e);
-        return Clubs.show(this.getClub().id);
+        return Results.ok();
     }
 
     public boolean isUserPresent() {

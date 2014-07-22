@@ -1,13 +1,13 @@
 package models;
 
-import com.google.api.client.util.DateTime;
-import play.data.format.Formats;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,9 +23,9 @@ public class Event extends Model {
     @Constraints.Required
     public String description;
     @Constraints.Required
-    public Date startTime;
+    public DateTime startTime;
     @Constraints.Required
-    public Date endTime;
+    public DateTime endTime;
     @Constraints.Required
     public String location;
     public String coverUrl;
@@ -40,7 +40,7 @@ public class Event extends Model {
     @Transient
     private boolean userAttending;
 
-    public Event(String name, String description, Date startTime, String location, String coverUrl, Club club) {
+    public Event(String name, String description, DateTime startTime, String location, String coverUrl, Club club) {
 
         this.name = name;
         this.description = description;
@@ -67,9 +67,8 @@ public class Event extends Model {
     }
 
     private String setTimeString() {
-        DateTime dateTime = new DateTime(startTime.getTime());
-        String[] splits = dateTime.toString().split("T");
-        return timeString = splits[1].substring(0, 5);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("HH:mm");
+        return timeString = fmt.print(startTime.toInstant());
     }
 
     public boolean isUserAttending() {
@@ -88,9 +87,8 @@ public class Event extends Model {
     }
 
     private String setDateString() {
-        DateTime dateTime = new DateTime(this.startTime.getTime());
-        String[] splits = dateTime.toString().split("T");
-        return dateString = splits[0];
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("d. MMMM");
+        return dateString = fmt.print(startTime.toInstant());
     }
 
     public static enum Privacy {
