@@ -63,12 +63,11 @@ function PowerupClass() {
         var dataObject = {};
         var newTitleNode = 'newTitleNode';
         var newTitleInput = '#newTitleInput';
-        var recruitPowerupNode = "recruitModal";
         var applicationMessage = "#application_message";
         var appMessageNode = "appMessageNode";
 
         var powerupHtml = getPowerupHtml((this).id);
-        console.log(powerupHtml);
+        console.log($(powerupHtml).prop('id'));
         var powerupContent = powerupHtml.find('.powerup-content');
 
 

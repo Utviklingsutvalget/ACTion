@@ -1,0 +1,27 @@
+@(club : Club, pendingList : List[powerups.models.Pending])
+@import powerups.core.recruitpowerup.RecruitPowerup
+@import powerups.core.recruitpowerup
+
+<div>
+    <div class="row">
+        <form>
+            @for(user <- pendingList){
+
+                <div class="panel pendingUser powerup-node" data-powerup-field="@user.getUser.id" data-powerup-select=".recruitSelect">
+                    <h4>@user.getUser.firstName @user.getUser.lastName</h4>
+                    <br />
+                    <p>@user.applicationMessage</p>
+                    <select class="recruitSelect">
+                        <option value="hold"></option>
+                        <option value="accept">Godta Forespørsel</option>
+                        <option value="reject">Nekt medlemsskap</option>
+                    </select>
+                </div>
+            }
+            <label>Pass på at du har satt riktige rettigheter for alle brukere før du lagrer.</label>
+        </form>
+        <script>
+        createButton ( getId ( $ ( '.pendingUser' ) ) ) ;
+        </script>
+    </div>
+</div>
