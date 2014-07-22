@@ -23,26 +23,51 @@
 	
 	<body>
 	
-		<!-- CHANGE BG IMG IN CSS DIV #backgroundimglarge AND #backgroundimsmall-->
-		<div id="backgroundimglarge" class="show-for-medium-up"></div>
-		<div id="backgroundimgsmall" class="hide-for-medium-up"></div>
+       
+        <div class="row">
+            <div class="small-12 columns show-for-medium-up backgroundimagelarge" id="animation">
+                
+              
+                
+                <img src="img/header.jpg"/>
+                
+                <div class="headercircle-large text-center show-for-large-up">
+                    <h3 class="headertext">Westerdals<br/> Oslo ACT</h3>
+                    <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
+				    <h5 class="headertext">Studentportal</h5>
+				</div>
+                
+                <div class="headercircle-medium text-center show-for-medium-only">
+                    <h3 class="headertext">Westerdals<br/> Oslo ACT</h3>
+                    <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
+				    <h5 class="headertext">Studentportal</h5>
+				</div>
+              
+            </div>
+              
+        
+        </div>
+        
+        <div class="row">
+            <div class="small-12 columns hide-for-medium-up">
+               <div id="backgroundimagesmall">
+                
+                </div>
+                   
+                <div class="headercircle-small text-center hide-for-medium-up">
+                    <h3 class="headertext">Westerdals<br/> Oslo ACT</h3>
+                    <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
+				    <h5 class="headertext">Studentportal</h5>
+				</div>
+            </div>
+        </div>
 		
 
 		
 		<!-- HEADER TEXT -->
-		<div class="row">
-			<div class="small-12 small-centered columns headercolumn text-center">
-				<h1 class="headertext"><strong>Studentportal</strong></h1>
-				<h3 class="headertext">Westerdals Oslo ACT</h3>
-				<br /><br /><br />
-				<div class="medium-10 columns medium-centered">
-					<a href="#" class="button expand round">Expanded Button</a>
-				</div>
-			</div>
-		</div>
+            
 		
 		<!-- MENU LINKS ON SMALL SCREENS -->
-		<div id="headersmall" class="hide-for-medium-up"></div>
 		
 		<div class="row text-center hide-for-medium-up buttonpanel ">
 		
@@ -314,13 +339,7 @@
 	
 	<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-	<script type="text/javascript" src="slick/slick.min.js"></script>
-	
-	<script type="text/javascript">
-	        $(document).ready(function(){
-	            $('.your-item').slick();
-	        });
-    </script>
+
   
 
 	</body>

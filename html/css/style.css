@@ -2,9 +2,6 @@ body{
 	background-color: #ffffff;
 }
 
-.headercolumn{
-	top: 100px;
-}
 
 #menu{
 	position: fixed;
@@ -15,12 +12,8 @@ body{
 	background-color: red;
 }
 
-.headercolumn-underpage{
-	top: 20px;
-}
-
 .buttonpanellarge{
-	margin-top: 300px;
+	margin-top: 90px;
 	position: relative;
 	padding-bottom: 80px;
 }
@@ -30,28 +23,31 @@ body{
 	margin-left: -46px;
 }
 
-.buttonpanel-underpage{
-	padding-top: 50px;
-}
-
-.buttonpanellarge-underpage{
-	padding-top: 50px;
-	padding-bottom: 50px;
-}
 
 .buttonpanel{
-	padding-top: 250px;
+	padding-top: 280px;
 }
 
 .buttonpanelsmall{
 	padding-top: 20px;
-	padding-bottom: 50px;
+	padding-bottom: 10px;
+}
+
+.headercolumn-underpage .headertext{
+    color: white;
+}
+
+.buttonpanel-underpage .headertext{
+    color: white;
+}
+
+.buttonpanellarge-underpage .headertext{
+    color: white;
 }
 
 .headertext{
-	color: #fff;
+	color: #000;
 	size: 50px;
-	text-shadow: 1px 1px 1px #888888;
 }
 
 .headertextbig{
@@ -59,20 +55,33 @@ body{
 	text-transform: uppercase;
 }
 
-#backgroundimglarge{
-	position: absolute;
-	height: 500px;
-	width: 100%;
-	background-image: url(../img/forest.jpg);
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
+.backgroundimagelarge{
+    top: 70px;
 }
+
+#backgroundimagesmall{
+    width: 100%;
+    height: 260px;
+    background: url('../img/header.jpg') center; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    left: 0px;
+    position: absolute;
+    box-shadow: 0px 0px 5px #000;
+}
+
+.backgroundimagelarge img{
+    top: 70px;
+    box-shadow: 0px 0px 3px #000;
+    opacity: 1;
+}
+
 
 #backgroundimgsmall{
 	position: absolute;
-	height: 450px;
+	height: 50px;
 	width: 100%;
 	background-image: url(../img/forest.jpg);
 	-webkit-background-size: cover;
@@ -81,16 +90,7 @@ body{
 	background-size: cover;
 }
 
-#backgroundimglarge-underpage{
-	position: absolute;
-	height: 230px;
-	width: 100%;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	background-color: #000000;
-}
+
 
 .paragraph-date{
 	margin-top: 8px;
@@ -102,34 +102,11 @@ body{
 
 #footer{
 	background-color: black;
-
-	width: 100%;
+    width: 100%;
 	padding-top: 30px;
 }
 .footertext{
 	color: #ffffff;
-}
-
-#header{
-	position: absolute;
-	opacity: 0.3;
-	top: 420px;
-	width: 100%;
-	height: 80px;
-	background-color: #000000;
-	/*box-shadow: 0 -10px 10px #000000, 0px -10px 5px;
-	-moz-box-shadow: 0 -10px 10px #000000, 0px -10px 5px;*/
-}
-
-#headersmall{
-	position: absolute;
-	opacity: 0.4;
-	top: 360px;
-	width: 100%;
-	height: 90px;
-	background-color: #000000;
-	/*box-shadow: 0 -10px 10px #000000, 0px -10px 5px;
-	-moz-box-shadow: 0 -10px 10px #000000, 0px -10px 5px;*/
 }
 
 #line{
@@ -176,6 +153,19 @@ body{
 
 .line-separator-mid{
 	margin-left: 5%;
+}
+
+#line-separator-bubble{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	height: 1px;
+	width: 60%;
+	background-color: white;
+}
+
+
+.line-separator-mid-bubble{
+	margin-left: 20%;
 }
 
 .profile-photo{
@@ -278,4 +268,64 @@ img.img-gallery:hover{
 .add-button{
 	right: 0px;
 	margin-right: 0;
+}
+
+.headercircle-large{
+    position: absolute;
+    bottom: 50px;
+    right: 100px;
+    width: 250px;
+    height: 250px;
+    border-radius: 100%;
+    background-color: #000;
+    padding-top: 60px;
+}
+
+.headercircle-medium{
+    position: absolute;
+    bottom: 10px;
+    right: 70px;
+    width: 240px;
+    height: 240px;
+    border-radius: 100%;
+    background-color: #000;
+    padding-top: 60px;
+}
+
+.headercircle-small{
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0px;
+    right: 0px;
+    top: 20px;
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    background-color: #000;
+    padding-top: 40px;
+}
+
+.headercircle-large h5, .headercircle-large h3, .headercircle-medium h5, .headercircle-medium h3, .headercircle-small h5, .headercircle-small h3{
+    color: #fff;
+}
+
+.banner { position: relative; overflow: auto; }
+    .banner li { list-style: none; }
+        .banner ul li { float: left; }
+.buttonpanellarge-underpage {
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.buttonpanel-underpage {
+    margin-top: 20px;
+}
+
+#black-bg-underpage {
+    position: absolute;
+    top: 0px;
+    width: 100%;    
+    height: 200px;
+    background-color: black;
 }
