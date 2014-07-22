@@ -1,10 +1,17 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import controllers.routes;
+import models.Membership;
+import models.SuperUser;
 import models.User;
+import play.Logger;
+import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
 import utils.Authorize;
+import utils.MembershipLevel;
 import views.html.index;
 import views.html.user.profile;
 import views.html.user.show;
@@ -45,11 +52,11 @@ public class Users extends Controller {
     public static Result profile() {
 
         try {
-            Authorize.UserSession session = new Authorize.UserSession();
-            return ok(profile.render(session.getUser()));
-
+            User user = new Authorize.UserSession().getUser();
+            boolean admin = user.isAdmin();
+            return ok(profile.render(user, admin));
         } catch(Authorize.SessionException e) {
-            return Results.redirect(routes.OAuth2.authenticate(0));
+            return Results.redirect(controllers.routes.OAuth2.authenticate(0));
         }
     }
 
@@ -77,6 +84,35 @@ public class Users extends Controller {
 
         OAuth2.destroySessions();
         return ok(index.render("Logged Out"));
+    }
+
+    @BodyParser.Of(BodyParser.Json.class)
+    public static Result hasUserEmail() {
+        Logger.warn("RECEIVED REQUEST");
+        User user;
+        try {
+            user = new Authorize.UserSession().getUser();
+            boolean authorized = false;
+            JsonNode json = request().body().asJson();
+            String email = json.findValue("email").asText();
+            Logger.warn(email);
+            for(Membership mem : user.memberships) {
+                if(mem.level == MembershipLevel.COUNCIL) {
+                    authorized = true;
+                    break;
+                }
+            }
+            if(!authorized) {
+                throw new Authorize.SessionException();
+            }
+            User targetUser = User.findByEmail(email);
+            if(targetUser != null) {
+                return ok();
+            }
+        } catch (Authorize.SessionException e) {
+            return unauthorized();
+        }
+    return notFound();
     }
 
 }

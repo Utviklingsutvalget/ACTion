@@ -4,12 +4,14 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
+import org.jsoup.Jsoup;
 import play.Logger;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.descriptionpowerup.html.listdesc;
 import powerups.core.descriptionpowerup.html.powerup;
+import powerups.core.descriptionpowerup.html.admin;
 import powerups.models.ClubDescription;
 import utils.MembershipLevel;
 
@@ -24,6 +26,7 @@ import static play.mvc.Results.ok;
 public class DescriptionPowerup extends Powerup {
 
     public static final String FIELD_STRING = "description";
+    public static final String LIST_STRING = "listdesc";
     /**
      * The model used by this powerup to hold information about descriptions.
      * @see powerups.models.ClubDescription
@@ -44,13 +47,31 @@ public class DescriptionPowerup extends Powerup {
     }
 
     @Override
+    public Html renderAdmin() {
+        return admin.render(clubDesc, FIELD_STRING, LIST_STRING);
+    }
+
+    @Override
+    public void activate() {
+        ClubDescription clubDesc = new ClubDescription();
+        clubDesc.clubId = this.getClub().id;
+        clubDesc.description = "";
+        clubDesc.listDescription = "";
+        Ebean.save(clubDesc);
+    }
+
+    @Override
     public Result update(JsonNode updateContent) {
         if(!updateContent.has(FIELD_STRING)) {
             return internalServerError("En feil har oppstått");
-        } else if(updateContent.get(FIELD_STRING).asText().equals(clubDesc.description)) {
+        } else if(updateContent.get(FIELD_STRING).asText().equals(clubDesc.description)
+                && updateContent.get(LIST_STRING).asText().equals(clubDesc.listDescription)) {
             return ok("Ingen endringer å lagre");
         } else if(this.editable) {
             this.clubDesc.description = updateContent.get(FIELD_STRING).asText();
+            if(updateContent.has(LIST_STRING)) {
+                this.clubDesc.listDescription = Jsoup.parse(updateContent.get(LIST_STRING).asText()).body().text();
+            }
             Ebean.save(clubDesc);
             return ok("Utvalgsbeskrivelse lagret!");
         } else return badRequest("Ingen lagringstilgang");

@@ -1,0 +1,61 @@
+@(board: List[powerups.core.boardpowerup.BoardMember], editable : Boolean, memberList : List[Membership])
+@import powerups.core.boardpowerup.BoardMember
+
+
+    <!-- DISPLAY EACH TITLE IN BOARD AND BOARDEXTRA -->
+@for(boardmember <- board){
+    <form data-abide class="boardmember">
+
+        <fieldset class="powerup-node" data-powerup-field="@boardmember.getTitle" data-powerup-select='.@(boardmember.getTitle)Select'>
+            <legend value="@boardmember.getTitle">@boardmember.getTitle</legend>
+
+            <label>Email
+                <input type="text" value="@boardmember.getMember.email" disabled>
+            </label>
+
+            <label>Name</label>
+            <select class='@(boardmember.getTitle)Select'>
+
+                    <!-- ADDS CURRENT HOLDER OF TITLE FIRST IN THE LISTVIEW -->
+                <option value="@boardmember.getMember.id">@boardmember.getMember.firstName @boardmember.getMember.lastName</option>
+                @for(members <- memberList){
+
+                        <!-- ADDS ALL CONSECUTIVE MEMBERS IN LIST (EXCEPT THE MEMBER HOLDING THE TITLE CURRENTLY) -->
+                    @if(!members.user.id.equals(boardmember.getMember.id)){
+                        <option value="@members.user.id"
+                        data-powerup-value="@members.user.id">@members.user.firstName @members.user.lastName</option>
+                    }
+                }
+                    <!-- testing for potential removal of titles-->
+                <option value="" data-powerup-value=""></option>
+            </select>
+        </fieldset>
+    </form>
+}
+@if(editable) {<script>
+createButton(getId($('.boardmember')));
+</script>}
+
+<form data-abide class="addTitle">
+    <fieldset id='newTitleNode' class="powerup-node"
+    data-powerup-select=".newTitleMember">
+
+        <legend>Legg til en tittel</legend>
+
+        <label>Tittel
+            <input id="newTitleInput" type="text" required placeholder="Må inneha en tittel">
+        </label>
+
+        <label>Medlemsliste
+            <select class="newTitleMember">
+                <option></option>
+                @for(member <- memberList){
+                    <option value="@member.user.id" data-powerup-value="@member.user.id">@member.user.firstName @member.user.lastName
+                    }
+            </select>
+        </label>
+    </fieldset>
+</form>
+@if(editable) {<script>
+createButton(getId($('.addTitle')));
+</script>}

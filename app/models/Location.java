@@ -29,4 +29,5 @@ public class Location extends Model {
     @Transient
     public int cssId;
 
+
 }

@@ -11,12 +11,13 @@ import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.boardpowerup.html.powerup;
+import powerups.core.boardpowerup.html.admin;
+import powerups.models.Board;
 import powerups.models.BoardExtras;
+import utils.MembershipLevel;
 
 import java.util.*;
 
-import powerups.models.Board;
-import utils.MembershipLevel;
 import static play.mvc.Results.ok;
 
 public class BoardPowerup extends Powerup {
@@ -26,49 +27,64 @@ public class BoardPowerup extends Powerup {
     public static final String VICE = "Nestleder";
     public static final String ECON = "Økonomiansvarlig";
     public static final String EVENT = "Eventansvarlig";
-
-    private Board board;
     public List<BoardMember> boardList;
-    private final boolean editable;
+    private Board board;
     private List<Membership> memberList;
 
     public BoardPowerup(Club club, PowerupModel model) {
         super(club, model);
         boardList = new ArrayList<>();
-
-        board = Board.find.byId(club.id);
-
-        boardList.add(new BoardMember(board.leader, LEADER));
-        boardList.add(new BoardMember(board.vice, VICE));
-        boardList.add(new BoardMember(board.economy, ECON));
-        boardList.add(new BoardMember(board.event, EVENT));
-
-        for (BoardExtras boardExtras : board.boardExtra) {
-
-            boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
+        Logger.warn(boardList.getClass().getName());
+        Logger.warn("Beginning setup!");
+        try {
+            board = BoardService.getBoard(this.getClub());
+        } catch (BoardService.BoardException e) {
+            Logger.error("GOT AN XCEPTION! :D");
         }
 
-        memberList = new ArrayList<>();
+        Logger.warn("Checking if list is empty!");
+        /*
+        Logger.warn(board.boardExtra.toString());
+        if (board.boardExtra != null && !board.boardExtra.isEmpty()) {
+            Logger.info("board.boardextra is not empty");
 
-        for (Membership m : Membership.find.all()) {
-            if (m.club.equals(club) && m.level.getLevel() >= MembershipLevel.MEMBER.getLevel()) {
-                memberList.add(m);
+            for (BoardExtras boardExtras : board.boardExtra) {
+                Logger.warn("Didn't fail yet...");
+                boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
+            }
+            Logger.warn("Survived the loop!");
+        }
+        */
+        Logger.warn("Setting leader");
+        BoardMember leader = new BoardMember(board.leader, "Leder");
+        Logger.warn("Leader set");
+        boardList.add(leader);
+        //boardList.add(new BoardMember(board.vice, "Nestleder"));
+        //boardList.add(new BoardMember(board.economy, "Økonomiansvarlig"));
+        //boardList.add(new BoardMember(board.event, "Eventansvarlig"));
+        Logger.warn("Making the list!");
+        memberList = club.members;
+        for(Membership mem : memberList) {
+            if(mem.level == MembershipLevel.SUBSCRIBE) {
+                memberList.remove(mem);
             }
         }
-
-        // TODO REPLACE WITH WORKING CONTEXT LOGIC AFTER BRANCH MERGE
-        editable = false;
-        //editable = this.getContext().getMemberLevel().getLevel() == MembershipLevel.VICE.getLevel();
+        Logger.warn("Made the list!");
     }
 
     @Override
-    public Html renderAdmin(){
-        return powerup.render(boardList, true, memberList);
+    public Html renderAdmin() {
+        return admin.render(boardList, true, memberList);
     }
 
     @Override
     public Html render() {
-        return powerup.render(boardList, editable, memberList);
+        return powerup.render(boardList);
+    }
+
+    @Override
+    public void activate() {
+        //PREPROOFED
     }
 
 
@@ -103,8 +119,6 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public Result update(JsonNode updateContent) {
-
-        // Testing access limitation
         if (updateContent != null) {
             Map<String, String> existing = new HashMap<>();
             Map<String, String> updates = new HashMap<>();
@@ -139,8 +153,8 @@ public class BoardPowerup extends Powerup {
 
             }
         }
-        return ok("something");
 
+        return ok("something");
     }
 
     public void updateExtras(String title, String userId) {
@@ -148,26 +162,29 @@ public class BoardPowerup extends Powerup {
         Logger.info("entered updateExtras, title: " + title + ", userId: " + userId);
         User user = User.find.byId(userId);
 
+        /*
         // If user connected to a title is removed and no other user is being given.
         // Delete row with title in entity.
-        if((userId == null || userId.equals("")) && title != null){
+        if ((userId == null || userId.equals("")) && title != null) {
 
-            for(BoardExtras boardExtras : board.boardExtra){
 
-                if(boardExtras.title.equals(title)){
+            for (BoardExtras boardExtras : board.boardExtra) {
+
+                if (boardExtras.title.equals(title)) {
 
                     Ebean.delete(boardExtras);
                     return;
                 }
             }
         }
-
-        if(title != null && !title.equals("")){
+        */
+        /*
+        if (title != null && !title.equals("")) {
 
             // Update existing title with new member
-            for(BoardExtras boardExtras : board.boardExtra){
+            for (BoardExtras boardExtras : board.boardExtra) {
 
-                if(boardExtras.title.equals(title) && !boardExtras.member.id.equals(userId)) {
+                if (boardExtras.title.equals(title) && !boardExtras.member.id.equals(userId)) {
 
                     boardExtras.setTitle(title, User.find.byId(userId));
 
@@ -179,17 +196,17 @@ public class BoardPowerup extends Powerup {
             }
         }
 
-
-        if(title != null && !title.equals("")){
+        if (title != null && !title.equals("")) {
             // If the titles sent in is not associated with this board, create new entry in board.boardextra
-            if(BoardExtras.findTitlesByBoard(board, title).size() == 0){
+            if (BoardExtras.findTitlesByBoard(board, title).size() == 0) {
 
-                Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.clubID);
+                Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.club.id);
                 board.boardExtra.add(new BoardExtras(user, title));
 
                 Ebean.update(board);
             }
         }
+        */
     }
 
     // TODO REVERSE LOGIC TO BE EFFICIENT

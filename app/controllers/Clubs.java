@@ -1,13 +1,15 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import models.Activation;
-import models.Club;
-import models.Location;
+import models.*;
+import play.Logger;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
 import utils.ActivationSorter;
+import utils.Authorize;
+import utils.MembershipLevel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,10 +65,50 @@ public class Clubs extends Controller {
         return redirect(routes.Clubs.index());
     }
 
+    public static Result create() {
+        try {
+            User user = new Authorize.UserSession().getUser();
+            boolean authorized = user.isAdmin();
+            if(!authorized) {
+                return unauthorized();
+            }
+        } catch (Authorize.SessionException e) {
+            e.printStackTrace();
+        }
+
+        Map<String, String[]> form = request().body().asFormUrlEncoded();
+        for(String key : form.keySet()) {
+            Logger.warn(key + ":" + form.get(key)[0]);
+        }
+        String name = form.get("name")[0];
+        String shortName = form.get("shortName")[0];
+        String email = form.get("leader")[0] + form.get("postfix")[0];
+        Long locationId = Long.valueOf(form.get("location")[0]);
+
+        Location location = Location.find.byId(locationId);
+
+        Club club = new Club(name, shortName, location);
+        club.save();
+        Membership membership = new Membership(club, User.findByEmail(email), MembershipLevel.LEADER);
+        club.members.add(membership);
+        ArrayList<Activation> activations = new ArrayList<>();
+        PowerupModel.find.all().stream().filter(model -> model.isMandatory).forEach(model -> {
+            Activation activation = new Activation(club, model, model.defaultWeight);
+            club.activations.add(activation);
+            activations.add(activation);
+        });
+        membership.save();
+        for(Activation activation : activations) {
+            activation.save();
+            activation.getPowerup().activate();
+        }
+        return ok(club.name);
+    }
+
 
     public static Result updatePowerup(Long clubId, Long powerupId) {
         JsonNode json = request().body().asJson();
-
+        Logger.warn("RECEIVED JSON");
         if(json == null || json.isNull()) {
             return badRequest("Expecting Json data");
         }

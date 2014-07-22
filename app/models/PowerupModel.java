@@ -60,6 +60,9 @@ public class PowerupModel extends Model {
     @Constraints.Required
     public boolean hasMenuEntry;
 
+    @Constraints.Required
+    public int defaultWeight;
+
     @OneToMany(cascade = CascadeType.PERSIST)
     public List<Activation> activations = new ArrayList<>();
 

@@ -9,6 +9,7 @@ import play.db.ebean.Model;
 import utils.MembershipLevel;
 
 import javax.persistence.*;
+import java.nio.channels.MembershipKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +26,13 @@ public class Membership extends Model {
     public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
 
     public Membership(Club club, User user){
+        this(club, user, MembershipLevel.MEMBER);
+    }
+
+    public Membership(Club club, User user, MembershipLevel level) {
         this.club = club;
         this.user = user;
+        this.level = level;
         this.id = new MembershipKey(club, user);
     }
 
@@ -34,9 +40,11 @@ public class Membership extends Model {
     public MembershipKey id;
 
     @ManyToOne
+    @JoinColumn(name = "club_id", insertable = false, updatable = false)
     public Club club;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     public User user;
 
     @Constraints.Required
@@ -56,39 +64,21 @@ public class Membership extends Model {
 
         @Override
         public boolean equals(Object o) {
-            if(this == o) {
-                return true;
-            } else {
-                return o instanceof MembershipKey &&
-                        ((MembershipKey) o).userId.equals(this.userId) &&
-                        ((MembershipKey) o).clubId.equals(this.clubId);
-            }
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            MembershipKey that = (MembershipKey) o;
+
+            return clubId.equals(that.clubId) && userId.equals(that.userId);
+
         }
 
         @Override
         public int hashCode() {
-            return new HashCodeBuilder()
-                    .append(getClass().getName())
-                    .toHashCode();
+            int result = clubId.hashCode();
+            result = 31 * result + userId.hashCode();
+            return result;
         }
-    }
-
-    public static boolean userHasMembershipInClubWithLevel(Long club_id, String user_id, MembershipLevel requiredLevel) {
-
-        Membership membership = find
-                .fetch("club")
-                .fetch("user")
-                .where().eq("club.id", club_id)
-                .where().eq("user.id", user_id)
-                .findUnique();
-
-        if(membership == null)
-            return false;
-
-        if(membership.level.compareTo(requiredLevel) >= 0)
-            return true;
-
-        return false;
     }
 
 }

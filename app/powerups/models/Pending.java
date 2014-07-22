@@ -7,6 +7,7 @@ import models.User;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Pending extends Model {
@@ -23,16 +24,29 @@ public class Pending extends Model {
 
     @MapsId("clubId")
     @ManyToOne
+    @JoinColumn(name = "club_id", insertable = false, updatable = false)
     public Club club;
 
     @MapsId("userId")
     @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     public User user;
 
     public Pending(Club club, User user) {
         this.user = user;
         this.club = club;
         this.key = new PendingKey(user, club);
+    }
+
+    public Pending(Club club, User user, String applicationMessage){
+        this.user = user;
+        this.club = club;
+        this.applicationMessage = applicationMessage;
+        this.key = new PendingKey(user, club);
+    }
+
+    public static List<Pending> getByClubId(Long clubId){
+        return find.where().eq("club_id", clubId).findList();
     }
 
     public User getUser(){

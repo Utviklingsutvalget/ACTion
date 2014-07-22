@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Email;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Transactional;
+import utils.MembershipLevel;
 
 import javax.persistence.*;
 import java.util.*;
@@ -14,31 +15,29 @@ public class User extends Model {
 
     public static Finder<String, User> find = new Finder<>(String.class, User.class);
 
+    public static User findByEmail(String email) {
+        return find.where().eq("email", email).findUnique();
+    }
+
     public enum Gender {
-        MALE, FEMALE;
+        MALE, FEMALE
     }
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "user")
     public List<Membership> memberships = new ArrayList<>();
 
     @Id
-    @Constraints.Required
     public String id;
 
-    @Constraints.Required
     public String firstName;
 
-    @Constraints.Required
     public String lastName;
 
-    @Constraints.Required
     public Gender gender;
 
-    @Constraints.Required
     @Email
     public String email;
 
-    @Constraints.Required
     public String pictureUrl;
 
     @OneToMany(mappedBy = "user")
@@ -46,7 +45,6 @@ public class User extends Model {
 
 
     public User(String id, String firstName, String lastName, Gender gender, String email, String picureUrl) {
-
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -98,5 +96,19 @@ public class User extends Model {
         int result = super.hashCode();
         result = 31 * result + id.hashCode();
         return result;
+    }
+
+    public boolean isAdmin() {
+        SuperUser su = SuperUser.find.byId(new SuperUser(this).key);
+        boolean admin = su != null && su.user.equals(this);
+        if(!admin) {
+            for (Membership mem : this.memberships) {
+                if (mem.level == MembershipLevel.COUNCIL) {
+                    admin = true;
+                    break;
+                }
+            }
+        }
+        return admin;
     }
 }

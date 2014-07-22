@@ -73,6 +73,8 @@ public abstract class Powerup implements Serializable {
      */
     public abstract Html render();
 
+    public abstract void activate();
+
     public abstract Result update(JsonNode updateContent);
 
     /**
@@ -100,22 +102,16 @@ public abstract class Powerup implements Serializable {
             Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class, PowerupModel.class);
             return constructor.newInstance(club, powerupModel);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            PowerupModel errorModel = new PowerupModel();
-            StringBuilder stackTraceBuilder = new StringBuilder();
-            stackTraceBuilder.append(e.getClass().toString() + "<br>");
-            for(StackTraceElement e1 : e.getStackTrace()) {
-                stackTraceBuilder.append(e1.toString()).append("<br>");
-            }
-            final String stackTrace = stackTraceBuilder.toString();
-            errorModel.className = "";
-            errorModel.friendlyName = "ERROR";
-            errorModel.hasMenuEntry = false;
-            errorModel.isMandatory = false;
-            errorModel.id = Long.MAX_VALUE;
-            return new Powerup(club, new PowerupModel()) {
+
+            return new Powerup(club, powerupModel) {
                 @Override
                 public Html render() {
-                    return new Html("An error activating plugin. Please contact your local administrator. Stacktrace: <br>" + stackTrace );
+                    return new Html("Error activating powerup.");
+                }
+
+                @Override
+                public void activate() {
+
                 }
 
                 @Override

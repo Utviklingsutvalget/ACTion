@@ -1,4 +1,4 @@
-@(board: List[powerups.core.boardpowerup.BoardMember], editable : Boolean, memberList : List[Membership])
+@(board: List[powerups.core.boardpowerup.BoardMember])
 @import powerups.core.boardpowerup.BoardMember
 
 
@@ -8,11 +8,14 @@
         <div class="medium-10 columns medium-centered text-center">
 
             @for(member <- board){
+
                 <div class="medium-4 columns left">
 
                     <img class="profile-photo" src="" alt=""/>
                     <br /><br />
-                    <h5><a href="mailto:@member.getMember.email">@member.getMember.firstName</a><br />@member.getTitle</h5>
+                    <h5><!--<a href="mailto:@*member.getMember.email">*@-->
+                    @member.getMember.firstName<!--</a>-->
+                        <br />@member.getTitle</h5>
                 </div>
             }
         </div>

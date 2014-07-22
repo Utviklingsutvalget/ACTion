@@ -8,10 +8,12 @@ import play.twirl.api.Html;
 import powerups.*;
 import powerups.Powerup;
 import powerups.core.descriptionpowerup.DescriptionPowerup;
+import utils.MembershipLevel;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Club extends Model {
@@ -35,10 +37,10 @@ public class Club extends Model {
     @ManyToOne
     public Location location;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "club")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "club")
     public List<Membership> members = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "club")
     public List<Activation> activations = new ArrayList<>();
 
     @OneToMany
@@ -60,6 +62,12 @@ public class Club extends Model {
         }
     }
 
+    public Club(String name, String shortName, Location location) {
+        this.name = name;
+        this.shortName = shortName;
+        this.location = location;
+    }
+
     public Html getListDesc() {
         if(listDesc == null) {
             setDescriptions();
@@ -69,5 +77,9 @@ public class Club extends Model {
 
     private void setListDesc(Html listDesc) {
         this.listDesc = listDesc;
+    }
+
+    public int getNumberOfMembers() {
+        return members.size();
     }
 }
