@@ -1,7 +1,5 @@
 package powerups.models;
 
-import models.Club;
-import models.Membership;
 import models.User;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
@@ -12,27 +10,25 @@ import java.util.List;
 
 @Entity
 public class BoardExtras extends Model {
-
     public static Finder<Long, BoardExtras> find = new Finder<>(Long.class, BoardExtras.class);
-    public static final String BOARDCOLUMNSTRING = "board_club_id";
-    public static final String MEMBERCOLUMNSTRING = "member_id";
-    public static final String TITLECOLUMNSTRING = "title";
+
+    public static final String BOARD_COLUMN = "board_club_id";
+    public static final String MEMBER_COLUMN = "member_id";
+    public static final String TITLE_COLUMN = "title";
 
     @Id
     public Long boardExtraId;
 
     @ManyToOne
-    @Column(name = BOARDCOLUMNSTRING)
+    @Column(name = BOARD_COLUMN)
     public Board board;
 
-    @Constraints.Required
     @OneToOne
     @PrimaryKeyJoinColumn
-    @Column(name = MEMBERCOLUMNSTRING)
+    @Column(name = MEMBER_COLUMN)
     public User member;
 
-    @Constraints.Required
-    @Column(name = TITLECOLUMNSTRING)
+    @Column(name = TITLE_COLUMN)
     public String title;
 
     public BoardExtras(User user, String title){
@@ -46,7 +42,7 @@ public class BoardExtras extends Model {
     }
 
     public static List<BoardExtras> findTitlesByBoard(Board board, String title){
-        return find.where().eq(BOARDCOLUMNSTRING, board.club.id).eq(TITLECOLUMNSTRING, title).findList();
+        return find.where().eq(BOARD_COLUMN, board.club.id).eq(TITLE_COLUMN, title).findList();
     }
 
 

@@ -2,19 +2,22 @@ package powerups.core.boardpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import models.*;
+import models.Club;
+import models.Membership;
+import models.PowerupModel;
+import models.User;
 import play.Logger;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.boardpowerup.html.powerup;
+import powerups.core.boardpowerup.html.admin;
+import powerups.models.Board;
 import powerups.models.BoardExtras;
+import utils.MembershipLevel;
 
 import java.util.*;
-import powerups.core.boardpowerup.html.*;
 
-import powerups.models.Board;
-import utils.MembershipLevel;
 import static play.mvc.Results.ok;
 
 public class BoardPowerup extends Powerup {
@@ -24,70 +27,53 @@ public class BoardPowerup extends Powerup {
     public static final String VICE = "Nestleder";
     public static final String ECON = "Økonomiansvarlig";
     public static final String EVENT = "Eventansvarlig";
-
-    private Board board;
     public List<BoardMember> boardList;
-    private final boolean editable;
+    private Board board;
     private List<Membership> memberList;
 
     public BoardPowerup(Club club, PowerupModel model) {
         super(club, model);
         boardList = new ArrayList<>();
-
-        User user1 = new User("1", "dummyUser", "dummyUser", User.Gender.FEMALE, "dummy@student.westerdals.no",
-                "http://resources1.news.com.au/images/2011/10/06/1226160/340797-steve-jobs-and-steve-wozniak.jpg");
-        Ebean.save(user1);
-
-        User user2 = new User("2", "dummyUser", "dummyUser", User.Gender.FEMALE, "dummy@student.westerdals.no",
-                "http://resources1.news.com.au/images/2011/10/06/1226160/340797-steve-jobs-and-steve-wozniak.jpg");
-        Ebean.save(user2);
-
-        User user3 = new User("3", "dummyUser", "dummyUser", User.Gender.FEMALE, "dummy@student.westerdals.no",
-                "http://resources1.news.com.au/images/2011/10/06/1226160/340797-steve-jobs-and-steve-wozniak.jpg");
-        Ebean.save(user3);
-
-        User user4 = new User("4", "dummyUser", "dummyUser", User.Gender.FEMALE, "dummy@student.westerdals.no",
-                "http://resources1.news.com.au/images/2011/10/06/1226160/340797-steve-jobs-and-steve-wozniak.jpg");
-        Ebean.save(user4);
-
-        
-
-        Ebean.save(board);
-
-        if(board.leader != null && board.vice != null && board.economy != null && board.event != null) {
-            boardList.add(new BoardMember(board.leader, LEADER));
-            boardList.add(new BoardMember(board.vice, VICE));
-            boardList.add(new BoardMember(board.economy, ECON));
-            boardList.add(new BoardMember(board.event, EVENT));
-
+        Logger.warn(boardList.getClass().getName());
+        Logger.warn("Beginning setup!");
+        try {
+            board = BoardService.getBoard(this.getClub());
+        } catch (BoardService.BoardException e) {
+            Logger.error("GOT AN XCEPTION! :D");
         }
 
-        if(board.boardExtra != null){
-            Logger.info("board.boardextra is not null");
+        Logger.warn("Checking if list is empty!");
+        /*
+        Logger.warn(board.boardExtra.toString());
+        if (board.boardExtra != null && !board.boardExtra.isEmpty()) {
+            Logger.info("board.boardextra is not empty");
 
             for (BoardExtras boardExtras : board.boardExtra) {
-
+                Logger.warn("Didn't fail yet...");
                 boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
             }
+            Logger.warn("Survived the loop!");
         }
-
-        memberList = new ArrayList<>();
-
-        if(Membership.find.all() != null){
-            for (Membership m : Membership.find.all()) {
-                if (m.club.equals(club) && m.level.getLevel() >= MembershipLevel.MEMBER.getLevel()) {
-                    memberList.add(m);
-                }
+        */
+        Logger.warn("Setting leader");
+        BoardMember leader = new BoardMember(board.leader, "Leder");
+        Logger.warn("Leader set");
+        boardList.add(leader);
+        //boardList.add(new BoardMember(board.vice, "Nestleder"));
+        //boardList.add(new BoardMember(board.economy, "Økonomiansvarlig"));
+        //boardList.add(new BoardMember(board.event, "Eventansvarlig"));
+        Logger.warn("Making the list!");
+        memberList = club.members;
+        for(Membership mem : memberList) {
+            if(mem.level == MembershipLevel.SUBSCRIBE) {
+                memberList.remove(mem);
             }
         }
-
-        // TODO REPLACE WITH WORKING CONTEXT LOGIC AFTER BRANCH MERGE
-        editable = true;
-        //editable = this.getContext().getMemberLevel().getLevel() == MembershipLevel.VICE.getLevel();
+        Logger.warn("Made the list!");
     }
 
     @Override
-    public Html renderAdmin(){
+    public Html renderAdmin() {
         return admin.render(boardList, true, memberList);
     }
 
@@ -98,14 +84,7 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public void activate() {
-        this.board = new Board(this.getClub());
-        for(Membership membership : this.getClub().members) {
-            if(membership.level == MembershipLevel.LEADER) {
-                board.leader = membership.user;
-                break;
-            }
-        }
-        Ebean.save(board);
+        //PREPROOFED
     }
 
 
@@ -183,26 +162,29 @@ public class BoardPowerup extends Powerup {
         Logger.info("entered updateExtras, title: " + title + ", userId: " + userId);
         User user = User.find.byId(userId);
 
+        /*
         // If user connected to a title is removed and no other user is being given.
         // Delete row with title in entity.
-        if((userId == null || userId.equals("")) && title != null){
+        if ((userId == null || userId.equals("")) && title != null) {
 
-            for(BoardExtras boardExtras : board.boardExtra){
 
-                if(boardExtras.title.equals(title)){
+            for (BoardExtras boardExtras : board.boardExtra) {
+
+                if (boardExtras.title.equals(title)) {
 
                     Ebean.delete(boardExtras);
                     return;
                 }
             }
         }
-
-        if(title != null && !title.equals("")){
+        */
+        /*
+        if (title != null && !title.equals("")) {
 
             // Update existing title with new member
-            for(BoardExtras boardExtras : board.boardExtra){
+            for (BoardExtras boardExtras : board.boardExtra) {
 
-                if(boardExtras.title.equals(title) && !boardExtras.member.id.equals(userId)) {
+                if (boardExtras.title.equals(title) && !boardExtras.member.id.equals(userId)) {
 
                     boardExtras.setTitle(title, User.find.byId(userId));
 
@@ -214,10 +196,9 @@ public class BoardPowerup extends Powerup {
             }
         }
 
-
-        if(title != null && !title.equals("")){
+        if (title != null && !title.equals("")) {
             // If the titles sent in is not associated with this board, create new entry in board.boardextra
-            if(BoardExtras.findTitlesByBoard(board, title).size() == 0){
+            if (BoardExtras.findTitlesByBoard(board, title).size() == 0) {
 
                 Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.club.id);
                 board.boardExtra.add(new BoardExtras(user, title));
@@ -225,6 +206,7 @@ public class BoardPowerup extends Powerup {
                 Ebean.update(board);
             }
         }
+        */
     }
 
     // TODO REVERSE LOGIC TO BE EFFICIENT

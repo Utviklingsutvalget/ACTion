@@ -1,9 +1,9 @@
 package powerups.models;
 
 
+import com.avaje.ebean.common.BeanList;
 import models.Club;
 import models.User;
-import play.Logger;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
@@ -11,11 +11,76 @@ import java.util.*;
 
 @Entity
 public class Board extends Model {
-    public static Finder<Long, Board> find = new Finder<>(Long.class, Board.class);
-
     public static final String[] MANDATORY = {
             "Leder", "Nestleder", "Økonomiansvarlig", "Eventansvarlig"
     };
+    public static final String LEADER_COL = "leader";
+    public static final String VICE_COL = "vice";
+    public static final String ECON_COL = "economy";
+    public static final String EVENT_COL = "event";
+    @EmbeddedId
+    public BoardKey key;
+    @OneToOne
+    @JoinColumn(name = "club_id", insertable = false, updatable = false)
+    public Club club;
+    @OneToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    public User leader;
+    @OneToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    public User vice;
+    @OneToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    public User economy;
+    @OneToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    public User event;
+    /*
+    @OneToMany(mappedBy = "board")
+    public List<BoardExtras> boardExtra = new BeanList<>();
+*/
+    public Board(Club club) {
+        this.club = club;
+
+        this.key = new BoardKey(this.club.id);
+    }
+
+    public void setByName(final String name, final User user) {
+
+        //switch on string case sensitive
+        switch (name.toLowerCase()) {
+            case LEADER_COL:
+                leader = user;
+                break;
+            case VICE_COL:
+                vice = user;
+                break;
+            case ECON_COL:
+                economy = user;
+                break;
+            case EVENT_COL:
+                event = user;
+                break;
+        }
+    }
+
+    public List<String> getMandatoryPositions() {
+        return Arrays.asList(MANDATORY);
+    }
+
+    public Map<String, String> getTitleColumns() {
+        Map<String, String> returnMap = new HashMap<>();
+        TitleColumn[] titleColumns = TitleColumn.values();
+
+        int i = 0;
+        for (String key : getMandatoryPositions()) {
+            if (i < TitleColumn.values().length) {
+                returnMap.put(key, titleColumns[i].name());
+                i++;
+            } else break;
+        }
+        return returnMap;
+    }
 
     private enum TitleColumn {
         LEADER(LEADER_COL),
@@ -35,71 +100,6 @@ public class Board extends Model {
         }
 
     }
-
-    public Board(User leader, User vice, User economy, User event){
-        this.leader = leader;
-        this.vice = vice;
-        this.economy = economy;
-        this.event = event;
-
-        this.key = new BoardKey(this.club.id);
-    }
-
-    public Board(Club club){
-        this.club = club;
-
-        this.key = new BoardKey(this.club.id);
-    }
-
-    public static final String LEADER_COL = "leader";
-    public static final String VICE_COL = "vice";
-    public static final String ECON_COL = "economy";
-    public static final String EVENT_COL = "event";
-
-    public void setByName(final String name, final User user) {
-
-        //switch on string case sensitive
-        switch (name.toLowerCase()) {
-            case LEADER_COL : leader = user;
-                break;
-            case VICE_COL : vice = user;
-                break;
-            case ECON_COL : economy = user;
-                break;
-            case EVENT_COL : event = user;
-                break;
-        }
-    }
-
-    @EmbeddedId
-    public BoardKey key;
-
-    @OneToOne
-    @JoinColumn(name = "club_id", insertable = false, updatable = false)
-    public Club club;
-
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    @Column(name = LEADER_COL)
-    public User leader;
-
-    @OneToOne
-    @Column(name = VICE_COL)
-    @PrimaryKeyJoinColumn
-    public User vice;
-
-    @OneToOne
-    @Column(name = ECON_COL)
-    @PrimaryKeyJoinColumn
-    public User economy;
-
-    @OneToOne
-    @Column(name = EVENT_COL)
-    @PrimaryKeyJoinColumn
-    public User event;
-
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "board")
-    public List<BoardExtras> boardExtra;
 
     @Embeddable
     public class BoardKey {
@@ -125,23 +125,5 @@ public class Board extends Model {
         public int hashCode() {
             return clubId.hashCode();
         }
-    }
-
-    public List<String> getMandatoryPositions() {
-        return Arrays.asList(MANDATORY);
-    }
-
-    public Map<String, String> getTitleColumns() {
-        Map<String, String> returnMap = new HashMap<>();
-        TitleColumn[] titleColumns = TitleColumn.values();
-
-        int i = 0;
-        for(String key : getMandatoryPositions()) {
-            if(i < TitleColumn.values().length) {
-                returnMap.put(key, titleColumns[i].name());
-                i++;
-            } else break;
-        }
-        return returnMap;
     }
 }

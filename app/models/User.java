@@ -27,23 +27,17 @@ public class User extends Model {
     public List<Membership> memberships = new ArrayList<>();
 
     @Id
-    @Constraints.Required
     public String id;
 
-    @Constraints.Required
     public String firstName;
 
-    @Constraints.Required
     public String lastName;
 
-    @Constraints.Required
     public Gender gender;
 
-    @Constraints.Required
     @Email
     public String email;
 
-    @Constraints.Required
     public String pictureUrl;
 
     @OneToMany(mappedBy = "user")
@@ -51,7 +45,6 @@ public class User extends Model {
 
 
     public User(String id, String firstName, String lastName, Gender gender, String email, String picureUrl) {
-
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
