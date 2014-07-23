@@ -22,11 +22,9 @@ public class FileUtility {
 
         Map<String, String> map = new HashMap<>();
 
-        try {
+            //URI uri = Play.application().resource(path).toURI();
 
-            URI uri = Play.application().resource(path).toURI();
-
-            File file = new File(uri);
+            File file = new File(path);
 
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
 
@@ -48,9 +46,9 @@ public class FileUtility {
                 e1.printStackTrace();
             }
 
-        } catch(URISyntaxException e) {
+        /*} catch(URISyntaxException e) {
             e.printStackTrace();
-        }
+        }*/
 
         return map;
     }

@@ -35,7 +35,7 @@ import java.security.NoSuchAlgorithmException;
 public class OAuth2 extends Controller {
 
     /**Secrets*/
-    private static final Map<String, String> CONF = FileUtility.getMap("secrets/googleoauth", "=");
+    private static final Map<String, String> CONF = FileUtility.getMap("/opt/ACTion/conf/secrets/googleoauth", "=");
 
     /**Endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.*/
     public static GoogleUtility.DiscoveryDocument dd;
@@ -86,7 +86,7 @@ public class OAuth2 extends Controller {
                     "client_id=" + CONF.get("client_id") +
                     "&response_type=" + dd.getResponseTypes(GoogleUtility.CODE) +
                     "&scope=openid profile email" +
-                    "&redirect_uri=http://localhost:9000/login/oauth2callback" +
+                    "&redirect_uri=http://action.rushteamc.com/login/oauth2callback" +
                     //"&hd=student.westerdals.no" + //This line cannot be used until all students have this email
                     "&access_type=online" + //We dont need offline access right now
                     "&state=" + session("state"));
@@ -121,7 +121,7 @@ public class OAuth2 extends Controller {
             String params = "code=" + code +
                     "&client_id=" + CONF.get("client_id") +
                     "&client_secret=" + CONF.get("client_secret") +
-                    "&redirect_uri=http://localhost:9000/login/oauth2callback" +
+                    "&redirect_uri=http://action.rushteamc.com/login/oauth2callback" +
                     "&grant_type=authorization_code";
 
             //Request header
