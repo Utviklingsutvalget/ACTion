@@ -12,7 +12,7 @@ public class BoardMembership extends Model {
     public static Finder<BoardMembershipKey, BoardMembership> find = new Finder<>(BoardMembershipKey.class, BoardMembership.class);
 
     public BoardMembership(Club club, BoardPost boardPost, User user){
-        this.BoardPost = boardPost;
+        BoardPost = boardPost;
         this.club = club;
         this.user = user;
         this.weight = boardPost.weight;
@@ -28,7 +28,7 @@ public class BoardMembership extends Model {
 
     @ManyToOne
     @JoinColumn(name = "board_post_id", insertable = false, updatable = false)
-    public BoardPost BoardPost;
+    public BoardPost boardPost;
 
     @OneToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)

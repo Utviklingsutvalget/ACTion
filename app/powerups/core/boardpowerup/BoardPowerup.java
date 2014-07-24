@@ -21,13 +21,10 @@ import utils.MembershipLevel;
 import java.util.*;
 
 import static play.mvc.Results.ok;
+import static play.mvc.Results.unauthorized;
 
 public class BoardPowerup extends Powerup {
 
-
-    public static final String LEADER = "Leder";
-    public static final String VICE = "Nestleder";
-    public static final String ECON = "Økonomiansvarlig";
     public static final String EVENT = "Eventansvarlig";
     public List<BoardMembership> boardList;
     private List<Membership> memberList;
@@ -39,6 +36,9 @@ public class BoardPowerup extends Powerup {
             boardList = this.getClub().boardMembers;
             memberList = club.members;
 
+        } else {
+            boardList = new ArrayList<>();
+            memberList = new ArrayList<>();
         }
     }
 
@@ -54,7 +54,7 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public void activate() {
-        //PREPROOFED
+        // TODO ADD LEADER FROM CLUB CREATE
     }
 
 
@@ -63,7 +63,6 @@ public class BoardPowerup extends Powerup {
         Map<String, String> changes = new HashMap<>();
 
         for (String key : existing.keySet()) {
-
             // Delete post if we can and it is empty
             if (!updates.containsKey(key)) {
                 changes.put(key, null);
@@ -90,123 +89,83 @@ public class BoardPowerup extends Powerup {
     @Override
     public Result update(JsonNode updateContent) {
         if (updateContent != null) {
-            Map<String, String> existing = new HashMap<>();
-            Map<String, String> updates = new HashMap<>();
-            Map<String, String> changes;
-            List<String> mandatoryPositions = new ArrayList<>();
-
-            for(BoardMembership boardMembership : boardList){
-
-                if(boardMembership.BoardPost.isMandatory){
-                    mandatoryPositions.add(boardMembership.BoardPost.title);
-                }
-            }
-
-            Iterator<String> stringIterator = updateContent.fieldNames();
-
-            for (BoardMembership member : boardList) {
-                existing.put(member.BoardPost.title, member.user.id);
-            }
-
-            while (stringIterator.hasNext()) {
-                String fieldName = stringIterator.next();
-                updates.put(fieldName, updateContent.get(fieldName).asText());
-                Logger.warn("key: " + fieldName + " & value: " + updates.get(fieldName));
-            }
-
-            changes = getMapUpdates(existing, updates);
-
-            for (String key : changes.keySet()) {
-
-                //boardtitle changed id
-                if (mandatoryPositions.contains(key)) {
-
-                    updateMandatory(key, changes.get(key));
-
-                } else {
-
-                    //Boardextra changed id
-                    updateExtras(key, changes.get(key));
+            if(updateContent.has("update-type")) {
+                if(updateContent.get("update-type").asText().equals("update")) {
+                    updateMemberships(updateContent);
+                } else if(updateContent.get("update-type").asText().equals("create")) {
+                    if(createPost(updateContent)) {
+                        return ok("Styrepost opprettet");
+                    } else {
+                        return unauthorized("Kunne ikke opprette styrepost");
+                    }
+                } else if(updateContent.get("update-type").asText().equals("add")) {
+                    if(addMembership(updateContent)) {
+                        return ok("Styremedlem lagt til");
+                    } else {
+                        return unauthorized("Kunne ikke legge til styremedlem");
+                    }
                 }
 
             }
         }
-
         return ok("something");
     }
 
-    public void updateExtras(String title, String userId) {
-
-        Logger.info("entered updateExtras, title: " + title + ", userId: " + userId);
-        User user = User.find.byId(userId);
-
-        /*
-        // If user connected to a title is removed and no other user is being given.
-        // Delete row with title in entity.
-        if ((userId == null || userId.equals("")) && title != null) {
-
-
-            for (BoardExtras boardExtras : board.boardExtra) {
-
-                if (boardExtras.title.equals(title)) {
-
-                    Ebean.delete(boardExtras);
-                    return;
+    private boolean addMembership(JsonNode updateContent) {
+        List<BoardPost> boardPosts = BoardPost.find.all();
+        for(BoardPost post : boardPosts) {
+            if(post.title.equals(updateContent.get("title").asText())) {
+                User user = User.find.byId(updateContent.get("user").asText());
+                if(user == null) {
+                    return false;
                 }
+                BoardMembership membership = new BoardMembership(this.getClub(), post, user);
+                Ebean.save(membership);
+                return true;
             }
         }
-        */
-        /*
-        if (title != null && !title.equals("")) {
-
-            // Update existing title with new member
-            for (BoardExtras boardExtras : board.boardExtra) {
-
-                if (boardExtras.title.equals(title) && !boardExtras.member.id.equals(userId)) {
-
-                    boardExtras.setTitle(title, User.find.byId(userId));
-
-                    Ebean.update(board);
-
-                    return;
-
-                }
-            }
-        }
-
-        if (title != null && !title.equals("")) {
-            // If the titles sent in is not associated with this board, create new entry in board.boardextra
-            if (BoardExtras.findTitlesByBoard(board, title).size() == 0) {
-
-                Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.club.id);
-                board.boardExtra.add(new BoardExtras(user, title));
-
-                Ebean.update(board);
-            }
-        }
-        */
+        return false;
     }
 
-    // TODO REVERSE LOGIC TO BE EFFICIENT
-    public void updateMandatory(String title, String userId) {
-        Map<String, String> columnMap = board.getTitleColumns();
-        User user = null;
-        for (Membership member : memberList) {
-            if (member.user.id.equals(userId)) {
-                user = member.user;
-                break;
+    private boolean createPost(JsonNode updateContent) {
+        String title = updateContent.get("title").asText();
+        if(title == null) {
+            return false;
+        }
+        List<BoardPost> existing = BoardPost.find.all();
+        for(BoardPost existingPost : existing) {
+            if(existingPost.title.equals(title)) {
+                return false;
             }
         }
+        boolean isMandatory = updateContent.get("mandatory").isBoolean();
+        int defaultWeight = updateContent.get("weight").asInt();
 
-        if (user != null) {
-            for (String boardTitle : board.getMandatoryPositions()) {
-                if (title.equals(boardTitle)) {
-                    this.board.setByName(columnMap.get(boardTitle), user);
-                    //Logger.warn("Board: " + board + " & title: " + columnMap.get(boardTitle) + ", & user: " + user.id);
+        BoardPost newPost = new BoardPost(title, isMandatory, defaultWeight);
+        Ebean.save(newPost);
+        return true;
+    }
+
+    private void updateMemberships(JsonNode updateContent) {
+        for(BoardMembership membership : this.getClub().boardMembers) {
+
+            // CASE DELETE BOARD MEMBER
+            if(updateContent.get(membership.boardPost.title) == null) {
+                if(!membership.boardPost.isMandatory) {
+                    Ebean.delete(membership);
+                } else {
+                    unauthorized("Obligatorisk styrepost kan ikke være tom");
                 }
             }
 
-            Ebean.update(board);
+            // CASE REPLACE BOARD MEMBER
+            if(!updateContent.get(membership.boardPost.title).asText().equals(membership.user.id)) {
+                User user = User.findById(updateContent.get(membership.boardPost.title).asText());
+                if(user != null) {
+                    membership.user = user;
+                    Ebean.update(membership);
+                }
+            }
         }
     }
 }
