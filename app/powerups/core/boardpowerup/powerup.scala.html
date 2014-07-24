@@ -1,4 +1,4 @@
-@(board: List[powerups.core.boardpowerup.BoardMember])
+@(board: List[powerups.models.BoardMembership])
 @import powerups.core.boardpowerup.BoardMember
 
 
@@ -14,8 +14,8 @@
                     <img class="profile-photo" src="" alt=""/>
                     <br /><br />
                     <h5><!--<a href="mailto:@*member.getMember.email">*@-->
-                    @member.getMember.firstName<!--</a>-->
-                        <br />@member.getTitle</h5>
+                    @member.user.firstName<!--</a>-->
+                        <br />@member.BoardPost.title</h5>
                 </div>
             }
         </div>

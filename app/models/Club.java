@@ -8,6 +8,7 @@ import play.twirl.api.Html;
 import powerups.*;
 import powerups.Powerup;
 import powerups.core.descriptionpowerup.DescriptionPowerup;
+import powerups.models.BoardMembership;
 import utils.MembershipLevel;
 
 import javax.persistence.*;
@@ -36,6 +37,9 @@ public class Club extends Model {
 
     @ManyToOne
     public Location location;
+
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "club")
+    public List<BoardMembership> boardMembers = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "club")
     public List<Membership> members = new ArrayList<>();

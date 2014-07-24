@@ -14,6 +14,8 @@ import powerups.core.boardpowerup.html.powerup;
 import powerups.core.boardpowerup.html.admin;
 import powerups.models.Board;
 import powerups.models.BoardExtras;
+import powerups.models.BoardMembership;
+import powerups.models.BoardPost;
 import utils.MembershipLevel;
 
 import java.util.*;
@@ -27,49 +29,17 @@ public class BoardPowerup extends Powerup {
     public static final String VICE = "Nestleder";
     public static final String ECON = "Økonomiansvarlig";
     public static final String EVENT = "Eventansvarlig";
-    public List<BoardMember> boardList;
-    private Board board;
+    public List<BoardMembership> boardList;
     private List<Membership> memberList;
 
     public BoardPowerup(Club club, PowerupModel model) {
         super(club, model);
-        boardList = new ArrayList<>();
-        Logger.warn(boardList.getClass().getName());
-        Logger.warn("Beginning setup!");
-        try {
-            board = BoardService.getBoard(this.getClub());
-        } catch (BoardService.BoardException e) {
-            Logger.error("GOT AN XCEPTION! :D");
-        }
 
-        Logger.warn("Checking if list is empty!");
-        /*
-        Logger.warn(board.boardExtra.toString());
-        if (board.boardExtra != null && !board.boardExtra.isEmpty()) {
-            Logger.info("board.boardextra is not empty");
+        if(club != null && model != null){
+            boardList = this.getClub().boardMembers;
+            memberList = club.members;
 
-            for (BoardExtras boardExtras : board.boardExtra) {
-                Logger.warn("Didn't fail yet...");
-                boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
-            }
-            Logger.warn("Survived the loop!");
         }
-        */
-        Logger.warn("Setting leader");
-        BoardMember leader = new BoardMember(board.leader, "Leder");
-        Logger.warn("Leader set");
-        boardList.add(leader);
-        //boardList.add(new BoardMember(board.vice, "Nestleder"));
-        //boardList.add(new BoardMember(board.economy, "Økonomiansvarlig"));
-        //boardList.add(new BoardMember(board.event, "Eventansvarlig"));
-        Logger.warn("Making the list!");
-        memberList = club.members;
-        for(Membership mem : memberList) {
-            if(mem.level == MembershipLevel.SUBSCRIBE) {
-                memberList.remove(mem);
-            }
-        }
-        Logger.warn("Made the list!");
     }
 
     @Override
@@ -123,11 +93,19 @@ public class BoardPowerup extends Powerup {
             Map<String, String> existing = new HashMap<>();
             Map<String, String> updates = new HashMap<>();
             Map<String, String> changes;
-            List<String> mandatoryPositions = board.getMandatoryPositions();
+            List<String> mandatoryPositions = new ArrayList<>();
+
+            for(BoardMembership boardMembership : boardList){
+
+                if(boardMembership.BoardPost.isMandatory){
+                    mandatoryPositions.add(boardMembership.BoardPost.title);
+                }
+            }
+
             Iterator<String> stringIterator = updateContent.fieldNames();
 
-            for (BoardMember member : boardList) {
-                existing.put(member.getTitle(), member.getMember().id);
+            for (BoardMembership member : boardList) {
+                existing.put(member.BoardPost.title, member.user.id);
             }
 
             while (stringIterator.hasNext()) {
