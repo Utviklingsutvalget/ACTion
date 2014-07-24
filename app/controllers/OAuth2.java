@@ -9,7 +9,9 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.common.base.Utf8;
 import models.User;
 import org.json.JSONObject;
+import play.Configuration;
 import play.Logger;
+import play.api.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.FileUtility;
@@ -35,7 +37,9 @@ import java.security.NoSuchAlgorithmException;
 public class OAuth2 extends Controller {
 
     /**Secrets*/
-    private static final Map<String, String> CONF = FileUtility.getMap("/opt/ACTion/conf/secrets/googleoauth", "=");
+    //private static final Map<String, String> CONF = FileUtility.getMap("/opt/ACTion/conf/secrets/googleoauth", "=");
+
+    private static final Configuration CONF = play.Play.application().configuration();
 
     /**Endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.*/
     public static GoogleUtility.DiscoveryDocument dd;
@@ -53,7 +57,6 @@ public class OAuth2 extends Controller {
      * Redirects the user to https://accounts.google.com/o/oauth2/auth with a
      * specific query for authentication.
      *
-     * @see     https://developers.google.com/accounts/docs/OAuth2Login#sendauthrequest
      *
      * @return  Result
      */
@@ -83,10 +86,11 @@ public class OAuth2 extends Controller {
 
             //Redirect to google
             return redirect(dd.getEndpoints(GoogleUtility.AUTHORIZATION_ENDPOINT) + "?" +
-                    "client_id=" + CONF.get("client_id") +
+                    "client_id=" + CONF.getString("googleclient.id") +
+                    "&hd=" +  CONF.getString("googleclient.hd") +
                     "&response_type=" + dd.getResponseTypes(GoogleUtility.CODE) +
                     "&scope=openid profile email" +
-                    "&redirect_uri=http://action.rushteamc.com/login/oauth2callback" +
+                    "&redirect_uri=" + CONF.getString("googleclient.redir") + "/login/oauth2callback" +
                     //"&hd=student.westerdals.no" + //This line cannot be used until all students have this email
                     "&access_type=online" + //We dont need offline access right now
                     "&state=" + session("state"));
@@ -99,7 +103,6 @@ public class OAuth2 extends Controller {
      * exchanged for an access_token and id_token. The get query also contains
      * a state(token) that should be validated.
      *
-     * @see     https://developers.google.com/accounts/docs/OAuth2Login#exchangecode
      *
      * @return  Result
      */
@@ -119,9 +122,9 @@ public class OAuth2 extends Controller {
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
             String params = "code=" + code +
-                    "&client_id=" + CONF.get("client_id") +
-                    "&client_secret=" + CONF.get("client_secret") +
-                    "&redirect_uri=http://action.rushteamc.com/login/oauth2callback" +
+                    "&client_id=" + CONF.getString("googleclient.id") +
+                    "&client_secret=" + CONF.getString("googleclient.secret") +
+                    "&redirect_uri=" + CONF.getString("googleclient.redir") +"/login/oauth2callback" +
                     "&grant_type=authorization_code";
 
             //Request header
@@ -192,7 +195,7 @@ public class OAuth2 extends Controller {
                 return unauthorized(error.render("Unauthorized Access"));
 
             //Identifies the audience that this ID token is intended for.
-            if(!payload.getAudience().equals(CONF.get("client_id")))
+            if(!payload.getAudience().equals(CONF.getString("googleclient.id")))
                 return unauthorized(error.render("Unauthorized Access"));
 
             //Email must be verified
@@ -264,7 +267,7 @@ public class OAuth2 extends Controller {
                     jsonObject.getString("email"),
                     jsonObject.getString("picture").split("\\?")[0]); //We dont want: ?sz=50(sets image size to 50)
 
-            if(!user.email.matches("([a-z0-9]*)@(student\\.|)westerdals.no")) {
+            if(!user.email.endsWith(CONF.getString("googleclient.hd"))) {
                 return ok(views.html.notAuthorizedPage.render("Din e-postaddresse stemmer ikke med kravene. Vennligst logg på med en e-post addresse hos domenet westerdals.no"));
             }
 
