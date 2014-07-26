@@ -12,8 +12,6 @@ import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.boardpowerup.html.powerup;
 import powerups.core.boardpowerup.html.admin;
-import powerups.models.Board;
-import powerups.models.BoardExtras;
 import powerups.models.BoardMembership;
 import powerups.models.BoardPost;
 import utils.MembershipLevel;
@@ -35,10 +33,12 @@ public class BoardPowerup extends Powerup {
         if(club != null && model != null){
             boardList = this.getClub().boardMembers;
             memberList = club.members;
+            Logger.info("club and model is not null");
 
         } else {
             boardList = new ArrayList<>();
             memberList = new ArrayList<>();
+            Logger.info("club and model is null");
         }
     }
 

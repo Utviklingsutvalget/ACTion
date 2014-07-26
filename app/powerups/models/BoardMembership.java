@@ -12,7 +12,7 @@ public class BoardMembership extends Model {
     public static Finder<BoardMembershipKey, BoardMembership> find = new Finder<>(BoardMembershipKey.class, BoardMembership.class);
 
     public BoardMembership(Club club, BoardPost boardPost, User user){
-        BoardPost = boardPost;
+        this.boardPost = boardPost;
         this.club = club;
         this.user = user;
         this.weight = boardPost.weight;
