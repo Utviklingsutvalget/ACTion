@@ -1,60 +1,77 @@
-@(board: List[powerups.models.BoardMembership], editable : Boolean, memberList : List[Membership])
+@(board: List[powerups.models.BoardMembership], memberList: List[Membership], posts: List[powerups.models.BoardPost])
 
 
-    <!-- DISPLAY EACH TITLE IN BOARD AND BOARDEXTRA -->
-@for(boardmember <- board){
-    <form data-abide class="boardmember">
-
-        <fieldset class="powerup-node" data-powerup-field="@boardmember.boardPost.title" data-powerup-select='.@(boardmember.boardPost.title)Select'>
-            <legend value="@boardmember.boardPost.title">@boardmember.boardPost.title</legend>
+<!-- DISPLAY EACH TITLE IN BOARD AND BOARDEXTRA -->
+<form data-abide data-powerup-update-type="update" class="boardmember powerup-body">
+    @for(boardmember <- board) {
+        <fieldset class="powerup-node" data-powerup-field="@boardmember.boardPost.id" data-powerup-select='.@(boardmember.boardPost.id)Select'>
+            <legend>@boardmember.boardPost.title</legend>
 
             <label>Email
                 <input type="text" value="@boardmember.user.email" disabled>
             </label>
 
-            <label>Name</label>
-            <select class='@(boardmember.boardPost.title)Select'>
+            <label>Name
+                <select class='@(boardmember.boardPost.id)Select'>
 
-                    <!-- ADDS CURRENT HOLDER OF TITLE FIRST IN THE LISTVIEW -->
-                <option value="@boardmember.user.id">@boardmember.user.firstName @boardmember.user.lastName</option>
-                @for(members <- memberList){
+                        <!-- ADDS CURRENT HOLDER OF TITLE FIRST IN THE LISTVIEW -->
+                    <option value="@boardmember.user.id" selected>@boardmember.user.firstName @boardmember.user.lastName</option>
+                    @for(members <- memberList) {
 
-                        <!-- ADDS ALL CONSECUTIVE MEMBERS IN LIST (EXCEPT THE MEMBER HOLDING THE TITLE CURRENTLY) -->
-                    @if(!members.user.id.equals(boardmember.user.id)){
-                        <option value="@members.user.id"
-                        data-powerup-value="@members.user.id">@members.user.firstName @members.user.lastName</option>
+                            <!-- ADDS ALL CONSECUTIVE MEMBERS IN LIST (EXCEPT THE MEMBER HOLDING THE TITLE CURRENTLY) -->
+                        @if(!members.user.id.equals(boardmember.user.id)) {
+                            <option value="@members.user.id"
+                            data-powerup-value="@members.user.id">@members.user.firstName @members.user.lastName</option>
+                        }
                     }
-                }
-                    <!-- testing for potential removal of titles-->
-                <option value="" data-powerup-value=""></option>
-            </select>
+                        <!-- testing for potential removal of titles-->
+                    <option value="" data-powerup-value=""></option>
+                </select>
+            </label>
         </fieldset>
-    </form>
-}
-@if(editable) {<script>
-createButton(getId($('.boardmember')));
-</script>}
-
-<form data-abide class="addTitle">
-    <fieldset id='newTitleNode' class="powerup-node"
-    data-powerup-select=".newTitleMember">
-
-        <legend>Legg til en tittel</legend>
-
-        <label>Tittel
-            <input id="newTitleInput" type="text" required placeholder="Må inneha en tittel">
+    }
+</form>
+<script>
+createUpdateTypeButton ( getId ( $ ( '.boardmember' ) ), '.boardmember' ) ;
+</script>
+<form class="powerup-body addPost" data-powerup-update-type="add">
+    <fieldset>
+        <legend>Legg til styremedlem</legend>
+        <label class="powerup-node" data-powerup-field="title" data-powerup-select='#board-post-select'>Styrepost
+            <select id="board-post-select">
+                <option value=""></option>
+                @for(post <- posts) {
+                    <option value="@(post.id)" data-powerup-value="@(post.id)">@(post.title)</option>
+                }
+            </select>
         </label>
-
-        <label>Medlemsliste
-            <select class="newTitleMember">
-                <option></option>
-                @for(member <- memberList){
-                    <option value="@member.user.id" data-powerup-value="@member.user.id">@member.user.firstName @member.user.lastName
-                    }
+        <label class="powerup-node" data-powerup-field="user" data-powerup-select='#board-user-select'>Medlem
+            <select id="board-user-select">
+                <option value="" selected></option>
+                @for(member <- memberList) {
+                    <option value="@(member.user.id)" data-powerup-value="@(member.user.id)">@(member.user.firstName + " " + member.user.lastName)</option>
+                }
             </select>
         </label>
     </fieldset>
 </form>
-@if(editable) {<script>
-createButton(getId($('.addTitle')));
-</script>}
+<script>
+createUpdateTypeButton ( getId ( $ ( '.addPost' ) ), '.addPost' ) ;
+</script>
+<form data-abide class="createPost powerup-body" data-powerup-update-type="create">
+    <fieldset id='newTitleNode' class="powerup-node" data-powerup-field="title" data-powerup-input="#newTitleInput">
+
+        <legend>Opprett styrepost</legend>
+
+        <label>Tittel
+            <input id="newTitleInput" type="text" required placeholder="Må inneha en tittel">
+        </label>
+        <label>
+            <input class="powerup-node" data-powerup-field="mandatory" type="checkbox" data-powerup-checkbox>
+            Obligatorisk<br>
+        </label>
+    </fieldset>
+</form>
+<script>
+createUpdateTypeButton ( getId ( $ ( '.createPost' ) ), '.createPost' ) ;
+</script>

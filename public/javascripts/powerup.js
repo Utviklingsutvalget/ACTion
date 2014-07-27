@@ -2,21 +2,34 @@ function powerup() {
 
     $(document).on('click', '.updatepowerup', function (e) {
         e.preventDefault();
-        var container = $(document).find('.powerup-container');
-        var clubId = container.data('powerups-for');
-        var powerupId = $(this).closest('.powerup').data('powerup-id');
-
-        console.log($(this).closest('.powerup-node'));
-
-        var powerup = new PowerupClass();
-
-        powerup.id = powerupId;
-        powerup.club = clubId;
-        console.log(powerup.id);
-        console.log(powerup.club);
+        var powerup = buildAndReturnPowerup($(this));
         powerup.update();
     });
+
+    $(document).on('click', '.updatepowerup-type', function(e) {
+        e.preventDefault();
+        var powerup = buildAndReturnPowerup($(this));
+        var updateTypeElement = $(this).closest('.powerup-body');
+        if(updateTypeElement.data('powerup-update-type') !== undefined) {
+            powerup.updateType = updateTypeElement.data('powerup-update-type');
+            console.log(powerup.updateType);
+        }
+        powerup.update();
+
+    });
 }
+
+function buildAndReturnPowerup(fromElement) {
+    var container = $(document).find('.powerup-container');
+    var clubId = container.data('powerups-for');
+    var powerupId = fromElement.closest('.powerup').data('powerup-id');
+
+    var powerup = new PowerupClass();
+    powerup.id = powerupId;
+    powerup.club = clubId;
+    return powerup;
+}
+
 function getPowerupHtml(id) {
 
     var container = $(document).find('.powerup-container');
@@ -26,25 +39,22 @@ function getPowerupHtml(id) {
     htmlPowerups.each(function () {
         var tempPowerup = $(this);
         if (tempPowerup.data('powerup-id') === id) {
-            console.log("FOUND THE POWER YAY");
             htmlPowerup = $(this);
         }
     });
     return htmlPowerup;
 }
 
-function createButton(powerupId) {
+function createStandardButton(powerupId) {
     var htmlPowerup = getPowerupHtml(powerupId);
     var insertInto = htmlPowerup.find('.powerup-content');
     insertInto.append("<button class=\"updatepowerup button small radius\">Save changes</button>");
 }
 
-function createButtonAt(powerupId, target) {
+function createUpdateTypeButton(powerupId, target) {
     var htmlPowerup = getPowerupHtml(powerupId);
-    console.log(htmlPowerup);
     var htmlElement = htmlPowerup.find(target);
-    console.log(htmlElement);
-    htmlElement.append("<button class=\"updatepowerup button small radius\">Save changes</button>");
+    htmlElement.append("<button class=\"updatepowerup-type button small radius\">Save changes</button>");
 }
 
 function getId(fromLocation) {
@@ -54,6 +64,7 @@ function getId(fromLocation) {
 function PowerupClass() {
     this.id = 0;
     this.club = 0;
+    this.updateType = undefined;
 
     this.update = update;
     this.invalidate = invalidate;
@@ -69,33 +80,37 @@ function PowerupClass() {
         var powerupHtml = getPowerupHtml((this).id);
         console.log($(powerupHtml).prop('id'));
         var powerupContent = powerupHtml.find('.powerup-content');
-
-
+        if((this).updateType !== undefined) {
+            var updateType = (this).updateType;
+            dataObject['update-type'] = updateType;
+            powerupContent.find('.powerup-body').each(function() {
+                console.log($(this));
+               if($(this).data('powerup-update-type') === updateType) {
+                   powerupContent = $(this);
+                   return false;
+               }
+            });
+        }
 
         powerupContent.find('.powerup-node').each(function () {
 
             if ($(this).hasClass('powerup-node')) {
+                var field;
+                if($(this).prop('id') === appMessageNode){
 
-                if($(this).prop('id') === newTitleNode) {
-
-                    var field = ($(this).find(newTitleInput).val());
-
-                    console.log("success: " + field);
-
-                }else if($(this).prop('id') === appMessageNode){
-
-                    var field = ($(this).find(applicationMessage).val());
+                    field = ($(this).find(applicationMessage).val());
 
                 }else{
 
-                    var field = ($(this)).data('powerup-field');
+                    field = ($(this)).data('powerup-field');
 
                 }
-
+                var targetSelector;
+                var targetObject;
                 if ($(this).data('powerup-select') !== undefined) {
 
-                    var targetSelector = $(this).data('powerup-select');
-                    var targetObject = $(this).find(targetSelector);
+                    targetSelector = $(this).data('powerup-select');
+                    targetObject = $(this).find(targetSelector);
                     var selectedValue = $('option:selected', targetObject);
 
                     console.log("targetselector: " + targetSelector);
@@ -107,10 +122,12 @@ function PowerupClass() {
                     dataObject[field] = $(this).data('powerup-value');
 
                 } else if($(this).data('powerup-input') !== undefined) {
-                    var targetSelector = $(this).data('powerup-input');
-                    var targetObject = $(this).find(targetSelector);
+                    targetSelector = $(this).data('powerup-input');
+                    targetObject = $(this).find(targetSelector);
                     dataObject[field] = targetObject.val();
 
+                } else if($(this).data('powerup-checkbox') !== undefined) {
+                    dataObject[field] = $(this).is(':checked');
                 } else {
                     dataObject[field] = $(this).html();
 
@@ -125,8 +142,11 @@ function PowerupClass() {
             contentType: 'application/json',
             data: JSON.stringify(dataObject),
             dataType: 'json'
-        }).done(function () {
+        }).done(function (data) {
+            console.log();
         }).always(function () {
+        }).fail(function (jqhxr) {
+            console.log(jqhxr);
         });
         (this).invalidate();
     }

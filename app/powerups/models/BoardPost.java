@@ -25,8 +25,7 @@ public class BoardPost extends Model {
     public boolean isMandatory;
 
     @Constraints.Required
-    @Column(insertable = false, nullable = false)
-    public int weight = 0;
+    public int weight;
 
     public BoardPost(String title, boolean isMandatory, int weight) {
         this.title = title;

@@ -31,7 +31,7 @@ public class BoardMembership extends Model {
     public BoardPost boardPost;
 
     @OneToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id")
     public User user;
 
     public int weight;
