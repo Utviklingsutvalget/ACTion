@@ -61,6 +61,16 @@ create table event (
   constraint pk_event primary key (id))
 ;
 
+create table feed (
+  id                        bigint auto_increment not null,
+  user_id                   varchar(255),
+  club_id                   bigint,
+  message                   varchar(255),
+  message_title             varchar(255),
+  Created                   datetime,
+  constraint pk_feed primary key (id))
+;
+
 create table location (
   id                        bigint auto_increment not null,
   name                      varchar(255),
@@ -132,20 +142,24 @@ alter table club_image add constraint fk_club_image_club_7 foreign key (club_id)
 create index ix_club_image_club_7 on club_image (club_id);
 alter table event add constraint fk_event_club_8 foreign key (club_id) references club (id) on delete restrict on update restrict;
 create index ix_event_club_8 on event (club_id);
-alter table membership add constraint fk_membership_club_9 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_membership_club_9 on membership (club_id);
-alter table membership add constraint fk_membership_user_10 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_membership_user_10 on membership (user_id);
-alter table participation add constraint fk_participation_event_11 foreign key (event_id) references event (id) on delete restrict on update restrict;
-create index ix_participation_event_11 on participation (event_id);
-alter table participation add constraint fk_participation_user_12 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_participation_user_12 on participation (user_id);
-alter table pending add constraint fk_pending_club_13 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_pending_club_13 on pending (club_id);
-alter table pending add constraint fk_pending_user_14 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_pending_user_14 on pending (user_id);
-alter table super_user add constraint fk_super_user_user_15 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_super_user_user_15 on super_user (user_id);
+alter table feed add constraint fk_feed_user_9 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_feed_user_9 on feed (user_id);
+alter table feed add constraint fk_feed_club_10 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_feed_club_10 on feed (club_id);
+alter table membership add constraint fk_membership_club_11 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_membership_club_11 on membership (club_id);
+alter table membership add constraint fk_membership_user_12 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_membership_user_12 on membership (user_id);
+alter table participation add constraint fk_participation_event_13 foreign key (event_id) references event (id) on delete restrict on update restrict;
+create index ix_participation_event_13 on participation (event_id);
+alter table participation add constraint fk_participation_user_14 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_participation_user_14 on participation (user_id);
+alter table pending add constraint fk_pending_club_15 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_pending_club_15 on pending (club_id);
+alter table pending add constraint fk_pending_user_16 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_pending_user_16 on pending (user_id);
+alter table super_user add constraint fk_super_user_user_17 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_super_user_user_17 on super_user (user_id);
 
 
 
@@ -166,6 +180,8 @@ drop table pl_ClubDescription;
 drop table club_image;
 
 drop table event;
+
+drop table feed;
 
 drop table location;
 

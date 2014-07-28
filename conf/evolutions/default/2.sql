@@ -12,7 +12,6 @@ VALUES ('1', 'core.clubimage.ClubImagePowerup', 'Utvalgsbilde', '1', '0', '0'),
   ('3', 'core.boardpowerup.BoardPowerup', 'Styret', '1', '1', '2'),
   ('4', 'core.eventpowerup.EventPowerup', 'Eventer', '1', '1', '3'),
   ('5', 'core.recruitpowerup.RecruitPowerup', 'Innmelding', '1', '1', '100'),
-  ('5', 'core.recruitpowerup.RecruitPowerup', 'Innmelding', '1', '1', '100');
   ('7', 'core.feedpowerup.FeedPowerup', 'Feed', '1', '1', '5');
 
 INSERT INTO `action`.`user` (`id`, `first_name`, `last_name`, `gender`, `email`, `picture_url`) VALUES
