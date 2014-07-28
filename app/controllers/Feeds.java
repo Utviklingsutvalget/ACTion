@@ -1,7 +1,5 @@
 package controllers;
 
-import com.avaje.ebean.Ebean;
-import com.fasterxml.jackson.databind.JsonNode;
 import models.*;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -14,8 +12,8 @@ import java.util.*;
 
 public class Feeds extends Controller {
 
-    private static final String TITLE = "Feed";
-    private static final String CONTENT = "content";
+    //private static final int MAXIMUMFEEDSIZE = 30;
+    private static final int MAXFEEDSPERCLUB = 5;
 
     /*
     * has yet to be implemented in routes file
@@ -25,6 +23,10 @@ public class Feeds extends Controller {
 
         List<Feed> feedList = new ArrayList<>();
 
+        // TODO FIND A MORE EFFECTIVE IMPLEMENTATION LATER
+
+        //Check all clubs for membership with given user. extract n amount
+        //of feeds from each club and return list to render.
         try{
             User user = new Authorize.UserSession().getUser();
             List<Club> clubList = Club.find.all();
@@ -34,16 +36,10 @@ public class Feeds extends Controller {
                 Membership membership = Membership.find.byId(new Membership(club, user).id);
 
                 if(membership != null){
+
                     if(membership.level.getLevel() >= MembershipLevel.SUBSCRIBE.getLevel()){
 
-                        List<Feed> clubFeedList = Feed.findByClub(club);
-
-                        for(Feed feed : clubFeedList){
-
-                            if(feed.dateTime.isAfterNow()){
-                                feedList.add(feed);
-                            }
-                        }
+                        feedList.addAll(getClubFeed(club));
                     }
                 }
             }
@@ -53,50 +49,31 @@ public class Feeds extends Controller {
             return unauthorized("You need to be logged in to see feed");
         }
 
-        if(feedList != null && !feedList.isEmpty()){
+        if(feedList != null){
             feedList.sort(new FeedSorter());
+            Collections.reverse(feedList);
         }
 
-        return ok(views.html.feed.index.render(feedList, TITLE));
+        return ok(views.html.feed.index.render(feedList));
     }
 
-    public static Result create(Long clubId){
+    //Find up x feeds by a give club (until maxfeedsperclub is reached)
+    //add to list, sort and return list
+    public static List<Feed> getClubFeed(Club club){
 
-        Map<String, String> titleAndMessage = new HashMap<>();
-        Club club = Club.find.byId(clubId);
+        List<Feed> clubFeedList = Feed.findByClub(club);
+        clubFeedList.sort(new FeedSorter());
+        Collections.reverse(clubFeedList);
 
-        JsonNode json = request().body().asJson();
+        List<Feed> feedList = new ArrayList<>();
 
-        // TODO FIX JSON PARSING TO THIS METHOD
+        for(int i = 0; i < clubFeedList.size(); i++){
 
-        try{
-            User user = new Authorize.UserSession().getUser();
-            if(json != null){
-
-                Iterator<String> fields = json.fieldNames();
-
-                while(fields.hasNext()){
-
-                    String title = fields.next();
-
-                    if(title.equals(TITLE)){
-                        titleAndMessage.put(title, json.get(title).asText());
-                    }
-                }
-
-                for(String title : titleAndMessage.keySet()){
-
-                    // TODO NEEDS IMPLEMENTATION OF CLUBID FOR FEEDENTRY
-                    Feed feedEntry = new Feed(club, titleAndMessage.get(title), title);
-                    Ebean.save(feedEntry);
-                }
+            if(i < MAXFEEDSPERCLUB){
+                feedList.add(clubFeedList.get(i));
             }
-
-        }catch(Authorize.SessionException e){
-            e.printStackTrace();
-            return unauthorized();
         }
 
-        return ok();
+        return feedList;
     }
 }

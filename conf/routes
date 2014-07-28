@@ -35,24 +35,23 @@ POST        /ckeditor/save                   controllers.CKEditor.save()
 
 # Events
 GET         /events                          controllers.Events.index()
-GET         /events/new                      controllers.Events.create()
-POST        /events/save                     controllers.Events.save()
+#GET        /events/new                      controllers.Events.create()
+POST       /events/save                     controllers.Events.save()
 POST        /events/attend                   controllers.Events.attend()
 
-GET         /events/:id                      controllers.Events.edit(id:Long)
+#GET        /events/:id                      controllers.Events.edit(id:Long)
 POST        /events/:id                      controllers.Events.update(id:Long)
-GET         /events/:id/show                 controllers.Events.show(id: Long)
+GET         /events/:id                      controllers.Events.show(id: Long)
 POST        /events/:id/delete               controllers.Events.delete(id: Long)
 
 GET         /admin/clubs/:id                 controllers.Administration.showClub(id: Long)
 GET         /admin/site                      controllers.Administration.showSite()
 POST        /admin/site                      controllers.Administration.updateLocation()
-PUT         /admin/clubs/:id                 controllers.Feeds.create(id: Long)
-
 GET         /admin/action                    controllers.Administration.makeAdmin()
 
 #Feed
 GET         /feed                            controllers.Feeds.index()
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                    controllers.Assets.at(path="/public", file)

@@ -16,8 +16,9 @@ public class Feed extends Model {
         return find.where().eq(CLUBCOLUMN, club).findList();
     }
 
-    public Feed(Club club, String message, String messageTitle){
+    public Feed(Club club, User user, String messageTitle, String message){
         this.club = club;
+        this.user = user;
         this.message = message;
         this.messageTitle = messageTitle;
         this.dateTime = new DateTime();
