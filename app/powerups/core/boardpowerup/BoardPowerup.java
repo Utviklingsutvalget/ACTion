@@ -26,9 +26,6 @@ public class BoardPowerup extends Powerup {
 
     public static final String LEADER = "Leder";
     public static final String VICE = "Nestleder";
-    public static final String EVENT = "Eventansvarlig";
-    public static final String ECONOMY = "Økonomiansvarlig";
-    public static final String SECRETARY = "Sekretær";
     private List<BoardMembership> boardList;
     private List<Membership> memberList;
     private List<BoardPost> posts;
@@ -48,7 +45,10 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public Html renderAdmin() {
-        return admin.render(boardList, memberList, posts);
+        Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
+        if(membership.level == MembershipLevel.LEADER || membership.level == MembershipLevel.COUNCIL) {
+            return admin.render(boardList, memberList, posts);
+        } else return new Html("<div class=\"medium-12 colums text-center\">Styremedlemmer har ikke tilgang til å endre styremedlemmer.</div>");
     }
 
     @Override
@@ -123,10 +123,7 @@ public class BoardPowerup extends Powerup {
 
                 } else {
                     // If the new rank isn't a flag rank, let's add some levels to the safe list
-                    List<MembershipLevel> safeList = new ArrayList<>();
-                    safeList.add(MembershipLevel.LEADER);
-                    safeList.add(MembershipLevel.VICE);
-                    safeList.add(MembershipLevel.COUNCIL);
+                    List<MembershipLevel> safeList = getSafeList();
 
                     // If the user already has a rank in the safe list, skip this step
                     if (!safeList.contains(membership.level)) {
@@ -142,6 +139,14 @@ public class BoardPowerup extends Powerup {
         }
         // Returns true if we looped through everything and did nothing
         return false;
+    }
+
+    private List<MembershipLevel> getSafeList() {
+        List<MembershipLevel> safeList = new ArrayList<>();
+        safeList.add(MembershipLevel.LEADER);
+        safeList.add(MembershipLevel.VICE);
+        safeList.add(MembershipLevel.COUNCIL);
+        return safeList;
     }
 
     private boolean createPost(JsonNode updateContent) {
@@ -168,24 +173,7 @@ public class BoardPowerup extends Powerup {
             return false;
         } else {
             Logger.warn("Deleting post");
-            boolean userHasOtherPosts = false;
-
-            // Check if the user holding the post has other board memberships
-            Logger.warn("Begin looping");
-            for(BoardMembership boardMembership2 : this.getClub().boardMembers) {
-
-                Logger.warn("Checking if post is different");
-                if(!boardMembership2.boardPost.equals(boardMembership.boardPost)) {
-                    Logger.warn("Post was different");
-
-                    Logger.warn("Checking if the user for a different post is the same");
-                    if (boardMembership2.user.equals(boardMembership.user)) {
-                        Logger.warn("User is the same, returning true");
-                        userHasOtherPosts = true;
-                        break;
-                    }
-                }
-            }
+            boolean userHasOtherPosts = userHasOtherPosts(boardMembership);
             // If the user has no other posts, assume he or she should now be a normal member.
             if (!userHasOtherPosts) {
                 Membership membership = Membership.find.byId(new Membership(this.getClub(), boardMembership.user).id);
@@ -198,12 +186,39 @@ public class BoardPowerup extends Powerup {
         }
     }
 
+    private boolean userHasOtherPosts(BoardMembership boardMembership, User user) {
+        boolean userHasOtherPosts = false;
+
+        // Check if the user holding the post has other board memberships
+        Logger.warn("Begin looping");
+        for (BoardMembership boardMembership2 : this.getClub().boardMembers) {
+
+            Logger.warn("Checking if post is different");
+            if (!boardMembership2.boardPost.equals(boardMembership.boardPost)) {
+                Logger.warn("Post was different");
+
+                Logger.warn("Checking if the user for a different post is the same");
+                if (boardMembership2.user.equals(user)) {
+                    Logger.warn("User is the same, returning true");
+                    userHasOtherPosts = true;
+                    break;
+                }
+            }
+        }
+        return userHasOtherPosts;
+    }
+
+    private boolean userHasOtherPosts(BoardMembership boardMembership) {
+        User user = boardMembership.user;
+        return userHasOtherPosts(boardMembership, user);
+    }
+
     private Result updateMemberships(JsonNode updateContent) {
         for (BoardMembership boardMembership : this.getClub().boardMembers) {
 
             // CASE DELETE BOARD MEMBER
             if (updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText().equals("")) {
-                if(!deleteMembership(boardMembership)) {
+                if (!deleteMembership(boardMembership)) {
                     return unauthorized("Obligatorisk styrepost kan ikke være tom");
                 }
             }
@@ -218,6 +233,46 @@ public class BoardPowerup extends Powerup {
                 }
             }
         }
+        validateMemberLevels();
         return ok("Styreposter oppdatert");
+    }
+
+    private void validateMemberLevels() {
+        for (Membership membership : this.getClub().members) {
+            Logger.warn("Checking memberships for " + membership.user.firstName);
+            if (membership.level != MembershipLevel.SUBSCRIBE && membership.level != MembershipLevel.COUNCIL) {
+
+                boolean levelChanged = false;
+                for (BoardMembership boardMembership : this.getClub().boardMembers) {
+                    if (boardMembership.user.equals(membership.user)) {
+                        Logger.warn("Found " + membership.user.firstName + " to be a board member");
+                        // We now know this user is at least a board member.
+                        if (!levelChanged) {
+                            levelChanged = true;
+                            membership.level = MembershipLevel.BOARD;
+                        }
+
+                        String postTitle = boardMembership.boardPost.title;
+                        if (postTitle.equals(LEADER)) {
+                            levelChanged = true;
+                            membership.level = MembershipLevel.LEADER;
+                            break;
+                        } else if (postTitle.equals(VICE)) {
+                            levelChanged = true;
+                            membership.level = MembershipLevel.VICE;
+                            // We also break for VICE as noone can be both leader and vice.
+                            break;
+                        }
+                    }
+                }
+
+                if (levelChanged) {
+                    Ebean.update(membership);
+                } else {
+                    membership.level = MembershipLevel.MEMBER;
+                    Ebean.update(membership);
+                }
+            }
+        }
     }
 }
