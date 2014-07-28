@@ -11,6 +11,7 @@ import powerups.Powerup;
 import utils.Context;
 import utils.FeedSorter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FeedPowerup extends Powerup {
@@ -45,6 +46,7 @@ public class FeedPowerup extends Powerup {
 
             if(feedList != null){
                 feedList.sort(new FeedSorter());
+                Collections.reverse(feedList);
 
                 for(int i = 0; i < feedList.size(); i++){
 
