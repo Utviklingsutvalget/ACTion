@@ -19,20 +19,6 @@ import views.html.user.show;
 import java.util.List;
 
 public class Users extends Controller {
-    public static Result index() {
-
-        List<User> users = User.find.all();
-
-        return ok(views.html.user.index.render(users));
-    }
-
-    public static Result delete(String id) {
-
-        OAuth2.destroySessions();
-        User.find.where().eq("id", id).findUnique().delete();
-        return index();
-    }
-
     /**
      * User proifle page
      *

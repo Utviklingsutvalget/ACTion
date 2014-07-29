@@ -1,9 +1,0 @@
-@(users: List[User])
-
-@main("People") {
-
-    <a href="@routes.Users.profile()">Profile Page</a>
-    <br><br>
-
-    @user.list(users)
-}
