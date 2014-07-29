@@ -15,6 +15,10 @@ public class Participation extends Model {
         this.user = user;
         if(user != null && event != null) {
             this.id = new ParticipationKey(event.id, user.id);
+
+            if(user == event.getHost()){
+                setHostRvsp();
+            }
         }
     }
 
@@ -32,11 +36,18 @@ public class Participation extends Model {
     @Constraints.Required
     public Status rvsp;
 
+    public void setHostRvsp(){
+        this.rvsp = Status.ATTENDING;
+    }
+
     public void setRvsp(boolean newRvsp) {
-        if(newRvsp) {
-            this.rvsp = Status.ATTENDING;
-        } else {
-            this.rvsp = Status.NOT_ATTENDING;
+
+        if(user != event.getHost()){
+            if(newRvsp) {
+                this.rvsp = Status.ATTENDING;
+            } else {
+                this.rvsp = Status.NOT_ATTENDING;
+            }
         }
     }
 

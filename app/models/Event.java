@@ -30,6 +30,8 @@ public class Event extends Model {
     public String location;
     public String coverUrl;
     @ManyToOne
+    public User host;
+    @ManyToOne
     public Club club;
     @OneToMany(mappedBy = "event")
     public List<Participation> participants = new ArrayList<>();
@@ -40,7 +42,7 @@ public class Event extends Model {
     @Transient
     private boolean userAttending;
 
-    public Event(String name, String description, DateTime startTime, String location, String coverUrl, Club club) {
+    public Event(String name, String description, DateTime startTime, String location, String coverUrl, Club club, User host) {
 
         this.name = name;
         this.description = description;
@@ -48,6 +50,11 @@ public class Event extends Model {
         this.location = location;
         this.coverUrl = coverUrl;
         this.club = club;
+        this.host = host;
+    }
+
+    public User getHost(){
+        return this.host;
     }
 
     public static List<String> getPrivacyAsList() {
