@@ -43,7 +43,7 @@ public class DescriptionPowerup extends Powerup {
 
     @Override
     public Html render() {
-        return powerup.render(clubDesc.description, editable, FIELD_STRING);
+        return powerup.render(clubDesc.description);
     }
 
     @Override

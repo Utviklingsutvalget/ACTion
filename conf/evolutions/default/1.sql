@@ -90,7 +90,7 @@ create table participation (
   event_id                  bigint,
   user_id                   varchar(255),
   rvsp                      integer,
-  constraint ck_participation_rvsp check (rvsp in (0,1)),
+  constraint ck_participation_rvsp check (rvsp in (0,1,2)),
   constraint pk_participation primary key (event_id, user_id))
 ;
 
