@@ -36,10 +36,8 @@ public class Events extends Controller {
                     if(participation.getRvsp()) {
                         attendingEvents.add(e);
                     }
-                    e.setUserAttending(participation.getRvsp());
-                } else {
-                    e.setUserAttending(false);
                 }
+                e.setUserAttending(participation.getRvsp());
             }
         } catch (Authorize.SessionException ignored) {
 

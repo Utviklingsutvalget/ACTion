@@ -37,18 +37,25 @@ public class Participation extends Model {
     public Status rvsp;
 
     public void setHostRvsp(){
-        this.rvsp = Status.ATTENDING;
+        this.rvsp = Status.HOSTING;
     }
 
-    public void setRvsp(boolean newRvsp) {
-
-        if(user != event.getHost()){
-            if(newRvsp) {
+    /**
+     * Attempts to set the RVSP for a user to this participation's event. Returns false if no change was made.
+     * @param newRvsp
+     * @return
+     */
+    public boolean setRvsp(boolean newRvsp) {
+        if(this.rvsp != Status.HOSTING){
+            if(newRvsp && this.rvsp == Status.NOT_ATTENDING) {
                 this.rvsp = Status.ATTENDING;
+                return true;
             } else {
                 this.rvsp = Status.NOT_ATTENDING;
+                return true;
             }
         }
+        else return false;
     }
 
     public boolean getRvsp() {
@@ -56,7 +63,7 @@ public class Participation extends Model {
     }
 
     public enum Status {
-        NOT_ATTENDING, ATTENDING
+        NOT_ATTENDING, ATTENDING, HOSTING
     }
 
     @Embeddable

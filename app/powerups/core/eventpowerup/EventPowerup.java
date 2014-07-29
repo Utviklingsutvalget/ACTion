@@ -44,9 +44,19 @@ public class EventPowerup extends Powerup {
         } else if(!tempEvents.isEmpty()) {
             events.addAll(tempEvents.subList(0, MAX_EVENTS));
         }
+        for (Event e : events) {
+            Participation participation = new Participation(e, this.getContext().getSender());
+            int i;
+            if (e.participants.contains(participation)) {
+                i = e.participants.indexOf(participation);
+                participation = e.participants.get(i);
+                e.setUserAttending(participation.getRvsp());
+            }
+            e.setUserAttending(participation.getRvsp());
         Logger.warn("Didn't fail yet4");
         User user = getContext().getSender();
         this.setUserPresent(user != null);
+        }
     }
 
     @Override
