@@ -206,3 +206,5 @@ sftp-config.json
 
 ### Espresso ###
 *.esproj
+
+*.espressostorage
