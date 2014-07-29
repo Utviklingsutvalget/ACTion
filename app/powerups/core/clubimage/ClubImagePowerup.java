@@ -44,7 +44,7 @@ public class ClubImagePowerup extends Powerup {
         }
         this.clubImage.imageUrl = updateContent.get("link").asText();
         Ebean.update(clubImage);
-        return Results.ok();
+        return Results.ok("Bilde endret!");
     }
 
 }
