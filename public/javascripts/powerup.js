@@ -28,8 +28,6 @@ function reloadSite(powerup){
         if($(this).data('powerup-id') === powerup.id){
             console.log("the powerupId that was used is: " + $(this).data('powerup-id'));
 
-            var htmlElement = $(this).parent();
-
             $.get("/clubs/" + powerup.club, function(){
 
                 document.location.reload();
