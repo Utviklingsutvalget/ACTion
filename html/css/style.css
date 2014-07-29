@@ -337,3 +337,13 @@ img.img-gallery:hover{
     height: 200px;
     background-color: black;
 }
+
+#tirsdag{
+	max-height: 10000px;
+	overflow: hidden;
+	-webkit-transition: all 1s ease-in-out 0s;
+}
+
+#tirsdag:target{
+	max-height: 0px;
+}
