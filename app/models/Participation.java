@@ -42,20 +42,20 @@ public class Participation extends Model {
 
     /**
      * Attempts to set the RVSP for a user to this participation's event. Returns false if no change was made.
-     * @param newRvsp
-     * @return
+     * @param newRvsp The RVSP status you wish to set.
+     * @return Whether or not there was anything to change.
      */
     public boolean setRvsp(boolean newRvsp) {
         if(this.rvsp != Status.HOSTING){
             if(newRvsp && this.rvsp == Status.NOT_ATTENDING) {
                 this.rvsp = Status.ATTENDING;
                 return true;
-            } else {
+            } else if(!newRvsp && this.rvsp == Status.ATTENDING) {
                 this.rvsp = Status.NOT_ATTENDING;
                 return true;
             }
         }
-        else return false;
+        return false;
     }
 
     public boolean getRvsp() {
