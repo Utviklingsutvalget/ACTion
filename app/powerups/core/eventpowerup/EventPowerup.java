@@ -3,10 +3,7 @@ package powerups.core.eventpowerup;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.Clubs;
-import models.Club;
-import models.Event;
-import models.PowerupModel;
-import models.User;
+import models.*;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -86,8 +83,12 @@ public class EventPowerup extends Powerup {
             return Results.badRequest();
         }
 
-        Event e = new Event(name, description, dateTime, location, coverUrl, this.getClub());
+        Event e = new Event(name, description, dateTime, location, coverUrl, this.getClub(), user);
         Ebean.save(e);
+
+        Participation p = new Participation(e, user);
+        Ebean.save(p);
+
         return Results.ok();
     }
 

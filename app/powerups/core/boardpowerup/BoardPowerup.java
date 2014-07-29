@@ -10,71 +10,45 @@ import play.Logger;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
-import powerups.core.boardpowerup.html.powerup;
 import powerups.core.boardpowerup.html.admin;
-import powerups.models.Board;
-import powerups.models.BoardExtras;
+import powerups.core.boardpowerup.html.powerup;
+import powerups.models.BoardMembership;
+import powerups.models.BoardPost;
 import utils.MembershipLevel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static play.mvc.Results.ok;
+import static play.mvc.Results.unauthorized;
 
 public class BoardPowerup extends Powerup {
 
-
     public static final String LEADER = "Leder";
     public static final String VICE = "Nestleder";
-    public static final String ECON = "Økonomiansvarlig";
-    public static final String EVENT = "Eventansvarlig";
-    public List<BoardMember> boardList;
-    private Board board;
+    private List<BoardMembership> boardList;
     private List<Membership> memberList;
+    private List<BoardPost> posts;
 
     public BoardPowerup(Club club, PowerupModel model) {
         super(club, model);
-        boardList = new ArrayList<>();
-        Logger.warn(boardList.getClass().getName());
-        Logger.warn("Beginning setup!");
-        try {
-            board = BoardService.getBoard(this.getClub());
-        } catch (BoardService.BoardException e) {
-            Logger.error("GOT AN XCEPTION! :D");
-        }
 
-        Logger.warn("Checking if list is empty!");
-        /*
-        Logger.warn(board.boardExtra.toString());
-        if (board.boardExtra != null && !board.boardExtra.isEmpty()) {
-            Logger.info("board.boardextra is not empty");
-
-            for (BoardExtras boardExtras : board.boardExtra) {
-                Logger.warn("Didn't fail yet...");
-                boardList.add(new BoardMember(boardExtras.member, boardExtras.title));
-            }
-            Logger.warn("Survived the loop!");
+        if (club != null && model != null) {
+            boardList = this.getClub().boardMembers;
+            memberList = club.members;
+        } else {
+            boardList = new ArrayList<>();
+            memberList = new ArrayList<>();
         }
-        */
-        Logger.warn("Setting leader");
-        BoardMember leader = new BoardMember(board.leader, "Leder");
-        Logger.warn("Leader set");
-        boardList.add(leader);
-        //boardList.add(new BoardMember(board.vice, "Nestleder"));
-        //boardList.add(new BoardMember(board.economy, "Økonomiansvarlig"));
-        //boardList.add(new BoardMember(board.event, "Eventansvarlig"));
-        Logger.warn("Making the list!");
-        memberList = club.members;
-        for(Membership mem : memberList) {
-            if(mem.level == MembershipLevel.SUBSCRIBE) {
-                memberList.remove(mem);
-            }
-        }
-        Logger.warn("Made the list!");
+        posts = BoardPost.find.all();
     }
 
     @Override
     public Html renderAdmin() {
-        return admin.render(boardList, true, memberList);
+        Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
+        if(membership.level == MembershipLevel.LEADER || membership.level == MembershipLevel.COUNCIL) {
+            return admin.render(boardList, memberList, posts);
+        } else return new Html("<div class=\"medium-12 colums text-center\">Styremedlemmer har ikke tilgang til å endre styremedlemmer.</div>");
     }
 
     @Override
@@ -84,151 +58,221 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public void activate() {
-        //PREPROOFED
-    }
-
-
-    // Check for new titles, titles with a new associated ID, or titles removed. Return a map of updates
-    private Map<String, String> getMapUpdates(Map<String, String> existing, Map<String, String> updates) {
-        Map<String, String> changes = new HashMap<>();
-
-        for (String key : existing.keySet()) {
-
-            // Delete post if we can and it is empty
-            if (!updates.containsKey(key)) {
-                changes.put(key, null);
-            }
-
-            // Update post if the post is changed
-            if (updates.containsKey(key)) {
-                if (!updates.get(key).equals(existing.get(key))) {
-                    changes.put(key, updates.get(key));
-                    //updates.remove(key);
+        List<BoardPost> boardPosts = BoardPost.find.all();
+        for (BoardPost post : boardPosts) {
+            if (post.title.equals(LEADER)) {
+                for (Membership membership : this.getClub().members) {
+                    if (membership.level == MembershipLevel.LEADER) {
+                        BoardMembership leadership = new BoardMembership(this.getClub(), post, membership.user);
+                        Ebean.save(leadership);
+                        return;
+                    }
                 }
             }
         }
-
-        for (String key : updates.keySet()) {
-            if (!existing.containsKey(key)) {
-                // Add new posts to key
-                changes.put(key, updates.get(key));
-            }
-        }
-        return changes;
     }
+
 
     @Override
     public Result update(JsonNode updateContent) {
         if (updateContent != null) {
-            Map<String, String> existing = new HashMap<>();
-            Map<String, String> updates = new HashMap<>();
-            Map<String, String> changes;
-            List<String> mandatoryPositions = board.getMandatoryPositions();
-            Iterator<String> stringIterator = updateContent.fieldNames();
-
-            for (BoardMember member : boardList) {
-                existing.put(member.getTitle(), member.getMember().id);
-            }
-
-            while (stringIterator.hasNext()) {
-                String fieldName = stringIterator.next();
-                updates.put(fieldName, updateContent.get(fieldName).asText());
-                Logger.warn("key: " + fieldName + " & value: " + updates.get(fieldName));
-            }
-
-            changes = getMapUpdates(existing, updates);
-
-            for (String key : changes.keySet()) {
-
-                //boardtitle changed id
-                if (mandatoryPositions.contains(key)) {
-
-                    updateMandatory(key, changes.get(key));
-
-                } else {
-
-                    //Boardextra changed id
-                    updateExtras(key, changes.get(key));
+            Logger.warn("BoardPowerup receives update");
+            if (updateContent.has("update-type")) {
+                Logger.warn("Update type is: " + updateContent.get("update-type").asText());
+                if (updateContent.get("update-type").asText().equals("update")) {
+                    return updateMemberships(updateContent);
+                } else if (updateContent.get("update-type").asText().equals("create")) {
+                    if (createPost(updateContent)) {
+                        return ok("Styrepost opprettet");
+                    } else {
+                        return unauthorized("Kunne ikke opprette styrepost");
+                    }
+                } else if (updateContent.get("update-type").asText().equals("add")) {
+                    if (addMembership(updateContent)) {
+                        return ok("Styremedlem lagt til");
+                    } else {
+                        return unauthorized("Kunne ikke legge til styremedlem");
+                    }
                 }
-
             }
         }
-
         return ok("something");
     }
 
-    public void updateExtras(String title, String userId) {
-
-        Logger.info("entered updateExtras, title: " + title + ", userId: " + userId);
-        User user = User.find.byId(userId);
-
-        /*
-        // If user connected to a title is removed and no other user is being given.
-        // Delete row with title in entity.
-        if ((userId == null || userId.equals("")) && title != null) {
-
-
-            for (BoardExtras boardExtras : board.boardExtra) {
-
-                if (boardExtras.title.equals(title)) {
-
-                    Ebean.delete(boardExtras);
-                    return;
+    private boolean addMembership(JsonNode updateContent) {
+        for (BoardPost post : posts) {
+            if (post.id == (updateContent.get("title").asLong())) {
+                User user = User.find.byId(updateContent.get("user").asText());
+                if (user == null) {
+                    return false;
                 }
-            }
-        }
-        */
-        /*
-        if (title != null && !title.equals("")) {
+                BoardMembership boardMembership = new BoardMembership(this.getClub(), post, user);
+                Ebean.save(boardMembership);
 
-            // Update existing title with new member
-            for (BoardExtras boardExtras : board.boardExtra) {
+                // Loop through the user's memberships to find his or her membership in the club
+                Membership membership = Membership.find.byId(new Membership(this.getClub(), user).id);
 
-                if (boardExtras.title.equals(title) && !boardExtras.member.id.equals(userId)) {
+                // If the user is getting added to the post indicated by LEADER or VICE, set his or her
+                // membership level accordingly
+                if ((post.title.equals(LEADER) || post.title.equals(VICE))) {
+                    if (post.title.equals(LEADER)) {
+                        membership.level = MembershipLevel.LEADER;
+                    } else if (post.title.equals(VICE)) {
+                        membership.level = MembershipLevel.VICE;
+                    }
 
-                    boardExtras.setTitle(title, User.find.byId(userId));
+                } else {
+                    // If the new rank isn't a flag rank, let's add some levels to the safe list
+                    List<MembershipLevel> safeList = getSafeList();
 
-                    Ebean.update(board);
-
-                    return;
-
+                    // If the user already has a rank in the safe list, skip this step
+                    if (!safeList.contains(membership.level)) {
+                        // Set level to BOARD
+                        membership.level = MembershipLevel.BOARD;
+                    }
                 }
+                Ebean.update(membership);
+
+                // Returns true if we had a membership to set up
+                return true;
             }
         }
-
-        if (title != null && !title.equals("")) {
-            // If the titles sent in is not associated with this board, create new entry in board.boardextra
-            if (BoardExtras.findTitlesByBoard(board, title).size() == 0) {
-
-                Logger.info("Added new title: " + title + ", connected to userId: " + user.id + ", to boardId: " + board.club.id);
-                board.boardExtra.add(new BoardExtras(user, title));
-
-                Ebean.update(board);
-            }
-        }
-        */
+        // Returns true if we looped through everything and did nothing
+        return false;
     }
 
-    // TODO REVERSE LOGIC TO BE EFFICIENT
-    public void updateMandatory(String title, String userId) {
-        Map<String, String> columnMap = board.getTitleColumns();
-        User user = null;
-        for (Membership member : memberList) {
-            if (member.user.id.equals(userId)) {
-                user = member.user;
-                break;
+    private List<MembershipLevel> getSafeList() {
+        List<MembershipLevel> safeList = new ArrayList<>();
+        safeList.add(MembershipLevel.LEADER);
+        safeList.add(MembershipLevel.VICE);
+        safeList.add(MembershipLevel.COUNCIL);
+        return safeList;
+    }
+
+    private boolean createPost(JsonNode updateContent) {
+        String title = updateContent.get("title").asText();
+        if (title == null) {
+            return false;
+        }
+        List<BoardPost> existing = BoardPost.find.all();
+        for (BoardPost existingPost : existing) {
+            if (existingPost.title.equals(title)) {
+                return false;
             }
         }
+        boolean isMandatory = updateContent.get("mandatory").asBoolean();
+        int defaultWeight = 10;
 
-        if (user != null) {
-            for (String boardTitle : board.getMandatoryPositions()) {
-                if (title.equals(boardTitle)) {
-                    this.board.setByName(columnMap.get(boardTitle), user);
-                    //Logger.warn("Board: " + board + " & title: " + columnMap.get(boardTitle) + ", & user: " + user.id);
-                }
+        BoardPost newPost = new BoardPost(title, isMandatory, defaultWeight);
+        Ebean.save(newPost);
+        return true;
+    }
+
+    private boolean deleteMembership(BoardMembership boardMembership) {
+        if (boardMembership.boardPost.isMandatory) {
+            return false;
+        } else {
+            Logger.warn("Deleting post");
+            boolean userHasOtherPosts = userHasOtherPosts(boardMembership);
+            // If the user has no other posts, assume he or she should now be a normal member.
+            if (!userHasOtherPosts) {
+                Membership membership = Membership.find.byId(new Membership(this.getClub(), boardMembership.user).id);
+                membership.level = MembershipLevel.MEMBER;
+                Ebean.update(membership);
             }
 
-            Ebean.update(board);
+            Ebean.delete(boardMembership);
+            return true;
+        }
+    }
+
+    private boolean userHasOtherPosts(BoardMembership boardMembership, User user) {
+        boolean userHasOtherPosts = false;
+
+        // Check if the user holding the post has other board memberships
+        Logger.warn("Begin looping");
+        for (BoardMembership boardMembership2 : this.getClub().boardMembers) {
+
+            Logger.warn("Checking if post is different");
+            if (!boardMembership2.boardPost.equals(boardMembership.boardPost)) {
+                Logger.warn("Post was different");
+
+                Logger.warn("Checking if the user for a different post is the same");
+                if (boardMembership2.user.equals(user)) {
+                    Logger.warn("User is the same, returning true");
+                    userHasOtherPosts = true;
+                    break;
+                }
+            }
+        }
+        return userHasOtherPosts;
+    }
+
+    private boolean userHasOtherPosts(BoardMembership boardMembership) {
+        User user = boardMembership.user;
+        return userHasOtherPosts(boardMembership, user);
+    }
+
+    private Result updateMemberships(JsonNode updateContent) {
+        for (BoardMembership boardMembership : this.getClub().boardMembers) {
+
+            // CASE DELETE BOARD MEMBER
+            if (updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText().equals("")) {
+                if (!deleteMembership(boardMembership)) {
+                    return unauthorized("Obligatorisk styrepost kan ikke være tom");
+                }
+            }
+            Logger.warn("Checking to see if post needs update");
+            // CASE REPLACE BOARD MEMBER
+            if (!updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText().equals(boardMembership.user.id)) {
+                User user = User.findById(updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText());
+                if (user != null) {
+                    Logger.warn("Updating");
+                    boardMembership.user = user;
+                    Ebean.update(boardMembership);
+                }
+            }
+        }
+        validateMemberLevels();
+        return ok("Styreposter oppdatert");
+    }
+
+    private void validateMemberLevels() {
+        for (Membership membership : this.getClub().members) {
+            Logger.warn("Checking memberships for " + membership.user.firstName);
+            if (membership.level != MembershipLevel.SUBSCRIBE && membership.level != MembershipLevel.COUNCIL) {
+
+                boolean levelChanged = false;
+                for (BoardMembership boardMembership : this.getClub().boardMembers) {
+                    if (boardMembership.user.equals(membership.user)) {
+                        Logger.warn("Found " + membership.user.firstName + " to be a board member");
+                        // We now know this user is at least a board member.
+                        if (!levelChanged) {
+                            levelChanged = true;
+                            membership.level = MembershipLevel.BOARD;
+                        }
+
+                        String postTitle = boardMembership.boardPost.title;
+                        if (postTitle.equals(LEADER)) {
+                            levelChanged = true;
+                            membership.level = MembershipLevel.LEADER;
+                            break;
+                        } else if (postTitle.equals(VICE)) {
+                            levelChanged = true;
+                            membership.level = MembershipLevel.VICE;
+                            // We also break for VICE as noone can be both leader and vice.
+                            break;
+                        }
+                    }
+                }
+
+                if (levelChanged) {
+                    Ebean.update(membership);
+                } else {
+                    membership.level = MembershipLevel.MEMBER;
+                    Ebean.update(membership);
+                }
+            }
         }
     }
 }

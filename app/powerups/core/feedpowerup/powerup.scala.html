@@ -1,0 +1,10 @@
+@(feedList: List[Feed])
+@import models.Feed
+
+
+    @if(feedList != null && feedList.nonEmpty){
+
+        @views.html.feed.list(feedList)
+    }else{
+            <p>Ingen feeds å vise</p>
+    }

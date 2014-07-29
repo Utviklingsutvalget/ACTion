@@ -1,0 +1,52 @@
+@(feedList: List[Feed])
+@import models.Feed
+
+<!-- FEED -->
+
+@main("Feed"){
+
+    <div id="feed" data-magellan-destination="feed">
+    @if(feedList.nonEmpty){
+
+        @for(feed <- feedList){
+            <div class="row">
+
+                    <!-- DATE -->
+                <div class="large-2 columns text-left paragraph-date">
+                    <h5>@feed.dateTime.getDayOfMonth / @feed.dateTime.getMonthOfYear - @feed.dateTime.getYear<br />
+                        Tid: @feed.dateTime.getHourOfDay:@feed.dateTime.getMinuteOfHour</h5>
+                </div>
+
+                    <!-- TEXT -->
+                <div class="large-10 columns">
+
+                        <!-- HEADER -->
+                    <h3>@feed.messageTitle</h3>
+                    <h9>@feed.user.firstName @feed.user.lastName, @feed.club.name</h9>
+                    <br /><br />
+
+                        <!-- PARAGRAPH -->
+                    <h5>@feed.message<br /><br /></h5>
+                </div>
+            </div>
+
+            <!-- Line seperator -->
+            <div class="medium-12 medium-centered columns utvalg-content-placement">
+                <div class="row">
+                    <div class="small-4 columns">
+                        <div id="line" class="lineleft"></div>
+                    </div>
+                </div>
+            </div>
+        }
+    }else{
+
+        <div class="large-10 columns">
+
+                <!-- HEADER -->
+            <h3>Ingen feeds å vise</h3>
+
+        </div>
+    }
+    </div>
+}

@@ -3,11 +3,11 @@
 @import powerups.core.recruitpowerup
 
 <div>
-    <div class="row">
+    <div class="row pending-user ">
         <form>
             @for(user <- pendingList){
 
-                <div class="panel pendingUser powerup-node" data-powerup-field="@user.getUser.id" data-powerup-select=".recruitSelect">
+                <div class="panel powerup-node" data-powerup-field="@user.getUser.id" data-powerup-select=".recruitSelect">
                     <h4>@user.getUser.firstName @user.getUser.lastName</h4>
                     <br />
                     <p>@user.applicationMessage</p>
@@ -21,7 +21,7 @@
             <label>Pass på at du har satt riktige rettigheter for alle brukere før du lagrer.</label>
         </form>
         <script>
-        createButton ( getId ( $ ( '.pendingUser' ) ) ) ;
+        createStandardButton(getId($('.pending-user')));
         </script>
     </div>
 </div>
