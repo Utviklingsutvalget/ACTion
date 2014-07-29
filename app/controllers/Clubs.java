@@ -124,4 +124,20 @@ public class Clubs extends Controller {
         } else return powerup.update(json);
     }
 
+    /**
+     *  WARNING: THIS RETURNS THE ADMIN FUNCTION
+     */
+    public static Result getPowerupContent(Long clubId, Long powerupId) {
+        final Club club = Club.find.byId(clubId);
+        Powerup powerup = null;
+        for(Activation activation : club.activations) {
+            if(activation.powerup.id.equals(powerupId)) {
+                powerup = activation.getPowerup();
+            }
+        }
+        if(powerup == null) {
+            return badRequest("No such powerup for " + club.shortName);
+        } else return ok(powerup.renderAdmin());
+    }
+
 }
