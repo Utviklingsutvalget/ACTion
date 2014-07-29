@@ -102,7 +102,7 @@ public class Clubs extends Controller {
             activation.save();
             activation.getPowerup().activate();
         }
-        return ok(club.name);
+        return ok(views.html.index.render("Utvalg opprettet"));
     }
 
 

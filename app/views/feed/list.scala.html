@@ -2,36 +2,38 @@
 @import models.Feed
 
 <div id="feed" data-magellan-destination="feed">
-    @if(feedList != null || feedList.nonEmpty){
+@if(feedList != null || feedList.nonEmpty) {
 
-        @for(feed <- feedList){
-            <div class="row">
+    @for(feed <- feedList) {
+        <div class="row">
 
-                    <!-- DATE -->
-                <div class="large-2 columns text-left paragraph-date">
-                    <h5>@feed.dateTime.getDayOfMonth / @feed.dateTime.getMonthOfYear - @feed.dateTime.getYear<br />@feed.dateTime.getHourOfDay : @feed.dateTime.getMinuteOfHour</h5>
-                </div>
-
-                    <!-- TEXT -->
-                <div class="large-10 columns">
-
-                        <!-- HEADER -->
-                    <h3>@feed.messageTitle</h3>
-                    <h9>@feed.user.firstName @feed.user.lastName, @feed.club.name</h9>
-                    <br /><br />
-
-                        <!-- PARAGRAPH -->
-                    <h5>@feed.message<br /><br /></h5>
-                </div>
+                <!-- DATE -->
+            <div class="large-2 columns text-left paragraph-date">
+                <h5>@feed.dateTime.getDayOfMonth
+                    / @feed.dateTime.getMonthOfYear - @feed.dateTime.getYear <br /> @feed.dateTime.getHourOfDay
+                    : @feed.dateTime.getMinuteOfHour</h5>
             </div>
-        }
-    }else{
 
-        <div class="large-10 columns">
+                <!-- TEXT -->
+            <div class="large-10 columns">
 
-                <!-- HEADER -->
-            <h3>Ingen feeds å vise</h3>
+                    <!-- HEADER -->
+                <h3>@feed.messageTitle</h3>
+                <h9>@feed.user.firstName @feed.user.lastName, @feed.club.name</h9>
+                <br /> <br />
 
+                    <!-- PARAGRAPH -->
+                <h5>@feed.message <br /> <br /></h5>
+            </div>
         </div>
     }
+} else {
+
+    <div class="large-10 columns">
+
+            <!-- HEADER -->
+        <h3>Ingen feeds å vise</h3>
+
+    </div>
+}
 </div>
