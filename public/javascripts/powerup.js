@@ -3,7 +3,9 @@ function powerup() {
     $(document).on('click', '.updatepowerup', function (e) {
         e.preventDefault();
         var powerup = buildAndReturnPowerup($(this));
-        powerup.update();
+        powerup.update()
+
+        reloadSite(powerup);
     });
 
     $(document).on('click', '.updatepowerup-type', function(e) {
@@ -16,6 +18,23 @@ function powerup() {
         }
         powerup.update();
 
+        reloadSite(powerup);
+    });
+}
+
+function reloadSite(powerup){
+    $('.powerup').each(function(){
+
+        if($(this).data('powerup-id') === powerup.id){
+            console.log("the powerupId that was used is: " + $(this).data('powerup-id'));
+
+            var htmlElement = $(this).parent();
+
+            $.get("/clubs/" + powerup.club, function(){
+
+                document.location.reload();
+            });
+        }
     });
 }
 
@@ -149,6 +168,7 @@ function PowerupClass() {
             console.log(jqhxr);
         });
         (this).invalidate();
+
     }
 
     function invalidate() {
