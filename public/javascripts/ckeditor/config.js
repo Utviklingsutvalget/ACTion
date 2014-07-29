@@ -28,6 +28,8 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Remove some buttons provided by the standard plugins, which are
 	// not needed in the Standard(s) toolbar.
+
+    config.extraPlugins = 'wordcount';
 	config.removeButtons = 'Underline,Subscript,Superscript';
 
     config.skin = 'moonocolor';
@@ -39,4 +41,15 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
+    config.wordcount = {
+
+        // Whether or not you want to show the Word Count
+        showWordCount: false,
+
+        // Whether or not you want to show the Char Count
+        showCharCount: true,
+
+        // Whether or not to include Html chars in the Char Count
+        countHTML: true
+    };
 };

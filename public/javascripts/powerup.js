@@ -5,7 +5,6 @@ function powerup() {
         var powerup = buildAndReturnPowerup($(this));
         powerup.update()
 
-        reloadSite(powerup);
     });
 
     $(document).on('click', '.updatepowerup-type', function(e) {
@@ -18,21 +17,6 @@ function powerup() {
         }
         powerup.update();
 
-        reloadSite(powerup);
-    });
-}
-
-function reloadSite(powerup){
-    $('.powerup').each(function(){
-
-        if($(this).data('powerup-id') === powerup.id){
-            console.log("the powerupId that was used is: " + $(this).data('powerup-id'));
-
-            $.get("/clubs/" + powerup.club, function(){
-
-                document.location.reload();
-            });
-        }
     });
 }
 
@@ -152,20 +136,33 @@ function PowerupClass() {
             }
         });
         console.log(dataObject);
-
-        var jqhxr = $.ajax({
-            url:  "/clubs/" + (this).club + "/" + (this).id,
+        var message;
+        var id = (this).id;
+        var url = "/clubs/" + (this).club + "/" + id;
+        powerupContent = getPowerupHtml(id).find('.powerup-content');
+        $.ajax({
+            url:  url,
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(dataObject),
-            dataType: 'json'
-        }).done(function (data) {
-            console.log();
-        }).always(function () {
-        }).fail(function (jqhxr) {
-            console.log(jqhxr);
+            dataType: 'json',
+
+            statusCode: {
+                200: function(jqxhr) {
+                    console.log(jqxhr);
+                    message = "<div data-alert class=\"alert-box info text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                },
+                401: function(jqxhr) {
+                    console.log(jqxhr);
+                    message = "<div data-alert class=\"alert-box alert text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                }
+            }
+        }).always(function() {
+            $.get(url, function (data) {
+                console.log(powerupContent.html());
+                powerupContent.html(message + data);
+            });
         });
-        (this).invalidate();
 
     }
 

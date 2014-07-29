@@ -151,7 +151,8 @@ public class BoardPowerup extends Powerup {
 
     private boolean createPost(JsonNode updateContent) {
         String title = updateContent.get("title").asText();
-        if (title == null) {
+        title = title.trim();
+        if (title.equals("")) {
             return false;
         }
         List<BoardPost> existing = BoardPost.find.all();

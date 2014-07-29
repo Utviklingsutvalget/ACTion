@@ -99,7 +99,7 @@ public class EventPowerup extends Powerup {
         Participation p = new Participation(e, user);
         Ebean.save(p);
 
-        return Results.ok();
+        return Results.ok("Event opprettet");
     }
 
     public boolean isUserPresent() {

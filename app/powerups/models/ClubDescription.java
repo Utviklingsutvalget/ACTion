@@ -1,10 +1,12 @@
 package powerups.models;
 
-import models.Club;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "pl_ClubDescription")
@@ -16,6 +18,7 @@ public class ClubDescription extends Model {
     public Long clubId;
 
     @Constraints.Required
+    @Constraints.MaxLength(10000)
     public String description;
 
     @Constraints.Required
