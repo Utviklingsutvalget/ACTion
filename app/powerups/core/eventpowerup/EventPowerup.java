@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import controllers.Clubs;
 import models.*;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import play.Logger;
@@ -36,7 +37,7 @@ public class EventPowerup extends Powerup {
         List<Event> tempEvents = getClub().events;
         tempEvents.sort(new EventSorter());
         Logger.warn("Didn't fail yet2");
-        tempEvents.stream().filter(e -> e.startTime.isBeforeNow()).forEach(tempEvents::remove);
+        tempEvents.stream().filter(e -> e.startTime.isBefore(LocalDateTime.now())).forEach(tempEvents::remove);
         events = new ArrayList<>();
         Logger.warn("Didn't fail yet3");
         if(tempEvents.size() < MAX_EVENTS) {

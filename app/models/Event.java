@@ -1,6 +1,7 @@
 package models;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import play.data.validation.Constraints;
@@ -9,6 +10,7 @@ import play.db.ebean.Model;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 public class Event extends Model {
@@ -23,9 +25,9 @@ public class Event extends Model {
     @Constraints.Required
     public String description;
     @Constraints.Required
-    public DateTime startTime;
+    public LocalDateTime startTime;
     @Constraints.Required
-    public DateTime endTime;
+    public LocalDateTime endTime;
     @Constraints.Required
     public String location;
     public String coverUrl;
@@ -46,7 +48,7 @@ public class Event extends Model {
 
         this.name = name;
         this.description = description;
-        this.startTime = startTime;
+        this.startTime = startTime.toLocalDateTime();
         this.location = location;
         this.coverUrl = coverUrl;
         this.club = club;
@@ -74,8 +76,8 @@ public class Event extends Model {
     }
 
     private String setTimeString() {
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("HH:mm");
-        return timeString = fmt.print(startTime.toInstant());
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("HH:mm").withLocale(new Locale("nb", "no"));
+        return timeString = fmt.print(startTime);
     }
 
     public boolean isUserAttending() {
@@ -95,7 +97,7 @@ public class Event extends Model {
 
     private String setDateString() {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("d. MMMM");
-        return dateString = fmt.print(startTime.toInstant());
+        return dateString = fmt.print(startTime);
     }
 
     public static enum Privacy {
