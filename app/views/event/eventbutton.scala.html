@@ -1,7 +1,12 @@
-@(id: Long, attending: Boolean, secondSet: Boolean)
+@(event: Event, secondSet: Boolean)
 
-<a href="#drop@(id)@if(secondSet){s}" id="event-@(id)" data-dropdown="drop@(id)@if(secondSet){s}" class="button dropdown tiny@if(!attending){ alert}">Skal@if(!attending){ ikke}</a><br>
-<ul id="drop@(id)@if(secondSet){s}" data-dropdown-content class="f-dropdown">
-    <li><a href="#ng" class="event-click" data-event-id="@(id)" data-event-value="true">Skal</a></li>
-    <li><a href="#ng" class="event-click" data-event-id="@(id)" data-event-value="false">Skal ikke</a></li>
-</ul>
+    @if(!event.isUserHosting) {
+        <a href="#drop@(event.id) @if(secondSet) {s}" id="event-@(event.id)" data-dropdown="drop@(event.id) @if(secondSet) {s}" class="button dropdown tiny@if(!event.isUserAttending) { alert}">
+            Skal@if(!event.isUserAttending) { ikke}</a> <br>
+        <ul id="drop@(event.id)@if(secondSet) {s}" data-dropdown-content class="f-dropdown">
+            <li><a href="#ng" class="event-click" data-event-id="@(event.id)" data-event-value="true">Skal</a></li>
+            <li><a href="#ng" class="event-click" data-event-id="@(event.id)" data-event-value="false">Skal ikke</a></li>
+        </ul>
+    } else {
+        <div class="button tiny secondary">Arrangør</div>
+    }

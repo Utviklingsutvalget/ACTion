@@ -59,7 +59,7 @@ public class Participation extends Model {
     }
 
     public boolean getRvsp() {
-        return rvsp == Status.ATTENDING;
+        return rvsp == Status.ATTENDING || rvsp == Status.HOSTING;
     }
 
     public enum Status {

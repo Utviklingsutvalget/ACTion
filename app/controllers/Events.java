@@ -21,7 +21,6 @@ import static play.data.Form.form;
 public class Events extends Controller {
 
     public static Result index() {
-        //Calendar cal =Calendar.getInstance(Locale.forLanguageTag("no_NO"));
         List<Event> events = Event.find.all();
         List<Event> attendingEvents = new ArrayList<>();
         User user = null;
@@ -33,6 +32,7 @@ public class Events extends Controller {
                 if (e.participants.contains(participation)) {
                     i = e.participants.indexOf(participation);
                     participation = e.participants.get(i);
+                    e.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
                     if(participation.getRvsp()) {
                         attendingEvents.add(e);
                     }
