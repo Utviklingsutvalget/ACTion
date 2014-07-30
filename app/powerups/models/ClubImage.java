@@ -16,8 +16,11 @@ public class ClubImage extends Model {
     public ClubImage(Club club, String imageUrl) {
         this.club = club;
         this.imageUrl = imageUrl;
-
         this.key = new ClubImageKey(this.club.id);
+    }
+
+    public static ClubImage getImageByClub(Club club){
+        return find.where().eq("club_id", club.id).findUnique();
     }
 
     @OneToOne

@@ -1,9 +1,11 @@
-@(locations: List[Location])
+@(locations: List[Location], clubList: List[Club])
 
 @main("Nettsideadministrasjon") {
     <script src="@routes.Assets.at("javascripts/admin.js")" type="text/javascript"></script>
 
     <div class="row">
+
+        <!-- Create club -->
         <div class="medium-6 columns">
             <form action="@routes.Clubs.create()" method="post">
                 <ul class="pricing-table">
@@ -49,16 +51,47 @@
                 </ul>
             </form>
         </div>
+
+        <!-- Location table edit -->
         <div class="medium-6 columns">
         @for(location <- locations) {
-            <form class="pricing-table medium-12 columns" action="@routes.Administration.updateLocation()" method="post">
-                <input type="hidden" name="id" value="@location.id">
+            <form class="pricing-table medium-12 columns updateLocation" action="@routes.Administration.updateLocation()" method="post">
+                <input class="locationId" type="hidden" name="id" value="@location.id">
                 <label class="bullet-item medium-8 columns">
-                    <input type="text" name="name" value="@location.name">
+                    <input class="locationName" type="text" name="name" value="@location.name">
                 </label>
                 <input class="button medium-4 columns alert right" type="submit" name="submit" value="Oppdater">
             </form>
         }
+        </div>
+
+        <!-- Club delete -->
+        <div class="medium-6 columns">
+            <a class="button alert" data-reveal-id="myModal">Slett utvalg</a>
+            <!-- <a href="#" data-reveal-id="myModal">Slett utvalg</a> -->
+            <div id="myModal" class="reveal-modal" data-reveal>
+                <h2>Sletting av utvalg</h2>
+                <p class="lead">Når du sletter et utvalg fjernes alle medlemmer, eventer og tilhørende utvalgsrelatert info.
+                <br>Vær sikker på at du sletter korrekt utvalg</p>
+
+                <!-- class confirmDelete must not be removed -->
+                <input class="confirmDelete" type="text" placeholder="Sriv navn på utvalg her">
+
+                <!-- class deleteClub must not be removed -->
+                <form class="pricing-table medium-12 columns deleteClub" action="@routes.Administration.deleteClub()" method="post">
+                    <br>
+                    <label>Sletting av utvalg</label>
+                    <br>
+                    <select>
+                    @for(club <- clubList) {
+                        <!-- class clubId and data-club-name must not be removed -->
+                        <option class="clubId" data-club-name="@club.name" value="@club.id">@club.name</option>
+                    }
+                    </select>
+                    <input class="button medium-4 columns alert" type="submit" value="Slett Utvalg">
+                </form>
+                <a class="close-reveal-modal">&#215;</a>
+            </div>
         </div>
     </div>
     <script>

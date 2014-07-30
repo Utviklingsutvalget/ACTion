@@ -45,6 +45,7 @@ GET         /admin/clubs/:id                 controllers.Administration.showClub
 GET         /admin/site                      controllers.Administration.showSite()
 POST        /admin/site                      controllers.Administration.updateLocation()
 GET         /admin/action                    controllers.Administration.makeAdmin()
+POST        /admin/site/delete               controllers.Administration.deleteClub()
 
 #Feed
 GET         /feed                            controllers.Feeds.index()
