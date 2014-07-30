@@ -35,7 +35,7 @@ public class Event extends Model {
     public User host;
     @ManyToOne
     public Club club;
-    @OneToMany(mappedBy = "event")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
     public List<Participation> participants = new ArrayList<>();
     @Transient
     private String timeString;

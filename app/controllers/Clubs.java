@@ -1,5 +1,6 @@
 package controllers;
 
+import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.*;
 import play.Logger;
@@ -46,7 +47,7 @@ public class Clubs extends Controller {
             Powerup powerup = activation.getPowerup();
             club.powerups.add(powerup);
         }
-
+        Ebean.delete(club);
         return ok(views.html.club.show.render(club));
     }
 
