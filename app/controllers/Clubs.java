@@ -49,7 +49,6 @@ public class Clubs extends Controller {
             Powerup powerup = activation.getPowerup();
             club.powerups.add(powerup);
         }
-        club.delete();
         return ok(views.html.club.show.render(club));
     }
 
