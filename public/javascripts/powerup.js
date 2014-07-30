@@ -150,7 +150,7 @@ function PowerupClass() {
             statusCode: {
                 200: function(jqxhr) {
                     console.log(jqxhr);
-                    message = "<div data-alert class=\"alert-box info text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                    message = "<div data-alert class=\"alert-box success text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
                 },
                 401: function(jqxhr) {
                     console.log(jqxhr);
