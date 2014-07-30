@@ -21,7 +21,7 @@ public class ClubImage extends Model {
     }
 
     @OneToOne
-    @JoinColumn(name = "club_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "club_id", nullable = true, insertable = false, updatable = false)
     public Club club;
 
     public String imageUrl;

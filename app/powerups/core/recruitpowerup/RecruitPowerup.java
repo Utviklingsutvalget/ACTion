@@ -104,6 +104,11 @@ public class RecruitPowerup extends Powerup {
     }
 
     @Override
+    public void deActivate() {
+
+    }
+
+    @Override
     public Result update(JsonNode updateContent) {
 
         if(updateContent != null){

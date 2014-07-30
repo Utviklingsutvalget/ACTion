@@ -38,6 +38,11 @@ public class ClubImagePowerup extends Powerup {
     }
 
     @Override
+    public void deActivate() {
+        Ebean.delete(clubImage);
+    }
+
+    @Override
     public play.mvc.Result update(JsonNode updateContent) {
         if (!(this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
             return Results.unauthorized();

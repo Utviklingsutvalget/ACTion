@@ -61,6 +61,11 @@ public class DescriptionPowerup extends Powerup {
     }
 
     @Override
+    public void deActivate() {
+        Ebean.delete(clubDesc);
+    }
+
+    @Override
     public Result update(JsonNode updateContent) {
         if(!updateContent.has(FIELD_STRING)) {
             return internalServerError("En feil har oppstått");
