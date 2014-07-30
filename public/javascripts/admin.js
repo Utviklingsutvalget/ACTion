@@ -60,6 +60,9 @@ function admin() {
         dataObject[clubName] = clubId;
         console.log(dataObject);
 
+        var message;
+        var htmlContent = $(document).find('.deleteModal');
+
         $.ajax({
             url: "/admin/site/delete",
             type: 'POST',
@@ -67,11 +70,22 @@ function admin() {
             data: JSON.stringify(dataObject),
             dataType: 'json',
             statusCode: {
-                200: function(){
-
+                200: function(jqxhr){
+                    message = "<div data-alert class=\"alert-box success text-center radius\">"
+                        + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                },
+                400: function(jqxhr){
+                    message = "<div data-alert class=\"alert-box alert text-center radius\">"
+                        + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
                 }
             }
-        });
+        }).always(function(){
 
+            $.get("/admin/site", function(data){
+
+                console.log(message);
+                htmlContent.find('label').html(message);
+            });
+        });
     });
 }

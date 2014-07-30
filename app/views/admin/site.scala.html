@@ -66,16 +66,16 @@
         </div>
 
         <!-- Club delete -->
-        <div class="medium-6 columns">
+        <div id="clubDelete" class="medium-6 columns">
             <a class="button alert" data-reveal-id="myModal">Slett utvalg</a>
-            <!-- <a href="#" data-reveal-id="myModal">Slett utvalg</a> -->
-            <div id="myModal" class="reveal-modal" data-reveal>
+            <!-- class deleteModal must not be removed -->
+            <div id="myModal" class="reveal-modal deleteModal" data-reveal>
                 <h2>Sletting av utvalg</h2>
                 <p class="lead">Når du sletter et utvalg fjernes alle medlemmer, eventer og tilhørende utvalgsrelatert info.
                 <br>Vær sikker på at du sletter korrekt utvalg</p>
 
                 <!-- class confirmDelete must not be removed -->
-                <input class="confirmDelete" type="text" placeholder="Sriv navn på utvalg her">
+                <input class="confirmDelete" type="text" placeholder="Skriv navn på utvalg fra listen her">
 
                 <!-- class deleteClub must not be removed -->
                 <form class="pricing-table medium-12 columns deleteClub" action="@routes.Administration.deleteClub()" method="post">

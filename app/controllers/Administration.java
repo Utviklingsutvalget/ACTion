@@ -170,11 +170,11 @@ public class Administration extends Controller {
                     deleteAllConnections(club);
 
                     Ebean.delete(club);
-                    break;
+                    return ok("Utvalg slettet");
                 }
             }
         }
-        return redirect("/admin/site");
+        return badRequest("Sletting ble ikke foretatt");
     }
 
     private static void deleteAllConnections(Club club){
