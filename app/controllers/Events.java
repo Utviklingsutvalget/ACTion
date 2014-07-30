@@ -22,6 +22,7 @@ public class Events extends Controller {
 
     public static Result index() {
         List<Event> events = Event.find.all();
+        events.sort(new EventSorter());
         List<Event> attendingEvents = new ArrayList<>();
         User user = null;
         try {
@@ -42,7 +43,6 @@ public class Events extends Controller {
         } catch (Authorize.SessionException ignored) {
 
         }
-        events.sort(new EventSorter());
         final boolean loggedIn = user != null;
         return ok(views.html.event.index.render(events, attendingEvents, loggedIn));
     }
