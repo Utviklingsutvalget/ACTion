@@ -11,7 +11,7 @@ public class SuperUser extends Model {
     @EmbeddedId
     public SuKey key;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     public User user;
 

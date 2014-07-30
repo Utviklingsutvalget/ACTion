@@ -38,13 +38,13 @@ public class Club extends Model {
     @ManyToOne
     public Location location;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "club")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
     public List<BoardMembership> boardMembers = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "club")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
     public List<Membership> members = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "club")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
     public List<Activation> activations = new ArrayList<>();
 
     @OneToMany

@@ -23,7 +23,7 @@ public class User extends Model {
         MALE, FEMALE
     }
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     public List<Membership> memberships = new ArrayList<>();
 
     @Id
@@ -40,7 +40,7 @@ public class User extends Model {
 
     public String pictureUrl;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     public List<Participation> participations = new ArrayList<>();
 
 
