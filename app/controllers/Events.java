@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Event;
 import models.Participation;
 import models.User;
+import org.joda.time.LocalDateTime;
 import play.Logger;
 import play.data.Form;
 import play.mvc.BodyParser;
@@ -20,6 +21,8 @@ import static play.data.Form.form;
 
 public class Events extends Controller {
 
+    public static int EVENT_DURATION = 6;
+
     public static Result index() {
         List<Event> events = Event.find.all();
         events.sort(new EventSorter());
@@ -28,6 +31,10 @@ public class Events extends Controller {
         try {
             user = new Authorize.UserSession().getUser();
             for (Event e : events) {
+                if(e.startTime.isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
+                    events.remove(e);
+                    continue;
+                }
                 Participation participation = new Participation(e, user);
                 int i;
                 if (e.participants.contains(participation)) {
