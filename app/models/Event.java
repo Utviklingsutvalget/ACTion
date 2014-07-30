@@ -43,12 +43,14 @@ public class Event extends Model {
     private String dateString;
     @Transient
     private boolean userAttending;
+    @Transient
+    private boolean userHosting;
 
-    public Event(String name, String description, DateTime startTime, String location, String coverUrl, Club club, User host) {
+    public Event(String name, String description, LocalDateTime startTime, String location, String coverUrl, Club club, User host) {
 
         this.name = name;
         this.description = description;
-        this.startTime = startTime.toLocalDateTime();
+        this.startTime = startTime;
         this.location = location;
         this.coverUrl = coverUrl;
         this.club = club;
@@ -98,6 +100,14 @@ public class Event extends Model {
     private String setDateString() {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("d. MMMM");
         return dateString = fmt.print(startTime);
+    }
+
+    public boolean isUserHosting() {
+        return userHosting;
+    }
+
+    public void setUserHosting(boolean userHosting) {
+        this.userHosting = userHosting;
     }
 
     public static enum Privacy {

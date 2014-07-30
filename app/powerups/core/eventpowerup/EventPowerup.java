@@ -33,13 +33,10 @@ public class EventPowerup extends Powerup {
         super(club, model);
         events = new ArrayList<>();
 
-        Logger.warn("Didn't fail yet1");
         List<Event> tempEvents = getClub().events;
         tempEvents.sort(new EventSorter());
-        Logger.warn("Didn't fail yet2");
         tempEvents.stream().filter(e -> e.startTime.isBefore(LocalDateTime.now())).forEach(tempEvents::remove);
         events = new ArrayList<>();
-        Logger.warn("Didn't fail yet3");
         if(tempEvents.size() < MAX_EVENTS) {
             events.addAll(tempEvents);
         } else if(!tempEvents.isEmpty()) {
@@ -79,7 +76,7 @@ public class EventPowerup extends Powerup {
     public Result update(JsonNode updateContent) {
         User user = getContext().getSender();
         if(!(user.isAdmin() || getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
-            return Results.unauthorized();
+            return Results.unauthorized("Ingen tilgang til å opprette events for " + this.getClub().name);
         }
         String name = updateContent.get("name").asText();
         String description = updateContent.get("description").asText();
@@ -87,11 +84,10 @@ public class EventPowerup extends Powerup {
         String time = updateContent.get("time").asText();
         String coverUrl = updateContent.get("imagelink").asText();
 
-
         DateTimeFormatter format = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
-        DateTime dateTime = format.parseDateTime(time);
-        if(dateTime.isBeforeNow()) {
-            return Results.badRequest();
+        LocalDateTime dateTime = LocalDateTime.parse(time, format);
+        if(dateTime.isBefore(LocalDateTime.now())) {
+            return Results.unauthorized("Kan ikke opprette events i fortiden.");
         }
 
         Event e = new Event(name, description, dateTime, location, coverUrl, this.getClub(), user);
