@@ -75,6 +75,11 @@ public abstract class Powerup implements Serializable {
 
     public abstract void activate();
 
+    /**
+     * Called when a club is deleted or the activation is deactivated.
+     */
+    public abstract void deActivate();
+
     public abstract Result update(JsonNode updateContent);
 
     /**
@@ -111,6 +116,11 @@ public abstract class Powerup implements Serializable {
 
                 @Override
                 public void activate() {
+
+                }
+
+                @Override
+                public void deActivate() {
 
                 }
 

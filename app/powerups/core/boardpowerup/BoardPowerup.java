@@ -72,6 +72,11 @@ public class BoardPowerup extends Powerup {
         }
     }
 
+    @Override
+    public void deActivate() {
+        this.boardList.forEach(Ebean::delete);
+    }
+
 
     @Override
     public Result update(JsonNode updateContent) {

@@ -26,6 +26,29 @@ public class Club extends Model {
         Ebean.update(club);
     }
 
+    @Transactional
+    public void delete() {
+        deactivatePowerups();
+        disInheritEvents();
+        Ebean.delete(this);
+    }
+
+    public void deactivatePowerups() {
+        for(Activation activation : this.activations) {
+            Powerup powerup = activation.getPowerup();
+            powerup.deActivate();
+        }
+        Ebean.delete(this.activations);
+    }
+
+    public void disInheritEvents() {
+        for(Event event : this.events) {
+            event.club = null;
+            Ebean.update(event);
+        }
+
+    }
+
     @Id
     public Long id;
 

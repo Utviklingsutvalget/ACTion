@@ -4,7 +4,6 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.*;
 import play.Logger;
-import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
@@ -38,6 +37,9 @@ public class Clubs extends Controller {
 
     public static Result show(Long id) {
         Club club = Club.find.byId(id);
+        if(club == null) {
+            return redirect(routes.Clubs.index());
+        }
 
         club.powerups = new ArrayList<>();
         // Sort the activations by weight:
@@ -47,7 +49,7 @@ public class Clubs extends Controller {
             Powerup powerup = activation.getPowerup();
             club.powerups.add(powerup);
         }
-        Ebean.delete(club);
+        club.delete();
         return ok(views.html.club.show.render(club));
     }
 

@@ -76,6 +76,11 @@ public class EventPowerup extends Powerup {
     }
 
     @Override
+    public void deActivate() {
+
+    }
+
+    @Override
     public Result update(JsonNode updateContent) {
         User user = getContext().getSender();
         if(!(user.isAdmin() || getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
