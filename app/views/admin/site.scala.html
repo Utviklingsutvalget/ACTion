@@ -12,20 +12,20 @@
                     <li>
                         <label class="title">
                             Utvalgsnavn:
-                            <input type="text" name="name" value="Navn på utvalg">
+                            <input type="text" name="name" placeholder="Skriv inn navnet på utvalget">
                         </label>
                     </li>
                     <li>
                         <label class="bullet-item">
                             Forkortelse:
-                            <input type="text" name="shortName" value="Forkortelse">
+                            <input type="text" name="shortName" placeholder="Forkortelse">
                         </label>
                     </li>
                     <li class="bullet-item small-12 columns">
                         <div class="row collapse">
                             <label class="small-7 columns">
                                 Leders e-post
-                                <input id="leader-email" type="text" name="leader" value="leder">
+                                <input id="leader-email" type="text" name="leader" placeholder="leders email">
                             </label>
                             <label class="small-5 columns">
                                 <br>
@@ -67,9 +67,9 @@
 
         <!-- Club delete -->
         <div id="clubDelete" class="medium-6 columns">
-            <a class="button alert" data-reveal-id="myModal">Slett utvalg</a>
+            <a class="button alert" data-reveal-id="deleteModal">Slett utvalg</a>
             <!-- class deleteModal must not be removed -->
-            <div id="myModal" class="reveal-modal deleteModal" data-reveal>
+            <div id="deleteModal" class="reveal-modal deleteModal" data-reveal>
                 <h2>Sletting av utvalg</h2>
                 <p class="lead">Når du sletter et utvalg fjernes alle medlemmer, eventer og tilhørende utvalgsrelatert info.
                 <br>Vær sikker på at du sletter korrekt utvalg</p>

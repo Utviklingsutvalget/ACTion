@@ -21,6 +21,7 @@ public class FeedPowerup extends Powerup {
     private List<Feed> adminList;
     private static final String MESSAGE = "message";
     private static final String MESSAGETITLE = "messageTitle";
+    private static final String PICTUREURL = "pictureUrl";
     private static final int MAXFEEDSIZE = 3;
     private User user = null;
 
@@ -90,6 +91,7 @@ public class FeedPowerup extends Powerup {
 
             String message = updateContent.get(MESSAGE).asText();
             String messageTitle = updateContent.get(MESSAGETITLE).asText();
+            String pictureUrl = updateContent.get(PICTUREURL).asText();
 
             if(message.equalsIgnoreCase("") || messageTitle.equalsIgnoreCase("")){
                 return Results.badRequest("Vennligst fyll ut både tittel og innhold for FeedPost");
@@ -101,7 +103,7 @@ public class FeedPowerup extends Powerup {
                     "clubname : " + getClub().name + ", \n" +
                     "user firstName : " + user.firstName + ".");
 
-            Feed feed = new Feed(getClub(), user, messageTitle, message);
+            Feed feed = new Feed(getClub(), user, messageTitle, message, pictureUrl);
             Ebean.save(feed);
 
         }else{

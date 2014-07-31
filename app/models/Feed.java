@@ -1,6 +1,8 @@
 package models;
 
+import org.hibernate.validator.constraints.Length;
 import org.joda.time.DateTime;
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import javax.persistence.*;
 import java.util.List;
@@ -16,11 +18,12 @@ public class Feed extends Model {
         return find.where().eq(CLUBCOLUMN, club).findList();
     }
 
-    public Feed(Club club, User user, String messageTitle, String message){
+    public Feed(Club club, User user, String messageTitle, String message, String pictureUrl){
         this.club = club;
         this.user = user;
         this.message = message;
         this.messageTitle = messageTitle;
+        this.pictureUrl = pictureUrl;
         this.dateTime = new DateTime();
     }
 
@@ -39,6 +42,11 @@ public class Feed extends Model {
 
     @play.data.validation.Constraints.Required
     public String messageTitle;
+
+    //length limiatation to be reviewed
+    @Constraints.MaxLength(75)
+    public String pictureUrl;
+
 
     @Column(name = "Created")
     public DateTime dateTime;

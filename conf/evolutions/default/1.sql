@@ -68,6 +68,7 @@ create table feed (
   club_id                   bigint,
   message                   varchar(255),
   message_title             varchar(255),
+  picture_url               varchar(255),
   Created                   datetime,
   constraint pk_feed primary key (id))
 ;

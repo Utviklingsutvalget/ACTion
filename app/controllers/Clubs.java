@@ -104,7 +104,7 @@ public class Clubs extends Controller {
             activation.save();
             activation.getPowerup().activate();
         }
-        return ok(views.html.index.render("Utvalg opprettet"));
+        return redirect(routes.Clubs.show(club.id));
     }
 
 
