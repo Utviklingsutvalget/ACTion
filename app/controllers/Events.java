@@ -25,15 +25,15 @@ public class Events extends Controller {
 
     public static Result index() {
         List<Event> events = Event.find.all();
+        List<Event> allEvents = new ArrayList<>();
         events.sort(new EventSorter());
         List<Event> attendingEvents = new ArrayList<>();
         User user = null;
         try {
             user = new Authorize.UserSession().getUser();
             for (Event e : events) {
-                if(e.startTime.isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
-                    events.remove(e);
-                    continue;
+                if(!e.startTime.isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
+                    allEvents.add(e);
                 }
                 Participation participation = new Participation(e, user);
                 int i;
@@ -51,7 +51,7 @@ public class Events extends Controller {
 
         }
         final boolean loggedIn = user != null;
-        return ok(views.html.event.index.render(events, attendingEvents, loggedIn));
+        return ok(views.html.event.index.render(allEvents, attendingEvents, loggedIn));
     }
 
     public static Result show(Long id) {
