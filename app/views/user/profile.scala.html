@@ -111,5 +111,14 @@
         }
         </div>
     </div>
-    <a href="@routes.Users.logout()">Logout</a> | <a href="@routes.OAuth2.authenticate(1)">Refetch Data</a>
+    <div class="row">
+        <div class="small-2 large-1 columns">
+            <a href="@routes.Users.logout()" class="button alert">Logout</a>
+        </div>
+        <div class="small-8 large-10 columns">
+            <a href="@routes.OAuth2.authenticate(1)" class="button">Refetch Data</a>
+        </div>
+
+    </div>
+
 }

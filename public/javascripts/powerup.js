@@ -155,6 +155,10 @@ function PowerupClass() {
                 401: function(jqxhr) {
                     console.log(jqxhr);
                     message = "<div data-alert class=\"alert-box alert text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                },
+                400: function(jqxhr){
+                    console.log(jqxhr);
+                    message = "<div data-alert class=\"alert-box alert text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
                 }
             }
         }).always(function() {

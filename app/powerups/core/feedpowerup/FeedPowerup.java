@@ -93,7 +93,9 @@ public class FeedPowerup extends Powerup {
             String messageTitle = updateContent.get(MESSAGETITLE).asText();
             String pictureUrl = updateContent.get(PICTUREURL).asText();
 
-            if(message.equalsIgnoreCase("") || messageTitle.equalsIgnoreCase("")){
+            if(message.equals("") || messageTitle.equals("")
+                    || message == null || messageTitle == null || pictureUrl == null || pictureUrl.equals("")){
+                Logger.info("shit is wrong");
                 return Results.badRequest("Vennligst fyll ut både tittel og innhold for FeedPost");
             }
 
@@ -106,11 +108,12 @@ public class FeedPowerup extends Powerup {
             Feed feed = new Feed(getClub(), user, messageTitle, message, pictureUrl);
             Ebean.save(feed);
 
+            return Results.ok("Opprettet feedpost");
+
         }else{
 
             Logger.info("Json in update for FeedPowerup was null");
+            return Results.badRequest("Manglende info fra feltene");
         }
-
-        return Results.ok();
     }
 }
