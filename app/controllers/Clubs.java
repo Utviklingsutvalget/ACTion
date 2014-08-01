@@ -89,17 +89,32 @@ public class Clubs extends Controller {
 
         Location location = Location.find.byId(locationId);
 
+        User leaderUser = User.findByEmail(email);
+
+        if(leaderUser == null){
+            return badRequest("Det finnes ingen bruker tilknyttet den emailen, " +
+                    "vennligst skriv inn en email knyttet til en bruker");
+        }
+
+        if(name.equals("") || shortName.equals("")){
+            return badRequest("Utvalget kan ikke ha et tomt Navn eller tom forkortelse");
+        }
+
         Club club = new Club(name, shortName, location);
         club.save();
-        Membership membership = new Membership(club, User.findByEmail(email), MembershipLevel.LEADER);
+
+        Membership membership = new Membership(club, leaderUser, MembershipLevel.LEADER);
         club.members.add(membership);
+
         ArrayList<Activation> activations = new ArrayList<>();
         PowerupModel.find.all().stream().filter(model -> model.isMandatory).forEach(model -> {
             Activation activation = new Activation(club, model, model.defaultWeight);
             club.activations.add(activation);
             activations.add(activation);
         });
+
         membership.save();
+
         for(Activation activation : activations) {
             activation.save();
             activation.getPowerup().activate();
