@@ -14,11 +14,13 @@ import powerups.core.boardpowerup.html.admin;
 import powerups.core.boardpowerup.html.powerup;
 import powerups.models.BoardMembership;
 import powerups.models.BoardPost;
+import utils.Authorize;
 import utils.MembershipLevel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.unauthorized;
 
@@ -168,6 +170,26 @@ public class BoardPowerup extends Powerup {
         }
         boolean isMandatory = updateContent.get("mandatory").asBoolean();
         int defaultWeight = 10;
+        boolean createdMandatory = false;
+
+        if(isMandatory){
+            try{
+                User user = new Authorize.UserSession().getUser();
+
+                if(user.isAdmin()){
+
+                    BoardPost newMandatoryPost = new BoardPost(title, isMandatory, defaultWeight);
+                    createdMandatory = true;
+                    Ebean.save(newMandatoryPost);
+
+                }
+
+                return createdMandatory;
+
+            }catch(Authorize.SessionException e){
+                e.printStackTrace();
+            }
+        }
 
         BoardPost newPost = new BoardPost(title, isMandatory, defaultWeight);
         Ebean.save(newPost);
