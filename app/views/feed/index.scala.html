@@ -18,22 +18,21 @@
                 </div>
 
                     <!-- TEXT -->
-                <div class="large-7 columns">
+                <div class="medium-9 columns">
 
                         <!-- HEADER -->
                     <h3>@feed.messageTitle</h3>
                     <h9>@feed.user.firstName @feed.user.lastName, @feed.club.name</h9>
-                    <br /> <br />
+                    <br />
 
                         <!-- PARAGRAPH -->
+                    <h9><small>Dato: @feed.dateTime.getDayOfMonth
+                        / @feed.dateTime.getMonthOfYear - @feed.dateTime.getYear
+                        <br>
+                        Tid: @feed.dateTime.getHourOfDay
+                        : @feed.dateTime.getMinuteOfHour
+                    </small><br></h9>
                     <h5>@feed.message <br /> <br /></h5>
-                </div>
-
-                    <!-- DATE -->
-                <div class="small-2 columns text-right paragraph-date">
-                    <p>@feed.dateTime.getDayOfMonth
-                        / @feed.dateTime.getMonthOfYear - @feed.dateTime.getYear<br>@feed.dateTime.getHourOfDay
-                        : @feed.dateTime.getMinuteOfHour</p>
                 </div>
             </div>
         }
