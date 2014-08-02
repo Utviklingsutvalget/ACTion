@@ -47,10 +47,10 @@ public class Participation extends Model {
      */
     public boolean setRvsp(boolean newRvsp) {
         if(this.rvsp != Status.HOSTING){
-            if(newRvsp && this.rvsp == Status.NOT_ATTENDING) {
+            if(newRvsp && (this.rvsp == Status.NOT_ATTENDING || this.rvsp == null)) {
                 this.rvsp = Status.ATTENDING;
                 return true;
-            } else if(!newRvsp && this.rvsp == Status.ATTENDING) {
+            } else if(!newRvsp && (this.rvsp == Status.ATTENDING || this.rvsp == null)) {
                 this.rvsp = Status.NOT_ATTENDING;
                 return true;
             }
