@@ -48,6 +48,7 @@ public class EventPowerup extends Powerup {
             if (e.participants.contains(participation)) {
                 i = e.participants.indexOf(participation);
                 participation = e.participants.get(i);
+                e.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
                 e.setUserAttending(participation.getRvsp());
             }
             e.setUserAttending(participation.getRvsp());
