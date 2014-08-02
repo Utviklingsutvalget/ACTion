@@ -47,7 +47,15 @@ body{
 
 .headertext{
 	color: #000;
-	size: 50px;
+}
+
+.headertext-underpage{
+	color: #fff;
+}
+
+
+.headertext-underpage a:hover{
+	color: #cfcfcf;
 }
 
 .headertextbig{
@@ -314,8 +322,38 @@ img.img-gallery:hover{
     padding-top: 40px;
 }
 
+.headercircle-large-underpage{
+    margin-left: auto;
+    margin-right: auto;
+    left: 0px;
+    right: 0px;
+    
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    background-color: #fff;
+    padding-top: 40px;
+}
+
+.headercircle-small-underpage{
+    margin-left: auto;
+    margin-right: auto;
+    left: 0px;
+    right: 0px;
+    
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background-color: #fff;
+    padding-top: 25px;
+}
+
 .headercircle-large h5, .headercircle-large h3, .headercircle-medium h5, .headercircle-medium h3, .headercircle-small h5, .headercircle-small h3{
     color: #fff;
+}
+
+.headercircle-small-underpage h4{
+	color: #000;
 }
 
 .banner { position: relative; overflow: auto; }
@@ -346,4 +384,23 @@ img.img-gallery:hover{
 
 #tirsdag:target{
 	max-height: 0px;
+}
+
+.header-underpage-large{
+	height: 200px;
+	background-color: black;
+}
+
+.header-underpage-small{
+	height: 220px;
+	background-color: black;
+}
+
+.underlinks{
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.underlinks-small{
+	font-size: 15px;
 }

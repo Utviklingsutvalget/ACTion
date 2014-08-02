@@ -2644,8 +2644,11 @@ a {
   color: #008cba;
   text-decoration: none;
   line-height: inherit; }
-  a:hover, a:focus {
-    color: #000; }
+  
+  /* FJERN KOMMENTAR UNDER FOR Å AKTIVERE HOVER-EFFEKT PÅ LINKER! */
+  /*a:hover, a:focus {
+    color: #000; }*/
+    
   a img {
     border: none; }
 
