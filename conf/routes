@@ -44,12 +44,15 @@ POST        /events/:id                      controllers.Events.update(id:Long)
 GET         /events/:id                      controllers.Events.show(id: Long)
 POST        /events/:id/delete               controllers.Events.delete(id: Long)
 
+# Adminstration
 GET         /admin/clubs/:id                 controllers.Administration.showClub(id: Long)
 GET         /admin/site                      controllers.Administration.showSite()
 POST        /admin/site                      controllers.Administration.updateLocation()
 POST        /admin/site/delete               controllers.Administration.deleteClub()
 POST        /admin/guardian/add              controllers.Administration.addGuardian()
 DELETE      /admin/guardian                  controllers.Administration.deleteGuardian()
+GET         /admin/itslearning               controllers.Administration.redirectToItsLearning()
+
 
 #Feed
 GET         /feed                            controllers.Feeds.index()

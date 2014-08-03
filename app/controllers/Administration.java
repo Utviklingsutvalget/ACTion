@@ -22,6 +22,7 @@ public class Administration extends Controller {
     private static final String LOCATIONNAME = "locationName";
     private static final String CONFIRM_DELETE = "confirmDelete";
     private static final Long PRESIDING_COUNCIL_ID = 1L;
+    private static final String ITSLEARNINGREDIRECT = "https://nith.itslearning.com/elogin/default.aspx";
 
     public static Result showClub(Long id) {
         Club club = Club.find.byId(id);
@@ -46,6 +47,10 @@ public class Administration extends Controller {
             return forbidden("fu");
         }
         return forbidden("fu");
+    }
+
+    public static Result redirectToItsLearning(){
+        return redirect(ITSLEARNINGREDIRECT);
     }
 
     public static Result showSite() {

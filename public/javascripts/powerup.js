@@ -46,10 +46,14 @@ function getPowerupHtml(id) {
     return htmlPowerup;
 }
 
-function createStandardButton(powerupId) {
+function createStandardButton(powerupId, buttonText) {
+    if(typeof(buttonText) == undefined || buttonText == null) {
+        buttonText = "Save Changes";
+    }
+
     var htmlPowerup = getPowerupHtml(powerupId);
     var insertInto = htmlPowerup.find('.powerup-content');
-    insertInto.append("<button class=\"updatepowerup button small radius\">Save changes</button>");
+    insertInto.append("<button class=\"updatepowerup button small radius\">" + buttonText + "</button>");
 }
 
 function createUpdateTypeButton(powerupId, target) {
