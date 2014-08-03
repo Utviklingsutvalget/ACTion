@@ -99,16 +99,22 @@ public class User extends Model {
     }
 
     public boolean isAdmin() {
+        if(SuperUser.find.all().isEmpty()) {
+            return false;
+        }
         SuperUser su = SuperUser.find.byId(new SuperUser(this).key);
-        boolean admin = su != null && su.user.equals(this);
-        if(!admin) {
+        if(su == null) {
+            return false;
+        }
+        if(!su.user.equals(this)) {
             for (Membership mem : this.memberships) {
                 if (mem.level == MembershipLevel.COUNCIL) {
-                    admin = true;
-                    break;
+                    return true;
                 }
             }
+        } else {
+            return true;
         }
-        return admin;
+        return false;
     }
 }

@@ -74,11 +74,11 @@ create table feed (
 ;
 
 create table initiation_group (
-  group_number              integer,
   guardian_id               varchar(255),
   location_id               bigint,
   phone_number              varchar(255),
-  constraint pk_initiation_group primary key (group_number, guardian_id, location_id))
+  group_number              integer,
+  constraint pk_initiation_group primary key (guardian_id, location_id))
 ;
 
 create table location (
