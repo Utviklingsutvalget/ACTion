@@ -73,6 +73,7 @@ public abstract class Powerup implements Serializable {
      */
     public abstract Html render();
 
+    // TODO DOCUMENT
     public abstract void activate();
 
     /**
