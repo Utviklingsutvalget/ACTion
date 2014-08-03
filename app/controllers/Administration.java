@@ -5,12 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.i18n.phonenumbers.NumberParseException;
 import models.*;
 import play.Logger;
+import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
-import powerups.models.ClubDescription;
-import powerups.models.ClubImage;
-import powerups.models.Pending;
 import utils.ActivationSorter;
 import utils.Authorize;
 import utils.InitiationSorter;
@@ -58,14 +56,14 @@ public class Administration extends Controller {
             List<InitiationGroup> initiationGroups = InitiationGroup.find.all();
             initiationGroups.sort(new InitiationSorter());
             Integer maxInitGrp = 1;
-            for(InitiationGroup initiationGroup : initiationGroups) {
-                if(initiationGroup.getGroupNumber() > maxInitGrp) {
+            for (InitiationGroup initiationGroup : initiationGroups) {
+                if (initiationGroup.getGroupNumber() > maxInitGrp) {
                     maxInitGrp = initiationGroup.getGroupNumber();
                 }
             }
             clubList.remove(Club.find.byId(PRESIDING_COUNCIL_ID));
 
-            if(user.isAdmin()) {
+            if (user.isAdmin()) {
                 return ok(views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
             }
         } catch (Authorize.SessionException e) {
@@ -81,15 +79,15 @@ public class Administration extends Controller {
         Map<Long, String> locationMap = new HashMap<>();
         List<Location> existingLocations = Location.find.all();
 
-        try{
+        try {
 
             User user = new Authorize.UserSession().getUser();
 
-            if(json != null){
+            if (json != null) {
 
                 Iterator<String> iter = json.fieldNames();
 
-                while(iter.hasNext()){
+                while (iter.hasNext()) {
 
                     String fieldName = iter.next();
                     String locationName = json.get(fieldName).asText();
@@ -99,18 +97,18 @@ public class Administration extends Controller {
                     locationMap.put(locationId, locationName);
                 }
 
-                for(Location location : existingLocations){
+                for (Location location : existingLocations) {
 
                     String locationName = locationMap.get(location.id);
 
-                    if(locationName != null && !locationName.equals("") && !locationName.equals(location.name)){
+                    if (locationName != null && !locationName.equals("") && !locationName.equals(location.name)) {
 
                         updateLocations(location.id, locationName);
                     }
                 }
             }
 
-        }catch(Authorize.SessionException e){
+        } catch (Authorize.SessionException e) {
             e.printStackTrace();
         }
 
@@ -118,7 +116,7 @@ public class Administration extends Controller {
     }
 
     // update LocationName to new name
-    public static void updateLocations(Long locationId, String newLocationName){
+    public static void updateLocations(Long locationId, String newLocationName) {
 
         Location location = Location.find.byId(locationId);
 
@@ -132,7 +130,7 @@ public class Administration extends Controller {
         try {
             User user = new Authorize.UserSession().getUser();
             List<SuperUser> superUsers = SuperUser.find.all();
-            if(superUsers.isEmpty()) {
+            if (superUsers.isEmpty()) {
                 SuperUser superUser = new SuperUser(user);
                 superUser.user = user;
                 Ebean.save(superUser);
@@ -143,23 +141,23 @@ public class Administration extends Controller {
         return Application.index();
     }
 
-    public static Result deleteClub(){
+    public static Result deleteClub() {
 
         JsonNode json = request().body().asJson();
         Map<Long, String> clubMap = new HashMap<>();
         Map<String, String> confirmDelMap = new HashMap<>();
         Iterator<String> iter = json.fieldNames();
 
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
 
             String key = iter.next();
             String val = json.get(key).asText();
 
-            if(key.equals(CONFIRM_DELETE)){
+            if (key.equals(CONFIRM_DELETE)) {
 
                 confirmDelMap.put(key, val);
 
-            }else{
+            } else {
                 Long newVal = Long.parseLong(val);
                 clubMap.put(newVal, key);
             }
@@ -168,12 +166,12 @@ public class Administration extends Controller {
         }
 
         // check for
-        for(Long id : clubMap.keySet()){
+        for (Long id : clubMap.keySet()) {
 
-            if(confirmDelMap.get(CONFIRM_DELETE).equals(clubMap.get(id))){
+            if (confirmDelMap.get(CONFIRM_DELETE).equals(clubMap.get(id))) {
                 Club club = Club.find.byId(id);
 
-                if(!club.id.equals(PRESIDING_COUNCIL_ID)){
+                if (!club.id.equals(PRESIDING_COUNCIL_ID)) {
 
                     club.delete();
                     return ok("Utvalg slettet");
@@ -187,7 +185,7 @@ public class Administration extends Controller {
         try {
             User user = new Authorize.UserSession().getUser();
             boolean authorized = user.isAdmin();
-            if(!authorized) {
+            if (!authorized) {
                 return unauthorized();
             }
         } catch (Authorize.SessionException e) {
@@ -195,7 +193,7 @@ public class Administration extends Controller {
         }
 
         Map<String, String[]> form = request().body().asFormUrlEncoded();
-        for(String key : form.keySet()) {
+        for (String key : form.keySet()) {
             Logger.warn(key + ":" + form.get(key)[0]);
         }
         String email = form.get("guardian")[0] + form.get("postfix")[0];
@@ -205,7 +203,7 @@ public class Administration extends Controller {
         Location location = Location.find.byId(locationId);
         String phoneNumber = form.get("phone")[0];
 
-        if(guardian != null && location != null) {
+        if (guardian != null && location != null) {
 
             InitiationGroup initiationGroup = new InitiationGroup(guardian, location, groupNumber);
             try {
@@ -213,13 +211,34 @@ public class Administration extends Controller {
             } catch (NumberParseException e) {
                 return badRequest();
             }
-            if(InitiationGroup.find.byId(initiationGroup.getId()) == null) {
+            if (InitiationGroup.find.byId(initiationGroup.getId()) == null) {
                 Ebean.save(initiationGroup);
             } else {
                 Ebean.update(initiationGroup);
             }
         }
 
+        return redirect(routes.Administration.showSite().url() + "#addguardian");
+    }
+
+    @BodyParser.Of(BodyParser.Json.class)
+    public static Result deleteGuardian() {
+        JsonNode json = request().body().asJson();
+
+        Long locationId = json.get("location").asLong();
+        String userId = json.get("guardian").asText();
+
+        User guardian = User.find.byId(userId);
+        Location location = Location.find.byId(locationId);
+
+        InitiationGroup group = null;
+        if (guardian != null && location != null) {
+            group = InitiationGroup.find.byId(new InitiationGroup(guardian, location).getId());
+        }
+
+        if (group != null) {
+            Ebean.delete(group);
+        }
         return redirect(routes.Administration.showSite().url() + "#addguardian");
     }
 

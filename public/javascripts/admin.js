@@ -28,35 +28,31 @@ function admin() {
         });
     });
 
-    function verifyUser(email) {
+    $(document).on('click', '.delete-init-group', function(e) {
+        e.preventDefault();
+
         var dataObject = {};
-        dataObject['email'] = email;
+
+        dataObject['location'] = $(this).data('init-location');
+        dataObject['guardian'] = $(this).data('init-guardian');
+
         $.ajax({
-            url: "/users/find",
-            type: 'POST',
+            url: "/admin/guardian",
+            type: 'DELETE',
             contentType: 'application/json',
             data: JSON.stringify(dataObject),
             dataType: 'json',
 
             statusCode: {
-
                 200: function () {
-                    console.log("Should be true");
-                    verified = true;
-                },
-                400: function () {
-                    verified = false;
-                },
-                403: function () {
-                    verified = false;
+                    location.reload();
                 },
                 404: function () {
-                    verified = false;
+                    alert("Ukjent faddergruppe");
                 }
             }
-
         });
-    }
+    });
 
     $('.updateLocation').submit(function (e) {
         e.preventDefault();

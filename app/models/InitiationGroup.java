@@ -33,6 +33,10 @@ public class InitiationGroup extends Model {
         this.id = new InitiationKey(guardian.id, location.id);
     }
 
+    public InitiationGroup(User guardian, Location location) {
+        this(guardian, location, 0);
+    }
+
     public InitiationKey getId() {
         return id;
     }

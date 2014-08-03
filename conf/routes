@@ -49,6 +49,7 @@ GET         /admin/site                      controllers.Administration.showSite
 POST        /admin/site                      controllers.Administration.updateLocation()
 POST        /admin/site/delete               controllers.Administration.deleteClub()
 POST        /admin/guardian/add              controllers.Administration.addGuardian()
+DELETE      /admin/guardian                  controllers.Administration.deleteGuardian()
 
 #Feed
 GET         /feed                            controllers.Feeds.index()
