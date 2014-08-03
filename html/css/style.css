@@ -404,3 +404,13 @@ img.img-gallery:hover{
 .underlinks-small{
 	font-size: 15px;
 }
+
+.admin-utvalg-oversikt{
+	height: 360px;
+	overflow: scroll;
+}
+
+.admin-faddere-oversikt{
+	height: 286px;
+	overflow: scroll;
+}
