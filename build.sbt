@@ -22,6 +22,7 @@ libraryDependencies ++= Seq(
   "mysql" % "mysql-connector-java" % "5.1.6",
   "com.google.http-client" % "google-http-client-jackson2" % "1.11.0-beta",
   "org.jsoup" % "jsoup" % "1.7.2",
+  "com.googlecode.libphonenumber" % "libphonenumber" % "3.1",
   javaJdbc,
   javaEbean,
   cache,
