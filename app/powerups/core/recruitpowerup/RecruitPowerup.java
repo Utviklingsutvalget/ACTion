@@ -22,6 +22,7 @@ import powerups.core.recruitpowerup.html.powerup;
 import utils.MembershipLevel;
 
 import static play.mvc.Results.ok;
+import static play.mvc.Results.unauthorized;
 
 
 public class RecruitPowerup extends Powerup {
@@ -31,6 +32,7 @@ public class RecruitPowerup extends Powerup {
     private boolean isMember;
     private boolean pending;
     private User user;
+    private static final String TERMINATEMEMBERSHIP = "TerminateMemberShip";
     private static final String ACCEPT = "accept";
     private static final String REJECT = "reject";
     private boolean adminAccess = false;
@@ -128,6 +130,23 @@ public class RecruitPowerup extends Powerup {
                 String val = updateContent.get(key).asText();
                 map.put(key, val);
 
+                if(val.equals(TERMINATEMEMBERSHIP)){
+                    User terminatedUser = User.find.byId(key);
+                    Membership terminateMember = Membership.find.byId(new Membership(club, terminatedUser).id);
+
+                    if(terminatedUser != null && terminateMember != null){
+
+                        if(terminateMember.level.getLevel() < MembershipLevel.BOARD.getLevel()){
+                            Ebean.delete(terminateMember);
+                            Logger.info("User: " + terminatedUser.firstName + " was removed from club: " + club.name);
+                            Logger.info("Member: " + terminateMember.user.firstName + " was the terminated member");
+                            return ok("Du avsluttet medlemsskapet hos " + club.name);
+                        }else{
+                            return unauthorized("Kan ikke utføre sletting ettersom din bruker er et styremedlem");
+                        }
+                    }
+                }
+
                 if(val.equals(ACCEPT) || val.equals(REJECT) && (firstCheck)){
                     firstCheck = false;
                     adminAccess = true;
@@ -155,12 +174,21 @@ public class RecruitPowerup extends Powerup {
 
             if(map.get(key).equals(ACCEPT)){
 
-                Pending p = new Pending(club, user);
-                Pending oldPending = Pending.find.byId(p.key);
+                //Pending p = new Pending(club, user);
+                Pending oldPending = Pending.find.byId(new Pending(club, user).key);
 
-                Ebean.delete(oldPending);
+                if(oldPending != null){
+                    Ebean.delete(oldPending);
+                }
 
-                membership = new Membership(club, user, MembershipLevel.MEMBER);
+                membership = Membership.find.byId(new Membership(club, user).id);
+
+                if(membership != null){
+
+                    membership.level = MembershipLevel.MEMBER;
+                }
+
+                //membership = new Membership(club, user, MembershipLevel.MEMBER);
                 Ebean.save(membership);
 
                 Logger.info("Removed member: " + user.email + " from pending at clubName: " + club.name);
@@ -170,10 +198,12 @@ public class RecruitPowerup extends Powerup {
 
             }else if(map.get(key).equals(REJECT)){
 
-                Pending p = new Pending(club, user);
-                Pending oldPending = Pending.find.byId(p.key);
+                //Pending p = new Pending(club, user);
+                Pending oldPending = Pending.find.byId(new Pending(club, user).key);
 
-                Ebean.delete(oldPending);
+                if(oldPending != null){
+                    Ebean.delete(oldPending);
+                }
 
                 Logger.info("Removed Pending user: " + user.email + " from clubName: " + club.name);
             }
@@ -188,14 +218,17 @@ public class RecruitPowerup extends Powerup {
 
             if(user1 != null){
                 Pending pendingUser = new Pending(club, user1, key);
+                Membership subMember = new Membership(club, user1, MembershipLevel.SUBSCRIBE);
 
                 Logger.info("Successful insert into pending, id: " + pendingUser.user.id + ", club: " + club.name +
                         ", application_message: " + key);
+                Logger.info("Successful insert into membership with subscribe");
 
                 Pending checkForEntry = Pending.find.byId(pendingUser.key);
 
                 if(checkForEntry == null){
 
+                    Ebean.save(subMember);
                     Ebean.save(pendingUser);
                 }
             }

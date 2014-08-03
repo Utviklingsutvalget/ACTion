@@ -1,6 +1,5 @@
-@(feedList: List[Feed])
+@(feedList: java.util.List[Feed])
 @import models.Feed
-
 
     @if(feedList != null && feedList.nonEmpty){
 
@@ -8,3 +7,4 @@
     }else{
             <p>Ingen feeds å vise</p>
     }
+
