@@ -44,9 +44,9 @@ public class Administration extends Controller {
                 }
             }
         } catch (Authorize.SessionException e) {
-            return forbidden("fu");
+            return forbidden(views.html.index.render("Du må være innlogget som administrator for å administrere siden"));
         }
-        return forbidden("fu");
+        return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
     }
 
     public static Result redirectToItsLearning(){
@@ -72,9 +72,9 @@ public class Administration extends Controller {
                 return ok(views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
             }
         } catch (Authorize.SessionException e) {
-            return forbidden("fu");
+            return forbidden(views.html.index.render("Du må være innlogget som administrator for å administrere siden"));
         }
-        return forbidden("fu");
+        return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
     }
 
     //@BodyParser.Of(BodyParser.Json.class)

@@ -58,7 +58,7 @@ public class Feeds extends Controller {
 
         }catch(Authorize.SessionException e){
 
-            return unauthorized("You need to be logged in to see feed");
+            return unauthorized(views.html.index.render("You need to be logged in to see feed"));
         }
 
         if(!feedList.isEmpty()){
