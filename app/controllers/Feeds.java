@@ -1,6 +1,7 @@
 package controllers;
 
 import models.*;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.Authorize;
@@ -31,6 +32,14 @@ public class Feeds extends Controller {
             User user = new Authorize.UserSession().getUser();
             List<Club> clubList = Club.find.all();
 
+            // Keeping this in as bugs with empty user tables have caused
+            // Authorize check to go through but return a null object for user.
+            if(user == null){
+                Logger.warn("The user table is empty, yet passes Authorization check, " +
+                        "returning internal server error. Check database, user table");
+                return internalServerError("Noe gikk galt, kontakt administrator");
+            }
+
             for(Club club : clubList){
 
                 Membership membership = Membership.find.byId(new Membership(club, user).id);
@@ -49,9 +58,12 @@ public class Feeds extends Controller {
             return unauthorized("You need to be logged in to see feed");
         }
 
-        if(feedList != null){
+        if(!feedList.contains(null)){
             feedList.sort(new FeedSorter());
             Collections.reverse(feedList);
+        }else{
+            Logger.warn("feedList contained null references");
+            return internalServerError("Noe gikk galt, kontakt administrator");
         }
 
         return ok(views.html.feed.index.render(feedList));
