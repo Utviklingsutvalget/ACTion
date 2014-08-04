@@ -24,9 +24,11 @@
         <a class="headertext" href='@routes.Feeds.index()'>Feed </a>
     </div>
 
+    <!--
     <div class="small-4 columns buttonpanelsmall">
-        <a class="headertext" href='@routes.Administration.redirectToItsLearning()'>ItsLearning</a>
+        <a class="headertext" href='@*routes.Administration.redirectToItsLearning()*@'>ItsLearning</a>
     </div>
+    -->
 
     @if(user != null) {
         <div class="small-4 columns  buttonpanelsmall">
@@ -63,9 +65,11 @@
             <a class="headertext" href="@routes.Initiation.index()">Fadderuka </a>
         </div>
 
+        <!--
         <div class="medium-2 columns">
-            <a class="headertext" href='@routes.Administration.redirectToItsLearning()'>ItsLearning</a>
+            <a class="headertext" href='@*routes.Administration.redirectToItsLearning()*@'>ItsLearning</a>
         </div>
+        -->
         @if(user != null) {
             <div class="medium-2 columns">
                 <a class="headertext" href="@routes.Users.profile()">Profil </a>
