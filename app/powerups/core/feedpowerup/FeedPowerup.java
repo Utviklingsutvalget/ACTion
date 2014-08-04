@@ -18,11 +18,13 @@ public class FeedPowerup extends Powerup {
 
     private List<Feed> feedList;
     private List<Feed> userFeedList;
+    private List<Feed> intialFeedList;
     private List<Feed> adminList;
     private static final String MESSAGE = "message";
     private static final String MESSAGETITLE = "messageTitle";
     private static final String PICTUREURL = "pictureUrl";
-    private static final int MAXFEEDSIZE = 3;
+    private static final int MAXFEEDINDEXSIZE = 3;
+    private static final String ERRORIMAGE = "http://img1.wikia.nocookie.net/__cb20140403200841/creepypasta/images/f/f8/Stewie_griffin_family_guy.jpg";
     private User user = null;
 
     public FeedPowerup(Club club, PowerupModel model){
@@ -38,6 +40,7 @@ public class FeedPowerup extends Powerup {
             feedList = Feed.findByClub(club);
             adminList = new ArrayList<>();
             userFeedList = new ArrayList<>();
+            intialFeedList = new ArrayList<>();
             user = Context.getContext(getClub()).getSender();
 
             if(user == null){
@@ -51,13 +54,14 @@ public class FeedPowerup extends Powerup {
 
                 for(int i = 0; i < feedList.size(); i++){
 
-                    if(i < MAXFEEDSIZE){
+                    if(i < MAXFEEDINDEXSIZE){
                         adminList.add(feedList.get(i));
                         userFeedList.add(feedList.get(i));
                     }else{
                         break;
                     }
                 }
+
             }else{
                 Logger.warn("feedList in FeedPowerup is null");
             }
@@ -104,6 +108,11 @@ public class FeedPowerup extends Powerup {
                     "messagetitle : " + messageTitle + ", \n" +
                     "clubname : " + getClub().name + ", \n" +
                     "user firstName : " + user.firstName + ".");
+
+            if(pictureUrl.length() <= 3 || pictureUrl.equals(".jpg") ||
+                    !pictureUrl.substring(pictureUrl.length() - 3, pictureUrl.length()).equals("jpg")){
+                pictureUrl = ERRORIMAGE;
+            }
 
             Feed feed = new Feed(getClub(), user, messageTitle, message, pictureUrl);
             Ebean.save(feed);

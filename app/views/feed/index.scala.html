@@ -1,42 +1,45 @@
-@(feedList: List[Feed])
+@(feedList: java.util.List[Feed], initialFeedList: java.util.List[Feed])
 @import models.Feed
 
     <!-- FEED -->
 
 @main("Feed") {
 
-    <div id="feed" data-magellan-destination="feed">
-    @if(feedList.nonEmpty) {
+    <div class="row">
+    @if(initialFeedList.nonEmpty) {
 
-        @for(feed <- feedList) {
-            <div class="row">
-
-                <div class="small-3 columns imagepreviewbox">
-                    <a class="th" href="@feed.pictureUrl">
-                        <img src="@feed.pictureUrl">
-                    </a>
-                </div>
-
-                    <!-- TEXT -->
-                <div class="medium-9 columns">
-
-                        <!-- HEADER -->
-                    <h3>@feed.messageTitle</h3>
-                    <h9>@feed.user.firstName @feed.user.lastName, @feed.club.name</h9>
-                    <br />
-
-                        <!-- PARAGRAPH -->
-                    <h9><small>Dato: @feed.dateTime.getDayOfMonth
-                        / @feed.dateTime.getMonthOfYear - @feed.dateTime.getYear
-                        <br>
-                        Tid: @feed.dateTime.getHourOfDay
-                        : @feed.dateTime.getMinuteOfHour
-                    </small><br></h9>
-                    <h5>@feed.message <br /> <br /></h5>
-                </div>
+        @for(feed <- initialFeedList) {
+            <div class="medium-6 columns">
+                <img src="@feed.pictureUrl"/>
+                <h6><em>@feed.dateTime.getDayOfMonth/@feed.dateTime.getMonthOfYear
+                    @feed.dateTime.getHourOfDay:@feed.dateTime.getMinuteOfHour</em>
+                </h6>
+                <h4>@feed.messageTitle</h4>
+                <small>@feed.club.name , @feed.user.firstName @feed.user.lastName</small>
+                <p>@feed.message</p>
             </div>
         }
+
+        @if(feedList.nonEmpty) {
+
+            <div class="medium-12 columns">
+                <div id="line-separator-wide"></div>
+                <br /><br />
+            </div>
+
+            @for(feed <- feedList) {
+
+                <div class="medium-4 columns">
+                    <img src="@feed.pictureUrl"/>
+                    <h6>@feed.dateTime.getDayOfMonth/@feed.dateTime.getMonthOfYear
+                        @feed.dateTime.getHourOfDay:@feed.dateTime.getMinuteOfHour</h6>
+                    <h4>@feed.messageTitle</h4>
+                    <p>@feed.message</p>
+                </div>
+            }
+        }
     } else {
+
         <div class="row">
             <div class="large-12 columns text-center">
 

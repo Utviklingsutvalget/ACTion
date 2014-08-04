@@ -1,29 +1,64 @@
 function admin() {
 
-    $(document).on('click', '.newclub', function(e) {
-        var email = $('#leader-email').val() + $('#emailpostfix').val();
+    $('.email-check-form').submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var email = form.find($('.user-email')).val() + form.find($('.email-postfix')).val();
         console.log(email);
-
         var dataObject = {};
         dataObject['email'] = email;
-        var jqhxr = $.ajax({
+
+        $.ajax({
             url: "/users/find",
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(dataObject),
-            dataType: 'json'
-        }).always(function() {
-            if(jqhxr.status !== 200) {
-                e.preventDefault();
+            dataType: 'json',
+
+            statusCode: {
+                200: function () {
+                    console.log("It is done");
+                    form.unbind('submit');
+                    form.submit();
+                },
+                404: function () {
+                    alert("Ukjent bruker");
+                }
             }
         });
     });
 
-    $('.updateLocation').submit(function(e){
+    $(document).on('click', '.delete-init-group', function(e) {
+        e.preventDefault();
+
+        var dataObject = {};
+
+        dataObject['location'] = $(this).data('init-location');
+        dataObject['guardian'] = $(this).data('init-guardian');
+
+        $.ajax({
+            url: "/admin/guardian",
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify(dataObject),
+            dataType: 'json',
+
+            statusCode: {
+                200: function () {
+                    location.reload();
+                },
+                404: function () {
+                    alert("Ukjent faddergruppe");
+                }
+            }
+        });
+    });
+
+    $('.updateLocation').submit(function (e) {
         e.preventDefault();
         var jsonObject = {};
 
-        $(document).find('.updateLocation').each(function(){
+        $(document).find('.updateLocation').each(function () {
 
             var locationId = $(this).find('.locationId').val();
             var locationName = $(this).find('.locationName').val();
@@ -45,13 +80,12 @@ function admin() {
         console.log(xHttp);
     });
 
-    $('.deleteClub').submit(function(e){
+    $('.deleteClub').submit(function (e) {
         e.preventDefault();
 
         var dataObject = {};
 
-        var confirmDeleteClub = $(document).find('.confirmDelete').val();
-        dataObject['confirmDelete'] = confirmDeleteClub;
+        dataObject['confirmDelete'] = $(document).find('.confirmDelete').val();
 
         var deleteClubElement = $(document).find('.deleteClub');
         var clubId = $(deleteClubElement).find('.clubId').val();
@@ -70,18 +104,18 @@ function admin() {
             data: JSON.stringify(dataObject),
             dataType: 'json',
             statusCode: {
-                200: function(jqxhr){
+                200: function (jqxhr) {
                     message = "<div data-alert class=\"alert-box success text-center radius\">"
                         + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
                 },
-                400: function(jqxhr){
+                400: function (jqxhr) {
                     message = "<div data-alert class=\"alert-box alert text-center radius\">"
                         + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
                 }
             }
-        }).always(function(){
+        }).always(function () {
 
-            $.get("/admin/site", function(data){
+            $.get("/admin/site", function (data) {
 
                 console.log(message);
                 htmlContent.find('label').html(message);

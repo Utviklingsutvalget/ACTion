@@ -15,6 +15,7 @@ public class Feeds extends Controller {
 
     //private static final int MAXIMUMFEEDSIZE = 30;
     private static final int MAXFEEDSPERCLUB = 5;
+    private static final int MAXINDEXFEEDSIZE = 14;
 
     /*
     * has yet to be implemented in routes file
@@ -23,6 +24,8 @@ public class Feeds extends Controller {
     public static Result index(){
 
         List<Feed> feedList = new ArrayList<>();
+        List<Feed> initialList = new ArrayList<>();
+        List<Feed> remainingList = new ArrayList<>();
 
         // TODO FIND A MORE EFFECTIVE IMPLEMENTATION LATER
 
@@ -58,15 +61,32 @@ public class Feeds extends Controller {
             return unauthorized("You need to be logged in to see feed");
         }
 
-        if(!feedList.contains(null)){
+        if(feedList != null && !feedList.isEmpty()){
             feedList.sort(new FeedSorter());
             Collections.reverse(feedList);
-        }else{
-            Logger.warn("feedList contained null references");
-            return internalServerError("Noe gikk galt, kontakt administrator");
+            Logger.info(feedList.size() + " is feedList size");
+
+            //Adds correct entries to correct lists, up to 10 entries
+            for(int i = 0; i < feedList.size(); i++){
+
+                if(i < 2){
+
+                    initialList.add(feedList.get(i));
+                    Logger.info("added to initial " + i);
+
+                }else if(i < MAXINDEXFEEDSIZE && i >= 2){
+
+                    remainingList.add(feedList.get(i));
+                    Logger.info("added to remaining " + i);
+
+                }else{
+                    Logger.info("Max of 14 has been reached or list has no more entries, terminating");
+                    break;
+                }
+            }
         }
 
-        return ok(views.html.feed.index.render(feedList));
+        return ok(views.html.feed.index.render(remainingList, initialList));
     }
 
     //Find up x feeds by a give club (until maxfeedsperclub is reached)

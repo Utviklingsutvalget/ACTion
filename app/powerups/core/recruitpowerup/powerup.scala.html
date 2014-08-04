@@ -25,9 +25,12 @@
     }else{
 
         @if(isMember && !pending){
-            <div class="row">
+            <div class="row powerup-node appMessageNode" data-powerup-field="@user.id" data-powerup-value="TerminateMemberShip">
                 <h6>Du er allerede medlem av @club.name</h6>
             </div>
+            <script>
+            createStandardButton ( getId ( $ ( '.appMessageNode' ) ), "Meld deg ut av utvalget");
+            </script>
 
         }else{
 
