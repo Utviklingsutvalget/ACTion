@@ -10,7 +10,11 @@
                     <a href="#panel@location.cssId">@location.name</a>
                     <div id="panel@location.cssId" class="content">
                         <dl>
-                        @club.list(location.clubs)
+                            @if(location.clubs.isEmpty){
+                                Denne lokasjonen har ingen utvalg.
+                            }else{
+                                @club.list(location.clubs)
+                            }
                         </dl>
                     </div>
                 </dd>
