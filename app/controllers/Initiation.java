@@ -43,7 +43,6 @@ public class Initiation extends Controller {
         }
 
 
-        Logger.info(query);
         Map<Integer, List<InitiationGroup>> groupMap = new HashMap<>();
         List<InitiationGroup> list;
         // If location turns up null, let's not panic. We'll just be vague.
@@ -53,7 +52,6 @@ public class Initiation extends Controller {
         }
 
         try {
-            Logger.info("Testing if group number");
             // Try dealing with the query as a group.
             String queryCopy = query;
 
@@ -64,7 +62,6 @@ public class Initiation extends Controller {
             // Get rid of all spaces.
             queryCopy = queryCopy.trim();
             final Integer groupNumber = Integer.parseInt(queryCopy);
-            Logger.info("Got group number: " + groupNumber);
             list = Ebean.find(InitiationGroup.class).where().eq("groupNumber", groupNumber).eq("location", location).findList();
 
             if (!list.isEmpty()) {
@@ -95,10 +92,6 @@ public class Initiation extends Controller {
                     }
                 }
             }
-        }
-        for (Integer key : groupMap.keySet()) {
-            Logger.info(key + " : ");
-            groupMap.get(key).forEach((initGroup) -> Logger.info(initGroup.getGuardian().email));
         }
         return ok(views.html.initiation.search.render(query, groupMap));
     }

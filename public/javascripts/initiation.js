@@ -22,7 +22,6 @@ function initiationSearch() {
 
             statusCode: {
                 200: function (data) {
-                    console.log(data);
                     target.replaceWith(data.responseText);
                 },
                 404: function(data) {
