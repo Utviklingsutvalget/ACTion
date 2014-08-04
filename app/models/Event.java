@@ -23,6 +23,7 @@ public class Event extends Model {
     @Constraints.Required
     public String name;
     @Constraints.Required
+    @Column(length = 3000)
     public String description;
     @Constraints.Required
     public LocalDateTime startTime;
