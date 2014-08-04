@@ -40,7 +40,7 @@
     <div class="tabs-content">
 
             <!-- GALLERI -->
-        <div class="content active" id="panel1">
+        <div class="content active location-container" data-location-id="1" id="panel1">
 
             <div class="row">
                 <div class="medium-12 medium-centered columns utvalg-content-placement">
@@ -415,7 +415,7 @@
                         Trykk på bildet for å se fullt kart
                         <a href="#" class="close">&times;</a>
                     </div>
-                    <a href="https://mapsengine.google.com/map/edit?mid=z5Ipoz82k22g.k6M2olnofro8"><img src="../img/gmaps-mobile.png" alt="" /></a>
+                    <a href="https://mapsengine.google.com/map/edit?mid=z5Ipoz82k22g.k6M2olnofro8"><img src="@routes.Assets.at("images/gmaps-mobile.png")" alt="" /></a>
 
                     <p>
                         A: #fuBar<br />
@@ -450,7 +450,7 @@
 
             <div class="row">
                 <div class="medium-10 columns medium-centered">
-                    <p>Her kan du søke etter faddere og fadderbarn, for å få en oversikt over hvilken gruppe du er i.</p>
+                    <p>Her kan du søke etter faddere, for å finne kontaktinformasjon til dine faddere.</p>
                 </div>
             </div>
 
@@ -458,40 +458,17 @@
                 <div class="medium-10 columns medium-centered">
                     <div class="row collapse">
                         <div class="small-10 columns">
-                            <input type="text" placeholder="Skriv inn navn">
+                            <input class="initiation-input" type="text" placeholder="Skriv inn navn eller gruppenummer">
                         </div>
                         <div class="small-2 columns">
-                            <a href="#" class="button postfix">Søk</a>
+                            <button class="button postfix initiation-search">Søk</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="medium-10 columns medium-centered">
+            <div class="row guardian-container">
 
-                    <p><em>Søketreff på "tommy":</em></p>
-
-                    <ul class="pricing-table">
-                        <li class="price">Gruppe 8</li>
-                        <li class="description">Faddere: <strong>Tommy</strong> Nordli og Pia Etternavn</li>
-                        <li class="bullet-item">Jørgen Jørgensen</li>
-                        <li class="bullet-item">Amalie Sirup</li>
-                        <li class="bullet-item">Wally Wiltersen</li>
-                        <li class="bullet-item">Knut Knudsen</li>
-                        <li class="bullet-item"><strong>Tommy</strong> Thomassen</li>
-                    </ul>
-
-                    <ul class="pricing-table">
-                        <li class="price">Gruppe 13</li>
-                        <li class="description">Faddere: <strong>Tommy</strong> Nordli og Pia Etternavn</li>
-                        <li class="bullet-item">Jørgen Jørgensen</li>
-                        <li class="bullet-item">Amalie Sirup</li>
-                        <li class="bullet-item">Wally Wiltersen</li>
-                        <li class="bullet-item">Knut Knudsen</li>
-                        <li class="bullet-item"><strong>Tommy</strong> Thomassen</li>
-                    </ul>
-                </div>
             </div>
         </div>
 
@@ -504,5 +481,8 @@
 
         </div>
     </div>
+    <script>
+    $ ( document ).ready(initiationSearch());
+    </script>
 
 }

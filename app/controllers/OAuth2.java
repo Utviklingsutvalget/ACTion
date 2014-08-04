@@ -6,47 +6,46 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.common.base.Utf8;
 import models.User;
 import org.json.JSONObject;
 import play.Configuration;
-import play.Logger;
-import play.api.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.FileUtility;
 import utils.GoogleUtility;
 import views.html.error;
 import views.html.index;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
-import java.net.*;
-import java.nio.charset.Charset;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 /**
  * https://developers.google.com/accounts/docs/OAuth2Login
- *
+ * <p>
  * For debugging purposes use: OAuth 2.0 Playground
  * https://developers.google.com/oauthplayground/?code=4/Yru2i1Y0AV8KWhteXZnUNppfLMTj.Mv2PwjP5CW0XPvB8fYmgkJyr8mc3jQI
- *
  */
 public class OAuth2 extends Controller {
 
-    /**Secrets*/
+    /**
+     * Secrets
+     */
     //private static final Map<String, String> CONF = FileUtility.getMap("/opt/ACTion/conf/secrets/googleoauth", "=");
 
     private static final Configuration CONF = play.Play.application().configuration();
-
-    /**Endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.*/
-    public static GoogleUtility.DiscoveryDocument dd;
-
-    /**A session lasts 2 hours*/
+    /**
+     * A session lasts 2 hours
+     */
     private static final long EXPIRATION_TIME_IN_SECONDS = 2 * 60 * 60;
-
+    /**
+     * Endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.
+     */
+    public static GoogleUtility.DiscoveryDocument dd;
     private static boolean update;
 
     public static Result login() {
@@ -57,27 +56,29 @@ public class OAuth2 extends Controller {
      * Redirects the user to https://accounts.google.com/o/oauth2/auth with a
      * specific query for authentication.
      *
-     *
-     * @return  Result
+     * @return Result
      */
     public static Result authenticate(int _update) {
 
         update = _update == 1;
 
-        if(session().containsKey("id") && !update) {
+        if (session().containsKey("id") && !update) {
             User user = User.findById(session("id"));
-            if(user != null)
+            if (user != null)
                 return Application.index();
 
             destroySessions();
         }
 
         //The discovery document
-        if(dd == null) {
-               try {
-                   dd = new GoogleUtility.DiscoveryDocument();
-               } catch(MalformedURLException e) {return notFound(error.render(e.getMessage()));
-               } catch(IOException e1) {return notFound(error.render(e1.getMessage()));}
+        if (dd == null) {
+            try {
+                dd = new GoogleUtility.DiscoveryDocument();
+            } catch (MalformedURLException e) {
+                return notFound(error.render(e.getMessage()));
+            } catch (IOException e1) {
+                return notFound(error.render(e1.getMessage()));
+            }
         }
 
         try {
@@ -87,15 +88,16 @@ public class OAuth2 extends Controller {
             //Redirect to google
             return redirect(dd.getEndpoints(GoogleUtility.AUTHORIZATION_ENDPOINT) + "?" +
                     "client_id=" + CONF.getString("googleclient.id") +
-                    "&hd=" +  CONF.getString("googleclient.hd") +
+                    "&hd=" + CONF.getString("googleclient.hd") +
                     "&response_type=" + dd.getResponseTypes(GoogleUtility.CODE) +
                     "&scope=openid profile email" +
                     "&redirect_uri=" + CONF.getString("googleclient.redir") + "/login/oauth2callback" +
-                    //"&hd=student.westerdals.no" + //This line cannot be used until all students have this email
                     "&access_type=online" + //We dont need offline access right now
                     "&state=" + session("state"));
 
-        }catch (NoSuchAlgorithmException e) {return internalServerError(error.render(e.getMessage()));}
+        } catch (NoSuchAlgorithmException e) {
+            return internalServerError(error.render(e.getMessage()));
+        }
     }
 
     /**
@@ -103,8 +105,7 @@ public class OAuth2 extends Controller {
      * exchanged for an access_token and id_token. The get query also contains
      * a state(token) that should be validated.
      *
-     *
-     * @return  Result
+     * @return Result
      */
     public static Result exchange() {
 
@@ -112,7 +113,7 @@ public class OAuth2 extends Controller {
         String state = request().getQueryString("state");
 
         //Confirm anti-forgery state token
-        if(!state.equals(session("state")) || code == null)
+        if (!state.equals(session("state")) || code == null)
             return unauthorized(error.render("Unauthorized Access"));
 
         try {
@@ -124,7 +125,7 @@ public class OAuth2 extends Controller {
             String params = "code=" + code +
                     "&client_id=" + CONF.getString("googleclient.id") +
                     "&client_secret=" + CONF.getString("googleclient.secret") +
-                    "&redirect_uri=" + CONF.getString("googleclient.redir") +"/login/oauth2callback" +
+                    "&redirect_uri=" + CONF.getString("googleclient.redir") + "/login/oauth2callback" +
                     "&grant_type=authorization_code";
 
             //Request header
@@ -156,21 +157,24 @@ public class OAuth2 extends Controller {
             //and return the Result
             return obtainUserInformation(response.toString());
 
-        } catch(MalformedURLException e) {return badRequest(error.render(e.getMessage()));
-        } catch(ProtocolException e1) {return badRequest(error.render(e1.getMessage()));
-        } catch(IOException e2) {return badRequest(error.render(e2.getMessage()));}
+        } catch (MalformedURLException e) {
+            return badRequest(error.render(e.getMessage()));
+        } catch (ProtocolException e1) {
+            return badRequest(error.render(e1.getMessage()));
+        } catch (IOException e2) {
+            return badRequest(error.render(e2.getMessage()));
+        }
     }
 
     /**
      * If the application already has the user in the db, we only need,
      * the id_token to identify the user.
-     *
+     * <p>
      * Else, if the user does not exist we need the access_token that can
      * be exchanged for a user profile using the OpenId endpoint.
      *
-     * @see     https://developers.google.com/accounts/docs/OAuth2Login#obtainuserinfo
-     *
-     * @return  Result
+     * @return Result
+     * @see https://developers.google.com/accounts/docs/OAuth2Login#obtainuserinfo
      */
     public static Result obtainUserInformation(String jwt) {
 
@@ -184,26 +188,26 @@ public class OAuth2 extends Controller {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), factory).build();
 
             //Verifies the id token and handles the signing of Google's certificates
-            if(!verifier.verify(idToken))
+            if (!verifier.verify(idToken))
                 return unauthorized(error.render("Unauthorized Access"));
 
             //An id token's payload
             IdToken.Payload payload = idToken.getPayload();
 
             //Make sure Google issued this
-            if(!payload.getIssuer().equals(dd.getIssuer(GoogleUtility.ISSUER)))
+            if (!payload.getIssuer().equals(dd.getIssuer(GoogleUtility.ISSUER)))
                 return unauthorized(error.render("Unauthorized Access"));
 
             //Identifies the audience that this ID token is intended for.
-            if(!payload.getAudience().equals(CONF.getString("googleclient.id")))
+            if (!payload.getAudience().equals(CONF.getString("googleclient.id")))
                 return unauthorized(error.render("Unauthorized Access"));
 
             //Email must be verified
-            if(!idToken.getPayload().getEmailVerified())
+            if (!idToken.getPayload().getEmailVerified())
                 return unauthorized(error.render("Please verify your Google email and try again"));
 
             //If user exists we dont need to use OpenId Connect
-            if(User.exists(payload.getSubject()) && !update) {
+            if (User.exists(payload.getSubject()) && !update) {
 
                 //Create the necessary sessionsd
                 createSessions(payload.getSubject());
@@ -213,19 +217,22 @@ public class OAuth2 extends Controller {
             //We need to OpenIdConnect to get email and profile information
             return getUserProfileInformation(jObject.get("access_token").toString());
 
-        } catch(UnsupportedEncodingException e) {return badRequest(error.render(e.getMessage()));
-        } catch (GeneralSecurityException e) {return badRequest(error.render(e.getMessage()));
-        } catch (IOException e) {return badRequest(error.render(e.getMessage()));}
+        } catch (UnsupportedEncodingException e) {
+            return badRequest(error.render(e.getMessage()));
+        } catch (GeneralSecurityException e) {
+            return badRequest(error.render(e.getMessage()));
+        } catch (IOException e) {
+            return badRequest(error.render(e.getMessage()));
+        }
     }
 
     /**
-    * The user does not exist we use the access_token that can
-    * be exchanged for a user profile using the OpenId endpoint.
-    *
-     * @see     https://developers.google.com/accounts/docs/OAuth2Login#authuser
+     * The user does not exist we use the access_token that can
+     * be exchanged for a user profile using the OpenId endpoint.
      *
-    * @return   Result
-    */
+     * @return Result
+     * @see https://developers.google.com/accounts/docs/OAuth2Login#authuser
+     */
     public static Result getUserProfileInformation(String accessToken) {
 
         try {
@@ -267,13 +274,13 @@ public class OAuth2 extends Controller {
                     jsonObject.getString("email"),
                     jsonObject.getString("picture").split("\\?")[0]); //We dont want: ?sz=50(sets image size to 50)
 
-            if(!user.email.endsWith(CONF.getString("googleclient.hd"))) {
+            if (!user.email.endsWith(CONF.getString("googleclient.hd"))) {
                 return ok(views.html.notAuthorizedPage.render("Din e-postaddresse stemmer ikke med kravene. Vennligst logg på med en e-post addresse hos domenet westerdals.no"));
             }
 
-            if(update) {
+            if (update) {
 
-                if(!session().get("id").equals(jsonObject.getString("sub"))) {
+                if (!session().get("id").equals(jsonObject.getString("sub"))) {
                     return badRequest(error.render("Kan ikke oppdatere en bruker med en opplysninger fra en annen bruker."));
                 }
 
@@ -283,7 +290,7 @@ public class OAuth2 extends Controller {
             /*I fadderuka har ikke førsteklassingene fått noen egen epost konto fra skolen
             Checks that this users name is not already in the db, preventing users from registering with
             every single account they have.*/
-            if(User.findByName(user.firstName, user.lastName) != null) {
+            if (User.findByName(user.firstName, user.lastName) != null) {
                 return badRequest(error.render("Dine opplysninger finnes allerede i databasen. De som har likt fornavn og etternavn " +
                         "må kontakte admin for registrering. Dette sikkerhets tiltaket vil forsvinne når fadderuken er over og alle har fått egen epost " +
                         "konto fra skolen."));
@@ -291,16 +298,20 @@ public class OAuth2 extends Controller {
 
             return Registration.autofill(user);
 
-        } catch(MalformedURLException e) {return badRequest(error.render("Malformed URL: " + e.getMessage()));
-        } catch(ProtocolException e) {return badRequest(error.render("ProtocolException: " + e.getMessage()));
-        } catch(IOException e) {return badRequest(error.render("IOException: " + e.getMessage()));}
+        } catch (MalformedURLException e) {
+            return badRequest(error.render("Malformed URL: " + e.getMessage()));
+        } catch (ProtocolException e) {
+            return badRequest(error.render("ProtocolException: " + e.getMessage()));
+        } catch (IOException e) {
+            return badRequest(error.render("IOException: " + e.getMessage()));
+        }
     }
 
     /**
      * Creates an anti-forgery state token. This round-trip verification helps
      * to ensure that the user, not a malicious script, is making the request.
      *
-     * @see     https://developers.google.com/accounts/docs/OAuth2Login#createxsrftoken
+     * @see https://developers.google.com/accounts/docs/OAuth2Login#createxsrftoken
      */
     public static void createStateToken() throws NoSuchAlgorithmException {
 
@@ -330,7 +341,6 @@ public class OAuth2 extends Controller {
      * Destroys the sessions when a user logs out or
      * is deleted from the db or revokes access for
      * this application.
-     *
      */
     public static void destroySessions() {
         session().clear();

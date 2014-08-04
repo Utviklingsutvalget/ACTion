@@ -182,7 +182,7 @@
                                         <label class="small-4 columns text-left">
                                 Fadder
                                             <input id="guardian-email" class="user-email" type="text" name="guardian" placeholder="fadders e-post"
-                                            value="@initGroup.getGuardian.email.substring(0, initGroup.getGuardian.email.indexOf("@"))" required>
+                                            value="@initGroup.getGuardian.email.substring(0, initGroup.getGuardian.email.indexOf("@"))" disabled>
                                         </label>
                                         <label class="small-8 columns">
                                             <br>
@@ -200,7 +200,7 @@
                                 <div class="small-3 columns text-left">
                                     <label>
                                 Lokasjon
-                                        <select name="location">
+                                        <select name="location" class="disabled">
                                             <option value="@initGroup.getLocation.id" selected>@initGroup.getLocation.name</option>
                                             @for(location <- locations) {
                                                 @if(initGroup.getLocation.id != location.id) {
@@ -210,7 +210,7 @@
                                         </select>
                                     </label>
                                 </div>
-                                <ul class="medium-2 columns collapse button-group radius">
+                                <ul class="medium-2 columns collapse button-group round">
                                     <li class="medium-6 columns"><button class="update-init-group small button text-left"><small>Oppdater</small></button></li>
                                     <li class="medium-6 columns"><button data-init-guardian="@initGroup.getGuardian.id" data-init-location="@initGroup.getLocation.id" class="delete-init-group small alert button text-right"><small>Slett</small></button></li>
                                 </ul>
