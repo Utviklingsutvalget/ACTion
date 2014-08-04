@@ -1,33 +1,30 @@
 @(query: String, groups: java.util.Map[Integer, java.util.List[InitiationGroup]])
 <div class="row guardian-container">
-    @if(!groups.isEmpty) {
-        <p><em>Søketreff på @(query):</em></p>
+    <div class="medium-10 medium-centered columns">
+        @if(!groups.isEmpty) {
+            <p><em>Søketreff på @(query):</em></p>
 
-        @for(key <- groups.keySet()) {
-            <ul class="pricing-table">
-                <li class="price">Gruppe @(key)</li>
-                @for(contact <- groups.get(key)) {
-                    @defining(contact.getGuardian) { guardian =>
-                        @defining(guardian.firstName + " " + guardian.lastName) { name =>
-                            <li class="bullet-item row">
-                                <span class="medium-3 show-for-medium-up left columns"></span>
-                                <span class="medium-3 columns right text-right">
-                                    <i>Telefon: </i><a href="tel:@contact.getPhoneNumber">@contact.getPhoneNumber</a>
-                                </span>
-                                <span class="medium-6 right columns">@if(guardian.firstName.toLowerCase.contains(query)) {
-                                    <strong>} @guardian.firstName @if(guardian.firstName.toLowerCase.contains(query)) {</strong>} @if(guardian.lastName.toLowerCase.contains(query)) {
-                                    <strong>} @guardian.lastName @if(guardian.lastName.toLowerCase.contains(query)) {</strong>}
-                                </span>
-
-                            </li>
-
+            @for(key <- groups.keySet()) {
+                <ul class="pricing-table">
+                    <li class="price">Gruppe @(key)</li>
+                    <li class="description">Faddere med telefonnummer</li>
+                    @for(contact <- groups.get(key)) {
+                        @defining(contact.getGuardian) { guardian =>
+                            @defining(guardian.firstName + " " + guardian.lastName) { name =>
+                                <li class="bullet-item">
+                                    <h5>@if(guardian.firstName.toLowerCase.contains(query)) {
+                                        <strong>} @guardian.firstName @if(guardian.firstName.toLowerCase.contains(query)) {</strong>} @if(guardian.lastName.toLowerCase.contains(query)) {
+                                        <strong>} @guardian.lastName @if(guardian.lastName.toLowerCase.contains(query)) {</strong>}</h5>
+                                    <br/>
+                                    tlf: <a href="tel:@contact.getPhoneNumber">@contact.getPhoneNumber</a>
+                                </li>
+                            }
                         }
-
                     }
-                }
-            </ul>
+                </ul>
+            }
+        } else {
+            <p><em>Ingen søketreff på @(query)</em></p>
         }
-    } else {
-        <p><em>Ingen søketreff på @(query)</em></p>
-    }
+    </div>
 </div>
