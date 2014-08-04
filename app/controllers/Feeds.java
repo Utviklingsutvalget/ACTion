@@ -61,7 +61,7 @@ public class Feeds extends Controller {
             return unauthorized("You need to be logged in to see feed");
         }
 
-        if(feedList != null && !feedList.isEmpty()){
+        if(!feedList.isEmpty()){
             feedList.sort(new FeedSorter());
             Collections.reverse(feedList);
             Logger.info(feedList.size() + " is feedList size");
