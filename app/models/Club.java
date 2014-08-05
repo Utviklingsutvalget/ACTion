@@ -70,6 +70,9 @@ public class Club extends Model {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
     public List<Activation> activations = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<Feed> feedPosts = new ArrayList<>();
+
     @OneToMany
     public List<Event> events = new ArrayList<>();
 
@@ -108,5 +111,9 @@ public class Club extends Model {
 
     public int getNumberOfMembers() {
         return members.size();
+    }
+
+    public List<Feed> getFeedPosts() {
+        return feedPosts;
     }
 }
