@@ -58,8 +58,47 @@ public class Feeds extends Controller {
 
         }catch(Authorize.SessionException e){
 
-            return unauthorized(views.html.index.render("You need to be logged in to see feed"));
+            List<Feed> defaultInitial = new ArrayList<>();
+            List<Feed> defaultRemaining = new ArrayList<>();
+
+            setupDefaultLists(defaultInitial, defaultRemaining);
+
+            return ok(views.html.feed.index.render(defaultRemaining, defaultInitial));
         }
+
+        setupUserLists(feedList, initialList, remainingList);
+
+        return ok(views.html.feed.index.render(remainingList, initialList));
+    }
+
+    public static void setupDefaultLists(List<Feed> defaultInitial, List<Feed> defaultRemaining){
+
+
+        // TODO FIND A MORE EFFICIENT WAY OF FINDING FEEDS AND SORTING
+        List<Feed> allFeeds = Feed.find.all();
+
+        if(!allFeeds.isEmpty()){
+            allFeeds.sort(new FeedSorter());
+            Collections.reverse(allFeeds);
+        }
+
+        for(int i = 0; i < allFeeds.size(); i++){
+
+            if(i < 2){
+
+                defaultInitial.add(allFeeds.get(i));
+
+            }else if(i >= 2 && i < MAXINDEXFEEDSIZE){
+
+                defaultRemaining.add(allFeeds.get(i));
+
+            }else{
+                break;
+            }
+        }
+    }
+
+    public static void setupUserLists(List<Feed> feedList, List<Feed> initialList, List<Feed> remainingList){
 
         if(!feedList.isEmpty()){
             feedList.sort(new FeedSorter());
@@ -85,8 +124,6 @@ public class Feeds extends Controller {
                 }
             }
         }
-
-        return ok(views.html.feed.index.render(remainingList, initialList));
     }
 
     //Find up x feeds by a give club (until maxfeedsperclub is reached)
