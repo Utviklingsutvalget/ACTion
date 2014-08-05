@@ -7,6 +7,6 @@ import views.html.event.index;
 public class Application extends Controller {
 
     public static Result index() {
-        return Events.index();
+        return Feeds.index();
     }
 }
