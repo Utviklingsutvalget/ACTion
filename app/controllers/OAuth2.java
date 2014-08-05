@@ -65,7 +65,7 @@ public class OAuth2 extends Controller {
         if (session().containsKey("id") && !update) {
             User user = User.findById(session("id"));
             if (user != null)
-                return Application.index();
+                return Users.profile();
 
             destroySessions();
         }
@@ -211,7 +211,7 @@ public class OAuth2 extends Controller {
 
                 //Create the necessary sessionsd
                 createSessions(payload.getSubject());
-                return ok(index.render("Welcome back " + User.findById(payload.getSubject()).firstName));
+                return Users.profile();
             }
 
             //We need to OpenIdConnect to get email and profile information
@@ -285,15 +285,6 @@ public class OAuth2 extends Controller {
                 }
 
                 return Registration.autoUpdate(user);
-            }
-
-            /*I fadderuka har ikke førsteklassingene fått noen egen epost konto fra skolen
-            Checks that this users name is not already in the db, preventing users from registering with
-            every single account they have.*/
-            if (User.findByName(user.firstName, user.lastName) != null) {
-                return badRequest(error.render("Dine opplysninger finnes allerede i databasen. De som har likt fornavn og etternavn " +
-                        "må kontakte admin for registrering. Dette sikkerhets tiltaket vil forsvinne når fadderuken er over og alle har fått egen epost " +
-                        "konto fra skolen."));
             }
 
             return Registration.autofill(user);

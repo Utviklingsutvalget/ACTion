@@ -63,7 +63,7 @@ public class Users extends Controller {
     public static Result logout() {
 
         OAuth2.destroySessions();
-        return ok(index.render("Logged Out"));
+        return Application.index();
     }
 
     @BodyParser.Of(BodyParser.Json.class)

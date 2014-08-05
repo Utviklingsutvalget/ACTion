@@ -18,7 +18,7 @@ public class Registration extends Controller {
         Form<User> filledForm = registrationForm.bindFromRequest();
 
         if(!"true".equals(filledForm.field("accept").value()))
-            filledForm.reject("accept", "Du må akkseptere brukeravtalen");
+            filledForm.reject("accept", "Du må akseptere brukeravtalen");
 
         if(filledForm.hasErrors()) {
             return badRequest(form.render(filledForm));
@@ -29,7 +29,7 @@ public class Registration extends Controller {
 
         OAuth2.createSessions(user.id);
 
-        return ok(index.render(user.firstName + " your account has been created."));
+        return Users.profile();
     }
 
     public static Result autofill(User user) {
@@ -42,7 +42,7 @@ public class Registration extends Controller {
     public static Result autoUpdate(User user) {
 
         User.update(user);
-        return ok(index.render("Din bruker er oppdatert"));
+        return Users.profile();
 
     }
 
