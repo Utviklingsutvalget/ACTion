@@ -1,7 +1,7 @@
 @(descriptions: powerups.models.ClubDescription, descString: String, listString: String)
 <p>Sidebeskrivelse(Maks 3,000 tegn):</p>
 <div id="inline-container" contenteditable='true' data-powerup-field='@(descString)' class="panel powerup-node cke_editable cke_editable_inline cke_contents_ltr cke_show_borders" role="textbox" aria-label="Utvalgsbeskrivelse" title="Utvalgsbeskrivelse" aria-describedby="cke_289">@Html(descriptions.description)</div>
-<p>Listebeskrivelse:</p>
+<p>Listebeskrivelse(en forkortelse av beskrivelsen til utvalget som vises på oversiktssiden over alle utvalg)</p>
 <div id="inline-container2" contenteditable='true' data-powerup-field='@(listString)' class="panel powerup-node cke_editable cke_editable_inline cke_contents_ltr cke_show_borders" role="textbox" aria-label="Utvalgsbeskrivelse" title="Utvalgsbeskrivelse" aria-describedby="cke_289">@descriptions.listDescription</div>
 <script>
 createStandardButton(getId($('#inline-container2')));
