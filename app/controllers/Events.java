@@ -65,6 +65,7 @@ public class Events extends Controller {
         if(event.participants.contains(participation)) {
             int i = event.participants.indexOf(participation);
             participation = event.participants.get(i);
+            event.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
             event.setUserAttending(event.participants.get(i).getRvsp());
         }
         if(user != null) {
