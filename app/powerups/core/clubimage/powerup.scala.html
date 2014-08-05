@@ -1,10 +1,8 @@
 @(imageLink: String, editable: Boolean)
 
-<div class="row">
-    <div class="medium-10 medium-centered columns">
-        <img src="@(imageLink)">
-    </div>
-</div>
+
+<img src="@(imageLink)">
+
 @if(editable) {
     <div class="change-image">
         <label class="powerup-node" data-powerup-field="link" data-powerup-input=".image-link">
