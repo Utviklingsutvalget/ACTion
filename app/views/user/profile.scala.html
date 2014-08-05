@@ -33,44 +33,54 @@
     </div>
 
     <div class="row">
-        @if(!user.memberships.isEmpty) {
             <div class="medium-4 columns text-center">
                 <p><strong>Utvalg jeg er medlem av</strong></p>
 
                 <div id="bold-line"></div>
 
                 <ul class="no-bullet">
-                @for(membership <- user.memberships) {
-                    @if(membership.level.getLevel > 0) {
-                        <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                    @if(!user.memberships.isEmpty) {
+                        @for(membership <- user.memberships) {
+                            @if(membership.level.getLevel > 0) {
+                                <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                            }
+                        }
+                    } else {
+                        <li>Du er ikke medlem av noen utvalg</li>
                     }
-                }
                 </ul>
             </div>
             <div class="medium-4 columns text-center">
-                <p><strong>Utvalg jeg abbonerer på</strong></p>
+                <p><strong>Utvalg jeg abonnerer på</strong></p>
 
                 <div id="bold-line"></div>
 
                 <ul class="no-bullet">
-                @for(membership <- user.memberships) {
-                    @if(membership.level.getLevel == 0) {
-                        <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                    @if(!user.memberships.isEmpty) {
+                        @for(membership <- user.memberships) {
+                            @if(membership.level.getLevel == 0) {
+                                <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                            }
+                        }
+                    } else {
+                        <li>Du abonnerer ikke på noen utvalg</li>
                     }
-                }
                 </ul>
             </div>
-        }
         <div class="medium-4 columns text-center">
             <p><strong>Kommende eventer</strong></p>
 
             <div id="bold-line"></div>
 
             <ul class="no-bullet">
-            @for(participation <- user.participations) {
-                @if(participation.getRvsp) {
-                    <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
+            @if(!user.participations.isEmpty) {
+                @for(participation <- user.participations) {
+                    @if(participation.getRvsp) {
+                        <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
+                    }
                 }
+            } else {
+                <li>Du er ikke påmeldt noen kommende eventer</li>
             }
             </ul>
         </div>
