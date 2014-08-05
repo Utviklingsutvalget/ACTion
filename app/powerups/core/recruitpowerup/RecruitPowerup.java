@@ -98,7 +98,7 @@ public class RecruitPowerup extends Powerup {
     @Override
     public Html renderAdmin(){
         Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
-        if(membership != null) {
+        if(membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
             return admin.render(club, Pending.getByClubId(club.id));
         }
         else return this.render();
