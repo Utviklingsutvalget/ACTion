@@ -12,7 +12,7 @@
 
                     <img class="profile-photo" src="@member.user.pictureUrl" alt=""/>
                     <br /><br />
-                    <h5><a href="mailto:@member.user.email">
+                    <h5><a href="@routes.Users.show(member.user.id)">
                     @member.user.firstName</a>
                         <br />@member.boardPost.title</h5>
                 </div>
