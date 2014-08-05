@@ -116,29 +116,7 @@ public class BoardPowerup extends Powerup {
                 BoardMembership boardMembership = new BoardMembership(this.getClub(), post, user);
                 Ebean.save(boardMembership);
 
-                // Loop through the user's memberships to find his or her membership in the club
-                Membership membership = Membership.find.byId(new Membership(this.getClub(), user).id);
-
-                // If the user is getting added to the post indicated by LEADER or VICE, set his or her
-                // membership level accordingly
-                if ((post.title.equals(LEADER) || post.title.equals(VICE))) {
-                    if (post.title.equals(LEADER)) {
-                        membership.level = MembershipLevel.LEADER;
-                    } else if (post.title.equals(VICE)) {
-                        membership.level = MembershipLevel.VICE;
-                    }
-
-                } else {
-                    // If the new rank isn't a flag rank, let's add some levels to the safe list
-                    List<MembershipLevel> safeList = getSafeList();
-
-                    // If the user already has a rank in the safe list, skip this step
-                    if (!safeList.contains(membership.level)) {
-                        // Set level to BOARD
-                        membership.level = MembershipLevel.BOARD;
-                    }
-                }
-                Ebean.update(membership);
+                this.validateMemberLevels();
 
                 // Returns true if we had a membership to set up
                 return true;
@@ -146,14 +124,6 @@ public class BoardPowerup extends Powerup {
         }
         // Returns true if we looped through everything and did nothing
         return false;
-    }
-
-    private List<MembershipLevel> getSafeList() {
-        List<MembershipLevel> safeList = new ArrayList<>();
-        safeList.add(MembershipLevel.LEADER);
-        safeList.add(MembershipLevel.VICE);
-        safeList.add(MembershipLevel.COUNCIL);
-        return safeList;
     }
 
     private boolean createPost(JsonNode updateContent) {
@@ -201,15 +171,9 @@ public class BoardPowerup extends Powerup {
             return false;
         } else {
             Logger.warn("Deleting post");
-            boolean userHasOtherPosts = userHasOtherPosts(boardMembership);
-            // If the user has no other posts, assume he or she should now be a normal member.
-            if (!userHasOtherPosts) {
-                Membership membership = Membership.find.byId(new Membership(this.getClub(), boardMembership.user).id);
-                membership.level = MembershipLevel.MEMBER;
-                Ebean.update(membership);
-            }
 
             Ebean.delete(boardMembership);
+            this.validateMemberLevels();
             return true;
         }
     }
