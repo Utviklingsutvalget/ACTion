@@ -22,6 +22,7 @@ public class ClubDescription extends Model {
     public String description;
 
     @Constraints.Required
+    @Constraints.MaxLength(300)
     public String listDescription;
 
 }
