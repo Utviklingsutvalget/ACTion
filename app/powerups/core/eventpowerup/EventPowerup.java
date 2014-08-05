@@ -35,12 +35,12 @@ public class EventPowerup extends Powerup {
 
         List<Event> tempEvents = getClub().events;
         tempEvents.sort(new EventSorter());
-        tempEvents.stream().filter(e -> e.startTime.isBefore(LocalDateTime.now())).forEach(tempEvents::remove);
+        tempEvents.stream().filter(e -> e.startTime.isAfter(LocalDateTime.now())).forEach(events::add);
         events = new ArrayList<>();
         if(tempEvents.size() < MAX_EVENTS) {
-            events.addAll(tempEvents);
+            events.addAll(events);
         } else if(!tempEvents.isEmpty()) {
-            events.addAll(tempEvents.subList(0, MAX_EVENTS));
+            events.addAll(events.subList(0, MAX_EVENTS));
         }
         for (Event e : events) {
             Participation participation = new Participation(e, this.getContext().getSender());
