@@ -8,7 +8,7 @@
     @if(!isMember && !pending) {
         <div class="row appMessageNode">
             <form class="powerup-node" id="appMessageNode" data-powerup-value="@user.id">
-                <div class="row">
+                <div class="medium-12 columns">
                     <h3>Innmelding for @club.name</h3>
                     <p class="lead">Skriv noe fornuftig her</p>
 
@@ -25,7 +25,7 @@
     }else{
 
         @if(isMember && !pending){
-            <div class="row powerup-node appMessageNode" data-powerup-field="@user.id" data-powerup-value="TerminateMemberShip">
+            <div class="medium-12 columns medium-centered text-centered powerup-node appMessageNode" data-powerup-field="@user.id" data-powerup-value="TerminateMemberShip">
                 <h6>Du er allerede medlem av @club.name</h6>
             </div>
             <script>
@@ -36,7 +36,7 @@
 
             @if(!isMember && pending){
 
-                <div class="row">
+                <div class="medium-12 columns medium-centered text-centered">
                     <h6>Ditt medlemskap er under vurdering</h6>
                 </div>
             }

@@ -10,16 +10,16 @@ import play.Logger;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
+import powerups.core.recruitpowerup.html.admin;
+import powerups.core.recruitpowerup.html.powerup;
 import powerups.models.Pending;
 import utils.Authorize;
+import utils.MembershipLevel;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import powerups.core.recruitpowerup.html.admin;
-import powerups.core.recruitpowerup.html.powerup;
-import utils.MembershipLevel;
 
 import static play.mvc.Results.ok;
 import static play.mvc.Results.unauthorized;
@@ -27,18 +27,17 @@ import static play.mvc.Results.unauthorized;
 
 public class RecruitPowerup extends Powerup {
 
+    private static final String TERMINATEMEMBERSHIP = "TerminateMemberShip";
+    private static final String ACCEPT = "accept";
+    private static final String REJECT = "reject";
     private Authorize.UserSession session;
     private Club club;
     private boolean isMember;
     private boolean pending;
     private User user;
-    private static final String TERMINATEMEMBERSHIP = "TerminateMemberShip";
-    private static final String ACCEPT = "accept";
-    private static final String REJECT = "reject";
     private boolean adminAccess = false;
-    private List<Pending> pendingList;
 
-    public RecruitPowerup(Club club, PowerupModel powerupModel){
+    public RecruitPowerup(Club club, PowerupModel powerupModel) {
         super(club, powerupModel);
 
         this.club = club;
@@ -46,62 +45,33 @@ public class RecruitPowerup extends Powerup {
 
         try {
             session = new Authorize.UserSession();
-            //alreadyPending();
             user = this.getContext().getSender();
 
-        } catch(Authorize.SessionException e) {}
+        } catch (Authorize.SessionException ignored) {
+        }
 
-        if(user != null && club != null){
+        if (user != null && club != null) {
 
-            if(Membership.find.byId(new Membership(this.club, this.user).id) != null){
-                isMember = true;
-            }else{
-                isMember = false;
-            }
+            isMember = this.getContext().getMemberLevel() != null && this.getContext().getMemberLevel() != MembershipLevel.SUBSCRIBE;
 
-            if(Pending.find.byId(new Pending(this.club, this.user).key) != null){
-                pending = true;
-            }else{
-                pending = false;
-            }
+            pending = Pending.find.byId(new Pending(this.club, this.user).key) != null;
         }
 
         Logger.info("Logged in user is pending = " + pending);
         Logger.info("Logged in user is already member = " + isMember);
     }
 
-    public boolean alreadyPending(){
-
-        try {
-
-            Pending pendingEntry = Pending.find.byId(new Pending(club, session.getUser()).key);
-            Membership membershipEntry = Membership.find.byId(new Membership(club, session.getUser()).id);
-
-            if(pendingEntry != null || membershipEntry != null){
-                this.isMember = true;
-
-            }
-
-        } catch(Authorize.SessionException e) {
-
-            //User not logged in
-        }
-
-        return false;
-    }
-
     @Override
-    public Html render(){
+    public Html render() {
         return powerup.render(isMember, club, user, pending);
     }
 
     @Override
-    public Html renderAdmin(){
+    public Html renderAdmin() {
         Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
-        if(membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
+        if (membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
             return admin.render(club, Pending.getByClubId(club.id));
-        }
-        else return this.render();
+        } else return this.render();
     }
 
     @Override
@@ -117,73 +87,73 @@ public class RecruitPowerup extends Powerup {
     @Override
     public Result update(JsonNode updateContent) {
 
-        if(updateContent != null){
+        if (updateContent != null) {
 
             Iterator<String> iter = updateContent.fieldNames();
             Map<String, String> map = new HashMap<>();
 
             boolean firstCheck = true;
 
-            while(iter.hasNext()){
+            while (iter.hasNext()) {
 
                 String key = iter.next();
                 String val = updateContent.get(key).asText();
                 map.put(key, val);
 
-                if(val.equals(TERMINATEMEMBERSHIP)){
+                if (val.equals(TERMINATEMEMBERSHIP)) {
                     User terminatedUser = User.find.byId(key);
                     Membership terminateMember = Membership.find.byId(new Membership(club, terminatedUser).id);
 
-                    if(terminatedUser != null && terminateMember != null){
+                    if (terminatedUser != null && terminateMember != null) {
 
-                        if(terminateMember.level.getLevel() < MembershipLevel.BOARD.getLevel()){
+                        if (terminateMember.level.getLevel() < MembershipLevel.BOARD.getLevel()) {
                             Ebean.delete(terminateMember);
                             Logger.info("User: " + terminatedUser.firstName + " was removed from club: " + club.name);
                             Logger.info("Member: " + terminateMember.user.firstName + " was the terminated member");
                             return ok("Du avsluttet medlemsskapet hos " + club.name);
-                        }else{
+                        } else {
                             return unauthorized("Kan ikke utføre sletting ettersom din bruker er et styremedlem");
                         }
                     }
                 }
 
-                if(val.equals(ACCEPT) || val.equals(REJECT) && (firstCheck)){
+                if (val.equals(ACCEPT) || val.equals(REJECT) && (firstCheck)) {
                     firstCheck = false;
                     adminAccess = true;
                 }
             }
 
-            if(adminAccess){
+            if (adminAccess) {
                 insertMember(map);
 
-            }else{
+            } else {
                 insertToPending(map);
             }
         }
         return ok("You successfully submitted for membership");
     }
 
-    public void insertMember(Map<String, String> map){
+    public void insertMember(Map<String, String> map) {
 
         User user;
         Membership membership;
 
-        for(String key : map.keySet()){
+        for (String key : map.keySet()) {
 
             user = User.find.byId(key);
 
-            if(map.get(key).equals(ACCEPT)){
+            if (map.get(key).equals(ACCEPT)) {
 
                 //Pending p = new Pending(club, user);
                 Pending oldPending = Pending.find.byId(new Pending(club, user).key);
 
-                if(oldPending != null){
+                if (oldPending != null) {
                     Ebean.delete(oldPending);
                 }
 
                 membership = Membership.find.byId(new Membership(club, user).id);
 
-                if(membership != null){
+                if (membership != null) {
 
                     membership.level = MembershipLevel.MEMBER;
                 }
@@ -196,12 +166,12 @@ public class RecruitPowerup extends Powerup {
                         " with membershiplevel: " + membership.level);
 
 
-            }else if(map.get(key).equals(REJECT)){
+            } else if (map.get(key).equals(REJECT)) {
 
                 //Pending p = new Pending(club, user);
                 Pending oldPending = Pending.find.byId(new Pending(club, user).key);
 
-                if(oldPending != null){
+                if (oldPending != null) {
                     Ebean.delete(oldPending);
                 }
 
@@ -210,13 +180,13 @@ public class RecruitPowerup extends Powerup {
         }
     }
 
-    public void insertToPending(Map<String, String> map){
+    public void insertToPending(Map<String, String> map) {
 
-        for(String key : map.keySet()){
+        for (String key : map.keySet()) {
 
             User user1 = User.find.byId(map.get(key));
 
-            if(user1 != null){
+            if (user1 != null) {
                 Pending pendingUser = new Pending(club, user1, key);
                 Membership subMember = new Membership(club, user1, MembershipLevel.SUBSCRIBE);
 
@@ -226,7 +196,7 @@ public class RecruitPowerup extends Powerup {
 
                 Pending checkForEntry = Pending.find.byId(pendingUser.key);
 
-                if(checkForEntry == null){
+                if (checkForEntry == null) {
 
                     Ebean.save(subMember);
                     Ebean.save(pendingUser);
