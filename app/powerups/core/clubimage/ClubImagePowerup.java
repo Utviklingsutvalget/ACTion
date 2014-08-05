@@ -13,6 +13,8 @@ import utils.MembershipLevel;
 
 public class ClubImagePowerup extends Powerup {
 
+    public static final String DEFAULT_IMAGE = "/assets/images/no_club_image.jpg";
+
     private final ClubImage clubImage;
 
     public ClubImagePowerup(Club club, PowerupModel model) {
@@ -33,7 +35,7 @@ public class ClubImagePowerup extends Powerup {
 
     @Override
     public void activate() {
-        ClubImage clubImage = new ClubImage(this.getClub(), "");
+        ClubImage clubImage = new ClubImage(this.getClub(), DEFAULT_IMAGE);
         Ebean.save(clubImage);
     }
 
@@ -48,6 +50,9 @@ public class ClubImagePowerup extends Powerup {
             return Results.unauthorized();
         }
         this.clubImage.imageUrl = updateContent.get("link").asText();
+        if(this.clubImage.imageUrl.equals("")) {
+            this.clubImage.imageUrl = DEFAULT_IMAGE;
+        }
         Ebean.update(clubImage);
         return Results.ok("Bilde endret!");
     }
