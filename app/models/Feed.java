@@ -2,10 +2,13 @@ package models;
 
 import org.hibernate.validator.constraints.Length;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 public class Feed extends Model {
@@ -44,12 +47,21 @@ public class Feed extends Model {
     public String messageTitle;
 
     //length limiatation to be reviewed
-    @Constraints.MaxLength(75)
+    @Constraints.MaxLength(200)
     public String pictureUrl;
 
 
+    public String getDateTime() {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("d. MMMM, HH:mm").withLocale(new Locale("nb", "no"));
+        return fmt.print(dateTime);
+    }
+
+    public void setDateTime(DateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
     @Column(name = "Created")
-    public DateTime dateTime;
+    private DateTime dateTime;
 
     @PrePersist
     void onCreate(){
@@ -75,8 +87,7 @@ public class Feed extends Model {
 
         Feed feed = (Feed) o;
 
-        if (!id.equals(feed.id)) return false;
+        return id.equals(feed.id);
 
-        return true;
     }
 }

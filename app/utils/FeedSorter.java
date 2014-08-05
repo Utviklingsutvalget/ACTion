@@ -13,6 +13,6 @@ public class FeedSorter implements Comparator<Feed> {
             return 0;
         }
 
-        return o1.dateTime.compareTo(o2.dateTime);
+        return o1.getDateTime().compareTo(o2.getDateTime());
     }
 }
