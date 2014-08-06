@@ -143,6 +143,16 @@ footer {
 	-moz-box-shadow: 0 -10px 10px #000000, 0px -10px 5px;*/
 }
 
+.admin-utvalg-oversikt{
+    height: 360px;
+    overflow: scroll;
+}
+
+.admin-faddere-oversikt{
+    height: 286px;
+    overflow: scroll;
+}
+
 #headersmall{
 	position: absolute;
 	opacity: 0.4;

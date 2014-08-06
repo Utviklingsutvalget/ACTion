@@ -80,16 +80,58 @@ function admin() {
         console.log(xHttp);
     });
 
-    $('.deleteClub').submit(function (e) {
+    // does not work yet
+    $('.submitDeleteGuardian').on('click', function(){
+
+
+        var deleteGuardianForm = $(document).find('.deleteGuardian');
+        var guardianId = deleteGuardianForm.find('#guardianId').val();
+        var guardianGroupLocation = deleteGuardianForm.find('#guardianLocation').val();
+
+        console.log(guardianId);
+        console.log(guardianGroupLocation);
+
+        var dataObject = {};
+
+        dataObject['guardian'] = guardianId;
+        dataObject['location'] = guardianGroupLocation;
+
+        console.log(dataObject);
+        var message;
+
+        $.ajax({
+            url: "/admin/guardian",
+            type: 'DELETE',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(dataObject),
+            statusCode: {
+                200: function(jqxhr){
+                    message = jqxhr.responseText;
+                }
+            }
+        }).always(function(){
+
+
+            //$.get("/admin/site", function(){
+
+                console.log(message);
+            //});
+        });
+    });
+
+
+    $('.submitDeleteClub').on('click', function (e) {
+
         e.preventDefault();
 
         var dataObject = {};
 
         dataObject['confirmDelete'] = $(document).find('.confirmDelete').val();
 
-        var deleteClubElement = $(document).find('.deleteClub');
-        var clubId = $(deleteClubElement).find('.clubId').val();
-        var clubName = $(deleteClubElement).find('.clubId').data('club-name');
+        var something = $('.clubDropDownList').find(':selected');
+        var clubName = something.data('club-name');
+        var clubId = something.data('club-id');
 
         dataObject[clubName] = clubId;
         console.log(dataObject);
@@ -118,7 +160,7 @@ function admin() {
             $.get("/admin/site", function (data) {
 
                 console.log(message);
-                htmlContent.find('label').html(message);
+                htmlContent.find('.insertCallback').html(message);
             });
         });
     });
