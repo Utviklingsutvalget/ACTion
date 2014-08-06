@@ -211,14 +211,14 @@
 
                             @for(group <- initGroups){
                                 <div class="small-9 columns">
-                                    <span class="prefix">@group.getGuardian.firstName
-                                        @group.getGuardian.lastName, gruppe: (@group.getGroupNumber)</span>
+                                    <span class="prefix">@group.getGuardian.getFirstName
+                                        @group.getGuardian.getLastName, gruppe: (@group.getGroupNumber)</span>
                                 </div>
 
                                 <!-- This part is not yet functional -->
                                 <div class="small-3 columns">
                                     <form class="deleteGuardian" action="@routes.Administration.deleteGuardian()" method="delete">
-                                        <input type="hidden" id="guardianId" value="@group.getGuardian.id">
+                                        <input type="hidden" id="guardianId" value="@group.getGuardian.getId">
                                         <input type="hidden" id="guardianLocation" value="@group.getLocation.id">
                                         <input type="submit" class="button postfix alert submitDeleteGuardian" value="Slett">
                                     </form>
@@ -311,7 +311,7 @@
                                         <label class="small-4 columns text-left">
                                 Fadder
                                             <input id="guardian-email" class="user-email" type="text" name="guardian" placeholder="fadders e-post"
-                                            value="@initGroup.getGuardian.email.substring(0, initGroup.getGuardian.email.indexOf("@"))" disabled>
+                                            value="@initGroup.getGuardian.getEmail.substring(0, initGroup.getGuardian.getEmail.indexOf("@"))" disabled>
                                         </label>
                                         <label class="small-8 columns">
                                             <br>
@@ -341,7 +341,7 @@
                                 </div>
                                 <ul class="medium-2 columns collapse button-group round">
                                     <li class="medium-3 columns"><button class="update-init-group small button text-left"><small>Oppdater</small></button></li>
-                                    <li class="medium-3 columns"><button data-init-guardian="@initGroup.getGuardian.id" data-init-location="@initGroup.getLocation.id" class="delete-init-group small alert button text-right"><small>Slett</small></button></li>
+                                    <li class="medium-3 columns"><button data-init-guardian="@initGroup.getGuardian.getId" data-init-location="@initGroup.getLocation.id" class="delete-init-group small alert button text-right"><small>Slett</small></button></li>
                                 </ul>
                             </form>
                         </div>

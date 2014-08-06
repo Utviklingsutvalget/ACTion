@@ -2,6 +2,7 @@ package powerups.core.boardpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import helpers.UserService;
 import models.Club;
 import models.Membership;
 import models.PowerupModel;
@@ -109,7 +110,7 @@ public class BoardPowerup extends Powerup {
     private boolean addMembership(JsonNode updateContent) {
         for (BoardPost post : posts) {
             if (post.id == (updateContent.get("title").asLong())) {
-                User user = User.find.byId(updateContent.get("user").asText());
+                User user = UserService.findById(updateContent.get("user").asText());
                 if (user == null) {
                     return false;
                 }
@@ -148,7 +149,7 @@ public class BoardPowerup extends Powerup {
 
                 if(user.isAdmin()){
 
-                    BoardPost newMandatoryPost = new BoardPost(title, isMandatory, defaultWeight);
+                    BoardPost newMandatoryPost = new BoardPost(title, true, defaultWeight);
                     createdMandatory = true;
                     Ebean.save(newMandatoryPost);
 
@@ -216,8 +217,8 @@ public class BoardPowerup extends Powerup {
             }
             Logger.warn("Checking to see if post needs update");
             // CASE REPLACE BOARD MEMBER
-            if (!updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText().equals(boardMembership.user.id)) {
-                User user = User.findById(updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText());
+            if (!updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText().equals(boardMembership.user.getId())) {
+                User user = UserService.findById(updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText());
                 if (user != null) {
                     Logger.warn("Updating");
                     boardMembership.user = user;
@@ -231,13 +232,13 @@ public class BoardPowerup extends Powerup {
 
     private void validateMemberLevels() {
         for (Membership membership : this.getClub().members) {
-            Logger.warn("Checking memberships for " + membership.user.firstName);
+            Logger.warn("Checking memberships for " + membership.user.getFirstName());
             if (membership.level != MembershipLevel.SUBSCRIBE && membership.level != MembershipLevel.COUNCIL) {
 
                 boolean levelChanged = false;
                 for (BoardMembership boardMembership : this.getClub().boardMembers) {
                     if (boardMembership.user.equals(membership.user)) {
-                        Logger.warn("Found " + membership.user.firstName + " to be a board member");
+                        Logger.warn("Found " + membership.user.getFirstName() + " to be a board member");
                         // We now know this user is at least a board member.
                         if (!levelChanged) {
                             levelChanged = true;

@@ -1,5 +1,6 @@
 package controllers;
 
+import helpers.UserService;
 import models.User;
 import play.Logger;
 import play.data.Form;
@@ -25,9 +26,9 @@ public class Registration extends Controller {
         }
 
         User user = filledForm.get();
-        User.save(user);
+        UserService.save(user);
 
-        OAuth2.createSessions(user.id);
+        OAuth2.createSessions(user.getId());
 
         return Users.profile();
     }
@@ -41,7 +42,7 @@ public class Registration extends Controller {
 
     public static Result autoUpdate(User user) {
 
-        User.update(user);
+        UserService.update(user);
         return Users.profile();
 
     }

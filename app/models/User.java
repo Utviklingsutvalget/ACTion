@@ -1,48 +1,31 @@
 package models;
 
-import com.avaje.ebean.Ebean;
+import helpers.UserService;
 import org.hibernate.validator.constraints.Email;
-import play.data.validation.Constraints;
 import play.db.ebean.Model;
-import play.db.ebean.Transactional;
 import utils.MembershipLevel;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User extends Model {
 
-    public static Finder<String, User> find = new Finder<>(String.class, User.class);
-
-    public static User findByEmail(String email) {
-        return find.where().eq("email", email).findUnique();
-    }
-
-    public enum Gender {
-        MALE, FEMALE
-    }
-
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
-    public List<Membership> memberships = new ArrayList<>();
-
+    private List<Membership> memberships = new ArrayList<>();
     @Id
-    public String id;
-
-    public String firstName;
-
-    public String lastName;
-
-    public Gender gender;
-
+    private String id;
+    private String firstName;
+    private String lastName;
+    private Gender gender;
     @Email
-    public String email;
-
-    public String pictureUrl;
-
+    private String email;
+    private String pictureUrl;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
-    public List<Participation> participations = new ArrayList<>();
-
+    private List<Participation> participations = new ArrayList<>();
+    @Transient
+    private String gravatarUrl;
 
     public User(String id, String firstName, String lastName, Gender gender, String email, String picureUrl) {
         this.id = id;
@@ -53,30 +36,88 @@ public class User extends Model {
         this.pictureUrl = picureUrl;
     }
 
-    public static User findById(String id) {return find.where().eq("id", id).findUnique();}
-    public static User findByName(String firstName, String lastName) {
-        return find.where().eq("firstName", firstName).eq("lastName", lastName).findUnique();
-    }
-
-    public static boolean exists(String id) {return find.where().eq("id", id).findRowCount() != 0;}
-
-    @Transactional
-    public static void save(User user) {
-
-        if(!exists(user.id))
-            Ebean.save(user);
-    }
-
-    @Transactional
-    public static void update(User user) {
-        Ebean.update(user);
-    }
-
-    public static List<String> genderAsList(){
+    public static List<String> genderAsList() {
         ArrayList<String> list = new ArrayList<>();
 
-        for(Gender gender : Gender.values()) { list.add(gender.name());}
+        for (Gender gender : Gender.values()) {
+            list.add(gender.name());
+        }
         return list;
+    }
+
+    @PostLoad
+    public void onPostLoad() {
+        UserService.setupGravatar(this);
+    }
+
+    public List<Membership> getMemberships() {
+        return memberships;
+    }
+
+    public void setMemberships(List<Membership> memberships) {
+        this.memberships = memberships;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPictureUrl() {
+        if (gravatarUrl == null) {
+            UserService.setupGravatar(this);
+        }
+        if(gravatarUrl == null) {
+            return this.pictureUrl;
+        }
+        return this.getGravatarUrl();
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    public List<Participation> getParticipations() {
+        return participations;
+    }
+
+    public void setParticipations(List<Participation> participations) {
+        this.participations = participations;
     }
 
     @Override
@@ -99,14 +140,14 @@ public class User extends Model {
     }
 
     public boolean isAdmin() {
-        if(SuperUser.find.all().isEmpty()) {
+        if (SuperUser.find.all().isEmpty()) {
             return false;
         }
         SuperUser su = SuperUser.find.byId(new SuperUser(this).key);
-        if(su == null) {
+        if (su == null) {
             return false;
         }
-        if(!su.user.equals(this)) {
+        if (!su.user.equals(this)) {
             for (Membership mem : this.memberships) {
                 if (mem.level == MembershipLevel.COUNCIL) {
                     return true;
@@ -116,5 +157,17 @@ public class User extends Model {
             return true;
         }
         return false;
+    }
+
+    private String getGravatarUrl() {
+        return gravatarUrl;
+    }
+
+    public void setGravatarUrl(String gravatarUrl) {
+        this.gravatarUrl = gravatarUrl;
+    }
+
+    public enum Gender {
+        MALE, FEMALE
     }
 }

@@ -10,10 +10,10 @@
 
                 <div class="medium-4 columns left">
 
-                    <img class="profile-photo" src="@member.user.pictureUrl" alt=""/>
+                    <img class="profile-photo" src="@member.user.getPictureUrl" alt=""/>
                     <br /><br />
-                    <h5><a href="@routes.Users.show(member.user.id)">
-                    @member.user.firstName</a>
+                    <h5><a href="@routes.Users.show(member.user.getId)">
+                    @member.user.getFirstName</a>
                         <br />@member.boardPost.title</h5>
                 </div>
             }

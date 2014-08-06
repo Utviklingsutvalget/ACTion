@@ -10,11 +10,11 @@
                     <li class="description">Faddere med telefonnummer</li>
                     @for(contact <- groups.get(key)) {
                         @defining(contact.getGuardian) { guardian =>
-                            @defining(guardian.firstName + " " + guardian.lastName) { name =>
+                            @defining(guardian.getFirstName + " " + guardian.getLastName) { name =>
                                 <li class="bullet-item">
-                                    <h5>@if(guardian.firstName.toLowerCase.contains(query)) {
-                                        <strong>} @guardian.firstName @if(guardian.firstName.toLowerCase.contains(query)) {</strong>} @if(guardian.lastName.toLowerCase.contains(query)) {
-                                        <strong>} @guardian.lastName @if(guardian.lastName.toLowerCase.contains(query)) {</strong>}</h5>
+                                    <h5>@if(guardian.getFirstName.toLowerCase.contains(query)) {
+                                        <strong>} @guardian.getFirstName @if(guardian.getFirstName.toLowerCase.contains(query)) {</strong>} @if(guardian.getLastName.toLowerCase.contains(query)) {
+                                        <strong>} @guardian.getLastName @if(guardian.getLastName.toLowerCase.contains(query)) {</strong>}</h5>
                                     <br/>
                                     tlf: <a href="tel:@contact.getPhoneNumber">@contact.getPhoneNumber</a>
                                 </li>

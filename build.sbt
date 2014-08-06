@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-lang3" % "3.3.2",
   "com.google.api-client" % "google-api-client" % "1.17.0-rc",
   "org.json" % "json" % "20140107",
+  "com.timgroup" % "jgravatar" % "1.0",
   "be.objectify" %% "deadbolt-java" % "2.3.0-RC1",
   "mysql" % "mysql-connector-java" % "5.1.6",
   "com.google.http-client" % "google-http-client-jackson2" % "1.11.0-beta",

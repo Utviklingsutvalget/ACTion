@@ -8,8 +8,8 @@
             @if(!pendingList.isEmpty) {
                 @for(user <- pendingList) {
 
-                    <div class="panel powerup-node" data-powerup-field="@user.getUser.id" data-powerup-select=".recruitSelect">
-                        <h4>@user.getUser.firstName @user.getUser.lastName</h4>
+                    <div class="panel powerup-node" data-powerup-field="@user.getUser.getId" data-powerup-select=".recruitSelect">
+                        <h4>@user.getUser.getFirstName @user.getUser.getLastName</h4>
                         <br />
                         <p>@user.applicationMessage</p>
                         <select class="recruitSelect">

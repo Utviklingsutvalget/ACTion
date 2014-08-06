@@ -10,7 +10,7 @@ public class PendingUser {
 
     public PendingUser(User user, Club club){
         this.clubId = club.id;
-        this.userID = user.id;
+        this.userID = user.getId();
     }
 
     public String getUserID(){return this.userID;}

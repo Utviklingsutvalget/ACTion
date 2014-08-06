@@ -66,7 +66,7 @@ public class Pending extends Model {
         public Long clubId;
 
         public PendingKey(User user, Club club){
-            this.userId = user.id;
+            this.userId = user.getId();
             this.clubId = club.id;
         }
 

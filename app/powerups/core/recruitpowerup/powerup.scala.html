@@ -1,13 +1,13 @@
-@(isMember : Boolean, club : Club, user : User, pending : Boolean)
+@(isMember: Boolean, club: Club, user: User, pending: Boolean)
 @import powerups.core.recruitpowerup.RecruitPowerup
 @import powerups.core.recruitpowerup
 
-@* ---- If user  of the club, hide the recruitpowerup ---- *@
+@* ---- If user of the club, hide the recruitpowerup ---- *@
 
-@if(user != null){
+@if(user != null) {
     @if(!isMember && !pending) {
         <div class="row appMessageNode">
-            <form class="powerup-node" id="appMessageNode" data-powerup-value="@user.id">
+            <form class="powerup-node" id="appMessageNode" data-powerup-value="@user.getId">
                 <div class="medium-12 columns">
                     <h3>Innmelding for @club.name</h3>
                     <p class="lead">Skriv noe fornuftig her</p>
@@ -22,19 +22,19 @@
             createStandardButton ( getId ( $ ( '.appMessageNode' ) ) ) ;
             </script>
         </div>
-    }else{
+    } else {
 
-        @if(isMember && !pending){
-            <div class="medium-12 columns medium-centered text-centered powerup-node appMessageNode" data-powerup-field="@user.id" data-powerup-value="TerminateMemberShip">
+        @if(isMember && !pending) {
+            <div class="medium-12 columns medium-centered text-centered powerup-node appMessageNode" data-powerup-field="@user.getId" data-powerup-value="TerminateMemberShip">
                 <h6>Du er allerede medlem av @club.name</h6>
             </div>
             <script>
-            createStandardButton ( getId ( $ ( '.appMessageNode' ) ), "Meld deg ut av utvalget");
+            createStandardButton ( getId ( $ ( '.appMessageNode' ) ), "Meld deg ut av utvalget" ) ;
             </script>
 
-        }else{
+        } else {
 
-            @if(!isMember && pending){
+            @if(!isMember && pending) {
 
                 <div class="medium-12 columns medium-centered text-centered">
                     <h6>Ditt medlemskap er under vurdering</h6>

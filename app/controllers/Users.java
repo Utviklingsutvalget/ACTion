@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import helpers.UserService;
 import models.User;
 import play.Logger;
 import play.mvc.BodyParser;
@@ -41,7 +42,7 @@ public class Users extends Controller {
     }
 
     public static Result show(final String id) {
-        User user = User.findById(id);
+        User user = UserService.findById(id);
         User loggedInUser = null;
         try {
             loggedInUser = new Authorize.UserSession().getUser();
@@ -80,7 +81,7 @@ public class Users extends Controller {
             if (!authorized) {
                 return forbidden();
             }
-            User targetUser = User.findByEmail(email);
+            User targetUser = UserService.findByEmail(email);
             if (targetUser != null) {
                 return ok();
             }

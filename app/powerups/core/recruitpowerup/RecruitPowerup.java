@@ -2,6 +2,7 @@ package powerups.core.recruitpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import helpers.UserService;
 import models.Club;
 import models.Membership;
 import models.PowerupModel;
@@ -101,15 +102,13 @@ public class RecruitPowerup extends Powerup {
                 map.put(key, val);
 
                 if (val.equals(TERMINATEMEMBERSHIP)) {
-                    User terminatedUser = User.find.byId(key);
+                    User terminatedUser = UserService.findById(key);
                     Membership terminateMember = Membership.find.byId(new Membership(club, terminatedUser).id);
 
                     if (terminatedUser != null && terminateMember != null) {
 
                         if (terminateMember.level.getLevel() < MembershipLevel.BOARD.getLevel()) {
                             Ebean.delete(terminateMember);
-                            Logger.info("User: " + terminatedUser.firstName + " was removed from club: " + club.name);
-                            Logger.info("Member: " + terminateMember.user.firstName + " was the terminated member");
                             return ok("Du avsluttet medlemsskapet hos " + club.name);
                         } else {
                             return unauthorized("Kan ikke utføre sletting ettersom din bruker er et styremedlem");
@@ -140,7 +139,7 @@ public class RecruitPowerup extends Powerup {
 
         for (String key : map.keySet()) {
 
-            user = User.find.byId(key);
+            user = UserService.findById(key);
 
             if (map.get(key).equals(ACCEPT)) {
 
@@ -154,15 +153,14 @@ public class RecruitPowerup extends Powerup {
                 membership = Membership.find.byId(new Membership(club, user).id);
 
                 if (membership != null) {
-
                     membership.level = MembershipLevel.MEMBER;
                 }
 
                 //membership = new Membership(club, user, MembershipLevel.MEMBER);
                 Ebean.save(membership);
 
-                Logger.info("Removed member: " + user.email + " from pending at clubName: " + club.name);
-                Logger.info("Inserted member: " + user.email + " in clubName: " + club.name +
+                Logger.info("Removed member: " + user.getEmail() + " from pending at clubName: " + club.name);
+                Logger.info("Inserted member: " + user.getEmail() + " in clubName: " + club.name +
                         " with membershiplevel: " + membership.level);
 
 
@@ -175,7 +173,7 @@ public class RecruitPowerup extends Powerup {
                     Ebean.delete(oldPending);
                 }
 
-                Logger.info("Removed Pending user: " + user.email + " from clubName: " + club.name);
+                Logger.info("Removed Pending user: " + user.getEmail() + " from clubName: " + club.name);
             }
         }
     }
@@ -184,13 +182,13 @@ public class RecruitPowerup extends Powerup {
 
         for (String key : map.keySet()) {
 
-            User user1 = User.find.byId(map.get(key));
+            User user1 = UserService.findById(map.get(key));
 
             if (user1 != null) {
                 Pending pendingUser = new Pending(club, user1, key);
                 Membership subMember = new Membership(club, user1, MembershipLevel.SUBSCRIBE);
 
-                Logger.info("Successful insert into pending, id: " + pendingUser.user.id + ", club: " + club.name +
+                Logger.info("Successful insert into pending, id: " + pendingUser.user.getId() + ", club: " + club.name +
                         ", application_message: " + key);
                 Logger.info("Successful insert into membership with subscribe");
 
