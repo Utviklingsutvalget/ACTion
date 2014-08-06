@@ -6,6 +6,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import helpers.UserService;
 import models.User;
 import org.json.JSONObject;
 import play.Configuration;
@@ -13,7 +14,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.GoogleUtility;
 import views.html.error;
-import views.html.index;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -63,7 +63,7 @@ public class OAuth2 extends Controller {
         update = _update == 1;
 
         if (session().containsKey("id") && !update) {
-            User user = User.findById(session("id"));
+            User user = UserService.findById(session("id"));
             if (user != null)
                 return Users.profile();
 
@@ -207,7 +207,7 @@ public class OAuth2 extends Controller {
                 return unauthorized(error.render("Please verify your Google email and try again"));
 
             //If user exists we dont need to use OpenId Connect
-            if (User.exists(payload.getSubject()) && !update) {
+            if (UserService.userExists(payload.getSubject()) && !update) {
 
                 //Create the necessary sessionsd
                 createSessions(payload.getSubject());
@@ -274,7 +274,7 @@ public class OAuth2 extends Controller {
                     jsonObject.getString("email"),
                     jsonObject.getString("picture").split("\\?")[0]); //We dont want: ?sz=50(sets image size to 50)
 
-            if (!user.email.endsWith(CONF.getString("googleclient.hd"))) {
+            if (!user.getEmail().endsWith(CONF.getString("googleclient.hd"))) {
                 return ok(views.html.notAuthorizedPage.render("Din e-postaddresse stemmer ikke med kravene. Vennligst logg på med en e-post addresse hos domenet westerdals.no"));
             }
 

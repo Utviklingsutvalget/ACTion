@@ -14,7 +14,7 @@ public class Participation extends Model {
         this.event = event;
         this.user = user;
         if(user != null && event != null) {
-            this.id = new ParticipationKey(event.id, user.id);
+            this.id = new ParticipationKey(event.id, user.getId());
 
             if(user == event.getHost()){
                 setHostRvsp();

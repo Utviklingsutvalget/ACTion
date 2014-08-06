@@ -30,10 +30,6 @@ PUT           /clubs/:clubId/:powerupId        controllers.Clubs.updatePowerup(c
 GET           /clubs/:clubId/:powerupId        controllers.Clubs.getPowerupContent(clubId: Long, powerupId: Long)
 POST          /clubs                           controllers.Clubs.create()
 
-#CK Editor
-GET           /ckeditor                        controllers.CKEditor.test()
-POST          /ckeditor/save                   controllers.CKEditor.save()
-
 # Events
 GET           /events                          controllers.Events.index()
 #GET        /events/new                      controllers.Events.create()

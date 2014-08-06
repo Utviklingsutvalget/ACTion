@@ -1,6 +1,6 @@
 @(registrationForm: Form[User])
 
-@import helper._
+@import views.html.helper._
 
 @main("Registering") {
 
@@ -76,6 +76,7 @@
 
                 <input type="submit" class="button large" value="Bli med">
                 <a href="@routes.Application.index()" class="button tiny alert">Avbryt</a>
+            </div>
         </form>
     }
 }

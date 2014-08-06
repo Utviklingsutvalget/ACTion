@@ -57,7 +57,7 @@ public class Membership extends Model {
 
         public MembershipKey(Club club, User user){
             this.clubId = club.id;
-            this.userId = user.id;
+            this.userId = user.getId();
         }
 
         @Override

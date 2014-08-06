@@ -107,7 +107,7 @@ public class FeedPowerup extends Powerup {
                     "message : " + message + ", \n" +
                     "messagetitle : " + messageTitle + ", \n" +
                     "clubname : " + getClub().name + ", \n" +
-                    "user firstName : " + user.firstName + ".");
+                    "user firstName : " + user.getFirstName() + ".");
 
             if(pictureUrl.length() <= 3 || pictureUrl.equals(".jpg") ||
                     !pictureUrl.substring(pictureUrl.length() - 3, pictureUrl.length()).equals("jpg")){

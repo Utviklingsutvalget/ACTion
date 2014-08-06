@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.i18n.phonenumbers.NumberParseException;
+import helpers.UserService;
 import models.*;
 import play.Logger;
 import play.mvc.BodyParser;
@@ -36,7 +37,7 @@ public class Administration extends Controller {
         }
         try {
             User user = new Authorize.UserSession().getUser();
-            for (Membership mem : user.memberships) {
+            for (Membership mem : user.getMemberships()) {
                 if (user.isAdmin()) {
                     return ok(views.html.club.admin.show.render(club));
                 } else if (mem.club.equals(club) && mem.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
@@ -204,7 +205,7 @@ public class Administration extends Controller {
         String email = form.get("guardian")[0] + form.get("postfix")[0];
         int groupNumber = Integer.valueOf(form.get("group-number")[0]);
         Long locationId = Long.valueOf(form.get("location")[0]);
-        User guardian = User.findByEmail(email);
+        User guardian = UserService.findByEmail(email);
         Location location = Location.find.byId(locationId);
         String phoneNumber = form.get("phone")[0];
 
@@ -233,7 +234,7 @@ public class Administration extends Controller {
         Long locationId = json.get("location").asLong();
         String userId = json.get("guardian").asText();
 
-        User guardian = User.find.byId(userId);
+        User guardian = UserService.findById(userId);
         Location location = Location.find.byId(locationId);
 
         InitiationGroup group = null;

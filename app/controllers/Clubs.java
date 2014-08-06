@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import helpers.UserService;
 import models.*;
 import play.Logger;
 import play.mvc.Controller;
@@ -89,7 +90,7 @@ public class Clubs extends Controller {
 
         Location location = Location.find.byId(locationId);
 
-        User leaderUser = User.findByEmail(email);
+        User leaderUser = UserService.findByEmail(email);
 
         if(leaderUser == null){
             return badRequest("Det finnes ingen bruker tilknyttet den emailen, " +

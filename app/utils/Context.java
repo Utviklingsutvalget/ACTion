@@ -22,7 +22,7 @@ public class Context {
 
         Membership membership = null;
         if(sender != null) {
-            for (Membership listMembership : sender.memberships) {
+            for (Membership listMembership : sender.getMemberships()) {
                 if (listMembership.club.equals(resource)) {
                     membership = listMembership;
                 }

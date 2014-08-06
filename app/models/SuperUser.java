@@ -18,7 +18,7 @@ public class SuperUser extends Model {
     public SuperUser(User user) {
 
         this.user = user;
-        this.key = new SuKey(user.id);
+        this.key = new SuKey(user.getId());
     }
 
     @Embeddable

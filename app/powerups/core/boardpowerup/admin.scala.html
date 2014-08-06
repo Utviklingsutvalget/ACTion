@@ -8,20 +8,20 @@
             <legend>@boardmember.boardPost.title</legend>
 
             <label>Email
-                <input type="text" value="@boardmember.user.email" disabled>
+                <input type="text" value="@boardmember.user.getEmail" disabled>
             </label>
 
             <label>Name
                 <select class='@(boardmember.boardPost.id)Select'>
 
                         <!-- ADDS CURRENT HOLDER OF TITLE FIRST IN THE LISTVIEW -->
-                    <option value="@boardmember.user.id" selected>@boardmember.user.firstName @boardmember.user.lastName</option>
+                    <option value="@boardmember.user.getId" selected>@boardmember.user.getFirstName @boardmember.user.getLastName</option>
                     @for(members <- memberList) {
 
                             <!-- ADDS ALL CONSECUTIVE MEMBERS IN LIST (EXCEPT THE MEMBER HOLDING THE TITLE CURRENTLY) -->
-                        @if(!members.user.id.equals(boardmember.user.id)) {
-                            <option value="@members.user.id"
-                            data-powerup-value="@members.user.id">@members.user.firstName @members.user.lastName</option>
+                        @if(!members.user.getId.equals(boardmember.user.getId)) {
+                            <option value="@members.user.getId"
+                            data-powerup-value="@members.user.getId">@members.user.getFirstName @members.user.getLastName</option>
                         }
                     }
                         <!-- testing for potential removal of titles-->
@@ -49,7 +49,7 @@ createUpdateTypeButton ( getId ( $ ( '.boardmember' ) ), '.boardmember' ) ;
             <select id="board-user-select">
                 <option value="" selected></option>
                 @for(member <- memberList) {
-                    <option value="@(member.user.id)" data-powerup-value="@(member.user.id)">@(member.user.firstName + " " + member.user.lastName)</option>
+                    <option value="@(member.user.getId)" data-powerup-value="@(member.user.getId)">@(member.user.getFirstName + " " + member.user.getLastName)</option>
                 }
             </select>
         </label>

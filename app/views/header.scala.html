@@ -1,4 +1,4 @@
-@(title: String)(implicit user: User = User.findById(session.get("id")))
+@(title: String)(implicit user: User = helpers.UserService.findById(session.get("id")))
 <div id="backgroundimglarge-underpage"></div>
 <!-- HEADER TEXT -->
 <div class="row">

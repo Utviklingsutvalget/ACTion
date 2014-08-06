@@ -1,6 +1,7 @@
 package utils;
 
 import controllers.OAuth2;
+import helpers.UserService;
 import models.User;
 import play.Logger;
 
@@ -18,7 +19,7 @@ public class Authorize {
             if(!sessionsExists())
                 throw new SessionException("Session are not set");
 
-            this.user = User.findById(session("id"));
+            this.user = UserService.findById(session("id"));
             this.expire = Long.parseLong(session("expires"));
         }
 

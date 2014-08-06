@@ -76,7 +76,7 @@ public class Initiation extends Controller {
             tempList = Ebean.find(InitiationGroup.class).where().eq("location", location).findList();
 
             for (InitiationGroup initGroup : tempList) {
-                String guardianName = (initGroup.getGuardian().firstName + " " + initGroup.getGuardian().lastName).toLowerCase();
+                String guardianName = (initGroup.getGuardian().getFirstName() + " " + initGroup.getGuardian().getLastName()).toLowerCase();
                 if (guardianName.contains(queryCopy)) {
                     int groupNumber = initGroup.getGroupNumber();
                     // Checking if the group already has a list, if not, set up the key/value pair
