@@ -47,7 +47,7 @@ public class User extends Model {
 
     @PostLoad
     public void onPostLoad() {
-        UserService.setupGravatar(this);
+        UserService.setupGravatar(this, this.pictureUrl);
     }
 
     public List<Membership> getMemberships() {
@@ -99,9 +99,6 @@ public class User extends Model {
     }
 
     public String getPictureUrl() {
-        if (gravatarUrl == null) {
-            UserService.setupGravatar(this);
-        }
         if(gravatarUrl == null) {
             return this.pictureUrl;
         }

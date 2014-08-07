@@ -16,11 +16,10 @@ public class UserService {
         return find.where().eq("email", email).findUnique();
     }
 
-    public static void setupGravatar(User user) {
+    public static void setupGravatar(User user, String defaultImage) {
         Gravatar gravatar = new Gravatar();
         gravatar.setSize(80);
         gravatar.setRating(GravatarRating.PARENTAL_GUIDANCE_SUGGESTED);
-        gravatar.setDefaultImage(GravatarDefaultImage.IDENTICON);
         String url = gravatar.getUrl(user.getEmail());
         user.setGravatarUrl(url);
     }

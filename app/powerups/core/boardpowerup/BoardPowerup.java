@@ -44,6 +44,9 @@ public class BoardPowerup extends Powerup {
             memberList = new ArrayList<>();
         }
         posts = BoardPost.find.all();
+        for(BoardMembership membership : boardList) {
+            membership.user.onPostLoad();
+        }
     }
 
     @Override
