@@ -206,22 +206,23 @@
                 <fieldset>
                     <legend>Faddere</legend>
 
-                    <div class="admin-faddere-oversikt">
+                    <div id="admin-faddere-oversikt" class="admin-faddere-oversikt">
                         <div class="row collapse">
+                            <div class="responseShow">
+
+                            </div>
 
                             @for(group <- initGroups){
-                                <div class="small-9 columns">
-                                    <span class="prefix">@group.getGuardian.getFirstName
-                                        @group.getGuardian.getLastName, gruppe: (@group.getGroupNumber)</span>
+                                <div class="small-9 columns displayGuardian">
+                                    <span class="prefix">@group.getGuardian.firstName
+                                        @group.getGuardian.lastName, gruppe: @group.getGroupNumber</span>
                                 </div>
-
                                 <!-- This part is not yet functional -->
                                 <div class="small-3 columns">
-                                    <form class="deleteGuardian" action="@routes.Administration.deleteGuardian()" method="delete">
-                                        <input type="hidden" id="guardianId" value="@group.getGuardian.getId">
-                                        <input type="hidden" id="guardianLocation" value="@group.getLocation.id">
-                                        <input type="submit" class="button postfix alert submitDeleteGuardian" value="Slett">
-                                    </form>
+                                    <div data-guardian-id="@group.getGuardian.id"
+                                         data-guardian-group="@group.getLocation.id"
+                                        class="button postfix alert submitDeleteGuardian">Slett
+                                    </div>
                                 </div>
                             }
                         </div>
@@ -237,12 +238,6 @@
             <form class="email-check-form" method="post" action="@routes.Administration.addGuardian()">
                 <fieldset>
                     <legend>Legg til fadder</legend>
-
-                    <div class="medium-12 columns collapse">
-                        <label>Navn
-                            <input type="text" placeholder="F.eks: Tommy Nordli" required>
-                        </label>
-                    </div>
 
                     <div class="large-12 columns collapse">
                         <div class="row collapse">
@@ -292,6 +287,7 @@
         </div>
     </div>
 
+    @*
     @if(!initGroups.isEmpty) {
         <div class="row medium-12 medium-centered">
             <ul class="pricing-table">
@@ -351,6 +347,7 @@
         </div>
 
     }
+    *@
 
 
     <!--  -------------------     THIS IS THE OLD HTML ----------------------->

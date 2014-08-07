@@ -22,6 +22,7 @@ public class Administration extends Controller {
     private static final String LOCATIONID = "locationId";
     private static final String LOCATIONNAME = "locationName";
     private static final String CONFIRM_DELETE = "confirmDelete";
+    private static final String GUARDIANANCHOR = "#addguardian";
     private static final Long PRESIDING_COUNCIL_ID = 1L;
     private static final String ITSLEARNINGREDIRECT = "https://nith.itslearning.com/elogin/default.aspx";
 
@@ -224,11 +225,12 @@ public class Administration extends Controller {
             }
         }
 
-        return redirect(routes.Administration.showSite().url() + "#addguardian");
+        return redirect(routes.Administration.showSite() + GUARDIANANCHOR);
     }
 
     @BodyParser.Of(BodyParser.Json.class)
     public static Result deleteGuardian() {
+
         JsonNode json = request().body().asJson();
 
         Long locationId = json.get("location").asLong();
@@ -244,8 +246,13 @@ public class Administration extends Controller {
 
         if (group != null) {
             Ebean.delete(group);
+            Logger.info("fant gruppen");
+        }else{
+            badRequest("Ingen faddergruppe funnet");
         }
-        return redirect(routes.Administration.showSite().url() + "#addguardian");
+
+        return ok("Fadder slettet");
+        //return redirect(routes.Administration.showSite().url() + "#addguardian");
     }
 
     public static Result modifyGuardian() {
