@@ -109,8 +109,9 @@ public class FeedPowerup extends Powerup {
                     "clubname : " + getClub().name + ", \n" +
                     "user firstName : " + user.getFirstName() + ".");
 
-            if(pictureUrl.length() <= 3 || pictureUrl.equals(".jpg") ||
-                    !pictureUrl.substring(pictureUrl.length() - 3, pictureUrl.length()).equals("jpg")){
+            if(pictureUrl.length() <= 3 || pictureUrl.equals(".jpg") || pictureUrl.equals(".png") ||
+                    !pictureUrl.substring(pictureUrl.length() - 3, pictureUrl.length()).equals("jpg")
+                    || !pictureUrl.substring(pictureUrl.length() - 3, pictureUrl.length()).equals("png")){
                 pictureUrl = ERRORIMAGE;
             }
 
