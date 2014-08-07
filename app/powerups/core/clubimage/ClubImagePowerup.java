@@ -60,7 +60,7 @@ public class ClubImagePowerup extends Powerup {
         if(statusMessage.isSuccess()) {
             clubImage.imageUrl = url;
             Ebean.update(clubImage);
-            return Results.ok(statusMessage.getMessage());
+            return Results.ok("Utvalgsbilde endret");
         } else {
             return Results.badRequest(statusMessage.getMessage());
         }
