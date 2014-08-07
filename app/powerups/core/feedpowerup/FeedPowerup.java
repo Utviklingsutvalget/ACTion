@@ -112,11 +112,11 @@ public class FeedPowerup extends Powerup {
                 Ebean.save(feed);
                 return Results.ok("Feed-post opprettet");
             } else {
-                return Results.badRequest(statusMessage.getMessage());
+                return Results.status(NO_UPDATE, statusMessage.getMessage());
             }
 
         } else {
-            return Results.badRequest("Manglende info fra feltene");
+            return Results.status(NO_UPDATE, "Manglende info fra feltene");
         }
     }
 }

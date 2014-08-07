@@ -62,7 +62,7 @@ public class ClubImagePowerup extends Powerup {
             Ebean.update(clubImage);
             return Results.ok("Utvalgsbilde endret");
         } else {
-            return Results.badRequest(statusMessage.getMessage());
+            return Results.status(NO_UPDATE, statusMessage.getMessage());
         }
     }
 
