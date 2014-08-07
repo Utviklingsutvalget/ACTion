@@ -160,6 +160,9 @@
 
                     <div class="row">
                     <!-- unsure about result in case of more than 3 locations -->
+                        <div class="small-12 columns updateLocationMessage">
+
+                        </div>
                     @for(location <- locations){
                         <form class="updateLocation updateAction" action="@routes.Administration.updateLocation()" method="post">
                             <input class="locationId" type="hidden" name="id" value="@location.id">
@@ -206,22 +209,23 @@
                 <fieldset>
                     <legend>Faddere</legend>
 
-                    <div class="admin-faddere-oversikt">
+                    <div id="admin-faddere-oversikt" class="admin-faddere-oversikt">
                         <div class="row collapse">
+                            <div class="responseShow">
+
+                            </div>
 
                             @for(group <- initGroups){
-                                <div class="small-9 columns">
+                                <div class="small-9 columns displayGuardian">
                                     <span class="prefix">@group.getGuardian.getFirstName
-                                        @group.getGuardian.getLastName, gruppe: (@group.getGroupNumber)</span>
+                                        @group.getGuardian.getLastName, gruppe: @group.getGroupNumber</span>
                                 </div>
-
                                 <!-- This part is not yet functional -->
                                 <div class="small-3 columns">
-                                    <form class="deleteGuardian" action="@routes.Administration.deleteGuardian()" method="delete">
-                                        <input type="hidden" id="guardianId" value="@group.getGuardian.getId">
-                                        <input type="hidden" id="guardianLocation" value="@group.getLocation.id">
-                                        <input type="submit" class="button postfix alert submitDeleteGuardian" value="Slett">
-                                    </form>
+                                    <div data-guardian-id="@group.getGuardian.getId"
+                                         data-guardian-group="@group.getLocation.id"
+                                        class="button postfix alert submitDeleteGuardian">Slett
+                                    </div>
                                 </div>
                             }
                         </div>
@@ -237,12 +241,6 @@
             <form class="email-check-form" method="post" action="@routes.Administration.addGuardian()">
                 <fieldset>
                     <legend>Legg til fadder</legend>
-
-                    <div class="medium-12 columns collapse">
-                        <label>Navn
-                            <input type="text" placeholder="F.eks: Tommy Nordli" required>
-                        </label>
-                    </div>
 
                     <div class="large-12 columns collapse">
                         <div class="row collapse">
@@ -292,6 +290,7 @@
         </div>
     </div>
 
+    @*
     @if(!initGroups.isEmpty) {
         <div class="row medium-12 medium-centered">
             <ul class="pricing-table">
@@ -351,6 +350,7 @@
         </div>
 
     }
+    *@
 
 
     <!--  -------------------     THIS IS THE OLD HTML ----------------------->
