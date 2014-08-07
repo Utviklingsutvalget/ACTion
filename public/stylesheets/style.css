@@ -422,7 +422,14 @@ img.img-gallery:hover{
 	bottom: -10px;
 }
 
-#bildetext-header p{
+#bildetext-header-small{
+    position: absolute;
+    left: 15px;
+    top: 225px;
+    text-shadow: 1px 1px #000;
+}
+
+#bildetext-header p, #bildetext-header-small p{
 	color: white;
 }
 
