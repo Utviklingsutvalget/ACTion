@@ -59,11 +59,13 @@ public class ImageLinkValidator {
                     return message;
                 }
                 String contentType = reader.getFormatName();
+                in.close();
                 if(contentType == null || contentType.equals("")) {
-                    in.close();
                     return new StatusMessage(false, "Kunne ikke lese bildetypen");
                 } else if(typeList.contains(contentType.toLowerCase())) {
                     return new StatusMessage(true, null);
+                } else {
+                    return new StatusMessage(false, "Bildetypen " + contentType.toLowerCase() + " er ikke støttet");
                 }
             } else {
                 return new StatusMessage(false, "Kunne ikke finne noe bilde på den linken");
@@ -73,7 +75,6 @@ public class ImageLinkValidator {
         } catch (IOException e) {
             return new StatusMessage(false, "Kunne ikke bekrefte bildet. Er du sikker på at linken er riktig?");
         }
-        return new StatusMessage(false, "En ukjent feil oppsto i valideringen av bildet");
     }
 
     private StatusMessage verifyImageDimension(Dimension imageDimension) {

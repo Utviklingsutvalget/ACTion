@@ -57,6 +57,9 @@ function admin() {
     $('.updateLocation').submit(function (e) {
         e.preventDefault();
         var jsonObject = {};
+        var htmlResponse = $(document).find('.updateLocationMessage');
+        htmlResponse.html('');
+        var message;
 
         $(document).find('.updateLocation').each(function () {
 
@@ -74,7 +77,23 @@ function admin() {
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(jsonObject),
-            dataType: 'json'
+            dataType: 'json',
+            statusCode: {
+                200: function(jqxhr){
+                    message = "<div data-alert class=\"alert-box success text-center radius\">" +
+                        jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                },
+                400: function(){
+                    message = "<div data-alert class=\"alert-box alert text-center radius\">"
+                        + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                }
+            }
+        }).always(function(){
+
+            $.get("/admin/site", function(){
+
+                htmlResponse.append(message);
+            });
         });
 
         console.log(xHttp);
@@ -83,13 +102,12 @@ function admin() {
     // does not work yet
     $('.submitDeleteGuardian').on('click', function(){
 
+        var htmlElement = $(document).find('.responseShow');
+        var guardianHtml = $(document).find('.displayGuardian');
+        var buttonHtml = $(this).parent('.small-3.columns');
 
-        var deleteGuardianForm = $(document).find('.deleteGuardian');
-        var guardianId = deleteGuardianForm.find('#guardianId').val();
-        var guardianGroupLocation = deleteGuardianForm.find('#guardianLocation').val();
-
-        console.log(guardianId);
-        console.log(guardianGroupLocation);
+        var guardianId = $(this).data('guardian-id');
+        var guardianGroupLocation = $(this).data('guardian-group');
 
         var dataObject = {};
 
@@ -107,19 +125,25 @@ function admin() {
             data: JSON.stringify(dataObject),
             statusCode: {
                 200: function(jqxhr){
-                    message = jqxhr.responseText;
+                    message = "<div data-alert class=\"alert-box success text-center radius\">" +
+                        jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                },
+                400: function(){
+                    message = "<div data-alert class=\"alert-box alert text-center radius\">"
+                        + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
                 }
             }
         }).always(function(){
 
 
-            //$.get("/admin/site", function(){
+            $.get("/admin/site", function(){
 
-                console.log(message);
-            //});
+                htmlElement.append(message);
+                guardianHtml.html('');
+                buttonHtml.html('');
+            });
         });
     });
-
 
     $('.submitDeleteClub').on('click', function (e) {
 

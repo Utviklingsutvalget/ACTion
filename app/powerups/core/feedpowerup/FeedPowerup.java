@@ -3,7 +3,7 @@ package powerups.core.feedpowerup;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
-import models.Feed;
+import models.*;
 import models.PowerupModel;
 import models.User;
 import play.Logger;
@@ -94,7 +94,7 @@ public class FeedPowerup extends Powerup {
     public Result update(JsonNode updateContent) {
 
         if (updateContent != null && !updateContent.isNull()) {
-            ImageLinkValidator validator = new ImageLinkValidator(new Dimension(250, 500), new Dimension(1000, 500), true);
+            ImageLinkValidator validator = new ImageLinkValidator(new Dimension(500, 250), new Dimension(1000, 500), true);
             String message = updateContent.get(MESSAGE).asText();
             String messageTitle = updateContent.get(MESSAGE_TITLE).asText();
             String pictureUrl = updateContent.get(PICTURE_URL).asText();
