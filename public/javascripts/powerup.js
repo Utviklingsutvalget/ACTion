@@ -73,6 +73,7 @@ function PowerupClass() {
 
     this.update = update;
     this.invalidate = invalidate;
+    this.prependMessage = prependMessage;
 
     function update() {
 
@@ -142,7 +143,8 @@ function PowerupClass() {
         console.log(dataObject);
         var message;
         var id = (this).id;
-        var url = "/clubs/" + (this).club + "/" + id;
+        var club = (this).club;
+        var url = "/clubs/" + club + "/" + id;
         powerupContent = getPowerupHtml(id).find('.powerup-content');
         $.ajax({
             url:  url,
@@ -155,27 +157,36 @@ function PowerupClass() {
                 200: function(jqxhr) {
                     console.log(jqxhr);
                     message = "<div data-alert class=\"alert-box success text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                    invalidate(powerupContent, message, club, id);
                 },
                 401: function(jqxhr) {
                     console.log(jqxhr);
                     message = "<div data-alert class=\"alert-box alert text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                    invalidate(powerupContent, message, club, id);
                 },
                 400: function(jqxhr){
                     console.log(jqxhr);
                     message = "<div data-alert class=\"alert-box alert text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                    invalidate(powerupContent, message, club, id);
+                },
+                412: function(jqxhr) {
+                    message = "<div data-alert class=\"alert-box alert text-center radius\">" + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                    prependMessage(powerupContent, message);
                 }
             }
-        }).always(function() {
-            $.get(url, function (data) {
-                console.log(powerupContent.html());
-                powerupContent.html(message + data);
-            });
         });
-
     }
 
-    function invalidate() {
+    function invalidate(powerupHtml, message, clubId, powerupId) {
+        var url = "/clubs/" + clubId + "/" + powerupId;
+        $.get(url, function (data) {
+            console.log(powerupHtml.html());
+            powerupHtml.html(message + data);
+        });
+    }
 
+    function prependMessage(powerupHtml, message) {
+        powerupHtml.prepend(message);
     }
 
 }
