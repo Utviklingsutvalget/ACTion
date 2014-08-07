@@ -414,3 +414,7 @@ img.img-gallery:hover{
 	height: 286px;
 	overflow: scroll;
 }
+
+.nyhet img{
+	height: 200px;
+}
