@@ -21,6 +21,7 @@ public class UserService {
         gravatar.setSize(80);
         gravatar.setRating(GravatarRating.PARENTAL_GUIDANCE_SUGGESTED);
         String url = gravatar.getUrl(user.getEmail());
+        url = url.replace("?d=404", "?d=" + defaultImage);
         user.setGravatarUrl(url);
     }
 
