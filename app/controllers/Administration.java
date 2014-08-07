@@ -119,7 +119,7 @@ public class Administration extends Controller {
             e.printStackTrace();
         }
 
-        return ok();
+        return ok("Lokasjon oppdatert");
     }
 
     // update LocationName to new name

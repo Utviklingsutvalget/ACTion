@@ -57,6 +57,9 @@ function admin() {
     $('.updateLocation').submit(function (e) {
         e.preventDefault();
         var jsonObject = {};
+        var htmlResponse = $(document).find('.updateLocationMessage');
+        htmlResponse.html('');
+        var message;
 
         $(document).find('.updateLocation').each(function () {
 
@@ -74,7 +77,23 @@ function admin() {
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(jsonObject),
-            dataType: 'json'
+            dataType: 'json',
+            statusCode: {
+                200: function(jqxhr){
+                    message = "<div data-alert class=\"alert-box success text-center radius\">" +
+                        jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                },
+                400: function(){
+                    message = "<div data-alert class=\"alert-box alert text-center radius\">"
+                        + jqxhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                }
+            }
+        }).always(function(){
+
+            $.get("/admin/site", function(){
+
+                htmlResponse.append(message);
+            });
         });
 
         console.log(xHttp);

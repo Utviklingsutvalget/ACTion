@@ -160,6 +160,9 @@
 
                     <div class="row">
                     <!-- unsure about result in case of more than 3 locations -->
+                        <div class="small-12 columns updateLocationMessage">
+
+                        </div>
                     @for(location <- locations){
                         <form class="updateLocation updateAction" action="@routes.Administration.updateLocation()" method="post">
                             <input class="locationId" type="hidden" name="id" value="@location.id">
