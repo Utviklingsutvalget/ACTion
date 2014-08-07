@@ -29,6 +29,8 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class Powerup implements Serializable {
 
+    protected static final int NO_UPDATE = 412;
+
     /**
      * Private access as no Powerup should ever be able to change the name of a Club.
      */
