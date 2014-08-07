@@ -9,7 +9,12 @@
                 <img class="profile-photo" src="@(user.getPictureUrl)" alt="" />
             </div>
             <br /><br />
-            <h1>@(user.getFirstName + " " + user.getLastName)</h1>
+            @defining(user.getFirstName + " " + user.getLastName) { fullName =>
+                <h1>@fullName</h1>
+            }
+
+
+
             <h5><em>@user.getEmail</em></h5>
         </div>
     </div>

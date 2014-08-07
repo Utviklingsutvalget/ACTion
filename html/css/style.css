@@ -13,7 +13,7 @@ body{
 }
 
 .buttonpanellarge{
-	margin-top: 90px;
+	margin-top: 200px;
 	position: relative;
 	padding-bottom: 80px;
 }
@@ -417,4 +417,14 @@ img.img-gallery:hover{
 
 .nyhet img{
 	height: 200px;
+}
+
+#bildetext-header{
+	position: absolute;
+	left: 30px;
+	bottom: -10px;
+}
+
+#bildetext-header p{
+	color: white;
 }

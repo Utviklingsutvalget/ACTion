@@ -1,86 +1,82 @@
 @(title: String)(implicit user: User = helpers.UserService.findById(session.get("id")))
-<div id="backgroundimglarge-underpage"></div>
-<!-- HEADER TEXT -->
+
 <div class="row">
-    <div class="small-12 small-centered columns headercolumn-underpage text-center">
-        <a href='@routes.Application.index()'>
-            <h2 class="headertext"><strong>Studentportal for</strong></h2>
-            <h3 class="headertext"><em>Westerdals ACT Oslo</em></h3>
-        </a>
+    <div class="small-12 columns show-for-medium-up backgroundimagelarge">
+        <img src="@routes.Assets.at("images/header.jpg")">
+
+        <div class="headercircle-large text-center show-for-large-up">
+            <h3 class="headertext">Westerdals <br/> Oslo ACT </h3>
+            <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
+            <h5 class="headertext">Studentersamfundet's <br/>portal</h5>
+        </div>
+
+        <div class="headercircle-medium text-center show-for-medium-only">
+            <h3 class="headertext">Westerdals <br/> Oslo ACT </h3>
+            <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
+            <h5 class="headertext">Studentersamfundet's <br/>portal</h5>
+        </div>
+
+        <div id="bildetext-header">
+            <p>Bilde: Westerdals kompetanse</p>
+        </div>
     </div>
 </div>
 
-<!-- LINKS ON SMALL SCREENS -->
-<div class="row text-center hide-for-medium-up buttonpanel-underpage">
-    <div class="small-4 columns ">
-        <a class="headertext" href="@routes.Events.index()">Eventer </a>
-    </div>
+<div class="row">
+    <div class="small-12 columns hide-for-medium-up">
+        <img id="backgroundimagesmall" src="@routes.Assets.at("images/header.jpg")">
 
-    <div class="small-4 columns ">
-        <a class="headertext" href='@routes.Clubs.index()'>Utvalg </a>
-    </div>
-
-    <div class="small-4 columns ">
-        <a class="headertext" href='@routes.Feeds.index()'>Feed </a>
-    </div>
-
-    <!--
-    <div class="small-4 columns buttonpanelsmall">
-        <a class="headertext" href='@*routes.Administration.redirectToItsLearning()*@'>ItsLearning</a>
-    </div>
-    -->
-
-    @if(user != null) {
-        <div class="small-4 columns  buttonpanelsmall">
-            <a class="headertext" href="@routes.Users.profile()">Profil </a>
+        <div class="headercircle-small text-center hide-for-medium-up">
+            <h3 class="headertext">Westerdals<br/> Oslo ACT</h3>
+            <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
+            <h6 class="headertext">Studentersamfundet's<br/> portal</h6>
         </div>
-    } else {
-        <div class="small-4 columns  buttonpanelsmall">
-            <a class="headertext" href='@routes.OAuth2.authenticate()'>Login </a>
-        </div>
-    }
-
-    <div class="small-4 columns  buttonpanelsmall">
-        <a class="headertext" href="@routes.Initiation.index()">Fadderuka</a>
     </div>
+</div>
+
+
+
+<div class="row text-center hide-for-medium-up buttonpanel ">
+
+    <div class="small-12 columns">
+        <ul class="small-block-grid-3 medium-block-grid-5 large-block-grid-5 text-center">
+            <li><a class="headertext" href="@routes.Events.index()">Eventer </a></li>
+            <li><a class="headertext" href="@routes.Clubs.index()">Utvalg </a></li>
+            <li><a class="headertext" href="@routes.Feeds.index()">Feed </a></li>
+            <li><a class="headertext" href="@routes.Initiation.index()">Fadderuka </a></li>
+            @if(user != null) {
+                <li><a class="headertext" href="@routes.Users.profile()">Profil </a></li>
+            } else {
+                <li><a class="headertext" href="@routes.OAuth2.login()">Login </a></li>
+            }
+        </ul>
+
+    </div>
+
 
 </div>
 
-<!-- LINKS ON LARGE SCREENS -->
-<div class="row text-center show-for-medium-up buttonpanellarge-underpage">
+
+<div id="header" class="show-for-medium-up"></div>
+
+<div class="buttonpanellarge row text-center show-for-medium-up">
+
     <div class="medium-9 medium-centered columns">
-        <div class="medium-2 columns">
-            <a class="headertext" href="@routes.Events.index()">Eventer </a>
-        </div>
-
-        <div class="medium-2 columns">
-            <a class="headertext" href='@routes.Clubs.index()'>Utvalg </a>
-        </div>
-
-        <div class="medium-2 columns">
-            <a class="headertext" href='@routes.Feeds.index()'>Feed </a>
-        </div>
-
-        <div class="medium-2 columns">
-            <a class="headertext" href="@routes.Initiation.index()">Fadderuka </a>
-        </div>
-
-        <!--
-        <div class="medium-2 columns">
-            <a class="headertext" href='@*routes.Administration.redirectToItsLearning()*@'>ItsLearning</a>
-        </div>
-        -->
-        @if(user != null) {
-            <div class="medium-2 columns">
-                <a class="headertext" href="@routes.Users.profile()">Profil </a>
-            </div>
-        } else {
-            <div class="medium-2 columns">
-                <a class="headertext" href='@routes.OAuth2.login()'>Login </a>
-            </div>
-        }
+        <ul class="small-block-grid-3 medium-block-grid-5 large-block-grid-5 text-center">
+            <li><a class="headertext" href="@routes.Events.index()">Eventer </a></li>
+            <li><a class="headertext" href="@routes.Clubs.index()">Utvalg </a></li>
+            <li><a class="headertext" href="@routes.Feeds.index()">Feed </a></li>
+            <li><a class="headertext" href="@routes.Initiation.index()">Fadderuka </a></li>
+            @if(user != null) {
+                <li><a class="headertext" href="@routes.Users.profile()">Profil </a></li>
+            } else {
+                <li><a class="headertext" href="@routes.OAuth2.login()">Login </a></li>
+            }
+        </ul>
     </div>
+
 </div>
+
 <div class="row">
     <br />
     <div class="small-4 columns">
@@ -96,3 +92,5 @@
         <div id="line" class="lineleft"></div>
     </div>
 </div>
+
+
