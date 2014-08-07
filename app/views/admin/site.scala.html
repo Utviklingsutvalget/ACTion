@@ -214,12 +214,12 @@
 
                             @for(group <- initGroups){
                                 <div class="small-9 columns displayGuardian">
-                                    <span class="prefix">@group.getGuardian.firstName
-                                        @group.getGuardian.lastName, gruppe: @group.getGroupNumber</span>
+                                    <span class="prefix">@group.getGuardian.getFirstName
+                                        @group.getGuardian.getLastName, gruppe: @group.getGroupNumber</span>
                                 </div>
                                 <!-- This part is not yet functional -->
                                 <div class="small-3 columns">
-                                    <div data-guardian-id="@group.getGuardian.id"
+                                    <div data-guardian-id="@group.getGuardian.getId"
                                          data-guardian-group="@group.getLocation.id"
                                         class="button postfix alert submitDeleteGuardian">Slett
                                     </div>
