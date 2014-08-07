@@ -4,12 +4,16 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
+import play.mvc.Result;
 import play.mvc.Results;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.clubimage.html.powerup;
 import powerups.models.ClubImage;
 import utils.MembershipLevel;
+import utils.imaging.ImageLinkValidator;
+
+import java.awt.*;
 
 public class ClubImagePowerup extends Powerup {
 
@@ -45,16 +49,21 @@ public class ClubImagePowerup extends Powerup {
     }
 
     @Override
-    public play.mvc.Result update(JsonNode updateContent) {
+    public Result update(JsonNode updateContent) {
         if (!(this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
             return Results.unauthorized();
         }
-        this.clubImage.imageUrl = updateContent.get("link").asText();
-        if(this.clubImage.imageUrl.equals("")) {
-            this.clubImage.imageUrl = DEFAULT_IMAGE;
+        String url = updateContent.get("link").asText();
+        ImageLinkValidator validator = new ImageLinkValidator(new Dimension(800, 300), new Dimension(1600, 600));
+        ImageLinkValidator.StatusMessage statusMessage = validator.validate(url);
+
+        if(statusMessage.isSuccess()) {
+            clubImage.imageUrl = url;
+            Ebean.update(clubImage);
+            return Results.ok(statusMessage.getMessage());
+        } else {
+            return Results.badRequest(statusMessage.getMessage());
         }
-        Ebean.update(clubImage);
-        return Results.ok("Bilde endret!");
     }
 
 }
