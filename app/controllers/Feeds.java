@@ -39,7 +39,7 @@ public class Feeds extends Controller {
             if (user == null) {
                 Logger.warn("The user table is empty, yet passes Authorization check, " +
                         "returning internal server error. Check database, user table");
-                return internalServerError("Noe gikk galt, kontakt administrator");
+                return internalServerError(views.html.error.render("Noe gikk galt, kontakt administrator"));
             }
 
             for (Club club : clubList) {
