@@ -1,0 +1,102 @@
+@(title: String)(implicit user: User = helpers.UserService.findById(session.get("id")))
+
+<div class="row">
+    <div class="small-12 columns show-for-medium-up backgroundimagelarge">
+        <img src="@routes.Assets.at("images/header.jpg")">
+
+        <a href="@routes.Feeds.index()">
+            <div class="headercircle-large text-center show-for-large-up">
+                <h3 class="headertext">Westerdals <br/> Oslo ACT </h3>
+                <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
+                <h5 class="headertext">Studentersamfundet's <br/>portal</h5>
+            </div>
+
+            <div class="headercircle-medium text-center show-for-medium-only">
+                <h3 class="headertext">Westerdals <br/> Oslo ACT </h3>
+                <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
+                <h5 class="headertext">Studentersamfundet's <br/>portal</h5>
+            </div>
+        </a>
+        <div id="bildetext-header">
+            <p>Bilde: Westerdals kompetanse</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="small-12 columns hide-for-medium-up">
+        <img id="backgroundimagesmall" src="@routes.Assets.at("images/header.jpg")">
+
+        <a href="@routes.Feeds.index()">
+            <div class="headercircle-small text-center hide-for-medium-up">
+                <h3 class="headertext">Westerdals<br/> Oslo ACT</h3>
+                <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
+                <h6 class="headertext">Studentersamfundet's<br/> portal</h6>
+            </div>
+        </a>
+        <div id="bildetext-header-small">
+            <p>Bilde: Westerdals kompetanse</p>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row text-center hide-for-medium-up buttonpanel ">
+
+    <div class="small-12 columns">
+        <ul class="small-block-grid-3 medium-block-grid-5 large-block-grid-5 text-center">
+            <li><a class="headertext" href="@routes.Feeds.index()">Feed </a></li>
+            <li><a class="headertext" href="@routes.Events.index()">Eventer </a></li>
+            <li><a class="headertext" href="@routes.Clubs.index()">Utvalg </a></li>
+            <li><a class="headertext" href="@routes.Initiation.index()">Fadderuka </a></li>
+            @if(user != null) {
+                <li><a class="headertext" href="@routes.Users.profile()">Profil </a></li>
+            } else {
+                <li><a class="headertext" href="@routes.OAuth2.login()">Login </a></li>
+            }
+        </ul>
+
+    </div>
+
+
+</div>
+
+
+<div id="header" class="show-for-medium-up"></div>
+
+<div class="buttonpanellarge row text-center show-for-medium-up">
+
+    <div class="medium-9 medium-centered columns">
+        <ul class="small-block-grid-3 medium-block-grid-5 large-block-grid-5 text-center">
+            <li><a class="headertext" href="@routes.Events.index()">Eventer </a></li>
+            <li><a class="headertext" href="@routes.Feeds.index()">Feed </a></li>
+            <li><a class="headertext" href="@routes.Clubs.index()">Utvalg </a></li>
+            <li><a class="headertext" href="@routes.Initiation.index()">Fadderuka </a></li>
+            @if(user != null) {
+                <li><a class="headertext" href="@routes.Users.profile()">Profil </a></li>
+            } else {
+                <li><a class="headertext" href="@routes.OAuth2.login()">Login </a></li>
+            }
+        </ul>
+    </div>
+
+</div>
+
+<div class="row">
+    <br />
+    <div class="small-4 columns">
+        <div id="line" class="lineright"></div>
+    </div>
+    <div class="small-4 columns text-center show-for-medium-up">
+        <h4><strong>@title<br /> <br /></strong></h4>
+    </div>
+    <div class="small-4 columns text-center hide-for-medium-up">
+        <h4><strong id="alt-title">@title<br /> <br /></strong></h4>
+    </div>
+    <div class="small-4 columns">
+        <div id="line" class="lineleft"></div>
+    </div>
+</div>
+
+

@@ -1,0 +1,32 @@
+@(feedList: List[Feed])
+@import models.Feed
+
+    @if(feedList != null && feedList.nonEmpty){
+
+        @views.html.feed.list(feedList)
+
+    }else{
+        <p>Ingen feeds å vise</p>
+
+    }
+
+    <div class="feed-create">
+        <strong>Opprett FeedPost</strong>
+        <form>
+            <label class="powerup-node" data-powerup-field="messageTitle" data-powerup-input=".feed-messageTitle">
+                Tittel:
+                <input class="feed-messageTitle" type="text">
+            </label>
+            <label class="powerup-node" data-powerup-field="message" data-powerup-input=".feed-message">
+                Melding:
+                <textarea class="feed-message" placeholder="innhold"></textarea>
+            </label>
+            <label class="powerup-node" data-powerup-field="pictureUrl" data-powerup-input=".feed-pictureUrl">
+                BildeLink:
+                <input class="feed-pictureUrl" type="text" placeholder="url her">
+            </label>
+        </form>
+    </div>
+    <script>
+    createStandardButton(getId($('.feed-create')));
+    </script>

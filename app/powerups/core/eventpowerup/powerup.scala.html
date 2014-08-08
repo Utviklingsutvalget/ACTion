@@ -1,0 +1,8 @@
+@(events: java.util.List[Event], userPresent: Boolean)
+@if(!events.isEmpty) {
+    @views.html.event.list(events, userPresent, false)
+} else {
+    <div class="medium-12 columns text-center">
+        <p>Ingen eventer å vise</p>
+    </div>
+}

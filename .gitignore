@@ -86,6 +86,7 @@ server.pid
 /dist/
 .cache
 
+!activator-launch-1.2.2.jar
 
 ### vim ###
 [._]*.s[a-w][a-z]
@@ -148,7 +149,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Created by http://www.gitignore.io
 
 ### Eclipse ###
 *.pydevproject
@@ -203,3 +203,8 @@ nb-configuration.xml
 
 #sftp configuration file
 sftp-config.json
+
+### Espresso ###
+*.esproj
+
+*.espressostorage

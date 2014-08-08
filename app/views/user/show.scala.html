@@ -1,0 +1,63 @@
+@(user: User)
+
+@main(user.getFirstName + " " + user.getLastName) {
+    <div class="row">
+        <div class="medium-10 columns medium-centered text-center">
+            <div class="medium-6 columns small-centered">
+                <img class="profile-photo" src="@(user.getPictureUrl)" alt="" />
+            </div>
+            <br /><br />
+            <h1>@(user.getFirstName + " " + user.getLastName)</h1>
+            <a href="mailto:@user.getEmail"> <h5><em>@user.getEmail</em></h5> </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="medium-12 medium-centered columns utvalg-content-placement">
+            <div class="row">
+                <br />
+                <div class="small-4 columns">
+                    <div id="line" class="lineright"></div>
+                </div>
+                <div class="small-4 columns text-center">
+                    <h5><strong>Oversikt<br /><br /></strong></h5>
+                </div>
+
+                <div class="small-4 columns">
+                    <div id="line" class="lineleft"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+    @if(!user.getMemberships.isEmpty) {
+        <div class="medium-4 columns text-center">
+            <p><strong>Utvalg @user.getFirstName er medlem av</strong></p>
+
+            <div id="bold-line"></div>
+
+            <ul class="no-bullet">
+            @for(membership <- user.getMemberships) {
+                @if(membership.level.getLevel > 0) {
+                    <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                }
+            }
+            </ul>
+        </div>
+    }
+        <div class="medium-4 columns text-center">
+            <p><strong>Kommende eventer</strong></p>
+
+            <div id="bold-line"></div>
+
+            <ul class="no-bullet">
+            @for(participation <- user.getParticipations) {
+                @if(participation.getRvsp) {
+                    <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
+                }
+            }
+            </ul>
+        </div>
+    </div>
+}

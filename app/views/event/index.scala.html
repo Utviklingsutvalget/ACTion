@@ -1,0 +1,34 @@
+@(events: java.util.List[Event], attendingEvents: java.util.List[Event], loggedIn: Boolean)
+
+@main("Eventer") {
+    <div class="row">
+        <div class="medium-10 columns medium-centered">
+            <p>Dette er en oversikt over alle kommende events arrangert av studentersamfunnet og forskjellige utvalg. Du kan enten velge å se alle, eller kun vise de eventene du er påmeldt</p>
+        </div>
+    </div>
+
+    @if(loggedIn && !attendingEvents.isEmpty) {
+        <div class="row">
+            <div class="medium-8 columns medium-centered">
+                <ul class="tabs button-group round even-2" data-tab>
+                    <li class="tab-title active"> <a href="#panel1" class="small button">Alle eventer</a></li>
+                    <li class="tab-title"> <a href="#panel2" class="small button">Påmeldte events</a></li>
+                </ul>
+            </div>
+        </div>
+    }
+
+    <div class="tabs-content">
+        <div class="content active" id="panel1">
+            @list(events, loggedIn, false)
+        </div>
+
+    @if(loggedIn && !attendingEvents.isEmpty) {
+        <div class="content" id="panel2">
+            @list(attendingEvents, loggedIn, true)
+        </div>
+    }
+    </div>
+
+
+}

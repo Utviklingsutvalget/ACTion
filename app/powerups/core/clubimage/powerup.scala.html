@@ -1,0 +1,18 @@
+@(imageLink: String, editable: Boolean)
+
+
+<img src="@(imageLink)">
+
+@if(editable) {
+    <div class="row change-image medium-12 columns">
+        <p class="medium-10 columns medium-centered">Her kan du endre utvalgsbildet ved å kopiere link direkte til bilder.
+        Denne utføringen av endringen er midlertidig frem til vi får ferdigutviklet dynamisk opplastningsløsning.</p>
+        <label class="medium-10 powerup-node" data-powerup-field="link" data-powerup-input=".image-link">
+            Endre bilde:
+            <input class="image-link" type="text" value="@(imageLink)">
+        </label>
+    </div>
+    <script>
+    createStandardButton ( getId ( $ ( '.change-image' ) ) ) ;
+    </script>
+}

@@ -1,0 +1,7 @@
+@(description: String)
+
+@if(description.equals("") || description.equals(null)){
+    <dd>Ingen beskrivelse</dd>
+}else{
+    <dd>@description</dd>
+}

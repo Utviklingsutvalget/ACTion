@@ -3,7 +3,59 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET           /                                controllers.Application.index()
+
+# Initiation week
+GET           /initiation                      controllers.Initiation.index()
+POST          /initiation                      controllers.Initiation.search()
+
+# Users
+GET           /users/profile                   controllers.Users.profile()
+GET           /users/profile/:id               controllers.Users.show(id: String)
+GET           /users/logout                    controllers.Users.logout()
+POST          /users/register                  controllers.Registration.submit()
+GET           /users/register/terms            controllers.Registration.terms()
+POST          /users/find                      controllers.Users.hasUserEmail()
+
+# Google OAuth2 routes
+GET           /login                           controllers.OAuth2.login()
+GET           /login/authenticate              controllers.OAuth2.authenticate(update:Int ?= 0)
+GET           /login/oauth2callback            controllers.OAuth2.exchange()
+
+# Clubs
+GET           /clubs                           controllers.Clubs.index()
+GET           /clubs/:id                       controllers.Clubs.show(id: Long)
+PUT           /clubs                           controllers.Clubs.update()
+PUT           /clubs/:clubId/:powerupId        controllers.Clubs.updatePowerup(clubId: Long, powerupId: Long)
+GET           /clubs/:clubId/:powerupId        controllers.Clubs.getPowerupContent(clubId: Long, powerupId: Long)
+POST          /clubs                           controllers.Clubs.create()
+
+# Events
+GET           /events                          controllers.Events.index()
+#GET        /events/new                      controllers.Events.create()
+POST          /events/save                     controllers.Events.save()
+POST          /events/attend                   controllers.Events.attend()
+
+#GET        /events/:id                      controllers.Events.edit(id:Long)
+POST          /events/:id                      controllers.Events.update(id:Long)
+GET           /events/:id                      controllers.Events.show(id: Long)
+POST          /events/:id/delete               controllers.Events.delete(id: Long)
+
+# Adminstration
+GET           /admin/clubs/:id                 controllers.Administration.showClub(id: Long)
+GET           /admin/site                      controllers.Administration.showSite()
+POST          /admin/site                      controllers.Administration.updateLocation()
+POST          /admin/site/delete               controllers.Administration.deleteClub()
+POST          /admin/guardian/add              controllers.Administration.addGuardian()
+DELETE        /admin/guardian                  controllers.Administration.deleteGuardian()
+GET           /admin/itslearning               controllers.Administration.redirectToItsLearning()
+
+
+#Feed
+GET           /feed                            controllers.Feeds.index()
+
+#Don't even try this one.
+GET           /admin/action                    controllers.Administration.makeAdmin()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET           /assets/*file                    controllers.Assets.at(path="/public", file)
