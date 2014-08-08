@@ -1,0 +1,581 @@
+@(locations: java.util.List[Location], clubList: java.util.List[Club], initGroups: java.util.List[InitiationGroup], maxGroup: Integer)
+
+@main("NettsideAdmin") {
+    <script src="@routes.Assets.at("javascripts/admin.js")" type="text/javascript" xmlns="http://www.w3.org/1999/html"></script>
+
+
+    <div class="row">
+        <div class="medium-11 small-centered columns">
+            <p>Dette er administratorpanelet for nettsiden. Her kan du oppdatere eller slette utvalg.
+            Du kan opprette nye faddere eller slette eksisterende. Du kan også oppdatere navn på Campus-lokasjoner.</p>
+        </div>
+    </div>
+
+    <!-- club -->
+    <div class="medium-12 medium-centered columns utvalg-content-placement">
+        <div class="row">
+            <br />
+            <div class="small-4 columns">
+                <div id="line" class="lineright"></div>
+            </div>
+            <div class="small-4 columns text-center">
+                <h5><strong>Utvalg<br /><br /></strong></h5>
+            </div>
+
+            <div class="small-4 columns">
+                <div id="line" class="lineleft"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXISITING CLUB LIST -->
+    <div class="row" data-equalizer>
+        <div class="medium-6 columns">
+            <form>
+                <fieldset>
+                    <legend>Eksisterende</legend>
+
+                    <div  id="clubDelete" class="admin-utvalg-oversikt">
+
+                        @for(club <- clubList){
+                            <div class="row collapse">
+                                <div class="small-9 columns">
+                                    <span class="prefix" data-club-name="@club.name">@club.name</span>
+                                </div>
+
+                                <div class="small-3 columns">
+                                    <a data-reveal-id="deleteModal" class="button postfix alert">Slett</a>
+                                </div>
+                            </div>
+                        }
+                        <div id="deleteModal" class="reveal-modal deleteModal" data-reveal>
+                            <h2>Sletting av utvalg</h2>
+                            <p class="lead">
+                                Når du sletter et utvalg fjernes alle medlemmer, eventer og tilhørende utvalgsrelatert info.
+                                <br>Vær sikker på at du sletter korrekt utvalg</p>
+
+                                <!-- class confirmDelete must not be removed -->
+                            <input class="confirmDelete" type="text" placeholder="Skriv navn på utvalg fra listen her">
+
+                                <!-- class deleteClub must not be removed -->
+                            <form class="pricing-table medium-12 columns deleteClub" action="@routes.Administration.deleteClub()" method="post">
+                                <br>
+                                <label class="insertCallback">Sletting av utvalg</label>
+                                <br>
+                                <label>
+                                    Utvalg:
+                                    <select class="clubDropDownList">
+                                    @for(club <- clubList) {
+                                            <!-- class clubId and data-club-name must not be removed -->
+                                        <option class="clubId" data-club-name="@club.name" data-club-id="@club.id" value="@club.id">@club.name</option>
+                                    }
+                                    </select>
+                                </label>
+                                <!-- button has been given class due to submit not responding to form -->
+                                <input class="submitDeleteClub button medium-4 columns alert" type="submit" value="Slett Utvalg">
+                            </form>
+                            <a class="close-reveal-modal">&#215;</a>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+
+        <!-- CREATE CLUB -->
+        <div class="medium-6 columns">
+            <form class="email-check-form" action="@routes.Clubs.create()" method="post">
+                <fieldset>
+                    <legend>Opprett et utvalg</legend>
+
+                    <div class="medium-12 columns">
+                        <label>Utvalgsnavn
+                            <input type="text" name="name" placeholder="Skriv inn navnet på utvalget" required>
+                        </label>
+                    </div>
+
+                    <div class="medium-12 columns">
+                        <label>Kort navn
+                            <input type="text" name="shortName" placeholder="Forkortelse" required>
+                        </label>
+                    </div>
+
+                    <div class="large-12 columns">
+                        <div class="row collapse">
+
+                            <div class="small-7 columns">
+                                <label>E-post
+                                    <input class="user-email" type="text" name="leader" placeholder="leders email" required>
+                            </div>
+
+                            <div class="small-5 columns">
+                                <label>&nbsp;</label>
+                                <span class="postfix radius">@@student.westerdals.no</span>
+                                <input class="email-postfix" type="hidden" name="postfix" value="@@student.westerdals.no">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="large-12 columns">
+                        <label>Lokasjon
+                            <select name="location">
+                                <option value="-1">Felles</option>
+                                @for(location <- locations) {
+                                    <option value="@location.id">@location.name</option>
+                                }
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="small-12 columns cta-button">
+                        <input class="button small newclub" type="submit" value="Opprett utvalg">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <!-- LOCATIONS -->
+    <div class="medium-12 medium-centered columns utvalg-content-placement">
+        <div class="row">
+            <br />
+            <div class="small-4 columns">
+                <div id="line" class="lineright"></div>
+            </div>
+            <div class="small-4 columns text-center">
+                <h5><strong>Lokasjoner<br /><br /></strong></h5>
+            </div>
+
+            <div class="small-4 columns">
+                <div id="line" class="lineleft"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPDATE/CHANGE LOCATIONS -->
+    <div class="row">
+        <div class="medium-12 columns">
+            <fieldset>
+                <legend>Lokasjonnavn</legend>
+
+                    <div class="row">
+                    <!-- unsure about result in case of more than 3 locations -->
+                        <div class="small-12 columns updateLocationMessage">
+
+                        </div>
+                    @for(location <- locations){
+                        <form class="updateLocation updateAction" action="@routes.Administration.updateLocation()" method="post">
+                            <input class="locationId" type="hidden" name="id" value="@location.id">
+                            <div class="large-4 columns">
+                                <div class="row collapse">
+
+                                    <div class="small-9 columns">
+                                        <input class="locationName" type="text" name="name" placeholder="@location.name">
+                                    </div>
+
+                                    <div class="small-3 columns">
+                                        <input class="button postfix" type="submit" name="submit" value="Oppdater">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <!-- GUARDIAN GROUPS -->
+    <div class="medium-12 medium-centered columns utvalg-content-placement">
+        <div class="row">
+            <br />
+            <div class="small-4 columns">
+                <div id="line" class="lineright"></div>
+            </div>
+            <div class="small-4 columns text-center">
+                <h5><strong>Faddergrupper<br /><br /></strong></h5>
+            </div>
+
+            <div class="small-4 columns">
+                <div id="line" class="lineleft"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GUARDIAN DISPLAY -->
+    <div class="row">
+        <div class="medium-6 columns">
+            <form>
+                <fieldset>
+                    <legend>Faddere</legend>
+
+                    <div id="admin-faddere-oversikt" class="admin-faddere-oversikt">
+                        <div class="row collapse">
+                            <div class="responseShow">
+
+                            </div>
+
+                            @for(group <- initGroups){
+                                <div class="small-9 columns displayGuardian">
+                                    <span class="prefix">@group.getGuardian.getFirstName
+                                        @group.getGuardian.getLastName, gruppe: @group.getGroupNumber</span>
+                                </div>
+                                <!-- This part is not yet functional -->
+                                <div class="small-3 columns">
+                                    <div data-guardian-id="@group.getGuardian.getId"
+                                         data-guardian-group="@group.getLocation.id"
+                                        class="button postfix alert submitDeleteGuardian">Slett
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+        </div>
+
+
+        <!-- ADD GUARDIAN -->
+        <div id="addguardian" class="medium-6 columns">
+            <form class="email-check-form" method="post" action="@routes.Administration.addGuardian()">
+                <fieldset>
+                    <legend>Legg til fadder</legend>
+
+                    <div class="large-12 columns collapse">
+                        <div class="row collapse">
+
+                            <div class="small-7 columns">
+                                <label>E-post
+                                    <input id="guardian-email" class="user-email" type="text" name="guardian" placeholder="e-post" required>
+                            </div>
+
+                            <div class="small-5 columns collapse">
+                                <label>&nbsp;</label>
+                                <span class="postfix radius">@@student.westerdals.no</span>
+                                <input class="email-postfix" type="hidden" name="postfix" value="@@student.westerdals.no">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="small-5 columns collapse">
+                        <label>Gruppenummer
+                            <input type="number" name="group-number" min="1" max="@(maxGroup + 1)" placeholder="@maxGroup">
+                        </label>
+                    </div>
+
+                    <div class="small-7 columns collapse">
+                        <label>Lokasjon
+                            <select name="location">
+                            @for(location <- locations) {
+                                <option value="@location.id">@location.name</option>
+                            }
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="medium-12 columns text-left collapse">
+                        <label>
+                            Telephone:
+                            <input type="tel" name="phone" placeholder="eks: 123 45 678" required>
+                        </label>
+                    </div>
+
+                    <div class="small-12 columns collapse">
+                        <button class="update-init-group small button">Lagre</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    @*
+    @if(!initGroups.isEmpty) {
+        <div class="row medium-12 medium-centered">
+            <ul class="pricing-table">
+                <li class="title">Endre faddere</li>
+                @for(initGroup <- initGroups) {
+                    <li class="bullet-item row collapse">
+                        <div class="medium-11 columns">
+                            <form class="email-check-form" method="post" action="@routes.Administration.addGuardian()">
+                                <div class="small-1 columns left">
+                                    <label class="text-left">Gruppe
+                                        <input type="number" name="group-number" min="1" max="@(maxGroup + 1)" value="@initGroup.getGroupNumber">
+                                    </label>
+                                </div>
+                                <div class="medium-4 columns">
+                                    <div class="row collapse">
+
+                                        <label class="small-4 columns text-left">
+                                Fadder
+                                            <input id="guardian-email" class="user-email" type="text" name="guardian" placeholder="fadders e-post"
+                                            value="@initGroup.getGuardian.getEmail.substring(0, initGroup.getGuardian.getEmail.indexOf("@"))" disabled>
+                                        </label>
+                                        <label class="small-8 columns">
+                                            <br>
+                                            <span class="postfix radius">@@student.westerdals.no</span>
+                                            <input class="email-postfix" type="hidden" name="postfix" value="@@student.westerdals.no">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="medium-2 columns text-left">
+                                    <label>
+                                    Telephone:
+                                        <input type="tel" name="phone" value="@initGroup.getPhoneNumber" placeholder="eks: 123 45 678">
+                                    </label>
+                                </div>
+                                <div class="small-3 columns text-left">
+                                    <label>
+                                Lokasjon
+                                        <select name="location" class="disabled">
+                                            <option value="@initGroup.getLocation.id" selected>@initGroup.getLocation.name</option>
+                                            @for(location <- locations) {
+                                                @if(initGroup.getLocation.id != location.id) {
+                                                    <option value="@location.id">@location.name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </label>
+                                </div>
+                                <ul class="medium-2 columns collapse button-group round">
+                                    <li class="medium-3 columns"><button class="update-init-group small button text-left"><small>Oppdater</small></button></li>
+                                    <li class="medium-3 columns"><button data-init-guardian="@initGroup.getGuardian.getId" data-init-location="@initGroup.getLocation.id" class="delete-init-group small alert button text-right"><small>Slett</small></button></li>
+                                </ul>
+                            </form>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+
+    }
+    *@
+
+
+    <!--  -------------------     THIS IS THE OLD HTML ----------------------->
+    @*
+    <div class="row">
+            <!-- Create club -->
+        <div class="medium-6 columns">
+            <form class="email-check-form" action="@routes.Clubs.create()" method="post">
+                <ul class="pricing-table">
+                    <li>
+                        <div class="title">
+                            <span>Opprett utvalg</span>
+                        </div>
+                    </li>
+                    <li>
+                        <label class="bullet-item text-left">
+                            Utvalgsnavn:
+                            <input type="text" name="name" placeholder="Skriv inn navnet på utvalget" required>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="bullet-item text-left">
+                            Forkortelse:
+                            <input type="text" name="shortName" placeholder="Forkortelse" required>
+                        </label>
+                    </li>
+                    <li class="bullet-item small-12 columns">
+                        <div class="row collapse">
+                            <label class="small-7 columns text-left">
+                                Leders e-post
+                                <input class="user-email" type="text" name="leader" placeholder="leders email" required>
+                            </label>
+                            <label class="small-5 columns">
+                                <br>
+                                <span class="postfix">@@student.westerdals.no</span>
+                                <input class="email-postfix" type="hidden" name="postfix" value="@@student.westerdals.no">
+                            </label>
+                        </div>
+                    </li>
+                    <li class="bullet-item">
+                        <label class="text-left">
+                            Lokasjon
+                            <select name="location">
+                                <option value="-1">Felles</option>
+                                @for(location <- locations) {
+                                    <option value="@location.id">@location.name</option>
+                                }
+                            </select>
+                        </label>
+                    </li>
+                    <li class="cta-button">
+                        <input class="button newclub" type="submit" value="Opprett utvalg">
+                    </li>
+                </ul>
+            </form>
+        </div>
+
+            <!-- Location table edit -->
+        <div class="medium-6 columns">
+            <ul class="pricing-table">
+                <li class="title">
+                    <span>Endre navn på lokasjoner</span>
+                </li>
+                @for(location <- locations) {
+                    <li class="bullet-item row collapse">
+                        <form class="medium-12 columns updateLocation" action="@routes.Administration.updateLocation()" method="post">
+                            <input class="locationId" type="hidden" name="id" value="@location.id">
+                            <label class="medium-8 columns">
+                                <input class="locationName" type="text" name="name" value="@location.name">
+                            </label>
+                            <input class="button medium-4 columns alert right" type="submit" name="submit" value="Oppdater">
+                        </form>
+                    </li>
+                }
+            </ul>
+        </div>
+
+            <!-- Club delete -->
+        <div id="clubDelete" class="medium-6 columns">
+            <a class="button alert" data-reveal-id="deleteModal">Slett utvalg</a>
+                <!-- class deleteModal must not be removed -->
+            <div id="deleteModal" class="reveal-modal deleteModal" data-reveal>
+                <h2>Sletting av utvalg</h2>
+                <p class="lead">
+                    Når du sletter et utvalg fjernes alle medlemmer, eventer og tilhørende utvalgsrelatert info.
+                    <br>Vær sikker på at du sletter korrekt utvalg</p>
+
+                    <!-- class confirmDelete must not be removed -->
+                <input class="confirmDelete" type="text" placeholder="Skriv navn på utvalg fra listen her">
+
+                    <!-- class deleteClub must not be removed -->
+                <form class="pricing-table medium-12 columns deleteClub" action="@routes.Administration.deleteClub()" method="post">
+                    <br>
+                    <label>Sletting av utvalg</label>
+                    <br>
+                    <label>
+                        Utvalg:
+                        <select>
+                        @for(club <- clubList) {
+                                <!-- class clubId and data-club-name must not be removed -->
+                            <option class="clubId" data-club-name="@club.name" value="@club.id">@club.name</option>
+                        }
+                        </select>
+                    </label>
+                    <input class="button medium-4 columns alert" type="submit" value="Slett Utvalg">
+                </form>
+                <a class="close-reveal-modal">&#215;</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="addguardian" class="medium-12">
+            <form class="email-check-form" method="post" action="@routes.Administration.addGuardian()">
+                <ul class="pricing-table">
+                    <li class="title">
+                        <span>Legg til fadder</span>
+                    </li>
+                    <li class="bullet-item row collapse">
+                        <div class="medium-12 columns">
+                            <form>
+                                <div class="medium-1 columns left">
+                                    <label class="text-left">Gruppe
+                                        <input type="number" name="group-number" min="1" max="@(maxGroup + 1)" placeholder="@maxGroup">
+                                    </label>
+                                </div>
+                                <div class="medium-4 columns">
+                                    <div class="row collapse">
+
+                                        <label class="small-4 columns text-left">
+                                            Fadder
+                                            <input id="guardian-email" class="user-email" type="text" name="guardian" placeholder="e-post" required>
+                                        </label>
+                                        <label class="small-8 columns">
+                                            <br>
+                                            <span class="postfix">@@student.westerdals.no</span>
+                                            <input class="email-postfix" type="hidden" name="postfix" value="@@student.westerdals.no">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="medium-2 columns text-left">
+                                    <label>
+                                        Telephone:
+                                        <input type="tel" name="phone" placeholder="eks: 123 45 678">
+                                    </label>
+                                </div>
+                                <div class="medium-3 columns text-left">
+                                    <label>
+                                        Lokasjon
+                                        <select name="location">
+                                        @for(location <- locations) {
+                                            <option value="@location.id">@location.name</option>
+                                        }
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="medium-2 columns">
+                                    <button class="update-init-group button right">Lagre</button>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        @if(!initGroups.isEmpty) {
+            <ul class="pricing-table">
+                <li class="title">Endre faddere</li>
+                @for(initGroup <- initGroups) {
+                    <li class="bullet-item row collapse">
+                        <div class="medium-12 columns">
+                            <form class="email-check-form" method="post" action="@routes.Administration.addGuardian()">
+                                <div class="small-1 columns left">
+                                    <label class="text-left">Gruppe
+                                        <input type="number" name="group-number" min="1" max="@(maxGroup + 1)" value="@initGroup.getGroupNumber">
+                                    </label>
+                                </div>
+                                <div class="medium-4 columns">
+                                    <div class="row collapse">
+
+                                        <label class="small-4 columns text-left">
+                                Fadder
+                                            <input id="guardian-email" class="user-email" type="text" name="guardian" placeholder="fadders e-post"
+                                            value="@initGroup.getGuardian.email.substring(0, initGroup.getGuardian.email.indexOf("@"))" disabled>
+                                        </label>
+                                        <label class="small-8 columns">
+                                            <br>
+                                            <span class="postfix">@@student.westerdals.no</span>
+                                            <input class="email-postfix" type="hidden" name="postfix" value="@@student.westerdals.no">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="medium-2 columns text-left">
+                                    <label>
+                                    Telephone:
+                                        <input type="tel" name="phone" value="@initGroup.getPhoneNumber" placeholder="eks: 123 45 678">
+                                    </label>
+                                </div>
+                                <div class="small-3 columns text-left">
+                                    <label>
+                                Lokasjon
+                                        <select name="location" class="disabled">
+                                            <option value="@initGroup.getLocation.id" selected>@initGroup.getLocation.name</option>
+                                            @for(location <- locations) {
+                                                @if(initGroup.getLocation.id != location.id) {
+                                                    <option value="@location.id">@location.name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </label>
+                                </div>
+                                <ul class="medium-2 columns collapse button-group round">
+                                    <li class="medium-6 columns"><button class="update-init-group small button text-left"><small>Oppdater</small></button></li>
+                                    <li class="medium-6 columns"><button data-init-guardian="@initGroup.getGuardian.id" data-init-location="@initGroup.getLocation.id" class="delete-init-group small alert button text-right"><small>Slett</small></button></li>
+                                </ul>
+                            </form>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    *@
+
+    <script>
+    $ ( document ).ready ( admin ( ) ) ;
+    </script>
+}

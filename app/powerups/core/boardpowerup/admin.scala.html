@@ -1,0 +1,77 @@
+@(board: List[powerups.models.BoardMembership], memberList: List[Membership], posts: List[powerups.models.BoardPost])
+
+
+<!-- DISPLAY EACH TITLE IN BOARD AND BOARDEXTRA -->
+<form data-abide data-powerup-update-type="update" class="boardmember powerup-body">
+    @for(boardmember <- board) {
+        <fieldset class="powerup-node" data-powerup-field="@boardmember.boardPost.id" data-powerup-select='.@(boardmember.boardPost.id)Select'>
+            <legend>@boardmember.boardPost.title</legend>
+
+            <label>Email
+                <input type="text" value="@boardmember.user.getEmail" disabled>
+            </label>
+
+            <label>Name
+                <select class='@(boardmember.boardPost.id)Select'>
+
+                        <!-- ADDS CURRENT HOLDER OF TITLE FIRST IN THE LISTVIEW -->
+                    <option value="@boardmember.user.getId" selected>@boardmember.user.getFirstName @boardmember.user.getLastName</option>
+                    @for(members <- memberList) {
+
+                            <!-- ADDS ALL CONSECUTIVE MEMBERS IN LIST (EXCEPT THE MEMBER HOLDING THE TITLE CURRENTLY) -->
+                        @if(!members.user.getId.equals(boardmember.user.getId)) {
+                            <option value="@members.user.getId"
+                            data-powerup-value="@members.user.getId">@members.user.getFirstName @members.user.getLastName</option>
+                        }
+                    }
+                        <!-- testing for potential removal of titles-->
+                    <option value="" data-powerup-value=""></option>
+                </select>
+            </label>
+        </fieldset>
+    }
+</form>
+<script>
+createUpdateTypeButton ( getId ( $ ( '.boardmember' ) ), '.boardmember' ) ;
+</script>
+<form class="powerup-body addPost" data-powerup-update-type="add">
+    <fieldset>
+        <legend>Legg til styremedlem</legend>
+        <label class="powerup-node" data-powerup-field="title" data-powerup-select='#board-post-select'>Styrepost
+            <select id="board-post-select">
+                <option value=""></option>
+                @for(post <- posts) {
+                    <option value="@(post.id)" data-powerup-value="@(post.id)">@(post.title)</option>
+                }
+            </select>
+        </label>
+        <label class="powerup-node" data-powerup-field="user" data-powerup-select='#board-user-select'>Medlem
+            <select id="board-user-select">
+                <option value="" selected></option>
+                @for(member <- memberList) {
+                    <option value="@(member.user.getId)" data-powerup-value="@(member.user.getId)">@(member.user.getFirstName + " " + member.user.getLastName)</option>
+                }
+            </select>
+        </label>
+    </fieldset>
+</form>
+<script>
+createUpdateTypeButton ( getId ( $ ( '.addPost' ) ), '.addPost' ) ;
+</script>
+<form data-abide class="createPost powerup-body" data-powerup-update-type="create">
+    <fieldset id='newTitleNode' class="powerup-node" data-powerup-field="title" data-powerup-input="#newTitleInput">
+
+        <legend>Opprett styrepost</legend>
+
+        <label>Tittel
+            <input id="newTitleInput" type="text" required placeholder="Må inneha en tittel">
+        </label>
+        <label>
+            <input class="powerup-node" data-powerup-field="mandatory" type="checkbox" data-powerup-checkbox>
+            Obligatorisk<br>
+        </label>
+    </fieldset>
+</form>
+<script>
+createUpdateTypeButton ( getId ( $ ( '.createPost' ) ), '.createPost' ) ;
+</script>

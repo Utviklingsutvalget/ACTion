@@ -1,0 +1,25 @@
+@(feedList: java.util.List[Feed])
+@import models.Feed
+
+<div id="feed" data-magellan-destination="feed">
+@if(feedList != null || feedList.nonEmpty) {
+
+        @for(feed <- feedList) {
+            <div class="row">
+
+                <div class="medium-6 columns">
+                    <img src="@feed.pictureUrl"/>
+                    <h6>@feed.getDateTime</h6>
+                    <h4>@feed.messageTitle</h4>
+                    <p>@feed.message</p>
+                </div>
+            </div>
+        }
+} else {
+
+    <div class="large-10 columns">
+            <!-- HEADER -->
+        <h3>Ingen nyheter å vise</h3>
+    </div>
+}
+</div>

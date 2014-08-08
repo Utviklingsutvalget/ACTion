@@ -1,0 +1,29 @@
+@(events: java.util.List[Event], loggedIn: Boolean, secondSet: Boolean)
+
+@for(event <- events) {
+    <div class="row">
+            <!-- DATE -->
+        <div class="large-2 columns text-left paragraph-date">
+            <h5>@event.getDateString<br>@event.getTimeString</h5>
+        </div>
+            <!-- TEXT -->
+        <div class="large-10 columns">
+                <!-- HEADER -->
+            <h3><a href="@routes.Events.show(event.id)">@event.name</a></h3>
+            @if(event.club != null) {<h9>@event.club.name</h9>}
+            <br /><br />
+                <!-- PARAGRAPH -->
+            <p>@event.description</p>
+            @if(loggedIn) {
+                @eventbutton(event, secondSet)
+            }
+        </div>
+    </div>
+    <!-- LINE SEPARATOR -->
+    <div class="row">
+        <div class="small-12 columns">
+            <div id="line-separator" class="line-separator-mid"></div>
+            <br />
+        </div>
+    </div>
+}

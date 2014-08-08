@@ -1,0 +1,51 @@
+@(feedList: java.util.List[Feed], initialFeedList: java.util.List[Feed])
+@import models.Feed
+
+    <!-- FEED -->
+
+@main("Feed") {
+
+    <div class="row">
+    @if(initialFeedList.nonEmpty) {
+
+        @for(feed <- initialFeedList) {
+            <div class="medium-6 columns">
+                <img src="@feed.pictureUrl"/>
+                <h6><em>@feed.getDateTime</em>
+                </h6>
+                <h4>@feed.messageTitle</h4>
+                <small>@feed.club.name , @feed.user.getFirstName @feed.user.getLastName</small>
+                <p>@feed.message</p>
+            </div>
+        }
+
+        @if(feedList.nonEmpty) {
+
+            <div class="medium-12 columns">
+                <div id="line-separator-wide"></div>
+                <br /><br />
+            </div>
+
+            @for(feed <- feedList) {
+
+                <div class="medium-4 columns">
+                    <img src="@feed.pictureUrl"/>
+                    <h6>@feed.getDateTime</h6>
+                    <h4>@feed.messageTitle</h4>
+                    <p>@feed.message</p>
+                </div>
+            }
+        }
+    } else {
+
+        <div class="row">
+            <div class="large-12 columns text-center">
+
+                    <!-- HEADER -->
+                <h3>Ingen feeds å vise</h3>
+
+            </div>
+        </div>
+    }
+    </div>
+}

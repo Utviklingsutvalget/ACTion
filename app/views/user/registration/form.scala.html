@@ -1,0 +1,80 @@
+@(registrationForm: Form[User])(termString: String)
+
+@import views.html.helper._
+
+@main("Registering") {
+
+    @helper.form(action = routes.Registration.submit) {
+
+        <div class="row">
+            <div class="medium-10 medium-centered columns panel callout">
+                <p>Vennligst kontroller at informasjonen vi har fått fra Google er riktig.
+                    Ved feil må du endre dine Google-opplysninger. Om dette fortsatt ikke løser problemet
+                    ta kontakt med administrasjonen.</p>
+            </div>
+        </div>
+
+        <form>
+            <input type="hidden" name="id" value="@registrationForm("id").value">
+
+            <div class="row">
+
+                <div class="medium-10 medium-centered columns">
+
+                    <div class="medium-6 columns">
+
+                    @inputText(
+                        registrationForm("firstName"),
+                        '_label -> "Fornavn",
+                        'class -> "input-xlarge",
+                        'readonly -> "readonly",
+                        '_showConstraints -> false,
+                        '_error -> registrationForm.globalError
+                    )
+
+                    </div>
+                    <div class="medium-6 columns">
+
+                    @inputText(
+                        registrationForm("lastName"),
+                        '_label -> "Etternavn",
+                        'class -> "input-xlarge",
+                        'readonly -> "readonly",
+                        '_showConstraints -> false,
+                        '_error -> registrationForm.globalError
+                    )
+                    </div>
+
+                    <div class="medium-6 columns">
+                    @inputText(
+                        registrationForm("email"),
+                        'readonly -> "readonly",
+                        '_showConstraints -> false,
+                        '_label -> "E-post"
+                    )
+                    </div>
+
+
+                    @*<div class="large-8 columns">
+                    <input type="hidden" name="pictureUrl" value="@registrationForm("pictureUrl").value" />
+                    <img src="@registrationForm("pictureUrl").value?sz=100" />
+                    </div>*@
+
+
+                    <div class="medium-12 columns">
+                        @checkbox(
+                            registrationForm("accept"),
+                            '_label -> None, '_text -> Html(termString),
+                            '_showConstraints -> false
+                        )
+                    </div>
+
+                    <div class="medium-12 columns">
+                        <input type="submit" class="button medium" value="Bli med">
+                        <a href="@routes.Application.index()" class="button medium alert">Avbryt</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+}

@@ -1,0 +1,38 @@
+
+.resize-none{
+	resize: none;
+}
+.textarea-size-max{
+	height: 200px;
+}
+.inline{
+	display: inline-block;
+}
+.min-width{
+	min-width: 200px;
+}
+.text-thick{
+	font-weight: bold;
+}
+.background-color-lightgray{
+	background-color: rgb(230,230,230);
+}
+.text-color-white{
+	color: rgb(250,250,250);
+}
+.absolute{
+	position: relative;
+}
+.padding{
+	left:15px;
+}
+#backgroundimglarge-bottom{
+	position: absolute;
+	height: 70px;
+	width: 100%;
+	background-image: url(../img/forest.jpg);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
