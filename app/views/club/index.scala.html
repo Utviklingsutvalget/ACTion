@@ -30,6 +30,7 @@
                 <li class="utvalg-width tab-title@if(location.cssId == 1) { active}"><a href="#panel@location.cssId">@location.name</a></li>
             }
             </ul>
+
             <div class="tabs-content vertical">
             @for(location <- locations) {
                 <div class="content@if(location.cssId == 1) { active}" id="panel@location.cssId">
