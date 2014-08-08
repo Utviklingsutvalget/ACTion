@@ -7,6 +7,11 @@
         <div class="medium-10 columns medium-centered text-center">
             <div class="medium-6 columns small-centered">
                 <img class="profile-photo" src="@(user.getPictureUrl)" alt="" />
+                <div data-alert class="alert-box info radius">
+                    Bruk gravatar.com til å endre profilbilde. Lag deg en bruker der med din (at)student.westerdals.no-mail, og legg til profilbilde.
+                    Da skal profilbilde ditt oppdateres her.
+                    <a href="#" class="close">&times;</a>
+                </div>
             </div>
             <br /><br />
             @defining(user.getFirstName + " " + user.getLastName) { fullName =>
@@ -23,7 +28,7 @@
         <br /><br />
         <div class="small-12 columns text-center">
             <a href="@routes.Users.logout()" class="button small">Logg ut</a>
-            <a href="@routes.OAuth2.authenticate(1)" class="button small">Oppdater</a>
+            @*<a href="@routes.OAuth2.authenticate(1)" class="button small">Oppdater</a>*@
         </div>
     </div>
 
