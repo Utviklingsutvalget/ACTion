@@ -51,7 +51,7 @@ public class Administration extends Controller {
         return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
     }
 
-    public static Result redirectToItsLearning(){
+    public static Result redirectToItsLearning() {
         return redirect(ITSLEARNINGREDIRECT);
     }
 
@@ -247,7 +247,7 @@ public class Administration extends Controller {
         if (group != null) {
             Ebean.delete(group);
             Logger.info("fant gruppen");
-        }else{
+        } else {
             badRequest("Ingen faddergruppe funnet");
         }
 

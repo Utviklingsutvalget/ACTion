@@ -13,6 +13,7 @@ import java.util.List;
  * care is taken to ensure that the className field is entered as noted below. It is imperative that each field for the
  * powerup is filled out precisely, or unpredictable behaviour might occur. This is, as above, due to the behaviour of
  * the class loader.
+ *
  * @see powerups.Powerup
  * @see com.avaje.ebean.Ebean
  * @see play.db.ebean.Model
@@ -30,6 +31,7 @@ public class PowerupModel extends Model {
      * package. As an example, the DescriptionPowerup class resides in the powerups.core.descriptionpowerup package,
      * so its className should be "core.descriptionpowerup.DescriptionPowerup". Please do not label a powerup as core
      * unless it is intended to be mandatory and used by every club.
+     *
      * @see powerups.core.descriptionpowerup.DescriptionPowerup
      */
     @Constraints.Required
@@ -44,6 +46,7 @@ public class PowerupModel extends Model {
 
     /**
      * This field is used to determine if any new clubs should automatically have this powerup activated for them.
+     *
      * @see models.Activation
      * @see models.Club
      */
@@ -55,6 +58,7 @@ public class PowerupModel extends Model {
      * associated view. Please keep in mind that not all powerups should have a menu entry. For example, we do not
      * require a link that takes us to the club's image. This is also used to determine whether or not this powerup
      * should have a headline above it, though this is subject to change in the future.
+     *
      * @see views.html.club.show
      */
     @Constraints.Required

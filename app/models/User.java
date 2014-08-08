@@ -99,7 +99,7 @@ public class User extends Model {
     }
 
     public String getPictureUrl() {
-        if(gravatarUrl == null) {
+        if (gravatarUrl == null) {
             return this.pictureUrl;
         }
         return this.getGravatarUrl();

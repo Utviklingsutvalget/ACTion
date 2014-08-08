@@ -2,13 +2,11 @@ package controllers;
 
 import helpers.UserService;
 import models.User;
-import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.user.registration.form;
 import views.html.user.registration.terms;
-import views.html.index;
 
 public class Registration extends Controller {
 
@@ -18,10 +16,10 @@ public class Registration extends Controller {
 
         Form<User> filledForm = registrationForm.bindFromRequest();
 
-        if(!"true".equals(filledForm.field("accept").value()))
+        if (!"true".equals(filledForm.field("accept").value()))
             filledForm.reject("accept", "Du må akseptere brukeravtalen");
 
-        if(filledForm.hasErrors()) {
+        if (filledForm.hasErrors()) {
             return badRequest(form.render(filledForm));
         }
 

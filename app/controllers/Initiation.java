@@ -4,7 +4,6 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.InitiationGroup;
 import models.Location;
-import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -82,8 +81,8 @@ public class Initiation extends Controller {
                     // Checking if the group already has a list, if not, set up the key/value pair
                     if (!groupMap.containsKey(groupNumber)) {
                         List<InitiationGroup> mapList = new ArrayList<>();
-                        for(InitiationGroup initiationGroup : tempList) {
-                            if(initiationGroup.getGroupNumber() == groupNumber) {
+                        for (InitiationGroup initiationGroup : tempList) {
+                            if (initiationGroup.getGroupNumber() == groupNumber) {
                                 mapList.add(initiationGroup);
                             }
                         }

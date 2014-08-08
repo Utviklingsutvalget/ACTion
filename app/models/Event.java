@@ -1,6 +1,5 @@
 package models;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -58,10 +57,6 @@ public class Event extends Model {
         this.host = host;
     }
 
-    public User getHost(){
-        return this.host;
-    }
-
     public static List<String> getPrivacyAsList() {
         ArrayList<String> list = new ArrayList<>();
 
@@ -71,8 +66,12 @@ public class Event extends Model {
         return list;
     }
 
+    public User getHost() {
+        return this.host;
+    }
+
     public String getTimeString() {
-        if(timeString == null) {
+        if (timeString == null) {
             return setTimeString();
         }
         return timeString;
@@ -92,7 +91,7 @@ public class Event extends Model {
     }
 
     public String getDateString() {
-        if(dateString == null) {
+        if (dateString == null) {
             return setDateString();
         }
         return dateString;

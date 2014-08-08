@@ -6,7 +6,6 @@ import models.Event;
 import models.Participation;
 import models.User;
 import org.joda.time.LocalDateTime;
-import play.Logger;
 import play.data.Form;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -15,7 +14,8 @@ import utils.Authorize;
 import utils.EventSorter;
 import views.html.error;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static play.data.Form.form;
 
@@ -32,7 +32,7 @@ public class Events extends Controller {
         try {
             user = new Authorize.UserSession().getUser();
             for (Event e : events) {
-                if(!e.startTime.isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
+                if (!e.startTime.isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
                     allEvents.add(e);
                 }
                 Participation participation = new Participation(e, user);
@@ -41,7 +41,7 @@ public class Events extends Controller {
                     i = e.participants.indexOf(participation);
                     participation = e.participants.get(i);
                     e.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
-                    if(participation.getRvsp()) {
+                    if (participation.getRvsp()) {
                         attendingEvents.add(e);
                     }
                 }
@@ -60,15 +60,16 @@ public class Events extends Controller {
         User user = null;
         try {
             user = new Authorize.UserSession().getUser();
-        } catch (Authorize.SessionException ignored) {}
+        } catch (Authorize.SessionException ignored) {
+        }
         Participation participation = new Participation(event, user);
-        if(event.participants.contains(participation)) {
+        if (event.participants.contains(participation)) {
             int i = event.participants.indexOf(participation);
             participation = event.participants.get(i);
             event.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
             event.setUserAttending(event.participants.get(i).getRvsp());
         }
-        if(user != null) {
+        if (user != null) {
             return ok(views.html.event.show.render(event, true));
         } else {
             return ok(views.html.event.show.render(event, false));
@@ -148,16 +149,16 @@ public class Events extends Controller {
         Long eventId = json.findValue("event").asLong();
         boolean newRvsp = json.findValue("attend").asBoolean();
         Event event = Event.find.byId(eventId);
-        if(event == null) {
+        if (event == null) {
             return internalServerError("No such event");
         }
         Participation participation = Participation.find.byId(new Participation(event, user).id);
-        if(participation == null) {
+        if (participation == null) {
             participation = new Participation(event, user);
             participation.setRvsp(newRvsp);
             Ebean.save(participation);
         } else {
-            if(participation.getRvsp() != newRvsp) {
+            if (participation.getRvsp() != newRvsp) {
                 participation.setRvsp(newRvsp);
                 Ebean.update(participation);
             }

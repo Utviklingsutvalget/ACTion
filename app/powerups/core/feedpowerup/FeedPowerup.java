@@ -3,7 +3,7 @@ package powerups.core.feedpowerup;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
-import models.*;
+import models.Feed;
 import models.PowerupModel;
 import models.User;
 import play.Logger;

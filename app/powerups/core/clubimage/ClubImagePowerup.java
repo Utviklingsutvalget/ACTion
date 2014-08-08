@@ -57,7 +57,7 @@ public class ClubImagePowerup extends Powerup {
         ImageLinkValidator validator = new ImageLinkValidator(new Dimension(800, 300), new Dimension(1600, 600));
         ImageLinkValidator.StatusMessage statusMessage = validator.validate(url);
 
-        if(statusMessage.isSuccess()) {
+        if (statusMessage.isSuccess()) {
             clubImage.imageUrl = url;
             Ebean.update(clubImage);
             return Results.ok("Utvalgsbilde endret");

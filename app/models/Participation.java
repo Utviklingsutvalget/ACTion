@@ -9,48 +9,45 @@ import javax.persistence.*;
 public class Participation extends Model {
 
     public static Finder<ParticipationKey, Participation> find = new Finder<>(ParticipationKey.class, Participation.class);
+    @EmbeddedId
+    public ParticipationKey id;
+    @ManyToOne
+    @JoinColumn(name = "event_id", insertable = false, updatable = false)
+    public Event event;
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    public User user;
+    @Constraints.Required
+    public Status rvsp;
 
-    public Participation(Event event, User user){
+    public Participation(Event event, User user) {
         this.event = event;
         this.user = user;
-        if(user != null && event != null) {
+        if (user != null && event != null) {
             this.id = new ParticipationKey(event.id, user.getId());
 
-            if(user == event.getHost()){
+            if (user == event.getHost()) {
                 setHostRvsp();
             }
         }
     }
 
-    @EmbeddedId
-    public ParticipationKey id;
-
-    @ManyToOne
-    @JoinColumn(name = "event_id", insertable = false, updatable = false)
-    public Event event;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    public User user;
-
-    @Constraints.Required
-    public Status rvsp;
-
-    public void setHostRvsp(){
+    public void setHostRvsp() {
         this.rvsp = Status.HOSTING;
     }
 
     /**
      * Attempts to set the RVSP for a user to this participation's event. Returns false if no change was made.
+     *
      * @param newRvsp The RVSP status you wish to set.
      * @return Whether or not there was anything to change.
      */
     public boolean setRvsp(boolean newRvsp) {
-        if(this.rvsp != Status.HOSTING){
-            if(newRvsp && (this.rvsp == Status.NOT_ATTENDING || this.rvsp == null)) {
+        if (this.rvsp != Status.HOSTING) {
+            if (newRvsp && (this.rvsp == Status.NOT_ATTENDING || this.rvsp == null)) {
                 this.rvsp = Status.ATTENDING;
                 return true;
-            } else if(!newRvsp && (this.rvsp == Status.ATTENDING || this.rvsp == null)) {
+            } else if (!newRvsp && (this.rvsp == Status.ATTENDING || this.rvsp == null)) {
                 this.rvsp = Status.NOT_ATTENDING;
                 return true;
             }

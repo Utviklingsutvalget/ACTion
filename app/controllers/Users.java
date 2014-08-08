@@ -9,7 +9,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
 import utils.Authorize;
-import views.html.index;
 import views.html.user.profile;
 import views.html.user.show;
 

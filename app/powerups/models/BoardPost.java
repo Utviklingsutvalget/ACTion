@@ -1,14 +1,10 @@
 package powerups.models;
 
-import javafx.beans.DefaultProperty;
-import models.Club;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.List;
 
 @Entity
 public class BoardPost extends Model {

@@ -5,19 +5,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
 import org.jsoup.Jsoup;
-import play.Logger;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import powerups.Powerup;
+import powerups.core.descriptionpowerup.html.admin;
 import powerups.core.descriptionpowerup.html.listdesc;
 import powerups.core.descriptionpowerup.html.powerup;
-import powerups.core.descriptionpowerup.html.admin;
 import powerups.models.ClubDescription;
 import utils.MembershipLevel;
 
-import static play.mvc.Results.badRequest;
-import static play.mvc.Results.internalServerError;
-import static play.mvc.Results.ok;
+import static play.mvc.Results.*;
 
 /**
  * Specific implementation of the {@link powerups.Powerup} class. This powerup is used to show information about clubs
@@ -29,6 +26,7 @@ public class DescriptionPowerup extends Powerup {
     public static final String LIST_STRING = "listdesc";
     /**
      * The model used by this powerup to hold information about descriptions.
+     *
      * @see powerups.models.ClubDescription
      */
     private final ClubDescription clubDesc;
@@ -67,14 +65,14 @@ public class DescriptionPowerup extends Powerup {
 
     @Override
     public Result update(JsonNode updateContent) {
-        if(!updateContent.has(FIELD_STRING)) {
+        if (!updateContent.has(FIELD_STRING)) {
             return internalServerError("En feil har oppstått");
-        } else if(updateContent.get(FIELD_STRING).asText().equals(clubDesc.description)
+        } else if (updateContent.get(FIELD_STRING).asText().equals(clubDesc.description)
                 && updateContent.get(LIST_STRING).asText().equals(clubDesc.listDescription)) {
             return ok("Ingen endringer å lagre");
-        } else if(this.editable) {
+        } else if (this.editable) {
             this.clubDesc.description = updateContent.get(FIELD_STRING).asText();
-            if(updateContent.has(LIST_STRING)) {
+            if (updateContent.has(LIST_STRING)) {
                 this.clubDesc.listDescription = Jsoup.parse(updateContent.get(LIST_STRING).asText()).body().text();
             }
             Ebean.save(clubDesc);
@@ -86,6 +84,7 @@ public class DescriptionPowerup extends Powerup {
      * Renders the shorter description to be used for the club list view. This is different from normal rendering
      * because we don't want the entire description to be shown in the list, nor do we want to cut off the actual
      * description at an arbitrary point.
+     *
      * @return The html to be inserted into the club list view.
      * @see views.html.club.index
      * @see views.html.club.list
