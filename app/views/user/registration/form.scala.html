@@ -7,9 +7,9 @@
     @helper.form(action = routes.Registration.submit) {
 
         <div class="row">
-            <div class="large-12 columns">
-                <p class="panel">Vennligst kontroller at informasjonen vi har fått fra Google er riktig.
-                    Ved feil må en endre sine Google opplysninger, om dette fortsatt ikke løser problemet
+            <div class="medium-10 medium-centered columns panel callout">
+                <p>Vennligst kontroller at informasjonen vi har fått fra Google er riktig.
+                    Ved feil må du endre dine Google-opplysninger. Om dette fortsatt ikke løser problemet
                     ta kontakt med administrasjonen.</p>
             </div>
         </div>
@@ -18,11 +18,14 @@
             <input type="hidden" name="id" value="@registrationForm("id").value">
 
             <div class="row">
-                <div class="large-4 columns">
+
+                <div class="medium-10 medium-centered columns">
+
+                <div class="medium-6 columns">
 
                 @inputText(
                     registrationForm("firstName"),
-                    '_label -> "First Name",
+                    '_label -> "Fornavn",
                     'class -> "input-xlarge",
                     'readonly -> "readonly",
                     '_showConstraints -> false,
@@ -30,11 +33,11 @@
                 )
 
                 </div>
-                <div class="large-4 columns">
+                <div class="medium-6 columns">
 
                 @inputText(
                     registrationForm("lastName"),
-                    '_label -> "Last Name",
+                    '_label -> "Etternavn",
                     'class -> "input-xlarge",
                     'readonly -> "readonly",
                     '_showConstraints -> false,
@@ -42,30 +45,32 @@
                 )
                 </div>
 
-                <div class="large-8 columns">
+                <div class="medium-6 columns">
                 @select(
                     registrationForm("gender"),
                     options = options(User.genderAsList()),
-                    'label -> "Gender",
+                    'label -> "Kjønn",
                     '_showConstraints -> false
                 )
                 </div>
 
-                <div class="large-8 columns">
+                <div class="medium-6 columns">
                 @inputText(
                     registrationForm("email"),
                     'readonly -> "readonly",
                     '_showConstraints -> false,
-                    '_label -> "Email"
+                    '_label -> "E-post"
                 )
                 </div>
 
-                <div class="large-8 columns">
+
+                @*<div class="large-8 columns">
                     <input type="hidden" name="pictureUrl" value="@registrationForm("pictureUrl").value" />
                     <img src="@registrationForm("pictureUrl").value?sz=100" />
-                </div>
+                </div>*@
 
-                <div class="large-8 columns">
+
+                <div class="medium-12 columns">
                     @checkbox(
                         registrationForm("accept"),
                         '_label -> None, '_text -> "Du samtykker i at du har lest og godtatt brukeravtalen",
@@ -74,8 +79,11 @@
                     <a href="@routes.Registration.terms()" target="_blank">Brukeravtalen</a>
                 </div>
 
-                <input type="submit" class="button large" value="Bli med">
-                <a href="@routes.Application.index()" class="button tiny alert">Avbryt</a>
+                <div class="medium-12 columns">
+                    <input type="submit" class="button medium" value="Bli med">
+                    <a href="@routes.Application.index()" class="button medium alert">Avbryt</a>
+                </div>
+                </div>
             </div>
         </form>
     }
