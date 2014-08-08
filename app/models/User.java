@@ -18,7 +18,6 @@ public class User extends Model {
     private String id;
     private String firstName;
     private String lastName;
-    private Gender gender;
     @Email
     private String email;
     private String pictureUrl;
@@ -31,7 +30,6 @@ public class User extends Model {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.gender = gender;
         this.email = email;
         this.pictureUrl = picureUrl;
     }
@@ -40,7 +38,7 @@ public class User extends Model {
         ArrayList<String> list = new ArrayList<>();
 
         for (Gender gender : Gender.values()) {
-            list.add(gender.name());
+            list.add(gender.toString());
         }
         return list;
     }
@@ -80,14 +78,6 @@ public class User extends Model {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
     }
 
     public String getEmail() {
@@ -165,6 +155,20 @@ public class User extends Model {
     }
 
     public enum Gender {
-        MALE, FEMALE
+        MALE, FEMALE, UNSPECIFIED;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case MALE:
+                    return "Mann";
+                case FEMALE:
+                    return "Kvinne";
+                case UNSPECIFIED:
+                    return "Ukjent/Uspesifisert";
+                default:
+                    return "Ukjent/Uspesifisert";
+            }
+        }
     }
 }
