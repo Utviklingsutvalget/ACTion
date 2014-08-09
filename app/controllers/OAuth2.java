@@ -60,13 +60,21 @@ public class OAuth2 extends Controller {
      * @return Result
      */
     public static Result authenticate(int _update) {
-
+        if (session("state") == null) {
+            try {
+                //Create an anti-forgery state token
+                createStateToken();
+            } catch (NoSuchAlgorithmException e) {
+                return internalServerError(error.render(e.getMessage()));
+            }
+        }
         update = _update == 1;
 
         if (session().containsKey("id") && !update) {
             User user = UserService.findById(session("id"));
-            if (user != null)
+            if (user != null) {
                 return Users.profile();
+            }
 
             destroySessions();
         }
@@ -82,23 +90,20 @@ public class OAuth2 extends Controller {
             }
         }
 
-        try {
-            //Create an anti-forgery state token
-            createStateToken();
+        //Create an anti-forgery state token
 
-            //Redirect to google
-            return redirect(dd.getEndpoints(GoogleUtility.AUTHORIZATION_ENDPOINT) + "?" +
-                    "client_id=" + CONF.getString("googleclient.id") +
-                    "&hd=" + CONF.getString("googleclient.hd") +
-                    "&response_type=" + dd.getResponseTypes(GoogleUtility.CODE) +
-                    "&scope=openid profile email" +
-                    "&redirect_uri=" + CONF.getString("googleclient.redir") + "/login/oauth2callback" +
-                    "&access_type=online" + //We dont need offline access right now
-                    "&state=" + session("state"));
 
-        } catch (NoSuchAlgorithmException e) {
-            return internalServerError(error.render(e.getMessage()));
-        }
+        //Redirect to google
+        return redirect(dd.getEndpoints(GoogleUtility.AUTHORIZATION_ENDPOINT) + "?" +
+                "client_id=" + CONF.getString("googleclient.id") +
+                "&hd=" + CONF.getString("googleclient.hd") +
+                "&response_type=" + dd.getResponseTypes(GoogleUtility.CODE) +
+                "&scope=openid profile email" +
+                "&redirect_uri=" + CONF.getString("googleclient.redir") + "/login/oauth2callback" +
+                "&access_type=online" + //We dont need offline access right now
+                "&state=" + session("state"));
+
+
     }
 
     /**
