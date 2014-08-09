@@ -114,7 +114,7 @@ public class OAuth2 extends Controller {
 
         //Confirm anti-forgery state token
         if (!state.equals(session("state")) || code == null)
-            return unauthorized(error.render("Unauthorized Access"));
+            return unauthorized(error.render("Et problem oppsto i påloggingen. Vennligst prøv på nytt"));
 
         try {
             URL url = new URL(dd.getEndpoints(GoogleUtility.TOKEN_ENDPOINT) + "?");
