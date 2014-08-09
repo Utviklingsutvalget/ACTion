@@ -67,7 +67,7 @@ public class OAuth2 extends Controller {
     public static Result authenticate(int _update) {
         update = _update == 1;
 
-        if (session().containsKey("id") && !update) {
+        if (session().containsKey("id") && update) {
             User user = UserService.findById(session("id"));
             if (user != null) {
                 return Users.profile();
