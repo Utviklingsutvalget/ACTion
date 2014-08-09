@@ -120,7 +120,7 @@ public class OAuth2 extends Controller {
         if (!state.equals(session("state")) || code == null) {
             Logger.warn("State mismatch: Expected: " + state);
             Logger.warn("State mismatch: Actual: " + session("state"));
-            return unauthorized(error.render("Et problem oppsto i påloggingen. Vennligst prøv på nytt"));
+            return unauthorized(error.render("Et problem oppsto i påloggingen. Vennligst prøv på nytt. Vi er klar over en feil i login-systemet hvor dette kan skje uten direkte årsakt. Vi forventer at neste innlogging fungerer normalt."));
         }
 
         try {
