@@ -317,7 +317,9 @@ public class OAuth2 extends Controller {
 
         //Only happens if a session is not set
         if (!session().containsValue("state") || session("state") == null) {
-            session("state", UUID.randomUUID().toString());
+            String uuid = UUID.randomUUID().toString();
+            Logger.info("Setting state for user: " + uuid);
+            session("state", uuid);
         }
     }
 
