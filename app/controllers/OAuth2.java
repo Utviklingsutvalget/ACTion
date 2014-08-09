@@ -50,6 +50,11 @@ public class OAuth2 extends Controller {
     private static boolean update;
 
     public static Result login() {
+        try {
+            createStateToken();
+        } catch (NoSuchAlgorithmException e) {
+            return internalServerError(error.render(e.getMessage()));
+        }
         return ok(views.html.login.index.render());
     }
 
