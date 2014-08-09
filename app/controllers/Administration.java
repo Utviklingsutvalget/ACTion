@@ -85,6 +85,9 @@ public class Administration extends Controller {
         try {
 
             User user = new Authorize.UserSession().getUser();
+            if(!user.isAdmin()) {
+                return badRequest("Ingen tilgang");
+            }
 
             if (json != null) {
 
