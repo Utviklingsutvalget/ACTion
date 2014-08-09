@@ -10,6 +10,7 @@ import helpers.UserService;
 import models.User;
 import org.json.JSONObject;
 import play.Configuration;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.GoogleUtility;
@@ -113,8 +114,11 @@ public class OAuth2 extends Controller {
         String state = request().getQueryString("state");
 
         //Confirm anti-forgery state token
-        if (!state.equals(session("state")) || code == null)
+        if (!state.equals(session("state")) || code == null) {
+            Logger.warn("State mismatch: Expected: " + state);
+            Logger.warn("State mismatch: Actual: " + session("state"));
             return unauthorized(error.render("Et problem oppsto i påloggingen. Vennligst prøv på nytt"));
+        }
 
         try {
             URL url = new URL(dd.getEndpoints(GoogleUtility.TOKEN_ENDPOINT) + "?");
