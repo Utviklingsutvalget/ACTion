@@ -13,7 +13,6 @@ import powerups.Powerup;
 import utils.ActivationSorter;
 import utils.Authorize;
 import utils.InitiationSorter;
-import utils.MembershipLevel;
 
 import java.util.*;
 
@@ -38,11 +37,11 @@ public class Administration extends Controller {
         }
         try {
             User user = new Authorize.UserSession().getUser();
-                if (user.isAdmin()) {
-                    return ok(views.html.club.admin.show.render(club));
-                } else {
-                    return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
-                }
+            if (user.isAdmin()) {
+                return ok(views.html.club.admin.show.render(club));
+            } else {
+                return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
+            }
         } catch (Authorize.SessionException e) {
             return forbidden(views.html.index.render("Du må være innlogget som administrator for å administrere siden"));
         }
