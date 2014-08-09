@@ -65,6 +65,7 @@ public class OAuth2 extends Controller {
      * @return Result
      */
     public static Result authenticate(int _update) {
+        Logger.info(String.valueOf(_update));
         update = _update == 1;
 
         if (session().containsKey("id") && update) {
@@ -327,7 +328,6 @@ public class OAuth2 extends Controller {
      * last.
      */
     public static void createSessions(String id) {
-
         long expires = System.currentTimeMillis() + (EXPIRATION_TIME_IN_SECONDS * 1000);
 
         //These probably need some security messures
