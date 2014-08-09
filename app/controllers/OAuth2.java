@@ -65,14 +65,6 @@ public class OAuth2 extends Controller {
      * @return Result
      */
     public static Result authenticate(int _update) {
-        if (session("state") == null) {
-            try {
-                //Create an anti-forgery state token
-                createStateToken();
-            } catch (NoSuchAlgorithmException e) {
-                return internalServerError(error.render(e.getMessage()));
-            }
-        }
         update = _update == 1;
 
         if (session().containsKey("id") && !update) {
