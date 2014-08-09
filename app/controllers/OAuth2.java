@@ -316,7 +316,7 @@ public class OAuth2 extends Controller {
     public static void createStateToken() throws NoSuchAlgorithmException {
 
         //Only happens if a session is not set
-        if (!session().containsValue("state")) {
+        if (!session().containsValue("state") || session("state") == null) {
             session("state", UUID.randomUUID().toString());
         }
     }
