@@ -318,6 +318,7 @@ public class OAuth2 extends Controller {
             String uuid = UUID.randomUUID().toString();
             Logger.info("Setting state for user: " + uuid);
             session("state", uuid);
+            Logger.info("Session state is now: " + session("state"));
         }
     }
 
@@ -333,7 +334,7 @@ public class OAuth2 extends Controller {
         //These probably need some security messures
         session("id", id);
         session("expires", String.valueOf(expires));
-        session().remove("state");
+        //session().remove("state");
     }
 
     /**
@@ -342,7 +343,7 @@ public class OAuth2 extends Controller {
      * this application.
      */
     public static void destroySessions() {
-        /*session().clear();*/
+        session().clear();
     }
 
 }
