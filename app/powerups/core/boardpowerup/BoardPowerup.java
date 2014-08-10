@@ -51,7 +51,7 @@ public class BoardPowerup extends Powerup {
     @Override
     public Html renderAdmin() {
         Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
-        if (membership.level == MembershipLevel.LEADER || this.getContext().getSender().isAdmin()) {
+        if (this.getContext().getSender().isAdmin() || membership.level == MembershipLevel.LEADER) {
             return admin.render(boardList, memberList, posts);
         } else
             return new Html("<div class=\"medium-12 colums text-center\">Styremedlemmer har ikke tilgang til å endre styremedlemmer.</div>");

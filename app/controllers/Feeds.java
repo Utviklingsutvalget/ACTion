@@ -46,13 +46,13 @@ public class Feeds extends Controller {
 
                 Membership membership = Membership.find.byId(new Membership(club, user).id);
 
-                if (membership != null) {
+                //if (membership != null) {
 
-                    if (membership.level.getLevel() >= MembershipLevel.SUBSCRIBE.getLevel()) {
+                    //if (membership.level.getLevel() >= MembershipLevel.SUBSCRIBE.getLevel()) {
 
                         feedList.addAll(getClubFeed(club));
-                    }
-                }
+                    //}
+                //}
             }
 
         } catch (Authorize.SessionException e) {
@@ -65,8 +65,8 @@ public class Feeds extends Controller {
             return ok(views.html.feed.index.render(defaultRemaining, defaultInitial));
         }
 
-        setupUserLists(feedList, initialList, remainingList);
-
+        //setupUserLists(feedList, initialList, remainingList);
+        setupDefaultLists(initialList, remainingList);
         return ok(views.html.feed.index.render(remainingList, initialList));
     }
 

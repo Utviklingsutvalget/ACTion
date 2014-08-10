@@ -102,7 +102,7 @@ public class FeedPowerup extends Powerup {
             if (message == null || message.equals("") || messageTitle == null || messageTitle.equals("")
                     || pictureUrl == null || pictureUrl.equals("")) {
                 Logger.info("shit is wrong");
-                return Results.badRequest("Vennligst fyll ut både tittel og innhold for FeedPost");
+                return Results.status(NO_UPDATE, "Vennligst fyll ut alle felt for nyheten");
             }
 
             ImageLinkValidator.StatusMessage statusMessage = validator.validate(pictureUrl);

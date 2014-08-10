@@ -23,11 +23,11 @@ public class Feed extends Model {
     @Column(name = CLUBCOLUMN)
     public Club club;
     @play.data.validation.Constraints.Required
+    @Column(length = 1500)
     public String message;
     @play.data.validation.Constraints.Required
     public String messageTitle;
     //length limiatation to be reviewed
-    @Constraints.MaxLength(200)
     public String pictureUrl;
     @Column(name = "Created")
     private DateTime dateTime;

@@ -1,10 +1,13 @@
 @(message: String)
 
-@main("Ingen tilgang") {
+    @main("Ingen tilgang") {
+        <div class="row">
+            <div class="medium-12 columns">
+                <h3>Du har ikke tilgang til å se denne siden</h3>
 
-    <h1>Du har ikke tilgang til å se denne siden</h1>
+                <p>@message</p>
 
-    <p>@message</p>
-
-    <a href="@routes.Application.index()">Tilbake til forsiden</a>
-}
+                <a href="@routes.Application.index()">Tilbake til forsiden</a>
+            </div>
+        </div>
+    }
