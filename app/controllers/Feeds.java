@@ -48,10 +48,10 @@ public class Feeds extends Controller {
 
                 if (membership != null) {
 
-                    if (membership.level.getLevel() >= MembershipLevel.SUBSCRIBE.getLevel()) {
+                    //if (membership.level.getLevel() >= MembershipLevel.SUBSCRIBE.getLevel()) {
 
                         feedList.addAll(getClubFeed(club));
-                    }
+                    //}
                 }
             }
 
