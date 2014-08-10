@@ -50,8 +50,10 @@ public class OAuth2 extends Controller {
     private static boolean update;
 
     public static Result login() {
+        //Create an anti-forgery state token
         try {
             createStateToken();
+            session("dummy", "I am alive");
         } catch (NoSuchAlgorithmException e) {
             return internalServerError(error.render(e.getMessage()));
         }
@@ -65,7 +67,6 @@ public class OAuth2 extends Controller {
      * @return Result
      */
     public static Result authenticate(int _update) {
-        Logger.info(String.valueOf(_update));
         update = _update == 1;
 
         if (session().containsKey("id") && update) {
@@ -87,8 +88,6 @@ public class OAuth2 extends Controller {
                 return notFound(error.render(e1.getMessage()));
             }
         }
-
-        //Create an anti-forgery state token
 
 
         //Redirect to google
@@ -112,6 +111,7 @@ public class OAuth2 extends Controller {
      * @return Result
      */
     public static Result exchange() {
+        Logger.info(session("dummy"));
 
         String code = request().getQueryString("code");
         String state = request().getQueryString("state");
@@ -342,7 +342,7 @@ public class OAuth2 extends Controller {
      * this application.
      */
     public static void destroySessions() {
-        session().clear();
+        /*session().clear();*/
     }
 
 }
