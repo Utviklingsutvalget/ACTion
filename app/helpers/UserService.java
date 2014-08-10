@@ -2,6 +2,7 @@ package helpers;
 
 import com.avaje.ebean.Ebean;
 import com.timgroup.jgravatar.Gravatar;
+import com.timgroup.jgravatar.GravatarDefaultImage;
 import com.timgroup.jgravatar.GravatarRating;
 import models.User;
 import play.db.ebean.Model;
@@ -17,8 +18,8 @@ public class UserService {
 
     public static void setupGravatar(User user, String defaultImage) {
         Gravatar gravatar = new Gravatar();
-        gravatar.setSize(80);
-        gravatar.setRating(GravatarRating.PARENTAL_GUIDANCE_SUGGESTED);
+        gravatar = gravatar.setSize(350);
+        gravatar = gravatar.setRating(GravatarRating.PARENTAL_GUIDANCE_SUGGESTED);
         String url = gravatar.getUrl(user.getEmail());
         url = url.replace("?d=404", "?d=" + defaultImage);
         user.setGravatarUrl(url);
