@@ -66,7 +66,7 @@ public class Feeds extends Controller {
         }
 
         //setupUserLists(feedList, initialList, remainingList);
-
+        setupDefaultLists(initialList, remainingList);
         return ok(views.html.feed.index.render(remainingList, initialList));
     }
 
