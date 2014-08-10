@@ -127,21 +127,20 @@ public class User extends Model {
     }
 
     public boolean isAdmin() {
-        if (SuperUser.find.all().isEmpty()) {
+        List<SuperUser> superUsers = SuperUser.find.all();
+        if (superUsers.isEmpty()) {
             return false;
-        }
-        SuperUser su = SuperUser.find.byId(new SuperUser(this).key);
-        if (su == null) {
-            return false;
-        }
-        if (!su.user.equals(this)) {
-            for (Membership mem : this.memberships) {
-                if (mem.level == MembershipLevel.COUNCIL) {
+        } else {
+            for (SuperUser superUser : superUsers) {
+                if (superUser.user.equals(this)) {
                     return true;
                 }
             }
-        } else {
-            return true;
+        }
+        for (Membership mem : this.memberships) {
+            if (mem.level == MembershipLevel.COUNCIL) {
+                return true;
+            }
         }
         return false;
     }
