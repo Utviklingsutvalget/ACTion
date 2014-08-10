@@ -2,7 +2,6 @@ package helpers;
 
 import com.avaje.ebean.Ebean;
 import com.timgroup.jgravatar.Gravatar;
-import com.timgroup.jgravatar.GravatarDefaultImage;
 import com.timgroup.jgravatar.GravatarRating;
 import models.User;
 import play.db.ebean.Model;

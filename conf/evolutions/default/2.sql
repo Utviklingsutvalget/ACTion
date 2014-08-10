@@ -1,10 +1,7 @@
 # --- !Ups
-
-ALTER TABLE  `pl_ClubDescription` CHANGE  `description`  `description` VARCHAR( 10000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
-ALTER TABLE  `pl_ClubDescription` CHANGE  `list_description`  list_description VARCHAR( 300 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
-UPDATE `action`.`location` SET `name` = 'Campus Galleriet' WHERE `location`.`id` = 1;
+ALTER TABLE `feed` CHANGE `message_title` `message_title` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `feed` CHANGE `message` `message` VARCHAR(1500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 
 # --- !Downs
-
-ALTER TABLE  `pl_ClubDescription` CHANGE  `description`  `description` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
-ALTER TABLE  `pl_ClubDescription` CHANGE  `list_description`  `list_description` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `feed` CHANGE `message_title` `message_title` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `feed` CHANGE `message` `message` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;

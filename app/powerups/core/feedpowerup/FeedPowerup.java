@@ -3,7 +3,7 @@ package powerups.core.feedpowerup;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
-import models.*;
+import models.Feed;
 import models.PowerupModel;
 import models.User;
 import play.Logger;
@@ -102,7 +102,7 @@ public class FeedPowerup extends Powerup {
             if (message == null || message.equals("") || messageTitle == null || messageTitle.equals("")
                     || pictureUrl == null || pictureUrl.equals("")) {
                 Logger.info("shit is wrong");
-                return Results.badRequest("Vennligst fyll ut både tittel og innhold for FeedPost");
+                return Results.status(NO_UPDATE, "Vennligst fyll ut alle felt for nyheten");
             }
 
             ImageLinkValidator.StatusMessage statusMessage = validator.validate(pictureUrl);

@@ -1,6 +1,5 @@
 package controllers;
 
-import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import helpers.UserService;
 import models.*;
@@ -29,7 +28,7 @@ public class Clubs extends Controller {
         locations.add(0, global);
 
         int cssId = 0;
-        for(Location location : locations) {
+        for (Location location : locations) {
             cssId++;
             location.cssId = cssId;
         }
@@ -38,7 +37,7 @@ public class Clubs extends Controller {
 
     public static Result show(Long id) {
         Club club = Club.find.byId(id);
-        if(club == null) {
+        if (club == null) {
             return redirect(routes.Clubs.index());
         }
 
@@ -46,7 +45,7 @@ public class Clubs extends Controller {
         // Sort the activations by weight:
         Collections.sort(club.activations, new ActivationSorter());
 
-        for(Activation activation : club.activations) {
+        for (Activation activation : club.activations) {
             Powerup powerup = activation.getPowerup();
             club.powerups.add(powerup);
         }
@@ -72,7 +71,7 @@ public class Clubs extends Controller {
         try {
             User user = new Authorize.UserSession().getUser();
             boolean authorized = user.isAdmin();
-            if(!authorized) {
+            if (!authorized) {
                 return unauthorized();
             }
         } catch (Authorize.SessionException e) {
@@ -80,7 +79,7 @@ public class Clubs extends Controller {
         }
 
         Map<String, String[]> form = request().body().asFormUrlEncoded();
-        for(String key : form.keySet()) {
+        for (String key : form.keySet()) {
             Logger.warn(key + ":" + form.get(key)[0]);
         }
         String name = form.get("name")[0];
@@ -92,12 +91,12 @@ public class Clubs extends Controller {
 
         User leaderUser = UserService.findByEmail(email);
 
-        if(leaderUser == null){
+        if (leaderUser == null) {
             return badRequest("Det finnes ingen bruker tilknyttet den emailen, " +
                     "vennligst skriv inn en email knyttet til en bruker");
         }
 
-        if(name.equals("") || shortName.equals("")){
+        if (name.equals("") || shortName.equals("")) {
             return badRequest("Utvalget kan ikke ha et tomt Navn eller tom forkortelse");
         }
 
@@ -116,7 +115,7 @@ public class Clubs extends Controller {
 
         membership.save();
 
-        for(Activation activation : activations) {
+        for (Activation activation : activations) {
             activation.save();
             activation.getPowerup().activate();
         }
@@ -127,33 +126,33 @@ public class Clubs extends Controller {
     public static Result updatePowerup(Long clubId, Long powerupId) {
         JsonNode json = request().body().asJson();
         Logger.warn("RECEIVED JSON");
-        if(json == null || json.isNull()) {
+        if (json == null || json.isNull()) {
             return badRequest("Expecting Json data");
         }
         final Club club = Club.find.byId(clubId);
         Powerup powerup = null;
-        for(Activation activation : club.activations) {
-            if(activation.powerup.id.equals(powerupId)) {
+        for (Activation activation : club.activations) {
+            if (activation.powerup.id.equals(powerupId)) {
                 powerup = activation.getPowerup();
             }
         }
-        if(powerup == null) {
+        if (powerup == null) {
             return badRequest("No such powerup for " + club.shortName);
         } else return powerup.update(json);
     }
 
     /**
-     *  WARNING: THIS RETURNS THE ADMIN FUNCTION
+     * WARNING: THIS RETURNS THE ADMIN FUNCTION
      */
     public static Result getPowerupContent(Long clubId, Long powerupId) {
         final Club club = Club.find.byId(clubId);
         Powerup powerup = null;
-        for(Activation activation : club.activations) {
-            if(activation.powerup.id.equals(powerupId)) {
+        for (Activation activation : club.activations) {
+            if (activation.powerup.id.equals(powerupId)) {
                 powerup = activation.getPowerup();
             }
         }
-        if(powerup == null) {
+        if (powerup == null) {
             return badRequest("No such powerup for " + club.shortName);
         } else return ok(powerup.renderAdmin());
     }

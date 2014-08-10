@@ -2,7 +2,7 @@ package models;
 
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
-import powerups.*;
+import powerups.Powerup;
 
 import javax.persistence.*;
 
@@ -11,6 +11,7 @@ import javax.persistence.*;
  * {@link Powerup}. The activation includes a reference to the activating club and the activated powerup. Note that
  * powerups are lazy loaded by the {@link Powerup} class, and that the {@link PowerupModel}'s class name therefore has
  * strict naming schemes.
+ *
  * @see models.PowerupModel
  * @see powerups.Powerup
  * @see models.Club
@@ -44,8 +45,13 @@ public class Activation extends Model {
         this.key = new ActivationKey(club.id, model.id);
     }
 
+    public powerups.Powerup getPowerup() {
+        return powerups.Powerup.getPowerup(this);
+    }
+
     /**
      * The embeddable key used to arrange the relations in this model.
+     *
      * @see play.db.ebean.Model
      * @see com.avaje.ebean.Ebean
      */
@@ -78,9 +84,5 @@ public class Activation extends Model {
             result = 31 * result + clubId.hashCode();
             return result;
         }
-    }
-
-    public powerups.Powerup getPowerup() {
-        return powerups.Powerup.getPowerup(this);
     }
 }

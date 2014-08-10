@@ -21,7 +21,6 @@ import utils.MembershipLevel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.unauthorized;
 
@@ -44,7 +43,7 @@ public class BoardPowerup extends Powerup {
             memberList = new ArrayList<>();
         }
         posts = BoardPost.find.all();
-        for(BoardMembership membership : boardList) {
+        for (BoardMembership membership : boardList) {
             membership.user.onPostLoad();
         }
     }
@@ -52,9 +51,10 @@ public class BoardPowerup extends Powerup {
     @Override
     public Html renderAdmin() {
         Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
-        if(membership.level == MembershipLevel.LEADER || this.getContext().getSender().isAdmin()) {
+        if (this.getContext().getSender().isAdmin() || membership.level == MembershipLevel.LEADER) {
             return admin.render(boardList, memberList, posts);
-        } else return new Html("<div class=\"medium-12 colums text-center\">Styremedlemmer har ikke tilgang til å endre styremedlemmer.</div>");
+        } else
+            return new Html("<div class=\"medium-12 colums text-center\">Styremedlemmer har ikke tilgang til å endre styremedlemmer.</div>");
     }
 
     @Override
@@ -146,11 +146,11 @@ public class BoardPowerup extends Powerup {
         int defaultWeight = 10;
         boolean createdMandatory = false;
 
-        if(isMandatory){
-            try{
+        if (isMandatory) {
+            try {
                 User user = new Authorize.UserSession().getUser();
 
-                if(user.isAdmin()){
+                if (user.isAdmin()) {
 
                     BoardPost newMandatoryPost = new BoardPost(title, true, defaultWeight);
                     createdMandatory = true;
@@ -160,7 +160,7 @@ public class BoardPowerup extends Powerup {
 
                 return createdMandatory;
 
-            }catch(Authorize.SessionException e){
+            } catch (Authorize.SessionException e) {
                 e.printStackTrace();
             }
         }

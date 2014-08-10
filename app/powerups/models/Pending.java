@@ -6,6 +6,7 @@ import models.Club;
 import models.User;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Pending extends Model {
 
     @Constraints.Required
     @Constraints.MaxLength(100)
-    @Column(length=100)
+    @Column(length = 100)
     public String applicationMessage;
 
     @MapsId("clubId")
@@ -38,54 +39,54 @@ public class Pending extends Model {
         this.key = new PendingKey(user, club);
     }
 
-    public Pending(Club club, User user, String applicationMessage){
+    public Pending(Club club, User user, String applicationMessage) {
         this.user = user;
         this.club = club;
         this.applicationMessage = applicationMessage;
         this.key = new PendingKey(user, club);
     }
 
-    public static List<Pending> getByClubId(Long clubId){
+    public static List<Pending> getByClubId(Long clubId) {
         return find.where().eq("club_id", clubId).findList();
     }
 
-    public User getUser(){
-        return this.user;
-    }
-
     @Transactional
-    public static void update(Pending pending){
+    public static void update(Pending pending) {
         Ebean.save(pending);
     }
 
+    public User getUser() {
+        return this.user;
+    }
+
     @Embeddable
-    public class PendingKey{
+    public class PendingKey {
 
         public String userId;
 
         public Long clubId;
 
-        public PendingKey(User user, Club club){
+        public PendingKey(User user, Club club) {
             this.userId = user.getId();
             this.clubId = club.id;
         }
 
         @Override
-        public int hashCode(){
+        public int hashCode() {
             return super.hashCode();
         }
 
         @Override
         public boolean equals(Object other) {
-            if(other == this) return true;
+            if (other == this) return true;
 
-            if(other instanceof PendingKey){
+            if (other instanceof PendingKey) {
 
-                PendingKey p = (PendingKey)other;
+                PendingKey p = (PendingKey) other;
 
                 return p.clubId.equals(this.clubId) && p.userId.equals(this.userId);
 
-            }else{
+            } else {
                 return false;
             }
         }

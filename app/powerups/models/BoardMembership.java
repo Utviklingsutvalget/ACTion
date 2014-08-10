@@ -10,8 +10,20 @@ import javax.persistence.*;
 public class BoardMembership extends Model {
 
     public static Finder<BoardMembershipKey, BoardMembership> find = new Finder<>(BoardMembershipKey.class, BoardMembership.class);
+    @EmbeddedId
+    public BoardMembershipKey key;
+    @ManyToOne
+    @JoinColumn(name = "club_id", insertable = false, updatable = false)
+    public Club club;
+    @ManyToOne
+    @JoinColumn(name = "board_post_id", insertable = false, updatable = false)
+    public BoardPost boardPost;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    public User user;
+    public int weight;
 
-    public BoardMembership(Club club, BoardPost boardPost, User user){
+    public BoardMembership(Club club, BoardPost boardPost, User user) {
         this.boardPost = boardPost;
         this.club = club;
         this.user = user;
@@ -19,30 +31,13 @@ public class BoardMembership extends Model {
         this.key = new BoardMembershipKey(club, boardPost);
     }
 
-    @EmbeddedId
-    public BoardMembershipKey key;
-
-    @ManyToOne
-    @JoinColumn(name = "club_id", insertable = false, updatable = false)
-    public Club club;
-
-    @ManyToOne
-    @JoinColumn(name = "board_post_id", insertable = false, updatable = false)
-    public BoardPost boardPost;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    public User user;
-
-    public int weight;
-
     @Embeddable
-    public class BoardMembershipKey{
+    public class BoardMembershipKey {
 
         public Long clubId;
         public Long BoardPostId;
 
-        public BoardMembershipKey(Club club, BoardPost boardPost){
+        public BoardMembershipKey(Club club, BoardPost boardPost) {
 
             this.clubId = club.id;
             this.BoardPostId = boardPost.id;

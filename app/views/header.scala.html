@@ -4,7 +4,7 @@
     <div class="small-12 columns show-for-medium-up backgroundimagelarge">
         <img src="@routes.Assets.at("images/header.jpg")">
 
-        <a href="@routes.Events.index()">
+        <a href="@routes.Feeds.index()">
             <div class="headercircle-large text-center show-for-large-up">
                 <h3 class="headertext">Westerdals <br/> Oslo ACT </h3>
                 <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
@@ -27,7 +27,7 @@
     <div class="small-12 columns hide-for-medium-up">
         <img id="backgroundimagesmall" src="@routes.Assets.at("images/header.jpg")">
 
-        <a href="@routes.Events.index()">
+        <a href="@routes.Feeds.index()">
             <div class="headercircle-small text-center hide-for-medium-up">
                 <h3 class="headertext">Westerdals<br/> Oslo ACT</h3>
                 <div id="line-separator-bubble" class="line-separator-mid-bubble"></div>
@@ -69,8 +69,8 @@
 
     <div class="medium-9 medium-centered columns">
         <ul class="small-block-grid-3 medium-block-grid-5 large-block-grid-5 text-center">
-            <li><a class="headertext" href="@routes.Events.index()">Eventer </a></li>
             <li><a class="headertext" href="@routes.Feeds.index()">Feed </a></li>
+            <li><a class="headertext" href="@routes.Events.index()">Eventer </a></li>
             <li><a class="headertext" href="@routes.Clubs.index()">Utvalg </a></li>
             <li><a class="headertext" href="@routes.Initiation.index()">Fadderuka </a></li>
             @if(user != null) {

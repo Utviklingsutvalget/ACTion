@@ -10,6 +10,7 @@ import helpers.UserService;
 import models.User;
 import org.json.JSONObject;
 import play.Configuration;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.GoogleUtility;
@@ -49,6 +50,13 @@ public class OAuth2 extends Controller {
     private static boolean update;
 
     public static Result login() {
+        //Create an anti-forgery state token
+        try {
+            createStateToken();
+            session("dummy", "I am alive");
+        } catch (NoSuchAlgorithmException e) {
+            return internalServerError(error.render(e.getMessage()));
+        }
         return ok(views.html.login.index.render());
     }
 
@@ -59,13 +67,13 @@ public class OAuth2 extends Controller {
      * @return Result
      */
     public static Result authenticate(int _update) {
-
         update = _update == 1;
 
-        if (session().containsKey("id") && !update) {
+        if (session().containsKey("id") && update) {
             User user = UserService.findById(session("id"));
-            if (user != null)
+            if (user != null) {
                 return Users.profile();
+            }
 
             destroySessions();
         }
@@ -81,23 +89,18 @@ public class OAuth2 extends Controller {
             }
         }
 
-        try {
-            //Create an anti-forgery state token
-            createStateToken();
 
-            //Redirect to google
-            return redirect(dd.getEndpoints(GoogleUtility.AUTHORIZATION_ENDPOINT) + "?" +
-                    "client_id=" + CONF.getString("googleclient.id") +
-                    "&hd=" + CONF.getString("googleclient.hd") +
-                    "&response_type=" + dd.getResponseTypes(GoogleUtility.CODE) +
-                    "&scope=openid profile email" +
-                    "&redirect_uri=" + CONF.getString("googleclient.redir") + "/login/oauth2callback" +
-                    "&access_type=online" + //We dont need offline access right now
-                    "&state=" + session("state"));
+        //Redirect to google
+        return redirect(dd.getEndpoints(GoogleUtility.AUTHORIZATION_ENDPOINT) + "?" +
+                "client_id=" + CONF.getString("googleclient.id") +
+                "&hd=" + CONF.getString("googleclient.hd") +
+                "&response_type=" + dd.getResponseTypes(GoogleUtility.CODE) +
+                "&scope=openid profile email" +
+                "&redirect_uri=" + CONF.getString("googleclient.redir") + "/login/oauth2callback" +
+                "&access_type=online" + //We dont need offline access right now
+                "&state=" + session("state"));
 
-        } catch (NoSuchAlgorithmException e) {
-            return internalServerError(error.render(e.getMessage()));
-        }
+
     }
 
     /**
@@ -108,13 +111,18 @@ public class OAuth2 extends Controller {
      * @return Result
      */
     public static Result exchange() {
+        Logger.info(session("dummy"));
 
         String code = request().getQueryString("code");
         String state = request().getQueryString("state");
 
         //Confirm anti-forgery state token
-        if (!state.equals(session("state")) || code == null)
-            return unauthorized(error.render("Unauthorized Access"));
+        /*
+        if (!state.equals(session("state")) || code == null) {
+            Logger.warn("State mismatch: Expected: " + state);
+            Logger.warn("State mismatch: Actual: " + session("state"));
+            return unauthorized(error.render("Et problem oppsto i påloggingen. Vennligst prøv på nytt. Vi er klar over en feil i login-systemet hvor dette kan skje uten direkte årsakt. Vi forventer at neste innlogging fungerer normalt."));
+        }*/
 
         try {
             URL url = new URL(dd.getEndpoints(GoogleUtility.TOKEN_ENDPOINT) + "?");
@@ -307,8 +315,11 @@ public class OAuth2 extends Controller {
     public static void createStateToken() throws NoSuchAlgorithmException {
 
         //Only happens if a session is not set
-        if (!session().containsValue("state")) {
-            session("state", UUID.randomUUID().toString());
+        if (!session().containsValue("state") || session("state") == null) {
+            String uuid = UUID.randomUUID().toString();
+            Logger.info("Setting state for user: " + uuid);
+            session("state", uuid);
+            Logger.info("Session state is now: " + session("state"));
         }
     }
 
@@ -319,13 +330,12 @@ public class OAuth2 extends Controller {
      * last.
      */
     public static void createSessions(String id) {
-
         long expires = System.currentTimeMillis() + (EXPIRATION_TIME_IN_SECONDS * 1000);
 
         //These probably need some security messures
         session("id", id);
         session("expires", String.valueOf(expires));
-        session().remove("state");
+        //session().remove("state");
     }
 
     /**

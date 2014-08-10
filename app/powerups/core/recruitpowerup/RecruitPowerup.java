@@ -19,7 +19,6 @@ import utils.MembershipLevel;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import static play.mvc.Results.ok;
@@ -70,7 +69,7 @@ public class RecruitPowerup extends Powerup {
     @Override
     public Html renderAdmin() {
         Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
-        if (membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
+        if (this.getContext().getSender().isAdmin() || membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
             return admin.render(club, Pending.getByClubId(club.id));
         } else return this.render();
     }

@@ -2,28 +2,28 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import play.Logger;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import utils.MembershipLevel;
 
 import javax.persistence.*;
-import java.nio.channels.MembershipKey;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Membership extends Model {
 
-    @Transactional
-    public static void update(Membership membership) {
-        Ebean.save(membership);
-    }
-
     public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
+    @EmbeddedId
+    public MembershipKey id;
+    @ManyToOne
+    @JoinColumn(name = "club_id", insertable = false, updatable = false)
+    public Club club;
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    public User user;
+    @Constraints.Required
+    public MembershipLevel level;
 
-    public Membership(Club club, User user){
+    public Membership(Club club, User user) {
         this(club, user, MembershipLevel.MEMBER);
     }
 
@@ -34,19 +34,10 @@ public class Membership extends Model {
         this.id = new MembershipKey(club, user);
     }
 
-    @EmbeddedId
-    public MembershipKey id;
-
-    @ManyToOne
-    @JoinColumn(name = "club_id", insertable = false, updatable = false)
-    public Club club;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    public User user;
-
-    @Constraints.Required
-    public MembershipLevel level;
+    @Transactional
+    public static void update(Membership membership) {
+        Ebean.save(membership);
+    }
 
     @Embeddable
     public class MembershipKey {
@@ -55,7 +46,7 @@ public class Membership extends Model {
 
         public String userId;
 
-        public MembershipKey(Club club, User user){
+        public MembershipKey(Club club, User user) {
             this.clubId = club.id;
             this.userId = user.getId();
         }

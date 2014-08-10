@@ -1,7 +1,6 @@
 package powerups.models;
 
 import models.Club;
-import models.UploadedFile;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
@@ -12,6 +11,10 @@ public class ClubImage extends Model {
 
     @EmbeddedId
     public ClubImageKey key;
+    @OneToOne
+    @JoinColumn(name = "club_id", nullable = true, insertable = false, updatable = false)
+    public Club club;
+    public String imageUrl;
 
     public ClubImage(Club club, String imageUrl) {
         this.club = club;
@@ -19,15 +22,9 @@ public class ClubImage extends Model {
         this.key = new ClubImageKey(this.club.id);
     }
 
-    public static ClubImage getImageByClub(Club club){
+    public static ClubImage getImageByClub(Club club) {
         return find.where().eq("club_id", club.id).findUnique();
     }
-
-    @OneToOne
-    @JoinColumn(name = "club_id", nullable = true, insertable = false, updatable = false)
-    public Club club;
-
-    public String imageUrl;
 
     @Embeddable
     public class ClubImageKey {

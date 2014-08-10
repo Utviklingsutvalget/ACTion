@@ -2,9 +2,7 @@ package powerups.core.eventpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.Clubs;
 import models.*;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -19,7 +17,6 @@ import utils.EventSorter;
 import utils.MembershipLevel;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class EventPowerup extends Powerup {
@@ -37,9 +34,9 @@ public class EventPowerup extends Powerup {
         tempEvents.sort(new EventSorter());
         tempEvents.stream().filter(e -> e.startTime.isAfter(LocalDateTime.now())).forEach(events::add);
         events = new ArrayList<>();
-        if(tempEvents.size() < MAX_EVENTS) {
+        if (tempEvents.size() < MAX_EVENTS) {
             events.addAll(events);
-        } else if(!tempEvents.isEmpty()) {
+        } else if (!tempEvents.isEmpty()) {
             events.addAll(events.subList(0, MAX_EVENTS));
         }
         for (Event e : events) {
@@ -52,9 +49,9 @@ public class EventPowerup extends Powerup {
                 e.setUserAttending(participation.getRvsp());
             }
             e.setUserAttending(participation.getRvsp());
-        Logger.warn("Didn't fail yet4");
-        User user = getContext().getSender();
-        this.setUserPresent(user != null);
+            Logger.warn("Didn't fail yet4");
+            User user = getContext().getSender();
+            this.setUserPresent(user != null);
         }
     }
 
@@ -81,7 +78,7 @@ public class EventPowerup extends Powerup {
     @Override
     public Result update(JsonNode updateContent) {
         User user = getContext().getSender();
-        if(!(user.isAdmin() || getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
+        if (!(user.isAdmin() || getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
             return Results.unauthorized("Ingen tilgang til å opprette events for " + this.getClub().name);
         }
         String name = updateContent.get("name").asText();
@@ -92,7 +89,7 @@ public class EventPowerup extends Powerup {
 
         DateTimeFormatter format = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(time, format);
-        if(dateTime.isBefore(LocalDateTime.now())) {
+        if (dateTime.isBefore(LocalDateTime.now())) {
             return Results.unauthorized("Kan ikke opprette events i fortiden.");
         }
 
