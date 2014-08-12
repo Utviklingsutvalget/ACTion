@@ -13,6 +13,7 @@ import play.Configuration;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.Authorize;
 import utils.GoogleUtility;
 import views.html.error;
 
@@ -125,6 +126,16 @@ public class OAuth2 extends Controller {
         }*/
 
         try {
+            User user = new Authorize.UserSession().getUser();
+            if (user != null) {
+                return redirect(routes.Users.profile());
+            }
+        } catch (Authorize.SessionException ignored) {
+        }
+
+
+        try {
+
             URL url = new URL(dd.getEndpoints(GoogleUtility.TOKEN_ENDPOINT) + "?");
 
             //!HTTPS!
@@ -219,7 +230,7 @@ public class OAuth2 extends Controller {
 
                 //Create the necessary sessionsd
                 createSessions(payload.getSubject());
-                return Users.profile();
+                return redirect(routes.Users.profile());
             }
 
             //We need to OpenIdConnect to get email and profile information
