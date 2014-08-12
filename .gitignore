@@ -85,6 +85,7 @@ server.pid
 *.eml
 /dist/
 .cache
+RUNNING_PID
 
 !activator-launch-1.2.2.jar
 
