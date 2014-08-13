@@ -10,9 +10,9 @@
             <form class="powerup-node" id="appMessageNode" data-powerup-value="@user.getId">
                 <div class="medium-12 columns">
                     <h3>Innmelding for @club.name</h3>
-                    <p class="lead">Skriv noe fornuftig her</p>
+                    <p>Skriv en kort kommentar om deg selv her</p>
 
-                    <textarea maxlength="100" id="application_message" placeholder="Skriv en kort kommentar om deg selv her" required></textarea>
+                    <textarea maxlength="100" id="application_message" placeholder="Maks 100 tegn" required></textarea>
                     <div id="textarea_feedback"></div>
                 </div>
 
@@ -25,8 +25,10 @@
     } else {
 
         @if(isMember && !pending) {
-            <div class="medium-12 columns medium-centered text-centered powerup-node appMessageNode" data-powerup-field="@user.getId" data-powerup-value="TerminateMemberShip">
-                <h6>Du er allerede medlem av @club.name</h6>
+            <div class="row">
+                <div class="medium-12 columns medium-centered text-center powerup-node appMessageNode" data-powerup-field="@user.getId" data-powerup-value="TerminateMemberShip">
+                    <p>Du er allerede medlem av @club.name</p>
+                </div>
             </div>
             <script>
             createStandardButton ( getId ( $ ( '.appMessageNode' ) ), "Meld deg ut av utvalget" ) ;
