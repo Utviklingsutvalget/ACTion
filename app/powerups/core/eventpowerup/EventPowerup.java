@@ -32,7 +32,7 @@ public class EventPowerup extends Powerup {
 
         List<Event> tempEvents = getClub().events;
         tempEvents.sort(new EventSorter());
-        tempEvents.stream().filter(e -> e.startTime.isAfter(LocalDateTime.now())).forEach(events::add);
+        tempEvents.stream().filter(e -> e.startTime.isBefore(LocalDateTime.now().plusHours(3))).forEach(events::add);
         events = new ArrayList<>();
         if (tempEvents.size() < MAX_EVENTS) {
             events.addAll(events);
