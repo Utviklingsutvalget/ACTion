@@ -18,6 +18,7 @@ import utils.MembershipLevel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EventPowerup extends Powerup {
 
@@ -32,7 +33,7 @@ public class EventPowerup extends Powerup {
 
         List<Event> tempEvents = getClub().events;
         tempEvents.sort(new EventSorter());
-        tempEvents.stream().filter(e -> e.startTime.isBefore(LocalDateTime.now().plusHours(3))).forEach(events::add);
+        events.addAll(tempEvents.stream().filter(e -> e.startTime.isBefore(LocalDateTime.now().plusHours(3))).collect(Collectors.toList()));
         if (events.size() < MAX_EVENTS) {
             events.addAll(events);
         } else if (!events.isEmpty()) {
