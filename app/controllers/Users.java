@@ -15,17 +15,9 @@ import views.html.user.show;
 public class Users extends Controller {
     /**
      * User proifle page
-     * <p>
-     * ----------------------------------------------------------------------------
+     *
      * If the user is not logged in, or if the sessions have expired
-     * the user is redirected to OAuth2.authenticate which functions as
-     * the login page.
-     * <p>
-     * A future feature for the OAuth2 could be, sending the users original preferred
-     * url to the OAuth that represents the endpoint where the user was going before
-     * he/she was redirected. That way when the user is logged in he/she would be
-     * sent back to the page that they originally wanted.
-     * ----------------------------------------------------------------------------
+     * the user is redirected to the login page.
      *
      * @return Result
      */
@@ -36,7 +28,7 @@ public class Users extends Controller {
             boolean admin = user.isAdmin();
             return ok(profile.render(user, admin));
         } catch (Authorize.SessionException e) {
-            return Results.redirect(controllers.routes.OAuth2.authenticate(0));
+            return Results.redirect(routes.OAuth2.login());
         }
     }
 
