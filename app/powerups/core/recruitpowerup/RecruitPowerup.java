@@ -30,31 +30,29 @@ public class RecruitPowerup extends Powerup {
     private static final String TERMINATEMEMBERSHIP = "TerminateMemberShip";
     private static final String ACCEPT = "accept";
     private static final String REJECT = "reject";
-    private Authorize.UserSession session;
     private Club club;
     private boolean isMember;
     private boolean pending;
+    private boolean boardMember;
     private User user;
     private boolean adminAccess = false;
 
     public RecruitPowerup(Club club, PowerupModel powerupModel) {
         super(club, powerupModel);
-
-        this.club = club;
         this.isMember = false;
+        this.boardMember = false;
 
-        try {
-            session = new Authorize.UserSession();
-            user = this.getContext().getSender();
-
-        } catch (Authorize.SessionException ignored) {
-        }
-
-        if (user != null && club != null) {
-
+        user = this.getContext().getSender();
+        Logger.warn("Got sender");
+        if (user != null) {
+            Logger.warn("Sender exists");
             isMember = this.getContext().getMemberLevel() != null && this.getContext().getMemberLevel() != MembershipLevel.SUBSCRIBE;
-
-            pending = Pending.find.byId(new Pending(this.club, this.user).key) != null;
+            Logger.info("Logged in user is already member = " + isMember);
+            pending = Pending.find.byId(new Pending(this.getClub(), this.user).key) != null;
+            Logger.info("Logged in user is pending = " + pending);
+            if(this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
+                boardMember = true;
+            }
         }
 
         Logger.info("Logged in user is pending = " + pending);
@@ -63,7 +61,7 @@ public class RecruitPowerup extends Powerup {
 
     @Override
     public Html render() {
-        return powerup.render(isMember, club, user, pending);
+        return powerup.render(isMember, this.getClub(), user, pending, boardMember);
     }
 
     @Override
