@@ -61,7 +61,6 @@ public class Users extends Controller {
      * @return Result
      */
     public static Result logout() {
-
         OAuth2.destroySessions();
         return Application.index();
     }
