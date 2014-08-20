@@ -1,6 +1,4 @@
-@(isMember: Boolean, club: Club, user: User, pending: Boolean)
-@import powerups.core.recruitpowerup.RecruitPowerup
-@import powerups.core.recruitpowerup
+@(isMember: Boolean, club: Club, user: User, pending: Boolean, boardMember: Boolean)
 
 @* ---- If user of the club, hide the recruitpowerup ---- *@
 
@@ -23,8 +21,12 @@
             </script>
         </div>
     } else {
-
-        @if(isMember && !pending) {
+        @if(isMember && boardMember) {
+            <div class="medium-12 columns medium-centered text-center">
+                <h6>Styremedlemmer kan ikke melde seg ut av utvalg.</h6>
+            </div>
+        } else {
+            @if(isMember && !pending) {
             <div class="row">
                 <div class="medium-12 columns medium-centered text-center powerup-node appMessageNode" data-powerup-field="@user.getId" data-powerup-value="TerminateMemberShip">
                     <p>Du er allerede medlem av @club.name</p>
@@ -33,14 +35,12 @@
             <script>
             createStandardButton ( getId ( $ ( '.appMessageNode' ) ), "Meld deg ut av utvalget" ) ;
             </script>
-
-        } else {
-
-            @if(!isMember && pending) {
-
-                <div class="medium-12 columns medium-centered text-centered">
-                    <h6>Ditt medlemskap er under vurdering</h6>
-                </div>
+            } else {
+                @if(!isMember && pending) {
+                    <div class="medium-12 columns medium-centered text-center">
+                        <h6>Ditt medlemskap er under vurdering</h6>
+                    </div>
+                }
             }
         }
     }
