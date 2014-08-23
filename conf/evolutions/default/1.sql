@@ -133,6 +133,15 @@ create table user (
   constraint pk_user primary key (id))
 ;
 
+create table club_image_file (
+  id                        bigint auto_increment not null,
+  club_id                   bigint not null,
+  image_path                varchar(255) not null,
+  filename                  varchar(255) not null,
+  constraint pk_club_image_file_pk primary key (id),
+  constraint fk_club foreign key (club_id) references club(id))
+;
+
 alter table activation add constraint fk_activation_club_1 foreign key (club_id) references club (id) on delete restrict on update restrict;
 create index ix_activation_club_1 on activation (club_id);
 alter table activation add constraint fk_activation_powerup_2 foreign key (powerup_id) references powerup (id) on delete restrict on update restrict;

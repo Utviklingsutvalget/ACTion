@@ -291,6 +291,23 @@
         </div>
     </div>
 
+    <div class="row imageUpload">
+        <div class="medium-12 columns">
+            <div id="xhrResponse"></div>
+            <form action="@routes.Application.uploadImage()" class="dropzone" id="imageUploadForm" method="post"
+                enctype="multipart/form-data">
+                <label style="opacity: 0.0">
+                    <input type="file" id="uploadedimage" name="file">
+                </label>
+                <input type="hidden" name="clubId" value="1">
+                <input type="hidden" name="userId" value="this is userId">
+                <input type="hidden" name="feedId" value="this is feedId">
+                <!-- required in every circumstance -->
+                <input type="hidden" name="intent" value="clubPicture">
+            </form>
+        </div>
+    </div>
+
     @*
     @if(!initGroups.isEmpty) {
         <div class="row medium-12 medium-centered">

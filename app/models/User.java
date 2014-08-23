@@ -12,6 +12,8 @@ import java.util.List;
 @Entity
 public class User extends Model {
 
+    public static Finder<String, User> find = new Finder<>(String.class, User.class);
+
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private List<Membership> memberships = new ArrayList<>();
     @Id
