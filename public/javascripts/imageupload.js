@@ -2,28 +2,17 @@ $(document).ready(function(){
 
     var UPLOAD_TASK = "upload";
     var DELETE_TASK = "delete";
+    var DROPZONEELEMENT = $(document).find('.dropzone');
     var arr = {};
+    var location = window.location.pathname;
+    console.log(location);
 
-    // Need to establish who uploaded image and intent
-    // (personal/club/feed.. etc)
+    /**
+     * thus far identifying intent and usecases is decided by calling window location
+     * function which displays current path (such as /admin/site).
+     */
 
-    /*
-    * <div class="row imageUpload">
-     <div class="medium-12 columns">
-     <div id="xhrResponse"></div>
-     <form action="@routes.Application.uploadImage()" class="dropzone" id="imageUploadForm" method="post"
-     enctype="multipart/form-data">
-     <label style="opacity: 0.0">
-     <input type="file" id="uploadedimage" name="file">
-     </label>
-     <input type="hidden" name="clubId" value="this is clubId">
-     <input type="hidden" name="userId" value="this is userId">
-     <input type="hidden" name="intent" value="this is intent">
-     <input type="hidden" name="feedId" value="this is feedId">
-     </form>
-     </div>
-     </div>
-    * */
+
     var fileCounter = 0;
 
     // configures our dropzone
@@ -36,12 +25,14 @@ $(document).ready(function(){
         addRemoveLinks: true,
         acceptedFiles: ".png, .jpg, .jpeg",
         accept: function(file){
-            //alert("yay");
+
             arr[file.name] = file;
             fileCounter++;
 
             if(fileCounter > 5){
-                //alert("only 5");
+
+                this.removeFile(arr[0]);
+
             }else{
                 console.log(arr);
                 console.log(file);
@@ -50,14 +41,22 @@ $(document).ready(function(){
         },
 
         init: function(){
+            var myDropzone = this;
 
-            $("input[id='submitImage']").click(function(){
+            $.get("/upload", {url: location}).done(function(data){
 
-                alert("processing");
+                $.each(data, function(key, value){
+
+                    var mockFile = {name: value.name, size: value.size};
+
+                    myDropzone.options.addedfile.call(myDropzone, mockFile);
+                    myDropzone.options.thumbnail.call(myDropzone, mockFile, "/upload" + value.name);
+                });
             });
 
             this.on('removedfile', function(file){
 
+                console.log("removed file: " + file.name);
                 fileCounter--;
                 sendToServer(file.name, file, DELETE_TASK);
             });

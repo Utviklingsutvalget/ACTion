@@ -5,6 +5,7 @@
 # Home page
 GET           /                                controllers.Application.index()
 POST          /upload                          controllers.Application.uploadImage()
+GET           /upload                          controllers.Application.getImages()
 
 # Initiation week
 GET           /initiation                      controllers.Initiation.index()
