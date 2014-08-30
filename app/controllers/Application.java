@@ -87,6 +87,7 @@ public class Application extends Controller {
     }
 
     public static Result getImages(){
+        Logger.debug("getImages called!");
         String userId = request().getQueryString("userID");
         String intent = request().getQueryString("intent");
         String clubID = request().getQueryString("clubID");
@@ -95,6 +96,8 @@ public class Application extends Controller {
         // fetch an id and association to club/user based upon url.
         UploadHandler uploadHandler = new UploadHandler(intent, userId, clubID, feedId, GET_TASK);
         ObjectNode json = uploadHandler.getJson();
+
+        Logger.debug(json.toString());
 
         return ok(json);
 

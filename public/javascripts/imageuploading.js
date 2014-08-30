@@ -20,14 +20,36 @@ $(document).ready(function(){
     // called when user has selected file from wizard
     $("#fileInputField").change(function(e){
 
-        // submit form here, display thumbnail.
         var form = document.getElementById('imageUpload');
         sendToServer(form);
+        resetXHRR();
+        /*
+        var form = $('#imageUpload');
+        var formData = new FormData(form);
+        var fileElement = document.getElementById('fileInputField');
+        var file = $('#fileInputField');
+        formData.append('file', file.files[0]);
 
-        $.get("/upload", {url: location, userID: userID, intent: intent}).done(function(data){
+        $.ajax({
+            url: "/upload",
+            type: "GET",
+            data: formData,
+            mimeType: "multipart/form-data",
+            contentType: false,
+            processData: false,
+            success: function(){
+                alert("hei");
+            }
+        });
+        */
+
+        $.get("/upload", {userID: userID, intent: intent}).done(function(data){
+
+            resetExistingImages();
 
             $.each(data, function(key, value){
 
+                console.log(value.id);
                 imageCountIncrease();
                 appendImage(value);
             });
@@ -44,19 +66,27 @@ $(document).ready(function(){
         var clubID = $(uploadModal).find('#clubID').val();
         var feedID = $(uploadModal).find('#feedID').val();
         var imageID = $(this).parent().find('img').attr('id');
-        console.log("intent from deleteEvent: " + intent + ", userID from deleteEvent: " + userID + ", imageID: " +
-            imageID);
 
         $.get("/deleteuploaded", {userID: userID, intent: intent, feedID: feedID, clubID: clubID, imageID: imageID},
             function(data){
 
-            console.log("what?! dem intent is: " + intent + ", and dem data is: " + data);
             var message = "<div data-alert class=\"alert-box success text-center radius\">"
                     + data + "<a href=\"#\" class=\"close\">&times;</a></div>";
             appendXHRResponse(message);
         }).done(function(){
 
                 // refetch images to display updated dir
+                $.get("/upload", {userID: userID, intent: intent, feedID: feedID,
+                    clubID: clubID}).done(function(data){
+
+                    resetExistingImages();
+
+                    $.each(data, function(key, value){
+
+                        imageCountIncrease();
+                        appendImage(value);
+                    });
+                });
             });
     });
 
@@ -68,15 +98,12 @@ $(document).ready(function(){
         var clubID = $(this).find('#clubID').val();
         var feedID = $(this).find('#feedID').val();
 
-        console.log("in get when opening modal: intent: " + intent + ", userID: " + userID + ", clubID: " + clubID
-            + ", feedID: " + feedID);
-
         $.get("/upload", {url: location, userID: userID, intent: intent, feedID: feedID,
             clubID: clubID}).done(function(data){
 
-            $.each(data, function(key, value){
+            resetExistingImages();
 
-                console.log("in opening of modal: " + value.id + ", " + value.name);
+            $.each(data, function(key, value){
 
                 imageCountIncrease();
                 appendImage(value);
@@ -90,6 +117,7 @@ $(document).ready(function(){
     $("#uploadModal").bind('closed', function(){
 
         resetExistingImages();
+        resetXHRR();
         console.log("closed!");
     });
 });
@@ -117,11 +145,9 @@ function appendButton(dbId){
 
     //var button = "<div id=\"value.id\" class=\"button deleteExisitingFile\">Slett</div>";
     var button = document.createElement("div");
-    console.log("value in appendButton: " + dbId);
     $(button).addClass('button deleteExisitingFile');
     $(button).attr('id', dbId);
     $(button).text('delete');
-    console.log("button.id is: " + button.id);
     return button;
 }
 
@@ -146,19 +172,18 @@ function appendImage(value){
     image.width = THUMBNAILHEIGHT;
     image.height = THUMBNALWIDTH;
     image.id = value.id;
-    console.log(image);
     imgNode.appendChild(image);
     imgNode.appendChild(button);
 }
 
 function resetExistingImages(){
 
-    $("#exisitingImages").html('');
+    console.log($('#existingImages'));
+    $("#existingImages").html('');
 }
 
 function imageCountIncrease(){
     imageCounter++;
-    console.log("updated imagecounter: " + imageCounter);
 }
 
 function sendToServer(form){
@@ -190,6 +215,11 @@ function sendToServer(form){
         console.log(message);
         appendXHRResponse(message);
     };
+}
+
+function resetXHRR(){
+    var htmlElement = $(document).find('#xhrResponse');
+    htmlElement.html('');
 }
 
 function appendXHRResponse(message){
