@@ -10,16 +10,14 @@ import java.util.Map;
 
 public class ImageUpload {
 
-    private static final String FEEDFIELD = "feedId";
+    //private static final String FEEDFIELD = "feedId";
 
-    private Map<String, String[]> paramsMap;
     private File uploadedFile;
     private String fileName;
     private static final String WRITE_IMAGE_ROOT_PATH = Play.current().path().getAbsolutePath() +
             File.separator + "public" + File.separator;
-    private static final String READ_IMAGE_ROOT_PATH = "public" + File.separator;
+    private static final String READ_IMAGE_ROOT_PATH = "public";
     private static final String FEEDPATH = "feeds";
-
 
     /**
      *
@@ -31,15 +29,22 @@ public class ImageUpload {
      * */
 
 
-    public ImageUpload(Map<String, String[]> inputMap, File file, String fileName) {
-        this.paramsMap = inputMap;
-        this.uploadedFile = file;
+    public ImageUpload(File file, String fileName) {
+        setUploadedFile(file);
         setFileName(fileName);
 
-        // resolve intent and redirect
     }
 
-    private void setFileName(String fileName){
+    public ImageUpload(){
+        setUploadedFile(null);
+        this.fileName = "";
+    }
+
+    public void setUploadedFile(File uploadedFile) {
+        this.uploadedFile = uploadedFile;
+    }
+
+    public void setFileName(String fileName){
 
         if(doubleCheckExtensions(fileName)){
             this.fileName = fileName;
@@ -48,6 +53,7 @@ public class ImageUpload {
         }
     }
 
+    /*
     public static String getFieldValue(String key, Map<String, String[]> paramsMap){
         String[] paramArray = paramsMap.get(key);
         String val = paramArray[0];
@@ -65,6 +71,7 @@ public class ImageUpload {
 
         return val;
     }
+    */
 
     protected boolean doubleCheckExtensions(String fileName){
         String[] validExtensions = {".jpeg", ".jpg", ".png"};
@@ -125,16 +132,16 @@ public class ImageUpload {
         return fileName;
     }
 
-    private File findUploadedFile(String subDir, String fileName){
+    public File findUploadedFile(String subDir, String fileName){
 
-        File file = Play.getFile(READ_IMAGE_ROOT_PATH + subDir + File.separator + fileName, Play.current());
+        File file = Play.getFile(READ_IMAGE_ROOT_PATH + File.separator + subDir + File.separator + fileName, Play.current());
 
         if(file.exists()){
             return file;
         }
 
         throw new IllegalArgumentException("did not find file: " +
-                READ_IMAGE_ROOT_PATH + subDir + File.separator + fileName);
+                READ_IMAGE_ROOT_PATH + File.separator + subDir + File.separator + fileName);
     }
 
     protected void deleteFile(String subDirectory, String fileName){
@@ -148,5 +155,7 @@ public class ImageUpload {
         }
     }
 
-
+    public static String getReadImageRootPath() {
+        return READ_IMAGE_ROOT_PATH;
+    }
 }

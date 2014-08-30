@@ -2,7 +2,7 @@ $(document).ready(function(){
 
     var UPLOAD_TASK = "upload";
     var DELETE_TASK = "delete";
-    var DROPZONEELEMENT = $(document).find('.dropzone');
+    var DROPZONEELEMENT;
     var arr = {};
     var location = window.location.pathname;
     console.log(location);
@@ -11,7 +11,6 @@ $(document).ready(function(){
      * thus far identifying intent and usecases is decided by calling window location
      * function which displays current path (such as /admin/site).
      */
-
 
     var fileCounter = 0;
 
@@ -25,6 +24,8 @@ $(document).ready(function(){
         addRemoveLinks: true,
         acceptedFiles: ".png, .jpg, .jpeg",
         accept: function(file){
+
+            console.log(file.name);
 
             arr[file.name] = file;
             fileCounter++;
@@ -45,12 +46,18 @@ $(document).ready(function(){
 
             $.get("/upload", {url: location}).done(function(data){
 
+                console.log("making the call");
+
                 $.each(data, function(key, value){
 
                     var mockFile = {name: value.name, size: value.size};
 
+                    console.log("val.size: " + value.size);
+                    console.log("val.name: " + value.name);
+                    console.log("val.url: " + value.url);
+
                     myDropzone.options.addedfile.call(myDropzone, mockFile);
-                    myDropzone.options.thumbnail.call(myDropzone, mockFile, "/upload" + value.name);
+                    myDropzone.options.thumbnail.call(myDropzone, mockFile, value.url);
                 });
             });
 
@@ -63,6 +70,10 @@ $(document).ready(function(){
         }
     };
 });
+
+function deleteExistingFile(){
+
+}
 
 function appendXHRResponse(message){
 

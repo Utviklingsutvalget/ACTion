@@ -291,6 +291,7 @@
         </div>
     </div>
 
+    @*
     <div class="row imageUpload">
         <div class="medium-12 columns">
             <div id="xhrResponse"></div>
@@ -305,7 +306,46 @@
                     <input type="hidden" name="feedId" value="this is feedId">
                         <!-- required in every circumstance -->
                     <input type="hidden" name="intent" value="profilePicture">
+                <input type="button" name="submitImage" value="send">
             </form>
+        </div>
+    </div>
+    *@
+
+    <div class="row">
+        <div class="medium-12 columns">
+            <!-- Content -->
+            <a href="#" data-reveal-id="uploadModal">Last opp bilde</a>
+
+            <!-- Modal content -->
+            <div id="uploadModal" class="reveal-modal" data-reveal>
+                <h2>Bildeopplasting</h2>
+                <p>her kan du laste opp bilder til din profil</p>
+                <div id="xhrResponse"></div>
+
+                <!-- object for holding existing images -->
+                <div id="existingImages" class="row"></div>
+
+                <form action="@routes.Application.uploadImage()" enctype="multipart/form-data"
+                method="POST" id="imageUpload">
+                    <input id="clubID" type="hidden" name="clubId" value="this is clubID">
+                    <input id="feedID" type="hidden" name="feedId" value="this is feedID"
+
+                    <!-- REQUIRED FIELDS, THESE MUST CONTAIN INFO -->
+                    <input id="intent" type="hidden" name="intent" value="profilePicture">
+                    <input id="userID" type="hidden" name="userID" value="110259387494417138630">
+
+                    <!-- file input -->
+                    <div class="button" id="fileInputButton">Velg fil
+                    </div>
+                    <label style="display: none" class="button">
+                        <input type="file" id="fileInputField">
+                    </label>
+                </form>
+
+                <a class="close-reveal-modal">&#215;</a>
+            </div>
+
         </div>
     </div>
 

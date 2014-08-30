@@ -1,9 +1,16 @@
 package utils.imageuploading;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.routes;
 import models.User;
 import models.UserImageFile;
+import play.Logger;
+import play.api.Play;
+import play.libs.Json;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,33 +19,35 @@ public class UserImageUpload extends ImageUpload {
     private static final String USERPATH = "users";
     private static final String TASK_DELETE = "delete";
     private static final String TASK_UPLOAD = "upload";
-    private static final String TASKFIELD = "task";
-    private static final String USERIDFIELD = "userId";
+    private static final String USERIDFIELD = "userID";
     private static final int MAXUSERIMAGES = 5;
-    private String task;
     private User user;
     private String returnMessage = "error";
 
-    public String getReturnMessage() {
-        return returnMessage;
-    }
-
-    public void setReturnMessage(String returnMessage) {
-        this.returnMessage = returnMessage;
-    }
 
     public UserImageUpload(Map<String, String[]> inputMap, File file, String fileName) {
-        super(inputMap, file, fileName);
+        super(file, fileName);
 
-        User user = checkForValidUser(getFieldValue(USERIDFIELD));
+        User user = checkForValidUser(FieldFetch.getFieldValue(USERIDFIELD, inputMap));
         setUser(user);
-
-        setTask(getFieldValue(TASKFIELD));
-        taskResolve(getTask());
-
     }
 
-    public User checkForValidUser(String userId){
+    public UserImageUpload(String userID, String imageID){
+        User user = checkForValidUser(userID);
+        setUser(user);
+
+        Long foundImageID = Long.parseLong(imageID);
+        UserImageFile userImageFile = UserImageFile.find.byId(foundImageID);
+
+        if(userImageFile != null){
+            Logger.debug("found an image in: " + getClass().getName() + ", image name is: " + userImageFile.fileName);
+            setFileName(userImageFile.fileName);
+            File existingFile = findUploadedFile(USERPATH + File.separator + user.getId(), userImageFile.fileName);
+            setUploadedFile(existingFile);
+        }
+    }
+
+    private static User checkForValidUser(String userId){
 
         User user = User.find.byId(userId);
 
@@ -48,7 +57,7 @@ public class UserImageUpload extends ImageUpload {
         return user;
     }
 
-    public void setUser(User user) {
+    private void setUser(User user) {
         this.user = user;
     }
 
@@ -91,17 +100,6 @@ public class UserImageUpload extends ImageUpload {
         }
     }
 
-    private void taskResolve(String task){
-
-        switch (task){
-            case TASK_UPLOAD : uploadProfilePicture();
-                break;
-            case TASK_DELETE : deleteProfilePicture();
-                break;
-            default: throw new IllegalArgumentException("task not recognised");
-        }
-    }
-
     public User getUser() {
         return user;
     }
@@ -118,24 +116,40 @@ public class UserImageUpload extends ImageUpload {
         return maxCountReached;
     }
 
-    public String getTask() {
-        return task;
+    public static ObjectNode fetchJson(String userID){
+        User user = checkForValidUser(userID);
+        ObjectNode outerObject = Json.newObject();
+
+        if(user == null){
+            throw new NullPointerException("no user associated with given ID");
+        }
+
+        List<UserImageFile> userImageFiles = UserImageFile.findImagesByUser(user);
+
+        int count = 0;
+        for(UserImageFile userImageFile : userImageFiles){
+
+            ObjectNode innerObject = Json.newObject();
+            innerObject.put("url", routes.Assets.at(USERPATH +
+                    File.separator + user.getId() + File.separator + userImageFile.fileName).url());
+            innerObject.put("id", userImageFile.id);
+            innerObject.put("name", userImageFile.fileName);
+            outerObject.put("file" + count++, innerObject);
+        }
+
+        return outerObject;
     }
 
-    public void setTask(String task) {
+    public String getReturnMessage() {
+        return returnMessage;
+    }
 
-        if(task == null || task.equals("")){
-            throw new IllegalArgumentException("no task specified for profileImage");
-        }
-        this.task = task;
+    public void setReturnMessage(String returnMessage) {
+        this.returnMessage = returnMessage;
     }
 
     public static String getUseridfield() {
         return USERIDFIELD;
-    }
-
-    public static String getTaskfield() {
-        return TASKFIELD;
     }
 
     public static String getTaskUpload() {

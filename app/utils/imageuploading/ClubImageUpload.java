@@ -23,9 +23,9 @@ public class ClubImageUpload extends ImageUpload {
     }
 
     public ClubImageUpload(Map<String, String[]> inputMap, File file, String fileName) {
-        super(inputMap, file, fileName);
+        super(file, fileName);
 
-        setClub(parseAndGetClub(getFieldValue(CLUBFIELD)));
+        setClub(parseAndGetClub(FieldFetch.getFieldValue(CLUBFIELD, inputMap)));
     }
 
     private Club parseAndGetClub(String clubIdString){
