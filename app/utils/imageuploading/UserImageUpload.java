@@ -17,8 +17,6 @@ import java.util.Map;
 public class UserImageUpload extends ImageUpload {
 
     private static final String USERPATH = "users";
-    private static final String TASK_DELETE = "delete";
-    private static final String TASK_UPLOAD = "upload";
     private static final String USERIDFIELD = "userID";
     private static final int MAXUSERIMAGES = 5;
     private User user;
@@ -152,11 +150,4 @@ public class UserImageUpload extends ImageUpload {
         return USERIDFIELD;
     }
 
-    public static String getTaskUpload() {
-        return TASK_UPLOAD;
-    }
-
-    public static String getTaskDelete() {
-        return TASK_DELETE;
-    }
 }

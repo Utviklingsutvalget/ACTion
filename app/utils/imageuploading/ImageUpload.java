@@ -1,23 +1,22 @@
 package utils.imageuploading;
 
 import com.avaje.ebean.Ebean;
+import controllers.Application;
 import models.ProfileImageFile;
 import models.User;
 import play.Logger;
 import play.api.Play;
 import java.io.*;
+import java.net.URI;
 import java.util.Map;
 
 public class ImageUpload {
 
-    //private static final String FEEDFIELD = "feedId";
-
     private File uploadedFile;
     private String fileName;
     private static final String WRITE_IMAGE_ROOT_PATH = Play.current().path().getAbsolutePath() +
-            File.separator + "public" + File.separator;
+            File.separator + "public";
     private static final String READ_IMAGE_ROOT_PATH = "public";
-    private static final String FEEDPATH = "feeds";
 
     /**
      *
@@ -28,11 +27,9 @@ public class ImageUpload {
      * implement hash function for images somehow.
      * */
 
-
     public ImageUpload(File file, String fileName) {
         setUploadedFile(file);
         setFileName(fileName);
-
     }
 
     public ImageUpload(){
@@ -46,32 +43,14 @@ public class ImageUpload {
 
     public void setFileName(String fileName){
 
+        Logger.debug(fileName);
+
         if(doubleCheckExtensions(fileName)){
             this.fileName = fileName;
         }else{
             throw new IllegalArgumentException("file has wrong format");
         }
     }
-
-    /*
-    public static String getFieldValue(String key, Map<String, String[]> paramsMap){
-        String[] paramArray = paramsMap.get(key);
-        String val = paramArray[0];
-
-        Logger.debug("key: " + key + ", val: " + val);
-
-        return val;
-    }
-
-    protected String getFieldValue(String key){
-        String[] paramArray = paramsMap.get(key);
-        String val = paramArray[0];
-
-        Logger.debug("key: " + key + ", val: " + val);
-
-        return val;
-    }
-    */
 
     protected boolean doubleCheckExtensions(String fileName){
         String[] validExtensions = {".jpeg", ".jpg", ".png"};
@@ -89,21 +68,25 @@ public class ImageUpload {
     // writes file to designated subdirectory
     protected String writeFile(String subDirectory, String fileName) {
 
-        File dir = new File(WRITE_IMAGE_ROOT_PATH
-                + File.separator + subDirectory + File.separator);
-        dir.mkdir();
+        File dir = new File(WRITE_IMAGE_ROOT_PATH + File.separator + subDirectory + File.separator);
+
+        if(!dir.exists() && !dir.isDirectory()){
+            dir.mkdirs();
+        }
+
         File picture = new File(dir, fileName);
 
         FileInputStream fileInputStream = null;
         FileOutputStream fileOutputStream = null;
 
-        try{
+        try {
 
             fileInputStream = new FileInputStream(uploadedFile);
             fileOutputStream = new FileOutputStream(picture);
+
             int content;
 
-            while((content = fileInputStream.read()) != -1){
+            while ((content = fileInputStream.read()) != -1) {
 
                 fileOutputStream.write(content);
             }
@@ -123,8 +106,6 @@ public class ImageUpload {
             }
 
         }
-        Logger.debug("picture.getpath(): " + picture.getPath());
-
         return subDirectory + File.separator + picture.getName();
     }
 

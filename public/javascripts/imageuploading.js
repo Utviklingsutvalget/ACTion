@@ -2,14 +2,14 @@ var imageCounter = 0;
 var THUMBNAILHEIGHT = 150;
 var THUMBNALWIDTH = 150;
 
+/**
+ * Possibly change design to use classes outside the modal div itself and incorporate classes.
+ * Then all div id identifiers within the modal can remain the same and only event handlers needs redesign
+ * to trigger on classes.
+ *
+ * */
+
 $(document).ready(function(){
-
-    var userID = $("#imageUpload").find("#userID").val();
-    var intent = $("#imageUpload").find("#intent").val();
-    console.log("userID: " + userID);
-    console.log("intent: " + intent);
-
-    var location = window.location.pathname;
 
     // calls file input with coverbutton
     $("#fileInputButton").on('click', function(){
@@ -20,38 +20,48 @@ $(document).ready(function(){
     // called when user has selected file from wizard
     $("#fileInputField").change(function(e){
 
-        var form = document.getElementById('imageUpload');
-        sendToServer(form);
-        resetXHRR();
-        /*
-        var form = $('#imageUpload');
-        var formData = new FormData(form);
+        var uploadModal = $(this).closest('#uploadModal');
+        var intent = $(this).closest(uploadModal).find('#intent').val();
+        var userID = $(this).closest(uploadModal).find('#userID').val();
+        var clubID = $(this).closest(uploadModal).find('#clubID').val();
+        var feedID = $(this).closest(uploadModal).find('feedID').val();
+        var existingImagesElement = $(this).closest(uploadModal).find('#existingImages');
+        console.log(existingImagesElement.attr('id'));
+
         var fileElement = document.getElementById('fileInputField');
-        var file = $('#fileInputField');
-        formData.append('file', file.files[0]);
+        var message;
+        var FILE_FIELD = "file";
+
+        var form = document.getElementById('imageUpload');
+        var formData = new FormData(form);
+        formData.append(FILE_FIELD, fileElement.files[0]);
 
         $.ajax({
             url: "/upload",
-            type: "GET",
+            type: "POST",
             data: formData,
             mimeType: "multipart/form-data",
             contentType: false,
             processData: false,
-            success: function(){
-                alert("hei");
+            success: function(data){
+                message = "<div data-alert class=\"alert-box success text-center radius\">"
+                    + data + "<a href=\"#\" class=\"close\">&times;</a></div>";
             }
-        });
-        */
 
-        $.get("/upload", {userID: userID, intent: intent}).done(function(data){
+        }).done(function(){
 
-            resetExistingImages();
+            appendXHRResponse(message);
 
-            $.each(data, function(key, value){
+            $.get("/upload", {userID: userID, intent: intent, feedID: feedID, clubID: clubID}).done(function(data){
 
-                console.log(value.id);
-                imageCountIncrease();
-                appendImage(value);
+                existingImagesElement.html('');
+
+                $.each(data, function(key, value){
+
+                    console.log(value.id);
+                    imageCountIncrease();
+                    appendImage(value);
+                });
             });
         });
     });
@@ -65,6 +75,7 @@ $(document).ready(function(){
         var userID = $(uploadModal).find('#userID').val();
         var clubID = $(uploadModal).find('#clubID').val();
         var feedID = $(uploadModal).find('#feedID').val();
+        var existingImagesElement = $(uploadModal).find('#existingImages');
         var imageID = $(this).parent().find('img').attr('id');
 
         $.get("/deleteuploaded", {userID: userID, intent: intent, feedID: feedID, clubID: clubID, imageID: imageID},
@@ -79,7 +90,7 @@ $(document).ready(function(){
                 $.get("/upload", {userID: userID, intent: intent, feedID: feedID,
                     clubID: clubID}).done(function(data){
 
-                    resetExistingImages();
+                    existingImagesElement.html('');
 
                     $.each(data, function(key, value){
 
@@ -97,11 +108,13 @@ $(document).ready(function(){
         var userID = $(this).find('#userID').val();
         var clubID = $(this).find('#clubID').val();
         var feedID = $(this).find('#feedID').val();
+        var existingImagesElement = $(this).find('#existingImages');
+        console.log(existingImagesElement.attr('id'));
 
-        $.get("/upload", {url: location, userID: userID, intent: intent, feedID: feedID,
+        $.get("/upload", {userID: userID, intent: intent, feedID: feedID,
             clubID: clubID}).done(function(data){
 
-            resetExistingImages();
+            existingImagesElement.html('');
 
             $.each(data, function(key, value){
 
@@ -116,30 +129,12 @@ $(document).ready(function(){
     // modal is closed
     $("#uploadModal").bind('closed', function(){
 
-        resetExistingImages();
+        var exisitingImagesElement = $(this).find('#existingImages');
+        exisitingImagesElement.html('');
         resetXHRR();
         console.log("closed!");
     });
 });
-
-// unused so far
-function test(){
-    var uploadModal = $(document).find('#uploadModal');
-    var intent = $(uploadModal).find('#intent').val();
-    var userID = $(uploadModal).find('#userID').val();
-    var clubID = $(uploadModal).find('#clubID').val();
-    var feedID = $(uploadModal).find('#feedID').val();
-
-    $.get("/upload", {url: location, userID: userID, intent: intent, feedID: feedID,
-        clubID: clubID}).done(function(data){
-
-        $.each(data, function(key, value){
-
-            imageCountIncrease();
-            appendImage(value);
-        });
-    });
-}
 
 function appendButton(dbId){
 
@@ -157,14 +152,6 @@ function appendImage(value){
     $(imgNode).addClass('imgNode');
     document.getElementById("existingImages").appendChild(imgNode);
 
-    /*
-    console.log("val.size: " + value.size);
-    console.log("val.name: " + value.name);
-    console.log("val.url: " + value.url);
-    console.log("value.id: " + value.id);
-    console.log("value.serverfilepath: " + value.serverfilepath);
-    */
-
     var button = appendButton(value.id);
 
     var image = document.createElement("img");
@@ -176,10 +163,10 @@ function appendImage(value){
     imgNode.appendChild(button);
 }
 
-function resetExistingImages(){
+function resetExistingImages(existingImagesElement){
 
-    console.log($('#existingImages'));
-    $("#existingImages").html('');
+    var emptyElement = $(existingImagesElement).html('');
+    return emptyElement;
 }
 
 function imageCountIncrease(){

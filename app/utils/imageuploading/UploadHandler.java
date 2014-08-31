@@ -25,6 +25,8 @@ public class UploadHandler {
     private String task;
     private String imageID;
     private String userID;
+    private String clubID;
+    private String feedID;
     private ObjectNode json;
 
     private ImageUpload imageUpload;
@@ -35,15 +37,6 @@ public class UploadHandler {
 
     // uploading files
     public UploadHandler(Map<String, String[]> inputMap, File file, String fileName, String task) {
-
-        if(inputMap == null){
-            throw new NullPointerException("paramsMap in Imageuploading is null");
-        }
-
-        if(file == null){
-            throw new NullPointerException("file object is empty");
-        }
-
         setParamsMap(inputMap);
         setFile(file);
         setFileName(fileName);
@@ -51,15 +44,16 @@ public class UploadHandler {
         String intent = FieldFetch.getFieldValue(INTENTFIELD, getParamsMap());
         Logger.debug("intent: " + intent);
 
-
         taskResolve(task);
         intentResolve(intent);
     }
 
     // deleting existing files
-    public UploadHandler(String imageID, String userID, String intent, String task) {
+    public UploadHandler(String imageID, String userID, String intent, String clubID, String feedID, String task) {
         setImageID(imageID);
         setUserID(userID);
+        setClubID(clubID);
+        setFeedID(feedID);
         taskResolve(task);
         intentResolve(intent);
 
@@ -69,6 +63,8 @@ public class UploadHandler {
     public UploadHandler(String intent, String userID, String clubID, String feedID, String task){
         json = Json.newObject();
         setUserID(userID);
+        setClubID(clubID);
+        setFeedID(feedID);
         taskResolve(task);
         intentResolve(intent);
     }
@@ -127,12 +123,29 @@ public class UploadHandler {
     }
 
     private void clubHandler(){
-        setImageUpload(new ClubImageUpload(getParamsMap(), getFile(), getFileName()));
 
-        ClubImageUpload clubImageUpload = (ClubImageUpload) getImageUpload();
-        clubImageUpload.uploadClubPicture();
+        if(getTask().equals(UPLOAD_TASK)){
 
-        setReturnMessage(clubImageUpload.getReturnMessage());
+            setImageUpload(new ClubImageUpload(getParamsMap(), getFile(), getFileName()));
+
+            ClubImageUpload clubImageUpload = (ClubImageUpload) getImageUpload();
+            clubImageUpload.uploadClubPicture();
+
+            setReturnMessage(clubImageUpload.getReturnMessage());
+
+        }else if(getTask().equals(DELETE_TASK)){
+
+            setImageUpload(new ClubImageUpload(getClubID()));
+
+            ClubImageUpload clubImageUpload = (ClubImageUpload) getImageUpload();
+            clubImageUpload.deleteClubPicture();
+
+            setReturnMessage(clubImageUpload.getReturnMessage());
+
+        }else{
+
+            setJson(ClubImageUpload.fetchJson(getClubID()));
+        }
     }
 
     public String getReturnMessage() {
@@ -210,5 +223,21 @@ public class UploadHandler {
 
     private void setJson(ObjectNode json) {
         this.json = json;
+    }
+
+    public String getFeedID() {
+        return feedID;
+    }
+
+    public void setFeedID(String feedID) {
+        this.feedID = feedID;
+    }
+
+    public String getClubID() {
+        return clubID;
+    }
+
+    public void setClubID(String clubID) {
+        this.clubID = clubID;
     }
 }

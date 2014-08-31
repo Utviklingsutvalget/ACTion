@@ -21,7 +21,11 @@ public class Application extends Controller {
     private static final String DELETE_TASK = "delete";
     private static final String UPLOAD_TASK = "upload";
     private static final String GET_TASK = "get";
-
+    private static final String INTENTFIELD = "intent";
+    private static final String USERIDFIELD = "userID";
+    private static final String IMAGEIDFIELD = "imageID";
+    private static final String CLUBIDFIELD = "clubID";
+    private static final String FEEDIDFIELD = "feedID";
 
     /**
      * intent is always the first field to be checked to see what type of image request is being sent.
@@ -31,31 +35,20 @@ public class Application extends Controller {
      *
      * */
 
-     /*
-    * TODO
-    *
-    * attach imageID to button so that each button knows its own imageID for deletion. (done)
-    * remove all references to dropzone.js
-    *
-    * fix backend so that UploadHandler and imageupload dont depend too much on paramsmap, rather
-    * send info to their constructors.
-    *
-    * */
     public static Result index() {
         return Feeds.index();
     }
 
     public static Result deleteUploadedImage(){
 
-        String intent = request().getQueryString("intent");
-        String userID = request().getQueryString("userID");
-        String imageID = request().getQueryString("imageID");
+        String intent = request().getQueryString(INTENTFIELD);
+        String userID = request().getQueryString(USERIDFIELD);
+        String imageID = request().getQueryString(IMAGEIDFIELD);
+        String clubID = request().getQueryString(CLUBIDFIELD);
+        String feedID = request().getQueryString(FEEDIDFIELD);
         Logger.debug("intent: " + intent + ", userID: " + userID + ", imageID: " + imageID);
 
-        UploadHandler uploadHandler = new UploadHandler(imageID, userID, intent, DELETE_TASK);
-
-
-        // resolve the intent and then call appropriate uploadClass
+        UploadHandler uploadHandler = new UploadHandler(imageID, userID, intent, clubID, feedID, DELETE_TASK);
 
         return ok(uploadHandler.getReturnMessage());
     }
@@ -75,6 +68,10 @@ public class Application extends Controller {
                 String fileName = filePart.getFilename();
                 File file = filePart.getFile();
 
+                if(file == null){
+                    return ok("No file selected");
+                }
+
                 Logger.debug("filename: " + fileName + ", file: " + file.toString());
                 uploadHandler = new UploadHandler(extraStuff, file, fileName, UPLOAD_TASK);
             }
@@ -87,11 +84,10 @@ public class Application extends Controller {
     }
 
     public static Result getImages(){
-        Logger.debug("getImages called!");
-        String userId = request().getQueryString("userID");
-        String intent = request().getQueryString("intent");
-        String clubID = request().getQueryString("clubID");
-        String feedId = request().getQueryString("feedID");
+        String userId = request().getQueryString(USERIDFIELD);
+        String intent = request().getQueryString(INTENTFIELD);
+        String clubID = request().getQueryString(CLUBIDFIELD);
+        String feedId = request().getQueryString(FEEDIDFIELD);
 
         // fetch an id and association to club/user based upon url.
         UploadHandler uploadHandler = new UploadHandler(intent, userId, clubID, feedId, GET_TASK);
@@ -100,6 +96,5 @@ public class Application extends Controller {
         Logger.debug(json.toString());
 
         return ok(json);
-
     }
 }
