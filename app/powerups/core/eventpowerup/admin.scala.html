@@ -29,6 +29,31 @@
                 <input class="event-image" type="text">
             </label>
         </form>
+
+        <a href="#" data-reveal-id="eventModal" class="button small radius">Last opp bilde</a>
+
+            <!-- Modal content event-image is copied and pasted into data image class, this is done on
+        a per powerup basis to seperate them-->
+        <div id="eventModal" class="reveal-modal uploadModal" data-image-class="event-image" data-reveal>
+            <h2>Bildeopplasting</h2>
+            <p>her kan du laste opp bilder til din profil</p>
+            <div class="xhrResponse"></div>
+
+                <!-- object for holding existing images -->
+            <div id="" class="row existingImages"></div>
+
+            <form action="@routes.Application.uploadImage()" enctype="multipart/form-data"
+            method="POST" id="imageUpload">
+
+                    <!-- file input -->
+                <div class="button fileInputButton">Velg fil
+                </div>
+                <label style="display: none" class="button">
+                    <input type="file" class="fileInputField">
+                </label>
+            </form>
+            <a class="close-reveal-modal">&#215;</a>
+        </div>
     </div>
 <script>
 createStandardButton(getId($('.event-create')));

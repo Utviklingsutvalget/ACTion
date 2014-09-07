@@ -15,7 +15,9 @@ import powerups.core.eventpowerup.html.admin;
 import powerups.core.eventpowerup.html.powerup;
 import utils.EventSorter;
 import utils.MembershipLevel;
+import utils.imageuploading.ImageUpload;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,6 +88,11 @@ public class EventPowerup extends Powerup {
         String location = updateContent.get("location").asText();
         String time = updateContent.get("time").asText();
         String coverUrl = updateContent.get("imagelink").asText();
+
+        String[] s = coverUrl.split("/");
+        Logger.debug("s er : " + s[s.length - 1]);
+        ImageUpload.checkForFileDefault(s[s.length - 1]);
+
 
         DateTimeFormatter format = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(time, format);

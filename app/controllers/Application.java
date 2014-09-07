@@ -1,19 +1,16 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import models.UserImageFile;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.imageuploading.ImageUpload;
 import utils.imageuploading.UploadHandler;
-import utils.imageuploading.UserImageUpload;
+
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Application extends Controller {
 
@@ -27,11 +24,12 @@ public class Application extends Controller {
     private static final String CLUBIDFIELD = "clubID";
     private static final String FEEDIDFIELD = "feedID";
 
+
     /**
+     *
      * intent is always the first field to be checked to see what type of image request is being sent.
      * NB:
      * make sure to check Imageuploading class in utils for instruction on usage of fieldnaming.
-     *
      *
      * */
 
@@ -56,45 +54,67 @@ public class Application extends Controller {
     public static Result uploadImage(){
 
         MultipartFormData body = request().body().asMultipartFormData();
-
-        UploadHandler uploadHandler = null;
+        String uploadPath = "";
 
         if(body != null){
 
-            Map<String, String[]> extraStuff = body.asFormUrlEncoded();
             FilePart filePart = body.getFile(FORMDATAFILEIDENTIFIER);
 
             if(filePart != null){
                 String fileName = filePart.getFilename();
                 File file = filePart.getFile();
 
+                Logger.debug("file.getName(): " + file.getName() + ", filename: " + fileName);
+
                 if(file == null){
                     return ok("No file selected");
                 }
 
                 Logger.debug("filename: " + fileName + ", file: " + file.toString());
-                uploadHandler = new UploadHandler(extraStuff, file, fileName, UPLOAD_TASK);
+
+                ImageUpload imageUpload = new ImageUpload(file, fileName);
+                uploadPath = imageUpload.writeFileDefault();
+                //uploadHandler = new UploadHandler(extraStuff, file, fileName, UPLOAD_TASK);
             }
 
         }else{
+            uploadPath = "error";
             Logger.debug("body is null");
         }
 
-        return ok(uploadHandler.getReturnMessage());
+        ObjectNode outer = Json.newObject();
+        ObjectNode inner = Json.newObject();
+        inner.put("url", uploadPath);
+        outer.put("file", inner);
+
+        return ok(outer);
     }
 
     public static Result getImages(){
+        /*
         String userId = request().getQueryString(USERIDFIELD);
         String intent = request().getQueryString(INTENTFIELD);
         String clubID = request().getQueryString(CLUBIDFIELD);
         String feedId = request().getQueryString(FEEDIDFIELD);
+        */
+        String fileName = request().getQueryString("fileName");
+
+        /*
+        Logger.debug("intent: " + intent);
+        Logger.debug("clubid: " + clubID);
+        Logger.debug("feedid: " + feedId);
+        */
+        Logger.debug("filename: " + fileName);
 
         // fetch an id and association to club/user based upon url.
-        UploadHandler uploadHandler = new UploadHandler(intent, userId, clubID, feedId, GET_TASK);
-        ObjectNode json = uploadHandler.getJson();
+        //UploadHandler uploadHandler = new UploadHandler(intent, userId, clubID, feedId, GET_TASK);
+        String filePath = ImageUpload.checkForFileDefault(fileName);
+        Logger.debug(filePath);
+        ObjectNode outer = Json.newObject();
+        ObjectNode inner = Json.newObject();
+        inner.put("url", filePath);
+        outer.put("file", inner);
 
-        Logger.debug(json.toString());
-
-        return ok(json);
+        return ok(outer);
     }
 }
