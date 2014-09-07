@@ -1,7 +1,5 @@
 import org.junit.Test;
-import play.api.Play;
 import utils.imaging.ImageLinkValidator;
-import play.test.FakeApplication;
 
 import java.awt.*;
 import java.io.File;
