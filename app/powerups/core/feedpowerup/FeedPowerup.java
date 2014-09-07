@@ -13,18 +13,21 @@ import play.twirl.api.Html;
 import powerups.Powerup;
 import utils.Context;
 import utils.FeedSorter;
+import utils.imageuploading.WriteFiles;
 import utils.imaging.ImageLinkValidator;
 
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FeedPowerup extends Powerup {
+public class FeedPowerup extends Powerup implements WriteFiles{
 
     private static final String MESSAGE = "message";
     private static final String MESSAGE_TITLE = "messageTitle";
     private static final String PICTURE_URL = "pictureUrl";
+    private static final String FEED_DIR_IDENTIFIER = "feed";
     private static final int MAX_FEED_INDEX_SIZE = 3;
     private List<Feed> userFeedList;
     private List<Feed> adminList;
@@ -108,8 +111,17 @@ public class FeedPowerup extends Powerup {
             ImageLinkValidator.StatusMessage statusMessage = validator.validate(pictureUrl);
 
             if (statusMessage.isSuccess()) {
+
+                // in order to rewrite image to server
+                String[] fileUrl = pictureUrl.split("/");
+                String fileName = fileUrl[fileUrl.length - 1];
+
                 Feed feed = new Feed(getClub(), user, messageTitle, message, pictureUrl);
                 Ebean.save(feed);
+
+                Feed wr = Feed.find.byId(feed.id);
+                Logger.debug(wr.pictureUrl);
+
                 return Results.ok("Feed-post opprettet");
             } else {
                 return Results.status(NO_UPDATE, statusMessage.getMessage());
@@ -118,5 +130,10 @@ public class FeedPowerup extends Powerup {
         } else {
             return Results.status(NO_UPDATE, "Manglende info fra feltene");
         }
+    }
+
+    @Override
+    public String writeFile(String fileName, String subDir) {
+        return null;
     }
 }

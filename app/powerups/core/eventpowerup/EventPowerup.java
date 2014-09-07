@@ -16,15 +16,17 @@ import powerups.core.eventpowerup.html.powerup;
 import utils.EventSorter;
 import utils.MembershipLevel;
 import utils.imageuploading.ImageUpload;
+import utils.imageuploading.WriteFiles;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EventPowerup extends Powerup {
+public class EventPowerup extends Powerup implements WriteFiles{
 
     public static final int MAX_EVENTS = 3;
+    private static final String EVENT_DIR_IDENTIFIER = "event";
 
     private List<Event> events;
     private boolean userPresent;
@@ -89,10 +91,6 @@ public class EventPowerup extends Powerup {
         String time = updateContent.get("time").asText();
         String coverUrl = updateContent.get("imagelink").asText();
 
-        String[] s = coverUrl.split("/");
-        Logger.debug("s er : " + s[s.length - 1]);
-        ImageUpload.checkForFileDefault(s[s.length - 1]);
-
 
         DateTimeFormatter format = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(time, format);
@@ -101,12 +99,34 @@ public class EventPowerup extends Powerup {
         }
 
         Event e = new Event(name, description, dateTime, location, coverUrl, this.getClub(), user);
+
+        // fetch imageName from imageUrl.
+        String[] uploadedFileUrl = coverUrl.split("/");
+        String fileName = uploadedFileUrl[uploadedFileUrl.length - 1];
+
+        // writes file to serverdir and uses timestamp as unique identifier, changes event url.
+        String newUrl = writeFile(fileName, getClub().id.toString() + File.separator + EVENT_DIR_IDENTIFIER +
+                File.separator + e.name + new LocalDateTime());
+        e.coverUrl = newUrl;
+
         Ebean.save(e);
 
         Participation p = new Participation(e, user);
         Ebean.save(p);
 
         return Results.ok("Event opprettet");
+    }
+
+    @Override
+    public String writeFile(String fileName, String subDir) {
+        File f = ImageUpload.getFileFromDefaultDir(fileName);
+
+        ImageUpload imageUpload = new ImageUpload(f, f.getName());
+        imageUpload.writeFile(subDir, imageUpload.getFileName());
+
+        String newUrl = imageUpload.returnFileUrl();
+
+        return newUrl;
     }
 
     public boolean isUserPresent() {

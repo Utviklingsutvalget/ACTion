@@ -14,7 +14,6 @@ import utils.ActivationSorter;
 import utils.Authorize;
 import utils.InitiationSorter;
 import utils.MembershipLevel;
-import utils.imageuploading.ClubImageUpload;
 
 import java.util.*;
 

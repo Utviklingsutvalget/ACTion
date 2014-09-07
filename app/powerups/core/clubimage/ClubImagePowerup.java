@@ -3,7 +3,6 @@ package powerups.core.clubimage;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
-import models.ClubImageFile;
 import models.PowerupModel;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -12,11 +11,12 @@ import powerups.Powerup;
 import powerups.core.clubimage.html.powerup;
 import powerups.models.ClubImage;
 import utils.MembershipLevel;
+import utils.imageuploading.WriteFiles;
 import utils.imaging.ImageLinkValidator;
 
 import java.awt.*;
 
-public class ClubImagePowerup extends Powerup {
+public class ClubImagePowerup extends Powerup implements WriteFiles{
 
     public static final String DEFAULT_IMAGE = "/assets/images/no_club_image.jpg";
 
@@ -67,4 +67,8 @@ public class ClubImagePowerup extends Powerup {
         }
     }
 
+    @Override
+    public String writeFile(String fileName, String subDir) {
+        return null;
+    }
 }

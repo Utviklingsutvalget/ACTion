@@ -8,7 +8,6 @@ import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.imageuploading.ImageUpload;
-import utils.imageuploading.UploadHandler;
 
 import java.io.File;
 
@@ -46,9 +45,7 @@ public class Application extends Controller {
         String feedID = request().getQueryString(FEEDIDFIELD);
         Logger.debug("intent: " + intent + ", userID: " + userID + ", imageID: " + imageID);
 
-        UploadHandler uploadHandler = new UploadHandler(imageID, userID, intent, clubID, feedID, DELETE_TASK);
-
-        return ok(uploadHandler.getReturnMessage());
+        return ok();
     }
 
     public static Result uploadImage(){
@@ -108,7 +105,8 @@ public class Application extends Controller {
 
         // fetch an id and association to club/user based upon url.
         //UploadHandler uploadHandler = new UploadHandler(intent, userId, clubID, feedId, GET_TASK);
-        String filePath = ImageUpload.checkForFileDefault(fileName);
+        String filePath = ImageUpload.checkAndReturnFileUrl(fileName);
+
         Logger.debug(filePath);
         ObjectNode outer = Json.newObject();
         ObjectNode inner = Json.newObject();
