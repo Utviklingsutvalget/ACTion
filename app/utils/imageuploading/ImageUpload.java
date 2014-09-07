@@ -11,6 +11,7 @@ import controllers.routes;
 public class ImageUpload {
 
     private File uploadedFile;
+    private String subdir;
     private String fileName;
     private static final String WRITE_IMAGE_ROOT_PATH = Play.current().path().getAbsolutePath() +
             File.separator + "public";
@@ -81,51 +82,9 @@ public class ImageUpload {
         return fileHash;
     }
 
-    public static String writeFile(String subDirectory, String fileName, File file){
-        File dir = new File(WRITE_IMAGE_ROOT_PATH + File.separator + subDirectory + File.separator);
-
-        if(!dir.exists() && !dir.isDirectory()){
-            dir.mkdirs();
-        }
-
-        File picture = new File(dir, fileName);
-
-        FileInputStream fileInputStream = null;
-        FileOutputStream fileOutputStream = null;
-
-        try {
-
-            fileInputStream = new FileInputStream(file);
-            fileOutputStream = new FileOutputStream(picture);
-
-            int content;
-
-            while ((content = fileInputStream.read()) != -1) {
-
-                fileOutputStream.write(content);
-            }
-
-        }catch (IOException e){
-            Logger.warn("error opening/writing to filestream in ImageUploading");
-
-        }finally{
-
-            try{
-
-                fileInputStream.close();
-                fileOutputStream.close();
-
-            }catch (IOException e){
-                Logger.warn("Error closing filestreams");
-            }
-
-        }
-        return subDirectory + File.separator + picture.getName();
-    }
-
     // writes file to designated subdirectory
     public String writeFile(String subDirectory, String fileName) {
-
+        setSubdir(subDirectory);
         File dir = new File(WRITE_IMAGE_ROOT_PATH + File.separator + subDirectory + File.separator);
 
         if(!dir.exists() && !dir.isDirectory()){
@@ -164,6 +123,7 @@ public class ImageUpload {
             }
 
         }
+
         return subDirectory + File.separator + picture.getName();
     }
 
@@ -171,7 +131,18 @@ public class ImageUpload {
         return fileName;
     }
 
-    public static String checkForFileDefault(String fileName){
+    public static File getFileFromDefaultDir(String fileName){
+        File file = Play.getFile(READ_IMAGE_ROOT_PATH + File.separator + DEFAULT_IMAGE_FOLDER +
+                File.separator + fileName, Play.current());
+
+        if(file.exists()){
+            return file;
+        }else{
+            return null;
+        }
+    }
+
+    public static String checkAndReturnFileUrl(String fileName){
 
         File file = Play.getFile(READ_IMAGE_ROOT_PATH + File.separator + DEFAULT_IMAGE_FOLDER +
                 File.separator + fileName, Play.current());
@@ -187,12 +158,34 @@ public class ImageUpload {
         }
     }
 
+    public String getSubdir() {
+        return subdir;
+    }
+
+    public void setSubdir(String subdir) {
+
+        this.subdir = subdir;
+    }
+
+    public String returnFileUrl(){
+        File f = Play.getFile(READ_IMAGE_ROOT_PATH + File.separator + subdir + File.separator +
+                getFileName(), Play.current());
+
+        if(f.exists()){
+            return routes.Assets.at(getSubdir() +
+                    File.separator + f.getName()).url();
+        }else{
+            return null;
+        }
+    }
+
     public static File getUploadedFileDefaultDir(String fileName){
         List<File> fileList = new ArrayList<>();
         List<File> uncheckedDirs = new ArrayList<>();
 
         File rootDir = Play.getFile(READ_IMAGE_ROOT_PATH + File.separator + DEFAULT_IMAGE_FOLDER, Play.current());
 
+        // check default rootdir
         if(rootDir.isDirectory()){
 
             File[] filesInDir = rootDir.listFiles();
@@ -212,6 +205,24 @@ public class ImageUpload {
             }
         }
 
+        // check all existing dirs
+        fileList.addAll(traverseDirs(uncheckedDirs));
+
+        // return search results
+        for(File file : fileList){
+
+            if(file.getName().equals(fileName)){
+                Logger.debug("got em!");
+                return file;
+            }
+        }
+
+        return null;
+    }
+
+    private static List<File> traverseDirs(List<File> uncheckedDirs){
+        List<File> fileList = new ArrayList<>();
+
         int count = 0;
         while(!uncheckedDirs.isEmpty()){
 
@@ -221,20 +232,25 @@ public class ImageUpload {
 
                 File[] filesInDir = f.listFiles();
 
-                for(File file : filesInDir){
+                if(filesInDir != null){
 
+                    for(File file : filesInDir){
+
+                        if(file.isDirectory()){
+                            uncheckedDirs.add(file);
+                        }else{
+                            fileList.add(file);
+                        }
+                    }
                 }
+                uncheckedDirs.remove(f);
 
             }else{
-
                 fileList.add(f);
             }
-
         }
 
-        // todo
-
-        return null;
+        return fileList;
     }
 
     public File findUploadedFile(String subDir, String fileName){
