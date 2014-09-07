@@ -4,6 +4,9 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -65,6 +68,20 @@ public class ImageLinkValidator {
             }
         } else {
             return new StatusMessage(false, "Kunne ikke finne noe bilde på den linken");
+        }
+    }
+
+    public StatusMessage validate(File image) {
+        try {
+            if(!image.canRead()) {
+                return new StatusMessage(false, "Kunne ikke bekrefte bildet. Er du sikker på at linken er riktig?");
+            }
+            ImageInputStream in = ImageIO.createImageInputStream(new FileInputStream(image));
+            return validateStream(in);
+        } catch (FileNotFoundException e) {
+            return new StatusMessage(false, "Linken peker ikke til en gyldig nettaddresse");
+        } catch (IOException e) {
+            return new StatusMessage(false, "Kunne ikke bekrefte bildet. Er du sikker på at linken er riktig?");
         }
     }
 
