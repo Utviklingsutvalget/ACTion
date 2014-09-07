@@ -22,7 +22,6 @@ public class UserImageUpload extends ImageUpload {
     private User user;
     private String returnMessage = "error";
 
-
     public UserImageUpload(Map<String, String[]> inputMap, File file, String fileName) {
         super(file, fileName);
 

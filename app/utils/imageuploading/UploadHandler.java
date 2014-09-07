@@ -61,7 +61,6 @@ public class UploadHandler {
 
     // fetching files
     public UploadHandler(String intent, String userID, String clubID, String feedID, String task){
-        json = Json.newObject();
         setUserID(userID);
         setClubID(clubID);
         setFeedID(feedID);
@@ -89,7 +88,7 @@ public class UploadHandler {
                 break;
             case CLUB : clubHandler();
                 break;
-            case FEED : //method
+            case FEED : feedHandler();
                 break;
             default: throw new IllegalArgumentException("intent matches none of identified types");
         }
@@ -145,6 +144,29 @@ public class UploadHandler {
         }else{
 
             setJson(ClubImageUpload.fetchJson(getClubID()));
+        }
+    }
+
+    private void feedHandler(){
+
+        if(getTask().equals(UPLOAD_TASK)){
+
+            setImageUpload(new FeedImageUpload(getParamsMap(), getFile(), getFileName()));
+            FeedImageUpload feedImageUpload = (FeedImageUpload) getImageUpload();
+            feedImageUpload.uploadFeedImage();
+            setReturnMessage(feedImageUpload.getReturnMessage());
+
+        }else if(getTask().equals(DELETE_TASK)){
+
+            setImageUpload(new FeedImageUpload(getFeedID()));
+            FeedImageUpload feedImageUpload = (FeedImageUpload) getImageUpload();
+            feedImageUpload.deleteFeedImage();
+            setReturnMessage(feedImageUpload.getReturnMessage());
+
+        }else{
+            // json
+            Logger.debug("getFeedID: " + getFeedID());
+            setJson(FeedImageUpload.fetchJson(getFeedID()));
         }
     }
 

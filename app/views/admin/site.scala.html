@@ -291,27 +291,6 @@
         </div>
     </div>
 
-    @*
-    <div class="row imageUpload">
-        <div class="medium-12 columns">
-            <div id="xhrResponse"></div>
-            <form action="@routes.Application.uploadImage()" class="dropzone" id="imageUploadForm" method="post"
-                enctype="multipart/form-data">
-                    <label style="opacity: 0.0">
-                            <!-- name must be file -->
-                        <input type="file" id="uploadedimage" name="file">
-                    </label>
-                    <input type="hidden" name="clubId" value="1">
-                    <input type="hidden" name="userId" value="110259387494417138630">
-                    <input type="hidden" name="feedId" value="this is feedId">
-                        <!-- required in every circumstance -->
-                    <input type="hidden" name="intent" value="profilePicture">
-                <input type="button" name="submitImage" value="send">
-            </form>
-        </div>
-    </div>
-    *@
-
     <div class="row">
         <div class="medium-12 columns">
             <!-- Content -->
@@ -328,11 +307,11 @@
 
                 <form action="@routes.Application.uploadImage()" enctype="multipart/form-data"
                 method="POST" id="imageUpload">
-                    <input id="clubID" type="hidden" name="clubId" value="3">
-                    <input id="feedID" type="hidden" name="feedId" value="this is feedID"
+                    <input id="clubID" type="hidden" name="clubId" value="2">
+                    <input id="feedID" type="hidden" name="feedId" value="1">
 
                     <!-- REQUIRED FIELDS, THESE MUST CONTAIN INFO -->
-                    <input id="intent" type="hidden" name="intent" value="clubPicture">
+                    <input id="intent" type="hidden" name="intent" value="feedPicture">
                     <input id="userID" type="hidden" name="userID" value="110259387494417138630">
 
                     <!-- file input -->
@@ -342,7 +321,6 @@
                         <input type="file" id="fileInputField">
                     </label>
                 </form>
-
                 <a class="close-reveal-modal">&#215;</a>
             </div>
 
