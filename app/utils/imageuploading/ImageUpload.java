@@ -3,6 +3,7 @@ package utils.imageuploading;
 import play.Logger;
 import play.api.Play;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +52,17 @@ public class ImageUpload {
     }
 
     public static void clearDefaultDir(){
+        File defaultDir = Play.getFile(READ_IMAGE_ROOT_PATH + File.separator + DEFAULT_IMAGE_FOLDER, Play.current());
 
+        if(defaultDir.isDirectory()){
+            File[] files = defaultDir.listFiles();
 
+            if(files != null){
+                for(File f : files){
+                    f.delete();
+                }
+            }
+        }
     }
 
     public boolean doubleCheckExtensions(String fileName){

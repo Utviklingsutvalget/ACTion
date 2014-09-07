@@ -62,11 +62,6 @@ public class Application extends Controller {
                 File file = filePart.getFile();
 
                 Logger.debug("file.getName(): " + file.getName() + ", filename: " + fileName);
-
-                if(file == null){
-                    return ok("No file selected");
-                }
-
                 Logger.debug("filename: " + fileName + ", file: " + file.toString());
 
                 ImageUpload imageUpload = new ImageUpload(file, fileName);

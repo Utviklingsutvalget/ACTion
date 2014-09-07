@@ -98,23 +98,31 @@ public class EventPowerup extends Powerup implements WriteFiles{
             return Results.unauthorized("Kan ikke opprette events i fortiden.");
         }
 
+        // bit weird implementation but we basically write to DB to get and id we then add to writeFile
+        // then we fetch the event and change its coverurl.
         Event e = new Event(name, description, dateTime, location, coverUrl, this.getClub(), user);
-
-        // fetch imageName from imageUrl.
-        String[] uploadedFileUrl = coverUrl.split("/");
-        String fileName = uploadedFileUrl[uploadedFileUrl.length - 1];
-
-        // writes file to serverdir and uses timestamp as unique identifier, changes event url.
-        String newUrl = writeFile(fileName, getClub().id.toString() + File.separator + EVENT_DIR_IDENTIFIER +
-                File.separator + e.name + new LocalDateTime());
-        e.coverUrl = newUrl;
-
         Ebean.save(e);
+
+        Event insertedEvent = Event.find.byId(e.id);
+        String fileName = getFileNameFromPath(coverUrl);
+
+        // writes file to serverdir and uses timestamp with event id
+        String newUrl = writeFile(fileName, getClub().id.toString() + File.separator + EVENT_DIR_IDENTIFIER +
+                File.separator + e.id + new LocalDateTime());
+        insertedEvent.coverUrl = newUrl;
+        Ebean.save(insertedEvent);
 
         Participation p = new Participation(e, user);
         Ebean.save(p);
 
         return Results.ok("Event opprettet");
+    }
+
+    @Override
+    public String getFileNameFromPath(String fileUrl) {
+        // fetch imageName from imageUrl.
+        String[] uploadedFileUrl = fileUrl.split("/");
+        return uploadedFileUrl[uploadedFileUrl.length - 1];
     }
 
     @Override
@@ -126,6 +134,7 @@ public class EventPowerup extends Powerup implements WriteFiles{
 
         String newUrl = imageUpload.returnFileUrl();
 
+        ImageUpload.clearDefaultDir();
         return newUrl;
     }
 

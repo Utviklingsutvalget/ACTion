@@ -112,6 +112,7 @@ public class FeedPowerup extends Powerup implements WriteFiles{
 
             if (statusMessage.isSuccess()) {
 
+                // todo implement imagewriting
                 // in order to rewrite image to server
                 String[] fileUrl = pictureUrl.split("/");
                 String fileName = fileUrl[fileUrl.length - 1];
@@ -130,6 +131,11 @@ public class FeedPowerup extends Powerup implements WriteFiles{
         } else {
             return Results.status(NO_UPDATE, "Manglende info fra feltene");
         }
+    }
+
+    @Override
+    public String getFileNameFromPath(String fileUrl) {
+        return null;
     }
 
     @Override

@@ -68,6 +68,11 @@ public class ClubImagePowerup extends Powerup implements WriteFiles{
     }
 
     @Override
+    public String getFileNameFromPath(String fileUrl) {
+        return null;
+    }
+
+    @Override
     public String writeFile(String fileName, String subDir) {
         return null;
     }
