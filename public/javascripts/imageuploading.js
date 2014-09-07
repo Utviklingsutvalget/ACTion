@@ -1,4 +1,3 @@
-var imageCounter = 0;
 var THUMBNAILHEIGHT = 150;
 var THUMBNALWIDTH = 150;
 
@@ -11,30 +10,33 @@ var THUMBNALWIDTH = 150;
 
 $(document).ready(function(){
 
-    // calls file input with coverbutton
-    $("#fileInputButton").on('click', function(){
+    var imagePowerupType = undefined;
 
-        $("#fileInputField").click();
+    // calls file input with coverbutton
+    $(".fileInputButton").on('click', function(){
+
+        var fileInputField = $(this).parent().find('.fileInputField');
+        fileInputField.click();
     });
 
     // called when user has selected file from wizard
-    $("#fileInputField").change(function(e){
+    $(".fileInputField").change(function(e){
 
-        var uploadModal = $(this).closest('#uploadModal');
-        var intent = $(this).closest(uploadModal).find('#intent').val();
-        var userID = $(this).closest(uploadModal).find('#userID').val();
-        var clubID = $(this).closest(uploadModal).find('#clubID').val();
-        var feedID = $(this).closest(uploadModal).find('feedID').val();
-        var existingImagesElement = $(this).closest(uploadModal).find('#existingImages');
-        console.log(existingImagesElement.attr('id'));
+        var uploadModal = $(this).closest('.uploadModal');
 
-        var fileElement = document.getElementById('fileInputField');
+        // fetches data which determines field of choice for link output
+        imagePowerupType = uploadModal.data('image-class');
+        console.log(imagePowerupType);
+
+        var existingImagesElement = $(this).closest(uploadModal).find('.existingImages');
+
+        // fetches file object
+        var fileElement = $(this)[0].files[0];
         var message;
         var FILE_FIELD = "file";
 
-        var form = document.getElementById('imageUpload');
-        var formData = new FormData(form);
-        formData.append(FILE_FIELD, fileElement.files[0]);
+        var formData = new FormData();
+        formData.append(FILE_FIELD, fileElement);
 
         $.ajax({
             url: "/upload",
@@ -50,17 +52,17 @@ $(document).ready(function(){
 
         }).done(function(){
 
-            appendXHRResponse(message);
+            appendXHRResponse(message, uploadModal);
 
-            $.get("/upload", {userID: userID, intent: intent, feedID: feedID, clubID: clubID}).done(function(data){
+            $.get("/upload", {fileName: fileElement.name}).done(function(data){
 
                 existingImagesElement.html('');
 
                 $.each(data, function(key, value){
 
-                    console.log(value.id);
-                    imageCountIncrease();
-                    appendImage(value);
+                    console.log(value.url);
+                    appendUrlToField(value.url, imagePowerupType);
+                    appendImage(value, existingImagesElement);
                 });
             });
         });
@@ -75,7 +77,7 @@ $(document).ready(function(){
         var userID = $(uploadModal).find('#userID').val();
         var clubID = $(uploadModal).find('#clubID').val();
         var feedID = $(uploadModal).find('#feedID').val();
-        var existingImagesElement = $(uploadModal).find('#existingImages');
+        var existingImagesElement = $(uploadModal).find('.existingImages');
         var imageID = $(this).parent().find('img').attr('id');
 
         $.get("/deleteuploaded", {userID: userID, intent: intent, feedID: feedID, clubID: clubID, imageID: imageID},
@@ -94,7 +96,6 @@ $(document).ready(function(){
 
                     $.each(data, function(key, value){
 
-                        imageCountIncrease();
                         appendImage(value);
                     });
                 });
@@ -102,39 +103,35 @@ $(document).ready(function(){
     });
 
     // modal is opened
-    $("#uploadModal").bind('opened', function(){
+    $(".uploadModal").bind('opened', function(){
 
-        var intent = $(this).find('#intent').val();
-        var userID = $(this).find('#userID').val();
-        var clubID = $(this).find('#clubID').val();
-        var feedID = $(this).find('#feedID').val();
-        var existingImagesElement = $(this).find('#existingImages');
-        console.log(existingImagesElement.attr('id'));
-
-        $.get("/upload", {userID: userID, intent: intent, feedID: feedID,
-            clubID: clubID}).done(function(data){
-
-            existingImagesElement.html('');
-
-            $.each(data, function(key, value){
-
-                imageCountIncrease();
-                appendImage(value);
-            });
-        });
+        var existingImagesElement = $(this).find('.existingImages');
+        existingImagesElement.html('');
+        resetXHRR(existingImagesElement.parent());
 
         console.log("opened!");
     });
 
     // modal is closed
-    $("#uploadModal").bind('closed', function(){
+    $(".uploadModal").bind('closed', function(){
 
-        var exisitingImagesElement = $(this).find('#existingImages');
+        var exisitingImagesElement = $(this).find('.existingImages');
         exisitingImagesElement.html('');
         resetXHRR();
         console.log("closed!");
     });
 });
+
+function appendUrlToField(url, classToAppendTo){
+
+    if(classToAppendTo === undefined){
+
+        console.log("classToAppend is undefined for url: " + url);
+        return;
+    }
+
+    $('.' + classToAppendTo).val(url);
+}
 
 function appendButton(dbId){
 
@@ -146,11 +143,12 @@ function appendButton(dbId){
     return button;
 }
 
-function appendImage(value){
+function appendImage(value, existingImageElements){
 
     var imgNode = document.createElement("div");
     $(imgNode).addClass('imgNode');
-    document.getElementById("existingImages").appendChild(imgNode);
+
+    $(existingImageElements).append(imgNode);
 
     var button = appendButton(value.id);
 
@@ -158,60 +156,18 @@ function appendImage(value){
     image.src = value.url;
     image.width = THUMBNAILHEIGHT;
     image.height = THUMBNALWIDTH;
-    image.id = value.id;
     imgNode.appendChild(image);
     imgNode.appendChild(button);
 }
 
-function resetExistingImages(existingImagesElement){
-
-    var emptyElement = $(existingImagesElement).html('');
-    return emptyElement;
-}
-
-function imageCountIncrease(){
-    imageCounter++;
-}
-
-function sendToServer(form){
-
-    var formData = new FormData(form);
-    var fileElement = document.getElementById('fileInputField');
-    var message;
-    var FILE_FIELD = "file";
-
-    formData.append(FILE_FIELD, fileElement.files[0]);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/upload', true);
-    xhr.send(formData);
-
-    xhr.onreadystatechange = function(){
-
-        if(xhr.status == 200 && xhr.readyState == 4){
-
-            message = "<div data-alert class=\"alert-box success text-center radius\">"
-                + xhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
-
-        }else if(xhr.status == 400 && xhr.readyState == 4){
-
-            message = "<div data-alert class=\"alert-box alert text-center radius\">"
-                + xhr.responseText + "<a href=\"#\" class=\"close\">&times;</a></div>";
-        }
-
-        console.log(message);
-        appendXHRResponse(message);
-    };
-}
-
-function resetXHRR(){
-    var htmlElement = $(document).find('#xhrResponse');
+function resetXHRR(parent){
+    var htmlElement = $(parent).find('.xhrResponse');
     htmlElement.html('');
 }
 
-function appendXHRResponse(message){
+function appendXHRResponse(message, parent){
+    var htmlElement = $(parent).find('.xhrResponse');
 
-    var htmlElement = $(document).find('#xhrResponse');
     htmlElement.html('');
     htmlElement.append(message);
 }

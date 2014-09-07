@@ -9,6 +9,7 @@ function powerup() {
 
     $(document).on('click', '.updatepowerup-type', function(e) {
         e.preventDefault();
+
         var powerup = buildAndReturnPowerup($(this));
         var updateTypeElement = $(this).closest('.powerup-body');
         if(updateTypeElement.data('powerup-update-type') !== undefined) {
@@ -16,6 +17,14 @@ function powerup() {
             console.log(powerup.updateType);
         }
         powerup.update();
+
+    });
+
+    $(document).on('click', '.uploadbutton', function(e){
+        e.preventDefault();
+
+        // this triggers the modal when clicking submit on form
+        $('#uploadModal').foundation('reveal', 'open');
 
     });
 }
@@ -44,6 +53,16 @@ function getPowerupHtml(id) {
         }
     });
     return htmlPowerup;
+}
+
+function createUploadButton(powerupId, buttonText) {
+    if(typeof(buttonText) == undefined || buttonText == null) {
+        buttonText = "Last opp bilde";
+    }
+
+    var htmlPowerup = getPowerupHtml(powerupId);
+    var insertInto = htmlPowerup.find('.powerup-content');
+    insertInto.append("<button class=\"uploadbutton button small radius\">" + buttonText + "</button>");
 }
 
 function createStandardButton(powerupId, buttonText) {
