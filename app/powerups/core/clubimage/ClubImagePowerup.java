@@ -4,6 +4,7 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Club;
 import models.PowerupModel;
+import org.joda.time.LocalDateTime;
 import play.mvc.Result;
 import play.mvc.Results;
 import play.twirl.api.Html;
@@ -11,15 +12,18 @@ import powerups.Powerup;
 import powerups.core.clubimage.html.powerup;
 import powerups.models.ClubImage;
 import utils.MembershipLevel;
+import utils.imageuploading.ImageUpload;
 import utils.imageuploading.WriteFiles;
 import utils.imaging.ImageLinkValidator;
 
 import java.awt.*;
+import java.io.File;
 
 public class ClubImagePowerup extends Powerup implements WriteFiles{
 
     public static final String DEFAULT_IMAGE = "/assets/images/no_club_image.jpg";
 
+    private static final String CLUB_IMAGE_IDENTIFIER = "clubimage";
     private final ClubImage clubImage;
 
     public ClubImagePowerup(Club club, PowerupModel model) {
@@ -56,10 +60,21 @@ public class ClubImagePowerup extends Powerup implements WriteFiles{
         }
         String url = updateContent.get("link").asText();
         ImageLinkValidator validator = new ImageLinkValidator(new Dimension(800, 300), new Dimension(1600, 600));
-        ImageLinkValidator.StatusMessage statusMessage = validator.validate(url);
+        // ImageLinkValidator.StatusMessage statusMessage = validator.validate(url);
+
+        String fileName = getFileNameFromPath(url);
+
+        //ImageLinkValidator.StatusMessage statusMessage = validator.validate(pictureUrl);
+        ImageLinkValidator.StatusMessage statusMessage = validator.validate(ImageUpload.getFileFromDefaultDir(
+                fileName
+        ));
 
         if (statusMessage.isSuccess()) {
-            clubImage.imageUrl = url;
+
+            String newUrl = writeFile(fileName, getClub().id.toString() + File.separator + CLUB_IMAGE_IDENTIFIER +
+                    File.separator + clubImage.key.toString() + new LocalDateTime());
+            clubImage.imageUrl = newUrl;
+
             Ebean.update(clubImage);
             return Results.ok("Utvalgsbilde endret");
         } else {
@@ -69,11 +84,20 @@ public class ClubImagePowerup extends Powerup implements WriteFiles{
 
     @Override
     public String getFileNameFromPath(String fileUrl) {
-        return null;
+        String[] pictureUrl = fileUrl.split("/");
+        return pictureUrl[pictureUrl.length - 1];
     }
 
     @Override
     public String writeFile(String fileName, String subDir) {
-        return null;
+        File f = ImageUpload.getFileFromDefaultDir(fileName);
+
+        ImageUpload imageUpload = new ImageUpload(f, f.getName());
+        imageUpload.writeFile(subDir, imageUpload.getFileName());
+
+        String newUrl = imageUpload.returnFileUrl();
+
+        ImageUpload.clearDefaultDir();
+        return newUrl;
     }
 }
