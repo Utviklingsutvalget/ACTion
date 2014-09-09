@@ -9,8 +9,8 @@ GET           /upload                          controllers.Application.getImages
 GET           /deleteuploaded                  controllers.Application.deleteUploadedImage()
 
 # Initiation week
-GET           /initiation                      controllers.Initiation.index()
-POST          /initiation                      controllers.Initiation.search()
+#GET           /initiation                      controllers.Initiation.index()
+#POST          /initiation                      controllers.Initiation.search()
 
 # Users
 GET           /users/profile                   controllers.Users.profile()

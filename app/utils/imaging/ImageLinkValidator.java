@@ -4,6 +4,9 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,40 +39,58 @@ public class ImageLinkValidator {
         this.enforceStrict = enforceStrict;
     }
 
-    public StatusMessage validate(String imageUrl) {
+    private StatusMessage validateStream(ImageInputStream in) throws IOException {
         List<String> typeList = Arrays.asList(ALLOWED_TYPES);
         StatusMessage message;
+        if(in == null) {
+            return new StatusMessage(false, "Kunne ikke lese bildet");
+        }
+
+        final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
+        if (readers.hasNext()) {
+            ImageReader reader = readers.next();
+            reader.setInput(in);
+            Dimension imageDimension = new Dimension(reader.getWidth(0), reader.getHeight(0));
+
+            message = verifyImageDimension(imageDimension);
+            if(!message.isSuccess()) {
+                in.close();
+                return message;
+            }
+            String contentType = reader.getFormatName();
+            in.close();
+            if(contentType == null || contentType.equals("")) {
+                return new StatusMessage(false, "Kunne ikke lese bildetypen");
+            } else if(typeList.contains(contentType.toLowerCase())) {
+                return new StatusMessage(true, null);
+            } else {
+                return new StatusMessage(false, "Bildetypen " + contentType.toLowerCase() + " er ikke støttet");
+            }
+        } else {
+            return new StatusMessage(false, "Kunne ikke finne noe bilde på den linken");
+        }
+    }
+
+    public StatusMessage validate(File image) {
+        try {
+            if(!image.canRead()) {
+                return new StatusMessage(false, "Kunne ikke bekrefte bildet. Er du sikker på at linken er riktig?");
+            }
+            ImageInputStream in = ImageIO.createImageInputStream(new FileInputStream(image));
+            return validateStream(in);
+        } catch (FileNotFoundException e) {
+            return new StatusMessage(false, "Linken peker ikke til en gyldig nettaddresse");
+        } catch (IOException e) {
+            return new StatusMessage(false, "Kunne ikke bekrefte bildet. Er du sikker på at linken er riktig?");
+        }
+    }
+
+    public StatusMessage validate(String imageUrl) {
         try {
             URL url = new URL(imageUrl);
             ImageInputStream in = ImageIO.createImageInputStream(url.openStream());
+            return this.validateStream(in);
 
-            if(in == null) {
-                return new StatusMessage(false, "Kunne ikke lese bildet");
-            }
-
-            final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
-            if (readers.hasNext()) {
-                ImageReader reader = readers.next();
-                reader.setInput(in);
-                Dimension imageDimension = new Dimension(reader.getWidth(0), reader.getHeight(0));
-
-                message = verifyImageDimension(imageDimension);
-                if(!message.isSuccess()) {
-                    in.close();
-                    return message;
-                }
-                String contentType = reader.getFormatName();
-                in.close();
-                if(contentType == null || contentType.equals("")) {
-                    return new StatusMessage(false, "Kunne ikke lese bildetypen");
-                } else if(typeList.contains(contentType.toLowerCase())) {
-                    return new StatusMessage(true, null);
-                } else {
-                    return new StatusMessage(false, "Bildetypen " + contentType.toLowerCase() + " er ikke støttet");
-                }
-            } else {
-                return new StatusMessage(false, "Kunne ikke finne noe bilde på den linken");
-            }
         } catch (MalformedURLException e) {
             return new StatusMessage(false, "Linken peker ikke til en gyldig nettaddresse");
         } catch (IOException e) {

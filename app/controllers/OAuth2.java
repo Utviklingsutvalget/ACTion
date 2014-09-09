@@ -69,8 +69,9 @@ public class OAuth2 extends Controller {
      */
     public static Result authenticate(int _update) {
         update = _update == 1;
+        Logger.info(String.valueOf(update));
 
-        if (session().containsKey("id") && update) {
+        if (session().containsKey("id") && !update) {
             User user = UserService.findById(session("id"));
             if (user != null) {
                 return Users.profile();
@@ -92,6 +93,7 @@ public class OAuth2 extends Controller {
 
 
         //Redirect to google
+        Logger.info("Redirecting user to Google");
         return redirect(dd.getEndpoints(GoogleUtility.AUTHORIZATION_ENDPOINT) + "?" +
                 "client_id=" + CONF.getString("googleclient.id") +
                 "&hd=" + CONF.getString("googleclient.hd") +
@@ -127,8 +129,10 @@ public class OAuth2 extends Controller {
 
         try {
             User user = new Authorize.UserSession().getUser();
+            Logger.info("Redirecting to profile!");
             if (user != null) {
-                return redirect(routes.Users.profile());
+                destroySessions();
+                //return redirect(routes.Users.profile());
             }
         } catch (Authorize.SessionException ignored) {
         }
@@ -299,7 +303,7 @@ public class OAuth2 extends Controller {
 
             if (update) {
 
-                if (!session().get("id").equals(jsonObject.getString("sub"))) {
+                if (session().containsKey("id") && !session().get("id").equals(jsonObject.getString("sub"))) {
                     return badRequest(error.render("Kan ikke oppdatere en bruker med en opplysninger fra en annen bruker."));
                 }
 
@@ -355,6 +359,7 @@ public class OAuth2 extends Controller {
      * this application.
      */
     public static void destroySessions() {
+        session().remove("id");
         session().clear();
     }
 

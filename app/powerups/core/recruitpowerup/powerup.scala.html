@@ -1,6 +1,4 @@
-@(isMember: Boolean, club: Club, user: User, pending: Boolean)
-@import powerups.core.recruitpowerup.RecruitPowerup
-@import powerups.core.recruitpowerup
+@(isMember: Boolean, club: Club, user: User, pending: Boolean, boardMember: Boolean)
 
 @* ---- If user of the club, hide the recruitpowerup ---- *@
 
@@ -12,7 +10,7 @@
                     <h3>Innmelding for @club.name</h3>
                     <p>Skriv en kort kommentar om deg selv her</p>
 
-                    <textarea maxlength="100" id="application_message" placeholder="Maks 100 tegn" required></textarea>
+                    <textarea maxlength="250" id="application_message" placeholder="Maks 250 tegn" required></textarea>
                     <div id="textarea_feedback"></div>
                 </div>
 
@@ -23,8 +21,12 @@
             </script>
         </div>
     } else {
-
-        @if(isMember && !pending) {
+        @if(isMember && boardMember) {
+            <div class="medium-12 columns medium-centered text-center">
+                <h6>Styremedlemmer kan ikke melde seg ut av utvalg.</h6>
+            </div>
+        } else {
+            @if(isMember && !pending) {
             <div class="row">
                 <div class="medium-12 columns medium-centered text-center powerup-node appMessageNode" data-powerup-field="@user.getId" data-powerup-value="TerminateMemberShip">
                     <p>Du er allerede medlem av @club.name</p>
@@ -33,14 +35,12 @@
             <script>
             createStandardButton ( getId ( $ ( '.appMessageNode' ) ), "Meld deg ut av utvalget" ) ;
             </script>
-
-        } else {
-
-            @if(!isMember && pending) {
-
-                <div class="medium-12 columns medium-centered text-centered">
-                    <h6>Ditt medlemskap er under vurdering</h6>
-                </div>
+            } else {
+                @if(!isMember && pending) {
+                    <div class="medium-12 columns medium-centered text-center">
+                        <h6>Ditt medlemskap er under vurdering</h6>
+                    </div>
+                }
             }
         }
     }

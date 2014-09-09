@@ -2,6 +2,7 @@ import org.junit.Test;
 import utils.imaging.ImageLinkValidator;
 
 import java.awt.*;
+import java.io.File;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -46,6 +47,14 @@ public class ImageLinkValidatorTest {
     public void fallsWithinTest() {
         ImageLinkValidator validator = new ImageLinkValidator(new Dimension(775, 300), new Dimension(1100, 500), true);
         ImageLinkValidator.StatusMessage message = validator.validate("http://puertoricohotelreservations.com/wp-content/uploads/2011/11/riomargolf-1000x400.jpg");
+        assertThat(message.isSuccess());
+    }
+
+    @Test
+    public void testFileSupport() {
+        ImageLinkValidator validator = new ImageLinkValidator(new Dimension(32, 32));
+        File f = new File("public/images/favicon-32x32.png");
+        ImageLinkValidator.StatusMessage message = validator.validate(f);
         assertThat(message.isSuccess());
     }
 

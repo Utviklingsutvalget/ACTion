@@ -20,6 +20,7 @@ import utils.imageuploading.WriteFiles;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,11 +38,11 @@ public class EventPowerup extends Powerup implements WriteFiles{
 
         List<Event> tempEvents = getClub().events;
         tempEvents.sort(new EventSorter());
-        events.addAll(tempEvents.stream().filter(e -> e.startTime.isBefore(LocalDateTime.now().plusHours(3))).collect(Collectors.toList()));
-        if (events.size() < MAX_EVENTS) {
-            events.addAll(events);
-        } else if (!events.isEmpty()) {
-            events.addAll(events.subList(0, MAX_EVENTS));
+        events.addAll(tempEvents.stream().filter(e -> e.startTime.isAfter(LocalDateTime.now().minusHours(3))).collect(Collectors.toList()));
+        if(events.size() > MAX_EVENTS) {
+            for(int i = MAX_EVENTS; i < events.size() ; i++) {
+                events.remove(i);
+            }
         }
         for (Event e : events) {
             Participation participation = new Participation(e, this.getContext().getSender());
@@ -53,7 +54,6 @@ public class EventPowerup extends Powerup implements WriteFiles{
                 e.setUserAttending(participation.getRvsp());
             }
             e.setUserAttending(participation.getRvsp());
-            Logger.warn("Didn't fail yet4");
             User user = getContext().getSender();
             this.setUserPresent(user != null);
         }

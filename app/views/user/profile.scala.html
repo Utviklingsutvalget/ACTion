@@ -1,4 +1,5 @@
 @(user: User, admin: Boolean)
+
 @import utils.MembershipLevel
 
 @main("Min profil") {
@@ -24,11 +25,13 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row text-center">
         <br /><br />
+        <span>Hvis du har endret profilbilde på Google+ må du oppdatere profilen for at dette skal vises på siden.</span>
+        <br>
         <div class="small-12 columns text-center">
             <a href="@routes.Users.logout()" class="button small">Logg ut</a>
-            @*<a href="@routes.OAuth2.authenticate(1)" class="button small">Oppdater</a>*@
+            <a href="@routes.OAuth2.authenticate(1)" class="button small">Oppdater</a>
         </div>
     </div>
 
