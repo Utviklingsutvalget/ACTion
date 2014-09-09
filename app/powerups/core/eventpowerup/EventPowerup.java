@@ -3,6 +3,7 @@ package powerups.core.eventpowerup;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.*;
+import models.Event;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -17,7 +18,9 @@ import utils.EventSorter;
 import utils.MembershipLevel;
 import utils.imageuploading.ImageUpload;
 import utils.imageuploading.WriteFiles;
+import utils.imaging.ImageLinkValidator;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,6 +88,14 @@ public class EventPowerup extends Powerup implements WriteFiles{
         if (!(user.isAdmin() || getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
             return Results.unauthorized("Ingen tilgang til å opprette events for " + this.getClub().name);
         }
+
+        if(updateContent == null || updateContent.isNull()){
+            return Results.status(NO_UPDATE, "Manglende info fra feltene");
+        }
+
+        // TODO CHANGE DIMENSIONS IF NEEDED
+        ImageLinkValidator validator = new ImageLinkValidator(new Dimension(500, 250), new Dimension(1000, 500), true);
+
         String name = updateContent.get("name").asText();
         String description = updateContent.get("description").asText();
         String location = updateContent.get("location").asText();
@@ -98,24 +109,35 @@ public class EventPowerup extends Powerup implements WriteFiles{
             return Results.unauthorized("Kan ikke opprette events i fortiden.");
         }
 
-        // bit weird implementation but we basically write to DB to get and id we then add to writeFile
-        // then we fetch the event and change its coverurl.
-        Event e = new Event(name, description, dateTime, location, coverUrl, this.getClub(), user);
-        Ebean.save(e);
-
-        Event insertedEvent = Event.find.byId(e.id);
         String fileName = getFileNameFromPath(coverUrl);
 
-        // writes file to serverdir and uses timestamp with event id
-        String newUrl = writeFile(fileName, getClub().id.toString() + File.separator + EVENT_DIR_IDENTIFIER +
-                File.separator + e.id + new LocalDateTime());
-        insertedEvent.coverUrl = newUrl;
-        Ebean.save(insertedEvent);
+        //ImageLinkValidator.StatusMessage statusMessage = validator.validate(pictureUrl);
+        ImageLinkValidator.StatusMessage statusMessage = validator.validate(ImageUpload.getFileFromDefaultDir(
+                fileName
+        ));
 
-        Participation p = new Participation(e, user);
-        Ebean.save(p);
+        if(statusMessage.isSuccess()){
 
-        return Results.ok("Event opprettet");
+            // bit weird implementation but we basically write to DB to get and id we then add to writeFile
+            // then we fetch the event and change its coverurl.
+            Event e = new Event(name, description, dateTime, location, coverUrl, this.getClub(), user);
+            Ebean.save(e);
+
+            Event insertedEvent = Event.find.byId(e.id);
+
+            // writes file to serverdir and uses timestamp with event id
+            String newUrl = writeFile(fileName, getClub().id.toString() + File.separator + EVENT_DIR_IDENTIFIER +
+                    File.separator + e.id + new LocalDateTime());
+            insertedEvent.coverUrl = newUrl;
+            Ebean.save(insertedEvent);
+
+            Participation p = new Participation(e, user);
+            Ebean.save(p);
+
+            return Results.ok("Event opprettet");
+        }else{
+            return Results.status(NO_UPDATE, statusMessage.getMessage());
+        }
     }
 
     @Override

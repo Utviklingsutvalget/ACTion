@@ -6,6 +6,7 @@ import models.Club;
 import models.Feed;
 import models.PowerupModel;
 import models.User;
+import org.joda.time.LocalDateTime;
 import play.Logger;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -13,6 +14,7 @@ import play.twirl.api.Html;
 import powerups.Powerup;
 import utils.Context;
 import utils.FeedSorter;
+import utils.imageuploading.ImageUpload;
 import utils.imageuploading.WriteFiles;
 import utils.imaging.ImageLinkValidator;
 
@@ -108,20 +110,23 @@ public class FeedPowerup extends Powerup implements WriteFiles{
                 return Results.status(NO_UPDATE, "Vennligst fyll ut alle felt for nyheten");
             }
 
-            ImageLinkValidator.StatusMessage statusMessage = validator.validate(pictureUrl);
+            String fileName = getFileNameFromPath(pictureUrl);
+
+            //ImageLinkValidator.StatusMessage statusMessage = validator.validate(pictureUrl);
+            ImageLinkValidator.StatusMessage statusMessage = validator.validate(ImageUpload.getFileFromDefaultDir(
+                fileName
+            ));
 
             if (statusMessage.isSuccess()) {
-
-                // todo implement imagewriting
-                // in order to rewrite image to server
-                String[] fileUrl = pictureUrl.split("/");
-                String fileName = fileUrl[fileUrl.length - 1];
 
                 Feed feed = new Feed(getClub(), user, messageTitle, message, pictureUrl);
                 Ebean.save(feed);
 
-                Feed wr = Feed.find.byId(feed.id);
-                Logger.debug(wr.pictureUrl);
+                Feed writtenFeed = Feed.find.byId(feed.id);
+                String newUrl = writeFile(fileName, getClub().id.toString() + File.separator + FEED_DIR_IDENTIFIER +
+                        File.separator + writtenFeed.id + new LocalDateTime());
+                writtenFeed.pictureUrl = newUrl;
+                Ebean.save(writtenFeed);
 
                 return Results.ok("Feed-post opprettet");
             } else {
@@ -135,11 +140,20 @@ public class FeedPowerup extends Powerup implements WriteFiles{
 
     @Override
     public String getFileNameFromPath(String fileUrl) {
-        return null;
+       String[] pictureUrl = fileUrl.split("/");
+       return pictureUrl[pictureUrl.length - 1];
     }
 
     @Override
     public String writeFile(String fileName, String subDir) {
-        return null;
+        File f = ImageUpload.getFileFromDefaultDir(fileName);
+
+        ImageUpload imageUpload = new ImageUpload(f, f.getName());
+        imageUpload.writeFile(subDir, imageUpload.getFileName());
+
+        String newUrl = imageUpload.returnFileUrl();
+
+        ImageUpload.clearDefaultDir();
+        return newUrl;
     }
 }
