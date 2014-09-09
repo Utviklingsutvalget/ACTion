@@ -130,6 +130,7 @@ public class FeedPowerup extends Powerup implements WriteFiles{
 
                 return Results.ok("Feed-post opprettet");
             } else {
+                ImageUpload.clearDefaultDir();
                 return Results.status(NO_UPDATE, statusMessage.getMessage());
             }
 

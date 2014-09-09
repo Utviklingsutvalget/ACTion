@@ -136,6 +136,7 @@ public class EventPowerup extends Powerup implements WriteFiles{
 
             return Results.ok("Event opprettet");
         }else{
+            ImageUpload.clearDefaultDir();
             return Results.status(NO_UPDATE, statusMessage.getMessage());
         }
     }

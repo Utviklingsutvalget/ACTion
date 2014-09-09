@@ -78,6 +78,7 @@ public class ClubImagePowerup extends Powerup implements WriteFiles{
             Ebean.update(clubImage);
             return Results.ok("Utvalgsbilde endret");
         } else {
+            ImageUpload.clearDefaultDir();
             return Results.status(NO_UPDATE, statusMessage.getMessage());
         }
     }
