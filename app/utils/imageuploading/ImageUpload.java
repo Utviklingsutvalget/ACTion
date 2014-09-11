@@ -152,7 +152,7 @@ public class ImageUpload {
         }
     }
 
-    public static String checkAndReturnFileUrl(String fileName){
+    public static String checkAndReturnDefaultDirFileUrl(String fileName){
 
         File file = Play.getFile(READ_IMAGE_ROOT_PATH + File.separator + DEFAULT_IMAGE_FOLDER +
                 File.separator + fileName, Play.current());
@@ -189,80 +189,6 @@ public class ImageUpload {
         }
     }
 
-    public static File getUploadedFileDefaultDir(String fileName){
-        List<File> fileList = new ArrayList<>();
-        List<File> uncheckedDirs = new ArrayList<>();
-
-        File rootDir = Play.getFile(READ_IMAGE_ROOT_PATH + File.separator + DEFAULT_IMAGE_FOLDER, Play.current());
-
-        // check default rootdir
-        if(rootDir.isDirectory()){
-
-            File[] filesInDir = rootDir.listFiles();
-
-            if(filesInDir == null){
-                return null;
-            }
-
-            for(File file : filesInDir){
-
-                if(file.isFile()){
-                    fileList.add(file);
-
-                }else if(file.isDirectory()){
-                    uncheckedDirs.add(file);
-                }
-            }
-        }
-
-        // check all existing dirs
-        fileList.addAll(traverseDirs(uncheckedDirs));
-
-        // return search results
-        for(File file : fileList){
-
-            if(file.getName().equals(fileName)){
-                Logger.debug("got em!");
-                return file;
-            }
-        }
-
-        return null;
-    }
-
-    private static List<File> traverseDirs(List<File> uncheckedDirs){
-        List<File> fileList = new ArrayList<>();
-
-        int count = 0;
-        while(!uncheckedDirs.isEmpty()){
-
-            File f = uncheckedDirs.get(count++);
-
-            if(f.isDirectory()){
-
-                File[] filesInDir = f.listFiles();
-
-                if(filesInDir != null){
-
-                    for(File file : filesInDir){
-
-                        if(file.isDirectory()){
-                            uncheckedDirs.add(file);
-                        }else{
-                            fileList.add(file);
-                        }
-                    }
-                }
-                uncheckedDirs.remove(f);
-
-            }else{
-                fileList.add(f);
-            }
-        }
-
-        return fileList;
-    }
-
     public File findUploadedFile(String subDir, String fileName){
 
         File file = Play.getFile(READ_IMAGE_ROOT_PATH + File.separator + subDir + File.separator + fileName, Play.current());
@@ -275,14 +201,16 @@ public class ImageUpload {
                 READ_IMAGE_ROOT_PATH + File.separator + subDir + File.separator + fileName);
     }
 
-    public void deleteFile(String subDirectory, String fileName){
+    public boolean deleteFile(String subDirectory, String fileName){
 
         File file = findUploadedFile(subDirectory, fileName);
 
         if(file.delete()){
             Logger.debug(file.getName() + " deleted");
+            return true;
         }else{
             Logger.debug("could not delete file");
+            return false;
         }
     }
 

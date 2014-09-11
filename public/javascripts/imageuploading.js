@@ -47,7 +47,7 @@ $(document).ready(function(){
             processData: false,
             success: function(data){
                 message = "<div data-alert class=\"alert-box success text-center radius\">"
-                    + data + "<a href=\"#\" class=\"close\">&times;</a></div>";
+                    + fileElement.name + " Successful upload to temp folder." + "<a href=\"#\" class=\"close\">&times;</a></div>";
             }
 
         }).done(function(){
@@ -70,6 +70,8 @@ $(document).ready(function(){
 
     // needs to be formatted accordingly to make sure events fire for dynamically created htmlelements
     // e.g deletebuttons
+
+    /*
     $("#uploadModal").on('click', '.deleteExisitingFile', function(){
 
         var uploadModal = $(this).closest('#uploadModal');
@@ -101,6 +103,8 @@ $(document).ready(function(){
                 });
             });
     });
+
+    */
 
     // modal is opened
     $(".uploadModal").bind('opened', function(){
@@ -150,7 +154,7 @@ function appendImage(value, existingImageElements){
 
     $(existingImageElements).append(imgNode);
 
-    var button = appendButton(value.id);
+    // var button = appendButton(value.id);
 
     var image = document.createElement("img");
     image.src = value.url;
