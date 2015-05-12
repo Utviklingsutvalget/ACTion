@@ -145,15 +145,20 @@ public class Clubs extends Controller {
      * WARNING: THIS RETURNS THE ADMIN FUNCTION
      */
     public static Result getPowerupContent(Long clubId, Long powerupId) {
+
         final Club club = Club.find.byId(clubId);
         Powerup powerup = null;
+
+        if (club == null)
+            return notFound(views.html.index.render("Utvalget du leter etter finnes ikke."));
+
         for (Activation activation : club.activations) {
             if (activation.powerup.id.equals(powerupId)) {
                 powerup = activation.getPowerup();
             }
         }
         if (powerup == null) {
-            return badRequest("No such powerup for " + club.shortName);
+            return notFound(views.html.index.render("Poweruppen du leter etter finnes ikke for" + club.shortName));
         } else return ok(powerup.renderAdmin());
     }
 

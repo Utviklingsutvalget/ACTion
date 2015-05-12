@@ -28,6 +28,11 @@ public class Administration extends Controller {
 
     public static Result showClub(Long id) {
         Club club = Club.find.byId(id);
+
+        if (club == null)
+            return notFound(views.html.index.render("Utvalget du leter etter finnes ikke."));
+
+
         club.powerups = new ArrayList<>();
         // Sort the activations by weight:
         Collections.sort(club.activations, new ActivationSorter());

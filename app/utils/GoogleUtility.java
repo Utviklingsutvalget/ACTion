@@ -3,12 +3,12 @@ package utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.net.ssl.HttpsURLConnection;
 
 public class GoogleUtility {
 
@@ -33,11 +33,11 @@ public class GoogleUtility {
     public static final int CODE_TOKEN_ID_TOKEN = 6;
 
     /**Subject types supported*/
-    public static final String SUBJECT_TYPES_SUPPORTED = "response_types_supported";
+    public static final String SUBJECT_TYPES_SUPPORTED = "subject_types_supported";
     public static final int PUBLIC = 0;
 
     /**Id token alg values supported*/
-    public static final String ID_TOKEN_ALG_VALUES_SUPPORTED = "id_token_alg_values_supported";
+    public static final String ID_TOKEN_ALG_VALUES_SUPPORTED = "id_token_signing_alg_values_supported";
     public static final int RS256 = 0;
 
     /**Token endpoint auth methods supported*/
