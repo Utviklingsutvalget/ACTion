@@ -7,13 +7,13 @@
             <dl class="accordion" data-accordion>
             @for(location <- locations) {
                 <dd class="accordion-navigation">
-                    <a href="#panel@location.cssId">@location.name</a>
-                    <div id="panel@location.cssId" class="content">
+                    <a href="#panel@location.getCssId">@location.getName</a>
+                    <div id="panel@location.getCssId" class="content">
                         <dl>
-                            @if(location.clubs.isEmpty){
+                            @if(location.getClubs.isEmpty){
                                 Denne lokasjonen har ingen utvalg.
                             }else{
-                                @club.list(location.clubs)
+                                @club.list(location.getClubs)
                             }
                         </dl>
                     </div>
@@ -27,18 +27,18 @@
         <div class="medium-10 small-centered columns show-for-medium-up">
             <ul class="tabs vertical" data-tab>
             @for(location <- locations) {
-                <li class="utvalg-width tab-title@if(location.cssId == 1) { active}"><a href="#panel@location.cssId">@location.name</a></li>
+                <li class="utvalg-width tab-title@if(location.getCssId == 1) { active}"><a href="#panel@location.getCssId">@location.getName</a></li>
             }
             </ul>
 
             <div class="tabs-content vertical">
             @for(location <- locations) {
-                <div class="content@if(location.cssId == 1) { active}" id="panel@location.cssId">
+                <div class="content@if(location.getCssId == 1) { active}" id="panel@location.getCssId">
                     <dl>
-                    @if(location.clubs.isEmpty) {
+                    @if(location.getClubs.isEmpty) {
                         Denne lokasjonen har ingen utvalg.
                     } else {
-                        @club.list(location.clubs)
+                        @club.list(location.getClubs)
                     }
                     </dl>
                 </div>
