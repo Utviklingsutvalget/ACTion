@@ -4,24 +4,24 @@
 <!-- DISPLAY EACH TITLE IN BOARD AND BOARDEXTRA -->
 <form data-abide data-powerup-update-type="update" class="boardmember powerup-body">
     @for(boardmember <- board) {
-        <fieldset class="powerup-node" data-powerup-field="@boardmember.boardPost.id" data-powerup-select='.@(boardmember.boardPost.id)Select'>
-            <legend>@boardmember.boardPost.title</legend>
+        <fieldset class="powerup-node" data-powerup-field="@boardmember.getBoardPost.getId" data-powerup-select='.@(boardmember.getBoardPost.getId)Select'>
+            <legend>@boardmember.getBoardPost.getTitle</legend>
 
             <label>Email
-                <input type="text" value="@boardmember.user.getEmail" disabled>
+                <input type="text" value="@boardmember.getUser.getEmail" disabled>
             </label>
 
             <label>Name
-                <select class='@(boardmember.boardPost.id)Select'>
+                <select class='@(boardmember.getBoardPost.getId)Select'>
 
                         <!-- ADDS CURRENT HOLDER OF TITLE FIRST IN THE LISTVIEW -->
-                    <option value="@boardmember.user.getId" selected>@boardmember.user.getFirstName @boardmember.user.getLastName</option>
+                    <option value="@boardmember.getUser.getId" selected>@boardmember.getUser.getFirstName @boardmember.getUser.getLastName</option>
                     @for(members <- memberList) {
 
                             <!-- ADDS ALL CONSECUTIVE MEMBERS IN LIST (EXCEPT THE MEMBER HOLDING THE TITLE CURRENTLY) -->
-                        @if(!members.user.getId.equals(boardmember.user.getId)) {
-                            <option value="@members.user.getId"
-                            data-powerup-value="@members.user.getId">@members.user.getFirstName @members.user.getLastName</option>
+                        @if(!members.getUser.getId.equals(boardmember.getUser.getId)) {
+                            <option value="@members.getUser.getId"
+                            data-powerup-value="@members.getUser.getId">@members.getUser.getFirstName @members.getUser.getLastName</option>
                         }
                     }
                         <!-- testing for potential removal of titles-->
@@ -41,7 +41,7 @@ createUpdateTypeButton ( getId ( $ ( '.boardmember' ) ), '.boardmember' ) ;
             <select id="board-post-select">
                 <option value=""></option>
                 @for(post <- posts) {
-                    <option value="@(post.id)" data-powerup-value="@(post.id)">@(post.title)</option>
+                    <option value="@(post.getId)" data-powerup-value="@(post.getId)">@(post.getTitle)</option>
                 }
             </select>
         </label>
@@ -49,7 +49,7 @@ createUpdateTypeButton ( getId ( $ ( '.boardmember' ) ), '.boardmember' ) ;
             <select id="board-user-select">
                 <option value="" selected></option>
                 @for(member <- memberList) {
-                    <option value="@(member.user.getId)" data-powerup-value="@(member.user.getId)">@(member.user.getFirstName + " " + member.user.getLastName)</option>
+                    <option value="@(member.getUser.getId)" data-powerup-value="@(member.getUser.getId)">@(member.getUser.getFirstName + " " + member.getUser.getLastName)</option>
                 }
             </select>
         </label>
