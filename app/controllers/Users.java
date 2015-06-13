@@ -44,7 +44,7 @@ public class Users extends Controller {
 
     public Result show(final String id) {
         User user = userService.findById(id);
-        User loggedInUser = null;
+        User loggedInUser;
         try {
             loggedInUser = new Authorize.UserSession().getUser();
         } catch (Authorize.SessionException e) {

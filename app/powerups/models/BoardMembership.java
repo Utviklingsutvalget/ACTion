@@ -25,7 +25,7 @@ public class BoardMembership {
         this.boardPost = boardPost;
         this.club = club;
         this.user = user;
-        this.weight = boardPost.weight;
+        this.weight = boardPost.getWeight();
         this.key = new BoardMembershipKey(club, boardPost);
     }
 
@@ -78,8 +78,8 @@ public class BoardMembership {
 
         public BoardMembershipKey(Club club, BoardPost boardPost) {
 
-            this.clubId = club.id;
-            this.BoardPostId = boardPost.id;
+            this.clubId = club.getId();
+            this.BoardPostId = boardPost.getId();
         }
 
         @Override

@@ -32,12 +32,12 @@ public class ClubImagePowerup extends Powerup {
 
     @Override
     public Html render() {
-        return powerup.render(this.clubImage.imageUrl, false);
+        return powerup.render(this.clubImage.getImageUrl(), false);
     }
 
     @Override
     public Html renderAdmin() {
-        return powerup.render(this.clubImage.imageUrl, true);
+        return powerup.render(this.clubImage.getImageUrl(), true);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ClubImagePowerup extends Powerup {
         ImageLinkValidator.StatusMessage statusMessage = validator.validate(url);
 
         if (statusMessage.isSuccess()) {
-            clubImage.imageUrl = url;
+            clubImage.setImageUrl(url);
             Ebean.update(clubImage);
             return Results.ok("Utvalgsbilde endret");
         } else {

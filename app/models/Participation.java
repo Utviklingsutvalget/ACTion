@@ -85,6 +85,10 @@ public class Participation {
         this.rvsp = rvsp;
     }
 
+    public Status getRvspObject() {
+        return rvsp;
+    }
+
     public enum Status {
         NOT_ATTENDING, ATTENDING, HOSTING
     }

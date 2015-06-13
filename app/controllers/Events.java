@@ -40,15 +40,16 @@ public class Events extends Controller {
         try {
             user = new Authorize.UserSession().getUser();
             for (Event e : events) {
-                if (!e.startTime.isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
+                if (!e.getStartTime().isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
                     allEvents.add(e);
                 }
                 Participation participation = new Participation(e, user);
                 int i;
-                if (e.participants.contains(participation)) {
-                    i = e.participants.indexOf(participation);
-                    participation = e.participants.get(i);
-                    e.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
+                List<Participation> participants = e.getParticipants();
+                if (participants.contains(participation)) {
+                    i = participants.indexOf(participation);
+                    participation = participants.get(i);
+                    e.setUserHosting(participation.getRvspObject() == Participation.Status.HOSTING);
                     if (participation.getRvsp()) {
                         attendingEvents.add(e);
                     }
@@ -70,11 +71,11 @@ public class Events extends Controller {
         } catch (Authorize.SessionException ignored) {
         }
         Participation participation = new Participation(event, user);
-        if (event.participants.contains(participation)) {
-            int i = event.participants.indexOf(participation);
-            participation = event.participants.get(i);
-            event.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
-            event.setUserAttending(event.participants.get(i).getRvsp());
+        if (event.getParticipants().contains(participation)) {
+            int i = event.getParticipants().indexOf(participation);
+            participation = event.getParticipants().get(i);
+            event.setUserHosting(participation.getRvspObject() == Participation.Status.HOSTING);
+            event.setUserAttending(event.getParticipants().get(i).getRvsp());
         }
         if (user != null) {
             return ok(views.html.event.show.render(event, true));
@@ -109,7 +110,7 @@ public class Events extends Controller {
 
             Event event = eventForm.get();
             eventService.save(event);
-            flash("success", "Event " + eventForm.get().name + " has been created.");
+            flash("success", "Event " + eventForm.get().getName() + " has been created.");
             return index();
 
         } catch (Authorize.SessionException e) {
@@ -134,7 +135,7 @@ public class Events extends Controller {
         }
         Event event = eventForm.get();
         eventService.update(event);
-        flash("success", "Event " + eventForm.get().name + " has been updated");
+        flash("success", "Event " + eventForm.get().getName() + " has been updated");
         return index();
     }
 
@@ -142,7 +143,7 @@ public class Events extends Controller {
         Event event = eventService.findById(id);
 
         eventService.delete(event);
-        flash("success", "Event " + event.name + " has been deleted");
+        flash("success", "Event " + event.getName() + " has been deleted");
 
         return index();
     }
@@ -162,7 +163,7 @@ public class Events extends Controller {
         if (event == null) {
             return internalServerError("No such event");
         }
-        Participation participation = participationService.findById(new Participation(event, user).id);
+        Participation participation = participationService.findById(new Participation(event, user).getId());
         if (participation == null) {
             participation = new Participation(event, user);
             participation.setRvsp(newRvsp);

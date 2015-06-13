@@ -52,14 +52,14 @@ public class BoardPowerup extends Powerup {
         }
         posts = boardService.findAllPosts();
         for (BoardMembership membership : boardList) {
-            membership.user.onPostLoad();
+            membership.getUser().onPostLoad();
         }
     }
 
     @Override
     public Html renderAdmin() {
-        Membership membership = membershipService.findById(new Membership(this.getClub(), this.getContext().getSender()).id);
-        if (this.getContext().getSender().isAdmin() || membership.level == MembershipLevel.LEADER) {
+        Membership membership = membershipService.findById(new Membership(this.getClub(), this.getContext().getSender()).getId());
+        if (this.getContext().getSender().isAdmin() || membership.getLevel() == MembershipLevel.LEADER) {
             return admin.render(boardList, memberList, posts);
         } else
             return new Html("<div class=\"medium-12 colums text-center\">Styremedlemmer har ikke tilgang til å endre styremedlemmer.</div>");
@@ -74,10 +74,10 @@ public class BoardPowerup extends Powerup {
     public void activate() {
         List<BoardPost> boardPosts = boardService.findAllPosts();
         for (BoardPost post : boardPosts) {
-            if (post.title.equals(LEADER)) {
-                for (Membership membership : this.getClub().members) {
-                    if (membership.level == MembershipLevel.LEADER) {
-                        BoardMembership leadership = new BoardMembership(this.getClub(), post, membership.user);
+            if (post.getTitle().equals(LEADER)) {
+                for (Membership membership : this.getClub().getMembers()) {
+                    if (membership.getLevel() == MembershipLevel.LEADER) {
+                        BoardMembership leadership = new BoardMembership(this.getClub(), post, membership.getUser());
                         Ebean.save(leadership);
                         return;
                     }
@@ -120,7 +120,7 @@ public class BoardPowerup extends Powerup {
 
     private boolean addMembership(JsonNode updateContent) {
         for (BoardPost post : posts) {
-            if (post.id == (updateContent.get("title").asLong())) {
+            if (post.getId() == (updateContent.get("title").asLong())) {
                 User user = userService.findById(updateContent.get("user").asText());
                 if (user == null) {
                     return false;
@@ -146,7 +146,7 @@ public class BoardPowerup extends Powerup {
         }
         List<BoardPost> existing = boardService.findAllPosts();
         for (BoardPost existingPost : existing) {
-            if (existingPost.title.equals(title)) {
+            if (existingPost.getTitle().equals(title)) {
                 return false;
             }
         }
