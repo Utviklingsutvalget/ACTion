@@ -58,7 +58,7 @@ public class Administration extends Controller {
         }
         try {
             User user = new Authorize.UserSession().getUser();
-            Membership membership = membershipService.findById(new Membership(club, user).id);
+            Membership membership = membershipService.findById(new Membership(club, user).getId());
             if (user.isAdmin() || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
                 return ok(views.html.club.admin.show.render(club));
             } else {

@@ -67,7 +67,7 @@
                                     <select class="clubDropDownList">
                                     @for(club <- clubList) {
                                             <!-- class clubId and data-club-name must not be removed -->
-                                        <option class="clubId" data-club-name="@club.name" data-club-id="@club.id" value="@club.id">@club.name</option>
+                                        <option class="clubId" data-club-name="@club.getName" data-club-id="@club.getId" value="@club.getId">@club.getName</option>
                                     }
                                     </select>
                                 </label>
@@ -122,7 +122,7 @@
                             <select name="location">
                                 <option value="-1">Felles</option>
                                 @for(location <- locations) {
-                                    <option value="@location.id">@location.name</option>
+                                    <option value="@location.getId">@location.getName</option>
                                 }
                             </select>
                         </label>
@@ -166,12 +166,12 @@
                         </div>
                     @for(location <- locations){
                         <form class="updateLocation updateAction" action="@routes.Administration.updateLocation()" method="post">
-                            <input class="locationId" type="hidden" name="id" value="@location.id">
+                            <input class="locationId" type="hidden" name="id" value="@location.getId">
                             <div class="large-4 columns">
                                 <div class="row collapse">
 
                                     <div class="small-9 columns">
-                                        <input class="locationName" type="text" name="name" placeholder="@location.name">
+                                        <input class="locationName" type="text" name="name" placeholder="@location.getName">
                                     </div>
 
                                     <div class="small-3 columns">
@@ -224,7 +224,7 @@
                                 <!-- This part is not yet functional -->
                                 <div class="small-3 columns">
                                     <div data-guardian-id="@group.getGuardian.getId"
-                                         data-guardian-group="@group.getLocation.id"
+                                         data-guardian-group="@group.getLocation.getId"
                                         class="button postfix alert submitDeleteGuardian">Slett
                                     </div>
                                 </div>
@@ -270,7 +270,7 @@
                         <label>Lokasjon
                             <select name="location">
                             @for(location <- locations) {
-                                <option value="@location.id">@location.name</option>
+                                <option value="@location.getId">@location.getName</option>
                             }
                             </select>
                         </label>
@@ -330,10 +330,10 @@
                                     <label>
                                 Lokasjon
                                         <select name="location" class="disabled">
-                                            <option value="@initGroup.getLocation.id" selected>@initGroup.getLocation.name</option>
+                                            <option value="@initGroup.getLocation.getId" selected>@initGroup.getLocation.getName</option>
                                             @for(location <- locations) {
-                                                @if(initGroup.getLocation.id != location.id) {
-                                                    <option value="@location.id">@location.name</option>
+                                                @if(initGroup.getLocation.getId != location.getId) {
+                                                    <option value="@location.getId">@location.getName</option>
                                                 }
                                             }
                                         </select>
@@ -341,7 +341,7 @@
                                 </div>
                                 <ul class="medium-2 columns collapse button-group round">
                                     <li class="medium-3 columns"><button class="update-init-group small button text-left"><small>Oppdater</small></button></li>
-                                    <li class="medium-3 columns"><button data-init-guardian="@initGroup.getGuardian.getId" data-init-location="@initGroup.getLocation.id" class="delete-init-group small alert button text-right"><small>Slett</small></button></li>
+                                    <li class="medium-3 columns"><button data-init-guardian="@initGroup.getGuardian.getId" data-init-location="@initGroup.getLocation.getId" class="delete-init-group small alert button text-right"><small>Slett</small></button></li>
                                 </ul>
                             </form>
                         </div>
@@ -397,7 +397,7 @@
                             <select name="location">
                                 <option value="-1">Felles</option>
                                 @for(location <- locations) {
-                                    <option value="@location.id">@location.name</option>
+                                    <option value="@location.getId">@location.getName</option>
                                 }
                             </select>
                         </label>
@@ -418,9 +418,9 @@
                 @for(location <- locations) {
                     <li class="bullet-item row collapse">
                         <form class="medium-12 columns updateLocation" action="@routes.Administration.updateLocation()" method="post">
-                            <input class="locationId" type="hidden" name="id" value="@location.id">
+                            <input class="locationId" type="hidden" name="id" value="@location.getId">
                             <label class="medium-8 columns">
-                                <input class="locationName" type="text" name="name" value="@location.name">
+                                <input class="locationName" type="text" name="name" value="@location.getName">
                             </label>
                             <input class="button medium-4 columns alert right" type="submit" name="submit" value="Oppdater">
                         </form>
@@ -452,7 +452,7 @@
                         <select>
                         @for(club <- clubList) {
                                 <!-- class clubId and data-club-name must not be removed -->
-                            <option class="clubId" data-club-name="@club.name" value="@club.id">@club.name</option>
+                            <option class="clubId" data-club-name="@club.getName" value="@club.getId">@club.getName</option>
                         }
                         </select>
                     </label>
@@ -502,7 +502,7 @@
                                         Lokasjon
                                         <select name="location">
                                         @for(location <- locations) {
-                                            <option value="@location.id">@location.name</option>
+                                            <option value="@location.getId">@location.getName</option>
                                         }
                                         </select>
                                     </label>
@@ -553,10 +553,10 @@
                                     <label>
                                 Lokasjon
                                         <select name="location" class="disabled">
-                                            <option value="@initGroup.getLocation.id" selected>@initGroup.getLocation.name</option>
+                                            <option value="@initGroup.getLocation.getId" selected>@initGroup.getLocation.getName</option>
                                             @for(location <- locations) {
-                                                @if(initGroup.getLocation.id != location.id) {
-                                                    <option value="@location.id">@location.name</option>
+                                                @if(initGroup.getLocation.getId != location.getId) {
+                                                    <option value="@location.getId">@location.getName</option>
                                                 }
                                             }
                                         </select>
@@ -564,7 +564,7 @@
                                 </div>
                                 <ul class="medium-2 columns collapse button-group round">
                                     <li class="medium-6 columns"><button class="update-init-group small button text-left"><small>Oppdater</small></button></li>
-                                    <li class="medium-6 columns"><button data-init-guardian="@initGroup.getGuardian.id" data-init-location="@initGroup.getLocation.id" class="delete-init-group small alert button text-right"><small>Slett</small></button></li>
+                                    <li class="medium-6 columns"><button data-init-guardian="@initGroup.getGuardian.getId" data-init-location="@initGroup.getLocation.getId" class="delete-init-group small alert button text-right"><small>Slett</small></button></li>
                                 </ul>
                             </form>
                         </div>
