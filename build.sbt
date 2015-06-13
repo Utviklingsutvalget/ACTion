@@ -4,7 +4,7 @@ name := "ACTion"
 
 version := "1.0-SNAPSHOT"
 
-lazy val ACTion = (project in file(".")).enablePlugins(PlayJava)
+lazy val ACTion = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
 
 javacOptions in Compile ++= Seq("-source", "1.8", "-target", "1.8")
 
@@ -29,3 +29,5 @@ libraryDependencies ++= Seq(
   cache,
   javaWs
 )
+
+libraryDependencies += evolutions
