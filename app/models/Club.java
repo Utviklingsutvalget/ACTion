@@ -130,7 +130,7 @@ public class Club {
 
     public void disInheritEvents() {
         for (Event event : this.events) {
-            event.club = null;
+            event.setClub(null);
             Ebean.update(event);
         }
 
