@@ -10,12 +10,12 @@
 
         @for(feed <- initialFeedList) {
             <div class="medium-6 columns">
-                <img src="@feed.pictureUrl"/>
+                <img src="@feed.getPictureUrl"/>
                 <h6><em>@feed.getDateTime</em>
                 </h6>
-                <h4>@feed.messageTitle</h4>
-                <small>@feed.club.name , @feed.user.getFirstName @feed.user.getLastName</small>
-                <p>@feed.message</p>
+                <h4>@feed.getMessageTitle</h4>
+                <small>@feed.getClub.getName , @feed.getUser.getFirstName @feed.getUser.getLastName</small>
+                <p>@feed.getMessage</p>
             </div>
         }
 
@@ -29,10 +29,10 @@
             @for(feed <- feedList) {
 
                 <div class="medium-4 columns">
-                    <img src="@feed.pictureUrl"/>
+                    <img src="@feed.getPictureUrl"/>
                     <h6>@feed.getDateTime</h6>
-                    <h4>@feed.messageTitle</h4>
-                    <p>@feed.message</p>
+                    <h4>@feed.getMessageTitle</h4>
+                    <p>@feed.getMessage</p>
                 </div>
             }
         }

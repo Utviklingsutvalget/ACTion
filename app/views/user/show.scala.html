@@ -39,8 +39,8 @@
 
             <ul class="no-bullet">
             @for(membership <- user.getMemberships) {
-                @if(membership.level.getLevel > 0) {
-                    <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                @if(membership.getLevel.getLevel > 0) {
+                    <li><a href="@routes.Clubs.show(membership.getClub.getId)">@membership.getClub.getName</a></li>
                 }
             }
             </ul>
@@ -54,7 +54,7 @@
             <ul class="no-bullet">
             @for(participation <- user.getParticipations) {
                 @if(participation.getRvsp) {
-                    <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
+                    <li><a href="@routes.Events.show(participation.getEvent.getId)">@(participation.getEvent.getName)</a></li>
                 }
             }
             </ul>
