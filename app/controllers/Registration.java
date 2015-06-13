@@ -16,7 +16,7 @@ public class Registration extends Controller {
     public static final String TERM_STRING = "Du samtykker at du har lest og godtatt " + TERM_LINK + ".";
     public static Form<User> registrationForm = Form.form(User.class);
 
-    public static Result submit() {
+    public Result submit() {
 
         Form<User> filledForm = registrationForm.bindFromRequest();
 
@@ -35,19 +35,19 @@ public class Registration extends Controller {
         return Users.profile();
     }
 
-    public static Result autofill(User user) {
+    public Result autofill(User user) {
         Form<User> filledForm = registrationForm.fill(user);
         return ok(form.render(filledForm, TERM_STRING));
 
     }
 
-    public static Result autoUpdate(User user) {
+    public Result autoUpdate(User user) {
         UserService.update(user);
         return Users.profile();
 
     }
 
-    public static Result terms() {
+    public Result terms() {
         return ok(terms.render());
     }
 }

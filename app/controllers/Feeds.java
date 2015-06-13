@@ -20,7 +20,7 @@ public class Feeds extends Controller {
     private static final int MAXFEEDSPERCLUB = 5;
     private static final int MAXINDEXFEEDSIZE = 14;
 
-    public static Result index() {
+    public Result index() {
 
         List<Feed> feedList = new ArrayList<>();
         List<Feed> initialList = new ArrayList<>();
@@ -71,7 +71,7 @@ public class Feeds extends Controller {
     }
 
     // Pretty much does the same thing as setupuserLists except fetching all feeds.
-    public static void setupDefaultLists(List<Feed> defaultInitial, List<Feed> defaultRemaining) {
+    public void setupDefaultLists(List<Feed> defaultInitial, List<Feed> defaultRemaining) {
 
         // TODO FIND A MORE EFFICIENT WAY OF FINDING FEEDS AND SORTING
         List<Feed> allFeeds = Feed.find.all();
@@ -99,7 +99,7 @@ public class Feeds extends Controller {
 
     // sorts feedlist, then fetches first 14 entries (provided there are that many),
     // places first 2 in initialFeedList for top display, then inserts remaining 12 in remainingList.
-    public static void setupUserLists(List<Feed> feedList, List<Feed> initialList, List<Feed> remainingList) {
+    public void setupUserLists(List<Feed> feedList, List<Feed> initialList, List<Feed> remainingList) {
 
         if (!feedList.isEmpty()) {
             feedList.sort(new FeedSorter());
@@ -129,7 +129,7 @@ public class Feeds extends Controller {
 
     //Find up x feeds by a give club (until maxfeedsperclub is reached)
     //add to list, sort and return list
-    public static List<Feed> getClubFeed(Club club) {
+    public List<Feed> getClubFeed(Club club) {
 
         List<Feed> clubFeedList = Feed.findByClub(club);
         clubFeedList.sort(new FeedSorter());

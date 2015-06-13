@@ -23,7 +23,7 @@ import static play.data.Form.form;
 
 public class Events extends Controller {
 
-    public static int EVENT_DURATION = 6;
+    public int EVENT_DURATION = 6;
 
     @Inject
     private EventService eventService;
@@ -81,7 +81,7 @@ public class Events extends Controller {
 
     }
 
-    public static Result create() {
+    public Result create() {
 
         try {
             User user = new Authorize.UserSession().getUser();

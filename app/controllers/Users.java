@@ -21,7 +21,7 @@ public class Users extends Controller {
      *
      * @return Result
      */
-    public static Result profile() {
+    public Result profile() {
 
         try {
             User user = new Authorize.UserSession().getUser();
@@ -32,7 +32,7 @@ public class Users extends Controller {
         }
     }
 
-    public static Result show(final String id) {
+    public Result show(final String id) {
         User user = UserService.findById(id);
         User loggedInUser = null;
         try {
@@ -52,13 +52,13 @@ public class Users extends Controller {
      *
      * @return Result
      */
-    public static Result logout() {
+    public Result logout() {
         OAuth2.destroySessions();
         return Application.index();
     }
 
     @BodyParser.Of(BodyParser.Json.class)
-    public static Result hasUserEmail() {
+    public Result hasUserEmail() {
         Logger.warn("RECEIVED REQUEST");
         User user;
         try {

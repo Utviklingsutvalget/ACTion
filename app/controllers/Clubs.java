@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Clubs extends Controller {
-    public static Result index() {
+    public Result index() {
         List<Location> locations = Location.find.all();
 
         // Set up pseudo-location(null in database) to hold all global clubs
@@ -35,7 +35,7 @@ public class Clubs extends Controller {
         return ok(views.html.club.index.render(locations));
     }
 
-    public static Result show(Long id) {
+    public Result show(Long id) {
         Club club = Club.find.byId(id);
         if (club == null) {
             return redirect(routes.Clubs.index());
@@ -52,7 +52,7 @@ public class Clubs extends Controller {
         return ok(views.html.club.show.render(club));
     }
 
-    public static Result update() {
+    public Result update() {
         final Map<String, String[]> postValues = request().body().asFormUrlEncoded();
 
         final Long id = Long.valueOf(postValues.get("id")[0]);
@@ -67,7 +67,7 @@ public class Clubs extends Controller {
         return redirect(routes.Clubs.index());
     }
 
-    public static Result create() {
+    public Result create() {
         try {
             User user = new Authorize.UserSession().getUser();
             boolean authorized = user.isAdmin();
@@ -123,7 +123,7 @@ public class Clubs extends Controller {
     }
 
 
-    public static Result updatePowerup(Long clubId, Long powerupId) {
+    public Result updatePowerup(Long clubId, Long powerupId) {
         JsonNode json = request().body().asJson();
         Logger.warn("RECEIVED JSON");
         if (json == null || json.isNull()) {
@@ -144,7 +144,7 @@ public class Clubs extends Controller {
     /**
      * WARNING: THIS RETURNS THE ADMIN FUNCTION
      */
-    public static Result getPowerupContent(Long clubId, Long powerupId) {
+    public Result getPowerupContent(Long clubId, Long powerupId) {
 
         final Club club = Club.find.byId(clubId);
         Powerup powerup = null;

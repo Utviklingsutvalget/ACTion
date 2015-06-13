@@ -25,12 +25,12 @@ public class Initiation extends Controller {
             ':', ';', '.', ',', '!', '?'
     };
 
-    public static Result index() {
+    public Result index() {
         return ok(views.html.initiation.index.render());
     }
 
     @BodyParser.Of(BodyParser.Json.class)
-    public static Result search() {
+    public Result search() {
         JsonNode json = request().body().asJson();
         String query = json.get("query").asText().toLowerCase();
         Long locationId = json.get("location").asLong();

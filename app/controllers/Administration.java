@@ -26,7 +26,7 @@ public class Administration extends Controller {
     private static final Long PRESIDING_COUNCIL_ID = 1L;
     private static final String ITSLEARNINGREDIRECT = "https://nith.itslearning.com/elogin/default.aspx";
 
-    public static Result showClub(Long id) {
+    public Result showClub(Long id) {
         Club club = Club.find.byId(id);
 
         if (club == null)
@@ -54,11 +54,11 @@ public class Administration extends Controller {
         }
     }
 
-    public static Result redirectToItsLearning() {
+    public Result redirectToItsLearning() {
         return redirect(ITSLEARNINGREDIRECT);
     }
 
-    public static Result showSite() {
+    public Result showSite() {
         try {
             User user = new Authorize.UserSession().getUser();
             List<Club> clubList = Club.find.all();
@@ -83,7 +83,7 @@ public class Administration extends Controller {
     }
 
     //@BodyParser.Of(BodyParser.Json.class)
-    public static Result updateLocation() {
+    public Result updateLocation() {
 
         JsonNode json = request().body().asJson();
         Map<Long, String> locationMap = new HashMap<>();
@@ -129,7 +129,7 @@ public class Administration extends Controller {
     }
 
     // update LocationName to new name
-    public static void updateLocations(Long locationId, String newLocationName) {
+    public void updateLocations(Long locationId, String newLocationName) {
 
         Location location = Location.find.byId(locationId);
 
@@ -139,7 +139,7 @@ public class Administration extends Controller {
         Ebean.save(location);
     }
 
-    public static Result makeAdmin() {
+    public Result makeAdmin() {
         try {
             User user = new Authorize.UserSession().getUser();
             List<SuperUser> superUsers = SuperUser.find.all();
@@ -154,7 +154,7 @@ public class Administration extends Controller {
         return Application.index();
     }
 
-    public static Result deleteClub() {
+    public Result deleteClub() {
 
         JsonNode json = request().body().asJson();
         Map<Long, String> clubMap = new HashMap<>();
@@ -194,7 +194,7 @@ public class Administration extends Controller {
         return badRequest("Sletting ble ikke foretatt");
     }
 
-    public static Result addGuardian() {
+    public Result addGuardian() {
         try {
             User user = new Authorize.UserSession().getUser();
             boolean authorized = user.isAdmin();
@@ -235,7 +235,7 @@ public class Administration extends Controller {
     }
 
     @BodyParser.Of(BodyParser.Json.class)
-    public static Result deleteGuardian() {
+    public Result deleteGuardian() {
 
         JsonNode json = request().body().asJson();
 
@@ -261,7 +261,7 @@ public class Administration extends Controller {
         //return redirect(routes.Administration.showSite().url() + "#addguardian");
     }
 
-    public static Result modifyGuardian() {
+    public Result modifyGuardian() {
         return null;
     }
 }
