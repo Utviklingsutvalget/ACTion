@@ -15,7 +15,7 @@ import powerups.core.boardpowerup.html.admin;
 import powerups.core.boardpowerup.html.powerup;
 import powerups.models.BoardMembership;
 import powerups.models.BoardPost;
-import services.EventService;
+import services.MembershipService;
 import services.UserService;
 import utils.Authorize;
 import utils.MembershipLevel;
@@ -35,6 +35,10 @@ public class BoardPowerup extends Powerup {
     private List<BoardPost> posts;
     @Inject
     private UserService userService;
+    @Inject
+    private MembershipService membershipService;
+    @Inject
+    private BoardService boardService;
 
     public BoardPowerup(Club club, PowerupModel model) {
         super(club, model);
@@ -46,7 +50,7 @@ public class BoardPowerup extends Powerup {
             boardList = new ArrayList<>();
             memberList = new ArrayList<>();
         }
-        posts = BoardPost.find.all();
+        posts = boardService.findAllPosts();
         for (BoardMembership membership : boardList) {
             membership.user.onPostLoad();
         }
@@ -54,7 +58,7 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public Html renderAdmin() {
-        Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
+        Membership membership = membershipService.findById(new Membership(this.getClub(), this.getContext().getSender()).id);
         if (this.getContext().getSender().isAdmin() || membership.level == MembershipLevel.LEADER) {
             return admin.render(boardList, memberList, posts);
         } else
@@ -68,7 +72,7 @@ public class BoardPowerup extends Powerup {
 
     @Override
     public void activate() {
-        List<BoardPost> boardPosts = BoardPost.find.all();
+        List<BoardPost> boardPosts = boardService.findAllPosts();
         for (BoardPost post : boardPosts) {
             if (post.title.equals(LEADER)) {
                 for (Membership membership : this.getClub().members) {
@@ -140,7 +144,7 @@ public class BoardPowerup extends Powerup {
         if (title.equals("")) {
             return false;
         }
-        List<BoardPost> existing = BoardPost.find.all();
+        List<BoardPost> existing = boardService.findAllPosts();
         for (BoardPost existingPost : existing) {
             if (existingPost.title.equals(title)) {
                 return false;

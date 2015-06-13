@@ -3,23 +3,45 @@ package models;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-public class UploadedFile extends Model {
-    public static Finder<String, UploadedFile> find = new Finder<>(String.class, UploadedFile.class);
+public class UploadedFile {
     @Id
-    public String path;
+    private String path;
     @ManyToOne
-    public User uploadedBy;
+    private User uploadedBy;
     @Constraints.Required
-    public FileType fileType;
+    private FileType fileType;
 
     @Transactional
     public static void update(UploadedFile file) {
         Ebean.update(file);
+    }
+
+    public FileType getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(final FileType fileType) {
+        this.fileType = fileType;
+    }
+
+    public User getUploadedBy() {
+        return uploadedBy;
+    }
+
+    public void setUploadedBy(final User uploadedBy) {
+        this.uploadedBy = uploadedBy;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(final String path) {
+        this.path = path;
     }
 
     public enum FileType {

@@ -2,6 +2,7 @@ package powerups.core.descriptionpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import models.Club;
 import models.PowerupModel;
 import org.jsoup.Jsoup;
@@ -31,10 +32,12 @@ public class DescriptionPowerup extends Powerup {
      */
     private final ClubDescription clubDesc;
     private final boolean editable;
+    @Inject
+    private DescriptionService descriptionService;
 
     public DescriptionPowerup(Club club, PowerupModel model) {
         super(club, model);
-        clubDesc = ClubDescription.find.byId(club.id);
+        clubDesc = descriptionService.findByClubId(club.id);
 
         editable = this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel();
     }

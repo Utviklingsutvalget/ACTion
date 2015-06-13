@@ -1,7 +1,6 @@
 package models;
 
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,11 +19,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "powerup")
-public class PowerupModel extends Model {
-    public static Model.Finder<Long, PowerupModel> find = new Model.Finder<>(Long.class, PowerupModel.class);
+public class PowerupModel {
 
     @Id
-    public Long id;
+    private Long id;
 
     /**
      * This is the qualified name of the class instantiated by the {@link powerups.Powerup} class within the powerups
@@ -35,14 +33,14 @@ public class PowerupModel extends Model {
      * @see powerups.core.descriptionpowerup.DescriptionPowerup
      */
     @Constraints.Required
-    public String className;
+    private String className;
 
     /**
      * This field is used to generate the name of the powerup that appears to the user. It is therefore imperative that
      * this name is filled out as you wish it to appear.
      */
     @Constraints.Required
-    public String friendlyName;
+    private String friendlyName;
 
     /**
      * This field is used to determine if any new clubs should automatically have this powerup activated for them.
@@ -51,7 +49,7 @@ public class PowerupModel extends Model {
      * @see models.Club
      */
     @Constraints.Required
-    public boolean isMandatory;
+    private boolean isMandatory;
 
     /**
      * This field is used to determine whether or not the powerup's view should be linked to at the top of a club's
@@ -62,12 +60,67 @@ public class PowerupModel extends Model {
      * @see views.html.club.show
      */
     @Constraints.Required
-    public boolean hasMenuEntry;
+    private boolean hasMenuEntry;
 
     @Constraints.Required
-    public int defaultWeight;
-
+    private int defaultWeight;
     @OneToMany(cascade = CascadeType.PERSIST)
-    public List<Activation> activations = new ArrayList<>();
+    private List<Activation> activations = new ArrayList<>();
+
+    public List<Activation> getActivations() {
+        return activations;
+    }
+
+    public void setActivations(final List<Activation> activations) {
+        this.activations = activations;
+    }
+
+    public int getDefaultWeight() {
+        return defaultWeight;
+    }
+
+    public void setDefaultWeight(final int defaultWeight) {
+        this.defaultWeight = defaultWeight;
+    }
+
+    public boolean isHasMenuEntry() {
+        return hasMenuEntry;
+    }
+
+    public void setHasMenuEntry(final boolean hasMenuEntry) {
+        this.hasMenuEntry = hasMenuEntry;
+    }
+
+    public boolean isMandatory() {
+        return isMandatory;
+    }
+
+    public void setIsMandatory(final boolean isMandatory) {
+        this.isMandatory = isMandatory;
+    }
+
+    public String getFriendlyName() {
+        return friendlyName;
+    }
+
+    public void setFriendlyName(final String friendlyName) {
+        this.friendlyName = friendlyName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(final String className) {
+        this.className = className;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
 }

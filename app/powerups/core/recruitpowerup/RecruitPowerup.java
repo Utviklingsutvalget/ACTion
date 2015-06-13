@@ -14,6 +14,7 @@ import powerups.Powerup;
 import powerups.core.recruitpowerup.html.admin;
 import powerups.core.recruitpowerup.html.powerup;
 import powerups.models.Pending;
+import services.MembershipService;
 import services.UserService;
 import utils.MembershipLevel;
 
@@ -37,6 +38,10 @@ public class RecruitPowerup extends Powerup {
     private boolean adminAccess = false;
     @Inject
     private UserService userService;
+    @Inject
+    private MembershipService membershipService;
+    @Inject
+    private RecruitService recruitService;
 
     public RecruitPowerup(Club club, PowerupModel powerupModel) {
         super(club, powerupModel);
@@ -49,7 +54,7 @@ public class RecruitPowerup extends Powerup {
             Logger.warn("Sender exists");
             isMember = this.getContext().getMemberLevel() != null && this.getContext().getMemberLevel() != MembershipLevel.SUBSCRIBE;
             Logger.info("Logged in user is already member = " + isMember);
-            pending = Pending.find.byId(new Pending(this.getClub(), this.user).key) != null;
+            pending = recruitService.findById(new Pending(this.getClub(), this.user).key) != null;
             Logger.info("Logged in user is pending = " + pending);
             if(this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
                 boardMember = true;
@@ -67,9 +72,9 @@ public class RecruitPowerup extends Powerup {
 
     @Override
     public Html renderAdmin() {
-        Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
+        Membership membership = membershipService.findById(new Membership(this.getClub(), this.getContext().getSender()).id);
         if (this.getContext().getSender().isAdmin() || membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
-            return admin.render(this.getClub(), Pending.getByClubId(this.getClub().id));
+            return admin.render(this.getClub(), recruitService.getByClubId(this.getClub().id));
         } else return this.render();
     }
 
@@ -101,7 +106,7 @@ public class RecruitPowerup extends Powerup {
 
                 if (val.equals(TERMINATEMEMBERSHIP)) {
                     User terminatedUser = userService.findById(key);
-                    Membership terminateMember = Membership.find.byId(new Membership(this.getClub(), terminatedUser).id);
+                    Membership terminateMember = membershipService.findById(new Membership(this.getClub(), terminatedUser).id);
 
                     if (terminatedUser != null && terminateMember != null) {
 
@@ -142,13 +147,13 @@ public class RecruitPowerup extends Powerup {
             if (map.get(key).equals(ACCEPT)) {
 
                 //Pending p = new Pending(club, user);
-                Pending oldPending = Pending.find.byId(new Pending(this.getClub(), user).key);
+                Pending oldPending = recruitService.findById(new Pending(this.getClub(), user).key);
 
                 if (oldPending != null) {
                     Ebean.delete(oldPending);
                 }
 
-                membership = Membership.find.byId(new Membership(this.getClub(), user).id);
+                membership = membershipService.findById(new Membership(this.getClub(), user).id);
 
                 if (membership != null) {
                     membership.level = MembershipLevel.MEMBER;
@@ -165,7 +170,7 @@ public class RecruitPowerup extends Powerup {
             } else if (map.get(key).equals(REJECT)) {
 
                 //Pending p = new Pending(club, user);
-                Pending oldPending = Pending.find.byId(new Pending(this.getClub(), user).key);
+                Pending oldPending = recruitService.findById(new Pending(this.getClub(), user).key);
 
                 if (oldPending != null) {
                     Ebean.delete(oldPending);
@@ -190,7 +195,7 @@ public class RecruitPowerup extends Powerup {
                         ", application_message: " + key);
                 Logger.info("Successful insert into membership with subscribe");
 
-                Pending checkForEntry = Pending.find.byId(pendingUser.key);
+                Pending checkForEntry = recruitService.findById(pendingUser.key);
 
                 if (checkForEntry == null) {
 

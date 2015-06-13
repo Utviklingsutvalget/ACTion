@@ -2,14 +2,12 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import services.UserService;
+import services.*;
 import models.*;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
-import services.ActivationService;
-import services.ClubService;
 import utils.ActivationSorter;
 import utils.Authorize;
 import utils.MembershipLevel;
@@ -27,9 +25,15 @@ public class Clubs extends Controller {
     private ActivationService activationService;
     @Inject
     private UserService userService;
+    @Inject
+    private LocationService locationService;
+    @Inject
+    private PowerupService powerupService;
+    @Inject
+    private MembershipService membershipService;
 
     public Result index() {
-        List<Location> locations = Location.find.all();
+        List<Location> locations = locationService.findAll();
         List<Club> byLocation = clubService.findByLocation(null);
 
         // Set up pseudo-location(null in database) to hold all global clubs
@@ -98,7 +102,7 @@ public class Clubs extends Controller {
         String email = form.get("leader")[0] + form.get("postfix")[0];
         Long locationId = Long.valueOf(form.get("location")[0]);
 
-        Location location = Location.find.byId(locationId);
+        Location location = locationService.findById(locationId);
 
         User leaderUser = userService.findByEmail(email);
 
@@ -118,13 +122,13 @@ public class Clubs extends Controller {
         club.members.add(membership);
 
         ArrayList<Activation> activations = new ArrayList<>();
-        PowerupModel.find.all().stream().filter(model -> model.isMandatory).forEach(model -> {
+        powerupService.findAllMandatory().forEach(model -> {
             Activation activation = new Activation(club, model, model.defaultWeight);
             club.activations.add(activation);
             activations.add(activation);
         });
 
-        membership.save();
+        membershipService.save(membership);
 
         for (Activation activation : activations) {
             activationService.save(activation);
@@ -143,7 +147,7 @@ public class Clubs extends Controller {
         final Club club = clubService.findById(clubId);
         Powerup powerup = null;
         for (Activation activation : club.activations) {
-            if (activation.powerup.id.equals(powerupId)) {
+            if (activation.getPowerupModel().id.equals(powerupId)) {
                 powerup = activation.getPowerup();
             }
         }

@@ -101,12 +101,12 @@ public abstract class Powerup implements Serializable {
      * @return The instantiated Powerup.
      */
     public static Powerup getPowerup(Activation activation) {
-        PowerupModel powerupModel = activation.powerup;
-        Club club = activation.club;
+        PowerupModel powerupModel = activation.getPowerupModel();
+        Club club = activation.getClub();
 
         try {
             @SuppressWarnings("unchecked")
-            Class<? extends Powerup> c = (Class<? extends Powerup>) Class.forName("powerups." + powerupModel.className);
+            Class<? extends Powerup> c = (Class<? extends Powerup>) Class.forName("powerups." + powerupModel.getClassName());
             Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class, PowerupModel.class);
             return constructor.newInstance(club, powerupModel);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {

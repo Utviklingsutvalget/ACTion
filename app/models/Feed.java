@@ -12,19 +12,72 @@ public class Feed {
 
     private static final String CLUBCOLUMN = "club";
     @Id
-    public Long id;
+    private Long id;
     @ManyToOne
-    public User user;
+    private User user;
     @ManyToOne
     @Column(name = CLUBCOLUMN)
-    public Club club;
+    private Club club;
     @play.data.validation.Constraints.Required
     @Column(length = 1500)
-    public String message;
+    private String message;
     @play.data.validation.Constraints.Required
-    public String messageTitle;
+    private String messageTitle;
     //length limiatation to be reviewed
-    public String pictureUrl;
+    private String pictureUrl;
+
+    public static String getCLUBCOLUMN() {
+        return CLUBCOLUMN;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(final Club club) {
+        this.club = club;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(final String message) {
+        this.message = message;
+    }
+
+    public String getMessageTitle() {
+        return messageTitle;
+    }
+
+    public void setMessageTitle(final String messageTitle) {
+        this.messageTitle = messageTitle;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(final String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
     @Column(name = "Created")
     private DateTime dateTime;
 

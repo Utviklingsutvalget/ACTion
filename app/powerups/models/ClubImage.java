@@ -1,37 +1,63 @@
 package powerups.models;
 
 import models.Club;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
 
 @Entity
-public class ClubImage extends Model {
-    public static Finder<ClubImageKey, ClubImage> find = new Finder<>(ClubImageKey.class, ClubImage.class);
+public class ClubImage {
 
     @EmbeddedId
-    public ClubImageKey key;
+    private ClubImageKey key;
     @OneToOne
     @JoinColumn(name = "club_id", nullable = true, insertable = false, updatable = false)
-    public Club club;
-    public String imageUrl;
+    private Club club;
+    private String imageUrl;
 
     public ClubImage(Club club, String imageUrl) {
         this.club = club;
         this.imageUrl = imageUrl;
-        this.key = new ClubImageKey(this.club.id);
+        this.key = new ClubImageKey(this.club.getId());
     }
 
-    public static ClubImage getImageByClub(Club club) {
-        return find.where().eq("club_id", club.id).findUnique();
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(final String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(final Club club) {
+        this.club = club;
+    }
+
+    public ClubImageKey getKey() {
+        return key;
+    }
+
+    public void setKey(final ClubImageKey key) {
+        this.key = key;
     }
 
     @Embeddable
     public class ClubImageKey {
 
-        public Long clubId;
+        private Long clubId;
 
         public ClubImageKey(Long clubId) {
+            this.clubId = clubId;
+        }
+
+        public Long getClubId() {
+            return clubId;
+        }
+
+        public void setClubId(final Long clubId) {
             this.clubId = clubId;
         }
 

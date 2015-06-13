@@ -7,9 +7,9 @@ import java.util.Comparator;
 public class ActivationSorter implements Comparator<Activation> {
     @Override
     public int compare(Activation o1, Activation o2) {
-        if(o1 == o2 || o1.key.equals(o2.key)) {
+        if(o1 == o2 || o1.getKey().equals(o2.getKey())) {
             return 0;
         }
-        return o1.weight - o2.weight;
+        return o1.getWeight() - o2.getWeight();
     }
 }

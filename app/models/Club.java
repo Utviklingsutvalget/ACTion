@@ -16,23 +16,23 @@ import java.util.List;
 public class Club {
 
     @Id
-    public Long id;
+    private Long id;
     @Constraints.Required
-    public String name;
+    private String name;
     @Constraints.Required
-    public String shortName;
+    private String shortName;
     @ManyToOne
-    public Location location;
+    private Location location;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
-    public List<BoardMembership> boardMembers = new ArrayList<>();
+    private List<BoardMembership> boardMembers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
-    public List<Membership> members = new ArrayList<>();
+    private List<Membership> members = new ArrayList<>();
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
-    public List<Activation> activations = new ArrayList<>();
+    private List<Activation> activations = new ArrayList<>();
     @OneToMany
-    public List<Event> events = new ArrayList<>();
+    private List<Event> events = new ArrayList<>();
     @Transient
-    public List<Powerup> powerups;
+    private List<Powerup> powerups;
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<Feed> feedPosts = new ArrayList<>();
     @Transient
@@ -47,6 +47,70 @@ public class Club {
     @Transactional
     public static void update(Club club) {
         Ebean.update(club);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(final String shortName) {
+        this.shortName = shortName;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(final Location location) {
+        this.location = location;
+    }
+
+    public List<BoardMembership> getBoardMembers() {
+        return boardMembers;
+    }
+
+    public void setBoardMembers(final List<BoardMembership> boardMembers) {
+        this.boardMembers = boardMembers;
+    }
+
+    public List<Membership> getMembers() {
+        return members;
+    }
+
+    public void setMembers(final List<Membership> members) {
+        this.members = members;
+    }
+
+    public List<Activation> getActivations() {
+        return activations;
+    }
+
+    public void setActivations(final List<Activation> activations) {
+        this.activations = activations;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(final List<Event> events) {
+        this.events = events;
+    }
+
+    public List<Powerup> getPowerups() {
+        return powerups;
+    }
+
+    public void setPowerups(final List<Powerup> powerups) {
+        this.powerups = powerups;
     }
 
     @Transactional
@@ -101,7 +165,15 @@ public class Club {
         return feedPosts;
     }
 
+    public void setFeedPosts(final List<Feed> feedPosts) {
+        this.feedPosts = feedPosts;
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
     }
 }

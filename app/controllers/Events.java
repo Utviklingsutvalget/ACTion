@@ -12,6 +12,7 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.EventService;
+import services.ParticipationService;
 import utils.Authorize;
 import utils.EventSorter;
 import views.html.error;
@@ -27,6 +28,8 @@ public class Events extends Controller {
 
     @Inject
     private EventService eventService;
+    @Inject
+    private ParticipationService participationService;
 
     public Result index() {
         List<Event> events = eventService.findAll();
@@ -159,7 +162,7 @@ public class Events extends Controller {
         if (event == null) {
             return internalServerError("No such event");
         }
-        Participation participation = Participation.find.byId(new Participation(event, user).id);
+        Participation participation = participationService.findById(new Participation(event, user).id);
         if (participation == null) {
             participation = new Participation(event, user);
             participation.setRvsp(newRvsp);

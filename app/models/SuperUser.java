@@ -1,19 +1,14 @@
 package models;
 
-import play.db.ebean.Model;
-
 import javax.persistence.*;
 
 @Entity
-public class SuperUser extends Model {
-    public static Finder<SuKey, SuperUser> find = new Finder<>(SuKey.class, SuperUser.class);
-
+public class SuperUser {
     @EmbeddedId
-    public SuKey key;
-
+    private SuKey key;
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    public User user;
+    private User user;
 
     public SuperUser(User user) {
 
@@ -21,13 +16,37 @@ public class SuperUser extends Model {
         this.key = new SuKey(user.getId());
     }
 
+    public SuKey getKey() {
+        return key;
+    }
+
+    public void setKey(final SuKey key) {
+        this.key = key;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
+    }
+
     @Embeddable
     public class SuKey {
 
-        public String userId;
+        private String userId;
 
         public SuKey(String userId) {
 
+            this.userId = userId;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(final String userId) {
             this.userId = userId;
         }
 

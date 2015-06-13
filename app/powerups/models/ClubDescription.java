@@ -1,7 +1,6 @@
 package powerups.models;
 
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,19 +9,41 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "pl_ClubDescription")
-public class ClubDescription extends Model {
-    public static Finder<Long, ClubDescription> find = new Finder<>(Long.class, ClubDescription.class);
+public class ClubDescription {
 
     @Id
     @OneToOne
-    public Long clubId;
+    private Long clubId;
 
     @Constraints.Required
     @Constraints.MaxLength(10000)
-    public String description;
-
+    private String description;
     @Constraints.Required
     @Constraints.MaxLength(300)
-    public String listDescription;
+    private String listDescription;
+
+    public String getListDescription() {
+        return listDescription;
+    }
+
+    public void setListDescription(final String listDescription) {
+        this.listDescription = listDescription;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    public Long getClubId() {
+        return clubId;
+    }
+
+    public void setClubId(final Long clubId) {
+        this.clubId = clubId;
+    }
 
 }

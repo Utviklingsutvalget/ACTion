@@ -14,27 +14,27 @@ import java.util.Locale;
 public class Event {
 
     @Id
-    public Long id;
+    private Long id;
     @Constraints.Required
-    public Privacy privacy;
+    private Privacy privacy;
     @Constraints.Required
-    public String name;
+    private String name;
     @Constraints.Required
     @Column(length = 3000)
-    public String description;
+    private String description;
     @Constraints.Required
-    public LocalDateTime startTime;
+    private LocalDateTime startTime;
     @Constraints.Required
-    public LocalDateTime endTime;
+    private LocalDateTime endTime;
     @Constraints.Required
-    public String location;
-    public String coverUrl;
+    private String location;
+    private String coverUrl;
     @ManyToOne
-    public User host;
+    private User host;
     @ManyToOne
-    public Club club;
+    private Club club;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "event")
-    public List<Participation> participants = new ArrayList<>();
+    private List<Participation> participants = new ArrayList<>();
     @Transient
     private String timeString;
     @Transient
@@ -64,8 +64,92 @@ public class Event {
         return list;
     }
 
+    public List<Participation> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(final List<Participation> participants) {
+        this.participants = participants;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(final Club club) {
+        this.club = club;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(final String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(final String location) {
+        this.location = location;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(final LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(final LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public Privacy getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(final Privacy privacy) {
+        this.privacy = privacy;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
     public User getHost() {
         return this.host;
+    }
+
+    public void setHost(final User host) {
+        this.host = host;
     }
 
     public String getTimeString() {
@@ -73,6 +157,10 @@ public class Event {
             return setTimeString();
         }
         return timeString;
+    }
+
+    public void setTimeString(final String timeString) {
+        this.timeString = timeString;
     }
 
     private String setTimeString() {
@@ -93,6 +181,10 @@ public class Event {
             return setDateString();
         }
         return dateString;
+    }
+
+    public void setDateString(final String dateString) {
+        this.dateString = dateString;
     }
 
     private String setDateString() {

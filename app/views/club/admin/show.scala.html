@@ -19,8 +19,8 @@
             <div data-magellan-expedition="fixed">
                 <dl class="sub-nav">
                 @for(powerup <- club.powerups) {
-                    @if(powerup.model.hasMenuEntry) {
-                        <dd data-magellan-arrival="@powerup.model.id"><a href='#@powerup.model.id'>@powerup.model.friendlyName</a></dd>
+                    @if(powerup.model.isHasMenuEntry) {
+                        <dd data-magellan-arrival="@powerup.model.getId"><a href='#@powerup.model.getId'>@powerup.model.getFriendlyName</a></dd>
                     }
                 }
                 </dl>
@@ -29,19 +29,19 @@
     </div>
     <div class="powerup-container" data-powerups-for='@club.id'>
         @for(powerup <- club.powerups) {
-            @if(powerup.model.hasMenuEntry) {
-                <div id="@powerup.model.id" data-magellan-destination="@powerup.model.id">
+            @if(powerup.model.isHasMenuEntry) {
+                <div id="@powerup.model.getId" data-magellan-destination="@powerup.model.getId">
                 } else {
                 <div>
                 }
-            <div class="row powerup" data-powerup-id="@powerup.model.id">
+            <div class="row powerup" data-powerup-id="@powerup.model.getId">
                 <div class="medium-10 medium-centered columns">
-                    @if(powerup.model.friendlyName != null) {
+                    @if(powerup.model.getFriendlyName != null) {
                         <div class="small-4 columns">
                             <div id="line" class="lineright"></div>
                         </div>
                         <div class="small-4 columns text-center">
-                            <h5><strong>@powerup.model.friendlyName<br /><br /></strong></h5>
+                            <h5><strong>@powerup.model.getFriendlyName<br /><br /></strong></h5>
                         </div>
 
                         <div class="small-4 columns">
@@ -53,7 +53,7 @@
                 </div>
                 </div>
             </div>
-            @if(powerup.model.hasMenuEntry) {
+            @if(powerup.model.isHasMenuEntry) {
             </div>
             } else {
             </div>

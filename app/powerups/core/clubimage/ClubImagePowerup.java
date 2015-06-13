@@ -2,6 +2,7 @@ package powerups.core.clubimage;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import models.Club;
 import models.PowerupModel;
 import play.mvc.Result;
@@ -20,11 +21,13 @@ public class ClubImagePowerup extends Powerup {
     public static final String DEFAULT_IMAGE = "/assets/images/no_club_image.jpg";
 
     private final ClubImage clubImage;
+    @Inject
+    private ClubImageService clubImageService;
 
     public ClubImagePowerup(Club club, PowerupModel model) {
         super(club, model);
 
-        clubImage = ClubImage.find.byId(new ClubImage(this.getClub(), "").key);
+        clubImage = clubImageService.findById(new ClubImage(this.getClub(), "").getKey());
     }
 
     @Override

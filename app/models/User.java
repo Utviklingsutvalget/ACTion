@@ -1,8 +1,9 @@
 package models;
 
-import services.UserService;
+import com.google.inject.Inject;
 import org.hibernate.validator.constraints.Email;
-import play.db.ebean.Model;
+import services.SuperUserService;
+import services.UserService;
 import utils.MembershipLevel;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class User extends Model {
+public class User {
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private List<Membership> memberships = new ArrayList<>();
@@ -25,6 +26,9 @@ public class User extends Model {
     private List<Participation> participations = new ArrayList<>();
     @Transient
     private String gravatarUrl;
+
+    @Inject
+    private SuperUserService superUserService;
 
     public User(String id, String firstName, String lastName, Gender gender, String email, String picureUrl) {
         this.id = id;
@@ -127,7 +131,7 @@ public class User extends Model {
     }
 
     public boolean isAdmin() {
-        List<SuperUser> superUsers = SuperUser.find.all();
+        List<SuperUser> superUsers = superUserService.findAll();
         if (superUsers.isEmpty()) {
             return false;
         } else {

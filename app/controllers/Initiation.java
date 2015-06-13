@@ -2,11 +2,13 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import models.InitiationGroup;
 import models.Location;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.LocationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +26,8 @@ public class Initiation extends Controller {
     public static final char[] UNWANTED_CHARACTERS = {
             ':', ';', '.', ',', '!', '?'
     };
+    @Inject
+    private LocationService locationService;
 
     public Result index() {
         return ok(views.html.initiation.index.render());
@@ -34,7 +38,7 @@ public class Initiation extends Controller {
         JsonNode json = request().body().asJson();
         String query = json.get("query").asText().toLowerCase();
         Long locationId = json.get("location").asLong();
-        Location location = Location.find.byId(locationId);
+        Location location = locationService.findById(locationId);
 
         if (location == null) {
             return notFound("Feil oppsett på server, vi støtter dessverre ikke denne lokasjonen. Vennligst kontakt Eivind på" +

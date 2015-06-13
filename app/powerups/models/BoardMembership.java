@@ -2,26 +2,24 @@ package powerups.models;
 
 import models.Club;
 import models.User;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
 
 @Entity
-public class BoardMembership extends Model {
+public class BoardMembership {
 
-    public static Finder<BoardMembershipKey, BoardMembership> find = new Finder<>(BoardMembershipKey.class, BoardMembership.class);
     @EmbeddedId
-    public BoardMembershipKey key;
+    private BoardMembershipKey key;
     @ManyToOne
     @JoinColumn(name = "club_id", insertable = false, updatable = false)
-    public Club club;
+    private Club club;
     @ManyToOne
     @JoinColumn(name = "board_post_id", insertable = false, updatable = false)
-    public BoardPost boardPost;
+    private BoardPost boardPost;
     @OneToOne
     @JoinColumn(name = "user_id")
-    public User user;
-    public int weight;
+    private User user;
+    private int weight;
 
     public BoardMembership(Club club, BoardPost boardPost, User user) {
         this.boardPost = boardPost;
@@ -31,11 +29,52 @@ public class BoardMembership extends Model {
         this.key = new BoardMembershipKey(club, boardPost);
     }
 
+    public BoardMembershipKey getKey() {
+        return key;
+    }
+
+    public void setKey(final BoardMembershipKey key) {
+        this.key = key;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(final Club club) {
+        this.club = club;
+    }
+
+    public BoardPost getBoardPost() {
+        return boardPost;
+    }
+
+    public void setBoardPost(final BoardPost boardPost) {
+        this.boardPost = boardPost;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(final int weight) {
+        this.weight = weight;
+    }
+
     @Embeddable
+
     public class BoardMembershipKey {
 
-        public Long clubId;
-        public Long BoardPostId;
+        private Long clubId;
+        private Long BoardPostId;
 
         public BoardMembershipKey(Club club, BoardPost boardPost) {
 
@@ -61,6 +100,22 @@ public class BoardMembership extends Model {
             int result = clubId.hashCode();
             result = 31 * result + BoardPostId.hashCode();
             return result;
+        }
+
+        public Long getClubId() {
+            return clubId;
+        }
+
+        public void setClubId(final Long clubId) {
+            this.clubId = clubId;
+        }
+
+        public Long getBoardPostId() {
+            return BoardPostId;
+        }
+
+        public void setBoardPostId(final Long boardPostId) {
+            BoardPostId = boardPostId;
         }
     }
 

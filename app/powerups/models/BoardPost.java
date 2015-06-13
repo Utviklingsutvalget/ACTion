@@ -1,31 +1,58 @@
 package powerups.models;
 
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class BoardPost extends Model {
-
-    public static Finder<Long, BoardPost> find = new Finder<>(Long.class, BoardPost.class);
+public class BoardPost {
 
     @Id
-    public Long id;
+    private Long id;
 
     @Constraints.Required
-    public String title;
-
+    private String title;
     @Constraints.Required
-    public boolean isMandatory;
-
+    private boolean mandatory;
     @Constraints.Required
-    public int weight;
+    private int weight;
 
-    public BoardPost(String title, boolean isMandatory, int weight) {
+    public BoardPost(String title, boolean mandatory, int weight) {
         this.title = title;
-        this.isMandatory = isMandatory;
+        this.mandatory = mandatory;
+        this.weight = weight;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(final boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(final int weight) {
         this.weight = weight;
     }
 }

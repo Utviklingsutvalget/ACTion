@@ -4,15 +4,13 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.inject.Inject;
-import services.InitiationGroupService;
-import services.UserService;
+import services.*;
 import models.*;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
-import services.ClubService;
 import utils.ActivationSorter;
 import utils.Authorize;
 import utils.InitiationSorter;
@@ -35,6 +33,12 @@ public class Administration extends Controller {
     private UserService userService;
     @Inject
     private InitiationGroupService initiationGroupService;
+    @Inject
+    private LocationService locationService;
+    @Inject
+    private MembershipService membershipService;
+    @Inject
+    private SuperUserService superUserService;
 
     public Result showClub(Long id) {
         Club club = clubService.findById(id);
@@ -53,7 +57,7 @@ public class Administration extends Controller {
         }
         try {
             User user = new Authorize.UserSession().getUser();
-            Membership membership = Membership.find.byId(new Membership(club, user).id);
+            Membership membership = membershipService.findById(new Membership(club, user).id);
             if (user.isAdmin() || membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
                 return ok(views.html.club.admin.show.render(club));
             } else {
@@ -72,7 +76,7 @@ public class Administration extends Controller {
         try {
             User user = new Authorize.UserSession().getUser();
             List<Club> clubList = clubService.findAll();
-            List<Location> locationList = Location.find.all();
+            List<Location> locationList = locationService.findAll();
             List<InitiationGroup> initiationGroups = initiationGroupService.findAll();
             initiationGroups.sort(new InitiationSorter());
             Integer maxInitGrp = 1;
@@ -101,7 +105,7 @@ public class Administration extends Controller {
 
         JsonNode json = request().body().asJson();
         Map<Long, String> locationMap = new HashMap<>();
-        List<Location> existingLocations = Location.find.all();
+        List<Location> existingLocations = locationService.findAll();
 
         try {
 
@@ -145,7 +149,7 @@ public class Administration extends Controller {
     // update LocationName to new name
     public void updateLocations(Long locationId, String newLocationName) {
 
-        Location location = Location.find.byId(locationId);
+        Location location = locationService.findById(locationId);
 
         location.name = newLocationName;
         Logger.info("updated locationId: " + location.id + ", new name: " + location.name);
@@ -156,7 +160,7 @@ public class Administration extends Controller {
     public Result makeAdmin() {
         try {
             User user = new Authorize.UserSession().getUser();
-            List<SuperUser> superUsers = SuperUser.find.all();
+            List<SuperUser> superUsers = superUserService.findAll();
             if (superUsers.isEmpty()) {
                 SuperUser superUser = new SuperUser(user);
                 superUser.user = user;
@@ -228,7 +232,7 @@ public class Administration extends Controller {
         int groupNumber = Integer.valueOf(form.get("group-number")[0]);
         Long locationId = Long.valueOf(form.get("location")[0]);
         User guardian = userService.findByEmail(email);
-        Location location = Location.find.byId(locationId);
+        Location location = locationService.findById(locationId);
         String phoneNumber = form.get("phone")[0];
 
         if (guardian != null && location != null) {
@@ -239,7 +243,7 @@ public class Administration extends Controller {
             } catch (NumberParseException e) {
                 return badRequest();
             }
-            if (InitiationGroup.find.byId(initiationGroup.getId()) == null) {
+            if (initiationGroupService.findById(initiationGroup.getId()) == null) {
                 Ebean.save(initiationGroup);
             } else {
                 Ebean.update(initiationGroup);
@@ -258,11 +262,11 @@ public class Administration extends Controller {
         String userId = json.get("guardian").asText();
 
         User guardian = userService.findById(userId);
-        Location location = Location.find.byId(locationId);
+        Location location = locationService.findById(locationId);
 
         InitiationGroup group = null;
         if (guardian != null && location != null) {
-            group = InitiationGroup.find.byId(new InitiationGroup(guardian, location).getId());
+            group = initiationGroupService.findById(new InitiationGroup(guardian, location).getId());
         }
 
         if (group != null) {

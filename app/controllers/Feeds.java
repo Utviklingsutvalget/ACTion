@@ -10,6 +10,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.ClubService;
 import services.FeedService;
+import services.MembershipService;
 import utils.Authorize;
 import utils.FeedSorter;
 import utils.MembershipLevel;
@@ -27,6 +28,8 @@ public class Feeds extends Controller {
     private ClubService clubService;
     @Inject
     private FeedService feedService;
+    @Inject
+    private MembershipService membershipService;
 
     public Result index() {
 
@@ -52,7 +55,7 @@ public class Feeds extends Controller {
 
             for (Club club : clubList) {
 
-                Membership membership = Membership.find.byId(new Membership(club, user).id);
+                Membership membership = membershipService.findById(new Membership(club, user).id);
 
                 //if (membership != null) {
 

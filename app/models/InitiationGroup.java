@@ -4,12 +4,11 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
 
 @Entity
-public class InitiationGroup extends Model {
+public class InitiationGroup {
 
     @EmbeddedId
     private InitiationKey id;

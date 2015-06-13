@@ -1,24 +1,22 @@
 package models;
 
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
 
 @Entity
-public class Participation extends Model {
+public class Participation {
 
-    public static Finder<ParticipationKey, Participation> find = new Finder<>(ParticipationKey.class, Participation.class);
     @EmbeddedId
-    public ParticipationKey id;
+    private ParticipationKey id;
     @ManyToOne
     @JoinColumn(name = "event_id", insertable = false, updatable = false)
-    public Event event;
+    private Event event;
     @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    public User user;
+    private User user;
     @Constraints.Required
-    public Status rvsp;
+    private Status rvsp;
 
     public Participation(Event event, User user) {
         this.event = event;
@@ -30,6 +28,30 @@ public class Participation extends Model {
                 setHostRvsp();
             }
         }
+    }
+
+    public ParticipationKey getId() {
+        return id;
+    }
+
+    public void setId(final ParticipationKey id) {
+        this.id = id;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(final Event event) {
+        this.event = event;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
     }
 
     public void setHostRvsp() {
@@ -59,6 +81,10 @@ public class Participation extends Model {
         return rvsp == Status.ATTENDING || rvsp == Status.HOSTING;
     }
 
+    public void setRvsp(final Status rvsp) {
+        this.rvsp = rvsp;
+    }
+
     public enum Status {
         NOT_ATTENDING, ATTENDING, HOSTING
     }
@@ -66,9 +92,8 @@ public class Participation extends Model {
     @Embeddable
     public class ParticipationKey {
 
-        public Long eventId;
-
-        public String userId;
+        private Long eventId;
+        private String userId;
 
         public ParticipationKey(final Long eventId, final String userId) {
             this.eventId = eventId;
@@ -91,6 +116,22 @@ public class Participation extends Model {
             int result = eventId.hashCode();
             result = 31 * result + userId.hashCode();
             return result;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(final String userId) {
+            this.userId = userId;
+        }
+
+        public Long getEventId() {
+            return eventId;
+        }
+
+        public void setEventId(final Long eventId) {
+            this.eventId = eventId;
         }
     }
 }

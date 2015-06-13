@@ -3,25 +3,23 @@ package models;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 import utils.MembershipLevel;
 
 import javax.persistence.*;
 
 @Entity
-public class Membership extends Model {
+public class Membership {
 
-    public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
     @EmbeddedId
-    public MembershipKey id;
+    private MembershipKey id;
     @ManyToOne
     @JoinColumn(name = "club_id", insertable = false, updatable = false)
-    public Club club;
+    private Club club;
     @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    public User user;
+    private User user;
     @Constraints.Required
-    public MembershipLevel level;
+    private MembershipLevel level;
 
     public Membership(Club club, User user) {
         this(club, user, MembershipLevel.MEMBER);
@@ -39,15 +37,47 @@ public class Membership extends Model {
         Ebean.save(membership);
     }
 
+    public MembershipKey getId() {
+        return id;
+    }
+
+    public void setId(final MembershipKey id) {
+        this.id = id;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(final Club club) {
+        this.club = club;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
+    }
+
+    public MembershipLevel getLevel() {
+        return level;
+    }
+
+    public void setLevel(final MembershipLevel level) {
+        this.level = level;
+    }
+
     @Embeddable
     public class MembershipKey {
 
-        public Long clubId;
+        private Long clubId;
 
-        public String userId;
+        private String userId;
 
         public MembershipKey(Club club, User user) {
-            this.clubId = club.id;
+            this.clubId = club.getId();
             this.userId = user.getId();
         }
 
@@ -67,6 +97,22 @@ public class Membership extends Model {
             int result = clubId.hashCode();
             result = 31 * result + userId.hashCode();
             return result;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(final String userId) {
+            this.userId = userId;
+        }
+
+        public Long getClubId() {
+            return clubId;
+        }
+
+        public void setClubId(final Long clubId) {
+            this.clubId = clubId;
         }
     }
 
