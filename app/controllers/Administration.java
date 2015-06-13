@@ -3,7 +3,8 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.i18n.phonenumbers.NumberParseException;
-import helpers.UserService;
+import com.google.inject.Inject;
+import services.*;
 import models.*;
 import play.Logger;
 import play.mvc.BodyParser;
@@ -26,25 +27,39 @@ public class Administration extends Controller {
     private static final Long PRESIDING_COUNCIL_ID = 1L;
     private static final String ITSLEARNINGREDIRECT = "https://nith.itslearning.com/elogin/default.aspx";
 
-    public static Result showClub(Long id) {
-        Club club = Club.find.byId(id);
+    @Inject
+    private ClubService clubService;
+    @Inject
+    private UserService userService;
+    @Inject
+    private InitiationGroupService initiationGroupService;
+    @Inject
+    private LocationService locationService;
+    @Inject
+    private MembershipService membershipService;
+    @Inject
+    private SuperUserService superUserService;
+
+    public Result showClub(Long id) {
+        Club club = clubService.findById(id);
 
         if (club == null)
             return notFound(views.html.index.render("Utvalget du leter etter finnes ikke."));
 
 
-        club.powerups = new ArrayList<>();
+        ArrayList<Powerup> powerups = new ArrayList<>();
+        club.setPowerups(powerups);
         // Sort the activations by weight:
-        Collections.sort(club.activations, new ActivationSorter());
+        Collections.sort(club.getActivations(), new ActivationSorter());
 
-        for (Activation activation : club.activations) {
+        for (Activation activation : club.getActivations()) {
             Powerup powerup = activation.getPowerup();
-            club.powerups.add(powerup);
+            powerups.add(powerup);
         }
         try {
             User user = new Authorize.UserSession().getUser();
-            Membership membership = Membership.find.byId(new Membership(club, user).id);
-            if (user.isAdmin() || membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
+            Membership membership = membershipService.findById(new Membership(club, user).getId());
+            if (user.isAdmin() || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
                 return ok(views.html.club.admin.show.render(club));
             } else {
                 return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
@@ -54,16 +69,16 @@ public class Administration extends Controller {
         }
     }
 
-    public static Result redirectToItsLearning() {
+    public Result redirectToItsLearning() {
         return redirect(ITSLEARNINGREDIRECT);
     }
 
-    public static Result showSite() {
+    public Result showSite() {
         try {
             User user = new Authorize.UserSession().getUser();
-            List<Club> clubList = Club.find.all();
-            List<Location> locationList = Location.find.all();
-            List<InitiationGroup> initiationGroups = InitiationGroup.find.all();
+            List<Club> clubList = clubService.findAll();
+            List<Location> locationList = locationService.findAll();
+            List<InitiationGroup> initiationGroups = initiationGroupService.findAll();
             initiationGroups.sort(new InitiationSorter());
             Integer maxInitGrp = 1;
             for (InitiationGroup initiationGroup : initiationGroups) {
@@ -71,7 +86,11 @@ public class Administration extends Controller {
                     maxInitGrp = initiationGroup.getGroupNumber();
                 }
             }
-            clubList.remove(Club.find.byId(PRESIDING_COUNCIL_ID));
+            Club council = clubList.stream()
+                    .filter(club -> club.getId().equals(PRESIDING_COUNCIL_ID))
+                    .findFirst()
+                    .get();
+            clubList.remove(council);
 
             if (user.isAdmin()) {
                 return ok(views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
@@ -83,11 +102,11 @@ public class Administration extends Controller {
     }
 
     //@BodyParser.Of(BodyParser.Json.class)
-    public static Result updateLocation() {
+    public Result updateLocation() {
 
         JsonNode json = request().body().asJson();
         Map<Long, String> locationMap = new HashMap<>();
-        List<Location> existingLocations = Location.find.all();
+        List<Location> existingLocations = locationService.findAll();
 
         try {
 
@@ -112,11 +131,11 @@ public class Administration extends Controller {
 
                 for (Location location : existingLocations) {
 
-                    String locationName = locationMap.get(location.id);
+                    String locationName = locationMap.get(location.getId());
 
-                    if (locationName != null && !locationName.equals("") && !locationName.equals(location.name)) {
+                    if (locationName != null && !locationName.equals("") && !locationName.equals(location.getName())) {
 
-                        updateLocations(location.id, locationName);
+                        updateLocations(location.getId(), locationName);
                     }
                 }
             }
@@ -129,32 +148,33 @@ public class Administration extends Controller {
     }
 
     // update LocationName to new name
-    public static void updateLocations(Long locationId, String newLocationName) {
+    public void updateLocations(Long locationId, String newLocationName) {
 
-        Location location = Location.find.byId(locationId);
+        Location location = locationService.findById(locationId);
 
-        location.name = newLocationName;
-        Logger.info("updated locationId: " + location.id + ", new name: " + location.name);
+        location.setName(newLocationName);
+        Logger.info("updated locationId: " + location.getId() + ", new name: " + location.getName());
 
-        Ebean.save(location);
+        locationService.update(location);
     }
 
-    public static Result makeAdmin() {
+    public Result makeAdmin() {
         try {
             User user = new Authorize.UserSession().getUser();
-            List<SuperUser> superUsers = SuperUser.find.all();
+            List<SuperUser> superUsers = superUserService.findAll();
             if (superUsers.isEmpty()) {
                 SuperUser superUser = new SuperUser(user);
-                superUser.user = user;
+                superUser.setUser(user);
                 Ebean.save(superUser);
             }
         } catch (Authorize.SessionException e) {
             return notFound();
         }
-        return Application.index();
+        // TODO MAKE SENSE
+        return redirect("/");
     }
 
-    public static Result deleteClub() {
+    public Result deleteClub() {
 
         JsonNode json = request().body().asJson();
         Map<Long, String> clubMap = new HashMap<>();
@@ -182,9 +202,9 @@ public class Administration extends Controller {
         for (Long id : clubMap.keySet()) {
 
             if (confirmDelMap.get(CONFIRM_DELETE).equals(clubMap.get(id))) {
-                Club club = Club.find.byId(id);
+                Club club = clubService.findById(id);
 
-                if (!club.id.equals(PRESIDING_COUNCIL_ID)) {
+                if (!club.getId().equals(PRESIDING_COUNCIL_ID)) {
 
                     club.delete();
                     return ok("Utvalg slettet");
@@ -194,7 +214,7 @@ public class Administration extends Controller {
         return badRequest("Sletting ble ikke foretatt");
     }
 
-    public static Result addGuardian() {
+    public Result addGuardian() {
         try {
             User user = new Authorize.UserSession().getUser();
             boolean authorized = user.isAdmin();
@@ -212,8 +232,8 @@ public class Administration extends Controller {
         String email = form.get("guardian")[0] + form.get("postfix")[0];
         int groupNumber = Integer.valueOf(form.get("group-number")[0]);
         Long locationId = Long.valueOf(form.get("location")[0]);
-        User guardian = UserService.findByEmail(email);
-        Location location = Location.find.byId(locationId);
+        User guardian = userService.findByEmail(email);
+        Location location = locationService.findById(locationId);
         String phoneNumber = form.get("phone")[0];
 
         if (guardian != null && location != null) {
@@ -224,7 +244,7 @@ public class Administration extends Controller {
             } catch (NumberParseException e) {
                 return badRequest();
             }
-            if (InitiationGroup.find.byId(initiationGroup.getId()) == null) {
+            if (initiationGroupService.findById(initiationGroup.getId()) == null) {
                 Ebean.save(initiationGroup);
             } else {
                 Ebean.update(initiationGroup);
@@ -235,19 +255,19 @@ public class Administration extends Controller {
     }
 
     @BodyParser.Of(BodyParser.Json.class)
-    public static Result deleteGuardian() {
+    public Result deleteGuardian() {
 
         JsonNode json = request().body().asJson();
 
         Long locationId = json.get("location").asLong();
         String userId = json.get("guardian").asText();
 
-        User guardian = UserService.findById(userId);
-        Location location = Location.find.byId(locationId);
+        User guardian = userService.findById(userId);
+        Location location = locationService.findById(locationId);
 
         InitiationGroup group = null;
         if (guardian != null && location != null) {
-            group = InitiationGroup.find.byId(new InitiationGroup(guardian, location).getId());
+            group = initiationGroupService.findById(new InitiationGroup(guardian, location).getId());
         }
 
         if (group != null) {
@@ -261,7 +281,7 @@ public class Administration extends Controller {
         //return redirect(routes.Administration.showSite().url() + "#addguardian");
     }
 
-    public static Result modifyGuardian() {
+    public Result modifyGuardian() {
         return null;
     }
 }

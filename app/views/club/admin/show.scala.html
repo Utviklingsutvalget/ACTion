@@ -1,6 +1,6 @@
 @(club: Club)
 
-@main("Administrasjon - " + club.shortName) {
+@main("Administrasjon - " + club.getShortName) {
     <div class="row">
         <div class="medium-10 columns medium-centered">
             <p>Kort beskrivelse av powerups, hvordan de fungerer, og hvordan admin-panel fungerer.</p>
@@ -18,30 +18,30 @@
         <div class="medium-10 columns medium-centered">
             <div data-magellan-expedition="fixed">
                 <dl class="sub-nav">
-                @for(powerup <- club.powerups) {
-                    @if(powerup.model.hasMenuEntry) {
-                        <dd data-magellan-arrival="@powerup.model.id"><a href='#@powerup.model.id'>@powerup.model.friendlyName</a></dd>
+                @for(powerup <- club.getPowerups) {
+                    @if(powerup.getModel.isHasMenuEntry) {
+                        <dd data-magellan-arrival="@powerup.getModel.getId"><a href='#@powerup.getModel.getId'>@powerup.getModel.getFriendlyName</a></dd>
                     }
                 }
                 </dl>
             </div>
         </div>
     </div>
-    <div class="powerup-container" data-powerups-for='@club.id'>
-        @for(powerup <- club.powerups) {
-            @if(powerup.model.hasMenuEntry) {
-                <div id="@powerup.model.id" data-magellan-destination="@powerup.model.id">
+    <div class="powerup-container" data-powerups-for='@club.getId'>
+        @for(powerup <- club.getPowerups) {
+            @if(powerup.getModel.isHasMenuEntry) {
+                <div id="@powerup.getModel.getId" data-magellan-destination="@powerup.getModel.getId">
                 } else {
                 <div>
                 }
-            <div class="row powerup" data-powerup-id="@powerup.model.id">
+            <div class="row powerup" data-powerup-id="@powerup.getModel.getId">
                 <div class="medium-10 medium-centered columns">
-                    @if(powerup.model.friendlyName != null) {
+                    @if(powerup.getModel.getFriendlyName != null) {
                         <div class="small-4 columns">
                             <div id="line" class="lineright"></div>
                         </div>
                         <div class="small-4 columns text-center">
-                            <h5><strong>@powerup.model.friendlyName<br /><br /></strong></h5>
+                            <h5><strong>@powerup.getModel.getFriendlyName<br /><br /></strong></h5>
                         </div>
 
                         <div class="small-4 columns">
@@ -53,7 +53,7 @@
                 </div>
                 </div>
             </div>
-            @if(powerup.model.hasMenuEntry) {
+            @if(powerup.getModel.isHasMenuEntry) {
             </div>
             } else {
             </div>
@@ -62,7 +62,7 @@
         <script>
         $(document ).ready(powerup());
         //noinspection BadExpressionStatementJS
-        $( '#alt-title' ).replaceWith( "<strong>@(club.shortName)</strong>");
+        $( '#alt-title' ).replaceWith( "<strong>@(club.getShortName)</strong>");
         </script>
     </div>
 

@@ -32,9 +32,9 @@ public class EventPowerup extends Powerup {
         super(club, model);
         events = new ArrayList<>();
 
-        List<Event> tempEvents = getClub().events;
+        List<Event> tempEvents = getClub().getEvents();
         tempEvents.sort(new EventSorter());
-        events.addAll(tempEvents.stream().filter(e -> e.startTime.isAfter(LocalDateTime.now().minusHours(3))).collect(Collectors.toList()));
+        events.addAll(tempEvents.stream().filter(e -> e.getStartTime().isAfter(LocalDateTime.now().minusHours(3))).collect(Collectors.toList()));
         if(events.size() > MAX_EVENTS) {
             for(int i = MAX_EVENTS; i < events.size() ; i++) {
                 events.remove(i);
@@ -43,10 +43,10 @@ public class EventPowerup extends Powerup {
         for (Event e : events) {
             Participation participation = new Participation(e, this.getContext().getSender());
             int i;
-            if (e.participants.contains(participation)) {
-                i = e.participants.indexOf(participation);
-                participation = e.participants.get(i);
-                e.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
+            if (e.getParticipants().contains(participation)) {
+                i = e.getParticipants().indexOf(participation);
+                participation = e.getParticipants().get(i);
+                e.setUserHosting(participation.getRvspObject() == Participation.Status.HOSTING);
                 e.setUserAttending(participation.getRvsp());
             }
             e.setUserAttending(participation.getRvsp());
@@ -79,7 +79,7 @@ public class EventPowerup extends Powerup {
     public Result update(JsonNode updateContent) {
         User user = getContext().getSender();
         if (!(user.isAdmin() || getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
-            return Results.unauthorized("Ingen tilgang til å opprette events for " + this.getClub().name);
+            return Results.unauthorized("Ingen tilgang til å opprette events for " + this.getClub().getName());
         }
         String name = updateContent.get("name").asText();
         String description = updateContent.get("description").asText();

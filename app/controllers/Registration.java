@@ -1,11 +1,12 @@
 package controllers;
 
-import helpers.UserService;
+import com.google.inject.Inject;
 import models.User;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
+import services.UserService;
 import views.html.user.registration.form;
 import views.html.user.registration.terms;
 
@@ -15,8 +16,14 @@ public class Registration extends Controller {
     public static final Html TERM_LINK = new Html("<a href=\"" + routes.Registration.terms() + "\" target=\"_blank\">brukervilkårene</a>");
     public static final String TERM_STRING = "Du samtykker at du har lest og godtatt " + TERM_LINK + ".";
     public static Form<User> registrationForm = Form.form(User.class);
+    @Inject
+    private OAuth2 oAuth2Controller;
+    @Inject
+    private Users userController;
+    @Inject
+    private UserService userService;
 
-    public static Result submit() {
+    public Result submit() {
 
         Form<User> filledForm = registrationForm.bindFromRequest();
 
@@ -28,26 +35,26 @@ public class Registration extends Controller {
         }
 
         User user = filledForm.get();
-        UserService.save(user);
+        userService.save(user);
 
-        OAuth2.createSessions(user.getId());
+        oAuth2Controller.createSessions(user.getId());
 
-        return Users.profile();
+        return userController.profile();
     }
 
-    public static Result autofill(User user) {
+    public Result autofill(User user) {
         Form<User> filledForm = registrationForm.fill(user);
         return ok(form.render(filledForm, TERM_STRING));
 
     }
 
-    public static Result autoUpdate(User user) {
-        UserService.update(user);
-        return Users.profile();
+    public Result autoUpdate(User user) {
+        userService.update(user);
+        return userController.profile();
 
     }
 
-    public static Result terms() {
+    public Result terms() {
         return ok(terms.render());
     }
 }

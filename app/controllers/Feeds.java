@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.inject.Inject;
 import models.Club;
 import models.Feed;
 import models.Membership;
@@ -7,6 +8,9 @@ import models.User;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.ClubService;
+import services.FeedService;
+import services.MembershipService;
 import utils.Authorize;
 import utils.FeedSorter;
 import utils.MembershipLevel;
@@ -20,7 +24,14 @@ public class Feeds extends Controller {
     private static final int MAXFEEDSPERCLUB = 5;
     private static final int MAXINDEXFEEDSIZE = 14;
 
-    public static Result index() {
+    @Inject
+    private ClubService clubService;
+    @Inject
+    private FeedService feedService;
+    @Inject
+    private MembershipService membershipService;
+
+    public Result index() {
 
         List<Feed> feedList = new ArrayList<>();
         List<Feed> initialList = new ArrayList<>();
@@ -32,7 +43,7 @@ public class Feeds extends Controller {
         //of feeds from each club and return list to render.
         try {
             User user = new Authorize.UserSession().getUser();
-            List<Club> clubList = Club.find.all();
+            List<Club> clubList = clubService.findAll();
 
             // Keeping this in as bugs with empty user tables have caused
             // Authorize check to go through but return a null object for user.
@@ -44,7 +55,7 @@ public class Feeds extends Controller {
 
             for (Club club : clubList) {
 
-                Membership membership = Membership.find.byId(new Membership(club, user).id);
+                Membership membership = membershipService.findById(new Membership(club, user).getId());
 
                 //if (membership != null) {
 
@@ -71,10 +82,10 @@ public class Feeds extends Controller {
     }
 
     // Pretty much does the same thing as setupuserLists except fetching all feeds.
-    public static void setupDefaultLists(List<Feed> defaultInitial, List<Feed> defaultRemaining) {
+    public void setupDefaultLists(List<Feed> defaultInitial, List<Feed> defaultRemaining) {
 
         // TODO FIND A MORE EFFICIENT WAY OF FINDING FEEDS AND SORTING
-        List<Feed> allFeeds = Feed.find.all();
+        List<Feed> allFeeds = feedService.findAll();
 
         if (!allFeeds.isEmpty()) {
             allFeeds.sort(new FeedSorter());
@@ -99,7 +110,7 @@ public class Feeds extends Controller {
 
     // sorts feedlist, then fetches first 14 entries (provided there are that many),
     // places first 2 in initialFeedList for top display, then inserts remaining 12 in remainingList.
-    public static void setupUserLists(List<Feed> feedList, List<Feed> initialList, List<Feed> remainingList) {
+    public void setupUserLists(List<Feed> feedList, List<Feed> initialList, List<Feed> remainingList) {
 
         if (!feedList.isEmpty()) {
             feedList.sort(new FeedSorter());
@@ -129,9 +140,9 @@ public class Feeds extends Controller {
 
     //Find up x feeds by a give club (until maxfeedsperclub is reached)
     //add to list, sort and return list
-    public static List<Feed> getClubFeed(Club club) {
+    public List<Feed> getClubFeed(Club club) {
 
-        List<Feed> clubFeedList = Feed.findByClub(club);
+        List<Feed> clubFeedList = feedService.findByClub(club);
         clubFeedList.sort(new FeedSorter());
         Collections.reverse(clubFeedList);
 

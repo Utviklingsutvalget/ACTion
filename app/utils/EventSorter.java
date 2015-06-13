@@ -7,8 +7,8 @@ import java.util.Comparator;
 public class EventSorter implements Comparator<Event> {
     @Override
     public int compare(Event e1, Event e2) {
-        if(e1 == e2 || e1.id.equals(e2.id)) {
+        if(e1 == e2 || e1.getId().equals(e2.getId())) {
             return 0;
-        } else return e1.startTime.compareTo(e2.startTime);
+        } else return e1.getStartTime().compareTo(e2.getStartTime());
     }
 }

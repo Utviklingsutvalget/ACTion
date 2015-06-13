@@ -1,50 +1,37 @@
 package models;
 
-import play.db.ebean.Model;
+import models.composite.UserKey;
 
 import javax.persistence.*;
 
 @Entity
-public class SuperUser extends Model {
-    public static Finder<SuKey, SuperUser> find = new Finder<>(SuKey.class, SuperUser.class);
-
+public class SuperUser {
     @EmbeddedId
-    public SuKey key;
-
+    private UserKey key;
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    public User user;
+    private User user;
 
     public SuperUser(User user) {
 
         this.user = user;
-        this.key = new SuKey(user.getId());
+        this.key = new UserKey(user.getId());
     }
 
-    @Embeddable
-    public class SuKey {
-
-        public String userId;
-
-        public SuKey(String userId) {
-
-            this.userId = userId;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            SuKey suKey = (SuKey) o;
-
-            return userId.equals(suKey.userId);
-
-        }
-
-        @Override
-        public int hashCode() {
-            return userId.hashCode();
-        }
+    public UserKey getKey() {
+        return key;
     }
+
+    public void setKey(final UserKey key) {
+        this.key = key;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
+    }
+
 }

@@ -2,26 +2,28 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
+import models.composite.ClubUserKey;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 import utils.MembershipLevel;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-public class Membership extends Model {
+public class Membership {
 
-    public static Finder<MembershipKey, Membership> find = new Finder<>(MembershipKey.class, Membership.class);
     @EmbeddedId
-    public MembershipKey id;
+    private ClubUserKey id;
     @ManyToOne
     @JoinColumn(name = "club_id", insertable = false, updatable = false)
-    public Club club;
+    private Club club;
     @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    public User user;
+    private User user;
     @Constraints.Required
-    public MembershipLevel level;
+    private MembershipLevel level;
 
     public Membership(Club club, User user) {
         this(club, user, MembershipLevel.MEMBER);
@@ -31,7 +33,7 @@ public class Membership extends Model {
         this.club = club;
         this.user = user;
         this.level = level;
-        this.id = new MembershipKey(club, user);
+        this.id = new ClubUserKey(club, user);
     }
 
     @Transactional
@@ -39,35 +41,36 @@ public class Membership extends Model {
         Ebean.save(membership);
     }
 
-    @Embeddable
-    public class MembershipKey {
+    public ClubUserKey getId() {
+        return id;
+    }
 
-        public Long clubId;
+    public void setId(final ClubUserKey id) {
+        this.id = id;
+    }
 
-        public String userId;
+    public Club getClub() {
+        return club;
+    }
 
-        public MembershipKey(Club club, User user) {
-            this.clubId = club.id;
-            this.userId = user.getId();
-        }
+    public void setClub(final Club club) {
+        this.club = club;
+    }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+    public User getUser() {
+        return user;
+    }
 
-            MembershipKey that = (MembershipKey) o;
+    public void setUser(final User user) {
+        this.user = user;
+    }
 
-            return clubId.equals(that.clubId) && userId.equals(that.userId);
+    public MembershipLevel getLevel() {
+        return level;
+    }
 
-        }
-
-        @Override
-        public int hashCode() {
-            int result = clubId.hashCode();
-            result = 31 * result + userId.hashCode();
-            return result;
-        }
+    public void setLevel(final MembershipLevel level) {
+        this.level = level;
     }
 
 }

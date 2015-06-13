@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import models.Event;
 import models.Participation;
 import models.User;
@@ -10,6 +11,8 @@ import play.data.Form;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.EventService;
+import services.ParticipationService;
 import utils.Authorize;
 import utils.EventSorter;
 import views.html.error;
@@ -21,10 +24,15 @@ import static play.data.Form.form;
 
 public class Events extends Controller {
 
-    public static int EVENT_DURATION = 6;
+    public int EVENT_DURATION = 6;
 
-    public static Result index() {
-        List<Event> events = Event.find.all();
+    @Inject
+    private EventService eventService;
+    @Inject
+    private ParticipationService participationService;
+
+    public Result index() {
+        List<Event> events = eventService.findAll();
         List<Event> allEvents = new ArrayList<>();
         events.sort(new EventSorter());
         List<Event> attendingEvents = new ArrayList<>();
@@ -32,15 +40,16 @@ public class Events extends Controller {
         try {
             user = new Authorize.UserSession().getUser();
             for (Event e : events) {
-                if (!e.startTime.isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
+                if (!e.getStartTime().isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
                     allEvents.add(e);
                 }
                 Participation participation = new Participation(e, user);
                 int i;
-                if (e.participants.contains(participation)) {
-                    i = e.participants.indexOf(participation);
-                    participation = e.participants.get(i);
-                    e.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
+                List<Participation> participants = e.getParticipants();
+                if (participants.contains(participation)) {
+                    i = participants.indexOf(participation);
+                    participation = participants.get(i);
+                    e.setUserHosting(participation.getRvspObject() == Participation.Status.HOSTING);
                     if (participation.getRvsp()) {
                         attendingEvents.add(e);
                     }
@@ -54,20 +63,19 @@ public class Events extends Controller {
         return ok(views.html.event.index.render(allEvents, attendingEvents, loggedIn));
     }
 
-    public static Result show(Long id) {
-
-        Event event = Event.find.byId(id);
+    public Result show(Long id) {
+        Event event = eventService.findById(id);
         User user = null;
         try {
             user = new Authorize.UserSession().getUser();
         } catch (Authorize.SessionException ignored) {
         }
         Participation participation = new Participation(event, user);
-        if (event.participants.contains(participation)) {
-            int i = event.participants.indexOf(participation);
-            participation = event.participants.get(i);
-            event.setUserHosting(participation.rvsp == Participation.Status.HOSTING);
-            event.setUserAttending(event.participants.get(i).getRvsp());
+        if (event.getParticipants().contains(participation)) {
+            int i = event.getParticipants().indexOf(participation);
+            participation = event.getParticipants().get(i);
+            event.setUserHosting(participation.getRvspObject() == Participation.Status.HOSTING);
+            event.setUserAttending(event.getParticipants().get(i).getRvsp());
         }
         if (user != null) {
             return ok(views.html.event.show.render(event, true));
@@ -77,7 +85,7 @@ public class Events extends Controller {
 
     }
 
-    public static Result create() {
+    public Result create() {
 
         try {
             User user = new Authorize.UserSession().getUser();
@@ -90,7 +98,7 @@ public class Events extends Controller {
         }
     }
 
-    public static Result save() {
+    public Result save() {
 
         try {
             User user = new Authorize.UserSession().getUser();
@@ -100,8 +108,9 @@ public class Events extends Controller {
                 return badRequest(views.html.event.createForm.render(eventForm));
             }
 
-            eventForm.get().save();
-            flash("success", "Event " + eventForm.get().name + " has been created.");
+            Event event = eventForm.get();
+            eventService.save(event);
+            flash("success", "Event " + eventForm.get().getName() + " has been created.");
             return index();
 
         } catch (Authorize.SessionException e) {
@@ -111,34 +120,36 @@ public class Events extends Controller {
 
     }
 
-    public static Result edit(Long id) {
+    public Result edit(Long id) {
+        Event event = eventService.findById(id);
         Form<Event> eventForm = form(Event.class).fill(
-                Event.find.byId(id));
+                event);
 
         return ok(views.html.event.editForm.render(id, eventForm));
     }
 
-    public static Result update(Long id) {
+    public Result update(Long id) {
         Form<Event> eventForm = form(Event.class).bindFromRequest();
         if (eventForm.hasErrors()) {
             return badRequest(views.html.event.editForm.render(id, eventForm));
         }
-        eventForm.get().update(id);
-        flash("success", "Event " + eventForm.get().name + " has been updated");
+        Event event = eventForm.get();
+        eventService.update(event);
+        flash("success", "Event " + eventForm.get().getName() + " has been updated");
         return index();
     }
 
-    public static Result delete(Long id) {
+    public Result delete(Long id) {
+        Event event = eventService.findById(id);
 
-        Event event = Event.find.byId(id);
-        Event.find.ref(id).delete();
-        flash("success", "Event " + event.name + " has been deleted");
+        eventService.delete(event);
+        flash("success", "Event " + event.getName() + " has been deleted");
 
         return index();
     }
 
     @BodyParser.Of(BodyParser.Json.class)
-    public static Result attend() {
+    public Result attend() {
         User user;
         try {
             user = new Authorize.UserSession().getUser();
@@ -148,11 +159,11 @@ public class Events extends Controller {
         JsonNode json = request().body().asJson();
         Long eventId = json.findValue("event").asLong();
         boolean newRvsp = json.findValue("attend").asBoolean();
-        Event event = Event.find.byId(eventId);
+        Event event = eventService.findById(eventId);
         if (event == null) {
             return internalServerError("No such event");
         }
-        Participation participation = Participation.find.byId(new Participation(event, user).id);
+        Participation participation = participationService.findById(new Participation(event, user).getId());
         if (participation == null) {
             participation = new Participation(event, user);
             participation.setRvsp(newRvsp);

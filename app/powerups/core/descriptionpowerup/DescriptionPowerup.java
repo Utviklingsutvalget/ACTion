@@ -2,6 +2,7 @@ package powerups.core.descriptionpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import models.Club;
 import models.PowerupModel;
 import org.jsoup.Jsoup;
@@ -31,17 +32,19 @@ public class DescriptionPowerup extends Powerup {
      */
     private final ClubDescription clubDesc;
     private final boolean editable;
+    @Inject
+    private DescriptionService descriptionService;
 
     public DescriptionPowerup(Club club, PowerupModel model) {
         super(club, model);
-        clubDesc = ClubDescription.find.byId(club.id);
+        clubDesc = descriptionService.findByClubId(club.getId());
 
         editable = this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel();
     }
 
     @Override
     public Html render() {
-        return powerup.render(clubDesc.description);
+        return powerup.render(clubDesc.getDescription());
     }
 
     @Override
@@ -52,9 +55,9 @@ public class DescriptionPowerup extends Powerup {
     @Override
     public void activate() {
         ClubDescription clubDesc = new ClubDescription();
-        clubDesc.clubId = this.getClub().id;
-        clubDesc.description = "";
-        clubDesc.listDescription = "";
+        clubDesc.setClub(this.getClub());
+        clubDesc.setDescription("");
+        clubDesc.setDescription("");
         Ebean.save(clubDesc);
     }
 
@@ -67,13 +70,13 @@ public class DescriptionPowerup extends Powerup {
     public Result update(JsonNode updateContent) {
         if (!updateContent.has(FIELD_STRING)) {
             return internalServerError("En feil har oppstått");
-        } else if (updateContent.get(FIELD_STRING).asText().equals(clubDesc.description)
-                && updateContent.get(LIST_STRING).asText().equals(clubDesc.listDescription)) {
+        } else if (updateContent.get(FIELD_STRING).asText().equals(clubDesc.getDescription())
+                && updateContent.get(LIST_STRING).asText().equals(clubDesc.getListDescription())) {
             return ok("Ingen endringer å lagre");
         } else if (this.editable) {
-            this.clubDesc.description = updateContent.get(FIELD_STRING).asText();
+            this.clubDesc.setDescription(updateContent.get(FIELD_STRING).asText());
             if (updateContent.has(LIST_STRING)) {
-                this.clubDesc.listDescription = Jsoup.parse(updateContent.get(LIST_STRING).asText()).body().text();
+                this.clubDesc.setListDescription(Jsoup.parse(updateContent.get(LIST_STRING).asText()).body().text());
             }
             Ebean.save(clubDesc);
             return ok("Utvalgsbeskrivelse lagret!");
@@ -90,6 +93,6 @@ public class DescriptionPowerup extends Powerup {
      * @see views.html.club.list
      */
     public Html renderList() {
-        return listdesc.render(clubDesc.listDescription);
+        return listdesc.render(clubDesc.getListDescription());
     }
 }

@@ -2,6 +2,7 @@ package powerups.core.feedpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import models.Club;
 import models.Feed;
 import models.PowerupModel;
@@ -11,6 +12,7 @@ import play.mvc.Result;
 import play.mvc.Results;
 import play.twirl.api.Html;
 import powerups.Powerup;
+import services.FeedService;
 import utils.Context;
 import utils.FeedSorter;
 import utils.imaging.ImageLinkValidator;
@@ -26,6 +28,8 @@ public class FeedPowerup extends Powerup {
     private static final String MESSAGE_TITLE = "messageTitle";
     private static final String PICTURE_URL = "pictureUrl";
     private static final int MAX_FEED_INDEX_SIZE = 3;
+    @Inject
+    private FeedService feedService;
     private List<Feed> userFeedList;
     private List<Feed> adminList;
     private User user = null;
@@ -40,7 +44,7 @@ public class FeedPowerup extends Powerup {
             * the first 3 into new lists to be rendered by view.
             * */
 
-            List<Feed> feedList = Feed.findByClub(club);
+            List<Feed> feedList = feedService.findByClub(club);
             adminList = new ArrayList<>();
             userFeedList = new ArrayList<>();
             user = Context.getContext(getClub()).getSender();

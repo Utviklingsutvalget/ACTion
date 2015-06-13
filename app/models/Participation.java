@@ -1,35 +1,61 @@
 package models;
 
+import models.composite.ParticipationKey;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-public class Participation extends Model {
+public class Participation {
 
-    public static Finder<ParticipationKey, Participation> find = new Finder<>(ParticipationKey.class, Participation.class);
     @EmbeddedId
-    public ParticipationKey id;
+    private ParticipationKey id;
     @ManyToOne
     @JoinColumn(name = "event_id", insertable = false, updatable = false)
-    public Event event;
+    private Event event;
     @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    public User user;
+    private User user;
     @Constraints.Required
-    public Status rvsp;
+    private Status rvsp;
 
     public Participation(Event event, User user) {
         this.event = event;
         this.user = user;
         if (user != null && event != null) {
-            this.id = new ParticipationKey(event.id, user.getId());
+            this.id = new ParticipationKey(event.getId(), user.getId());
 
             if (user == event.getHost()) {
                 setHostRvsp();
             }
         }
+    }
+
+    public ParticipationKey getId() {
+        return id;
+    }
+
+    public void setId(final ParticipationKey id) {
+        this.id = id;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(final Event event) {
+        this.event = event;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
     }
 
     public void setHostRvsp() {
@@ -59,38 +85,16 @@ public class Participation extends Model {
         return rvsp == Status.ATTENDING || rvsp == Status.HOSTING;
     }
 
+    public void setRvsp(final Status rvsp) {
+        this.rvsp = rvsp;
+    }
+
+    public Status getRvspObject() {
+        return rvsp;
+    }
+
     public enum Status {
         NOT_ATTENDING, ATTENDING, HOSTING
     }
 
-    @Embeddable
-    public class ParticipationKey {
-
-        public Long eventId;
-
-        public String userId;
-
-        public ParticipationKey(final Long eventId, final String userId) {
-            this.eventId = eventId;
-            this.userId = userId;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            final ParticipationKey that = (ParticipationKey) o;
-
-            return eventId.equals(that.eventId) && userId.equals(that.userId);
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = eventId.hashCode();
-            result = 31 * result + userId.hashCode();
-            return result;
-        }
-    }
 }

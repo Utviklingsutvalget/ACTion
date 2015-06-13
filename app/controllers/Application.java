@@ -1,11 +1,15 @@
 package controllers;
 
+import com.google.inject.Inject;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 public class Application extends Controller {
 
-    public static Result index() {
-        return Feeds.index();
+    @Inject
+    private Feeds feedController;
+
+    public Result index() {
+        return feedController.index();
     }
 }

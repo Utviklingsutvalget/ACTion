@@ -62,8 +62,8 @@
             <ul class="no-bullet">
             @if(!user.getMemberships.isEmpty) {
                 @for(membership <- user.getMemberships) {
-                    @if(membership.level.getLevel > 0) {
-                        <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                    @if(membership.getLevel.getLevel > 0) {
+                        <li><a href="@routes.Clubs.show(membership.getClub.getId)">@membership.getClub.getName</a></li>
                     }
                 }
             } else {
@@ -79,8 +79,8 @@
             <ul class="no-bullet">
             @if(!user.getMemberships.isEmpty) {
                 @for(membership <- user.getMemberships) {
-                    @if(membership.level.getLevel == 0) {
-                        <li><a href="@routes.Clubs.show(membership.club.id)">@membership.club.name</a></li>
+                    @if(membership.getLevel.getLevel == 0) {
+                        <li><a href="@routes.Clubs.show(membership.getClub.getId)">@membership.getClub.getName</a></li>
                     }
                 }
             } else {
@@ -97,7 +97,7 @@
             @if(!user.getParticipations.isEmpty) {
                 @for(participation <- user.getParticipations) {
                     @if(participation.getRvsp) {
-                        <li><a href="@routes.Events.show(participation.event.id)">@(participation.event.name)</a></li>
+                        <li><a href="@routes.Events.show(participation.getEvent.getId)">@(participation.getEvent.getName)</a></li>
                     }
                 }
             } else {
@@ -132,13 +132,13 @@
                 </div>
             }
             @for(membership <- user.getMemberships) {
-                @if(membership.level.getLevel >= MembershipLevel.BOARD.getLevel) {
+                @if(membership.getLevel.getLevel >= MembershipLevel.BOARD.getLevel) {
                     <div class="medium-12 columns">
                         <ul class="pricing-table">
-                            <li class="title">@membership.level.getTitle</li>
-                            <li class="price">@membership.club.name</li>
-                            <li class="bullet-item">@membership.club.getNumberOfMembers medlemmer</li>
-                            <li class="cta-button"><a class="button" href="@routes.Administration.showClub(membership.club.id)">
+                            <li class="title">@membership.getLevel.getTitle</li>
+                            <li class="price">@membership.getClub.getName</li>
+                            <li class="bullet-item">@membership.getClub.getNumberOfMembers medlemmer</li>
+                            <li class="cta-button"><a class="button" href="@routes.Administration.showClub(membership.getClub.getId)">
                                 Administrer</a></li>
                         </ul>
                     </div>

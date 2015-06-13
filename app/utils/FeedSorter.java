@@ -9,7 +9,7 @@ public class FeedSorter implements Comparator<Feed> {
     @Override
     public int compare(Feed o1, Feed o2) {
 
-        if(o1 == o2 || o1.id.equals(o2.id)){
+        if(o1 == o2 || o1.getId().equals(o2.getId())){
             return 0;
         }
 

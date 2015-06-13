@@ -1,16 +1,16 @@
 @(club: Club)
 
-@main(club.name) {
-    <div class="powerup-container" data-powerups-for='@club.id'>
-        @for(powerup <- club.powerups) {
-            <div class="row powerup" data-powerup-id="@powerup.model.id">
+@main(club.getName) {
+    <div class="powerup-container" data-powerups-for='@club.getId'>
+        @for(powerup <- club.getPowerups) {
+            <div class="row powerup" data-powerup-id="@powerup.getModel.getId">
                 <div class="medium-10 medium-centered columns">
-                    @if(powerup.model.hasMenuEntry) {
+                    @if(powerup.getModel.isHasMenuEntry) {
                         <div class="small-4 columns">
                             <div id="line" class="lineright"></div>
                         </div>
                         <div class="small-4 columns text-center">
-                            <h5><strong>@powerup.model.friendlyName </strong><br /> <br /></h5>
+                            <h5><strong>@powerup.getModel.getFriendlyName </strong><br /> <br /></h5>
                         </div>
 
                         <div class="small-4 columns">
@@ -27,7 +27,7 @@
         <script>
         $ ( document ).ready ( powerup ( ) ) ;
         //noinspection BadExpressionStatementJS
-        $ ( '#alt-title' ).replaceWith ("<strong>@(club.shortName)</strong>");
+        $ ( '#alt-title' ).replaceWith ("<strong>@(club.getShortName)</strong>");
         </script>
     </div>
 

@@ -1,7 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import helpers.UserService;
+import com.google.inject.Inject;
+import services.UserService;
 import models.User;
 import play.Logger;
 import play.mvc.BodyParser;
@@ -13,6 +14,15 @@ import views.html.user.profile;
 import views.html.user.show;
 
 public class Users extends Controller {
+
+    @Inject
+    private OAuth2 oAuth2Controller;
+
+    @Inject
+    private Application applicationController;
+    @Inject
+    private UserService userService;
+
     /**
      * User proifle page
      *
@@ -21,7 +31,7 @@ public class Users extends Controller {
      *
      * @return Result
      */
-    public static Result profile() {
+    public Result profile() {
 
         try {
             User user = new Authorize.UserSession().getUser();
@@ -32,9 +42,9 @@ public class Users extends Controller {
         }
     }
 
-    public static Result show(final String id) {
-        User user = UserService.findById(id);
-        User loggedInUser = null;
+    public Result show(final String id) {
+        User user = userService.findById(id);
+        User loggedInUser;
         try {
             loggedInUser = new Authorize.UserSession().getUser();
         } catch (Authorize.SessionException e) {
@@ -52,13 +62,13 @@ public class Users extends Controller {
      *
      * @return Result
      */
-    public static Result logout() {
-        OAuth2.destroySessions();
-        return Application.index();
+    public Result logout() {
+        oAuth2Controller.destroySessions();
+        return applicationController.index();
     }
 
     @BodyParser.Of(BodyParser.Json.class)
-    public static Result hasUserEmail() {
+    public Result hasUserEmail() {
         Logger.warn("RECEIVED REQUEST");
         User user;
         try {
@@ -71,7 +81,7 @@ public class Users extends Controller {
             if (!authorized) {
                 return forbidden();
             }
-            User targetUser = UserService.findByEmail(email);
+            User targetUser = userService.findByEmail(email);
             if (targetUser != null) {
                 return ok();
             }

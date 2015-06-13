@@ -3,14 +3,13 @@ package models;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import models.composite.InitiationKey;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
 
 @Entity
-public class InitiationGroup extends Model {
-    public static Finder<InitiationKey, InitiationGroup> find = new Finder<>(InitiationKey.class, InitiationGroup.class);
+public class InitiationGroup {
 
     @EmbeddedId
     private InitiationKey id;
@@ -30,7 +29,7 @@ public class InitiationGroup extends Model {
         this.location = location;
         this.groupNumber = groupNumber;
 
-        this.id = new InitiationKey(guardian.getId(), location.id);
+        this.id = new InitiationKey(guardian.getId(), location.getId());
     }
 
     public InitiationGroup(User guardian, Location location) {
@@ -82,50 +81,4 @@ public class InitiationGroup extends Model {
         this.groupNumber = groupNumber;
     }
 
-    @Embeddable
-    public class InitiationKey {
-
-        private String guardianId;
-        private Long locationId;
-
-        public InitiationKey(String userId, Long locationId) {
-
-            this.guardianId = userId;
-            this.locationId = locationId;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            InitiationKey that = (InitiationKey) o;
-
-            return guardianId.equals(that.guardianId) && locationId.equals(that.locationId);
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = guardianId.hashCode();
-            result = 31 * result + locationId.hashCode();
-            return result;
-        }
-
-        public String getGuardianId() {
-            return guardianId;
-        }
-
-        public void setGuardianId(String guardianId) {
-            this.guardianId = guardianId;
-        }
-
-        public Long getLocationId() {
-            return locationId;
-        }
-
-        public void setLocationId(Long locationId) {
-            this.locationId = locationId;
-        }
-    }
 }

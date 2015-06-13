@@ -1,7 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import helpers.UserService;
+import com.google.inject.Inject;
+import services.*;
 import models.*;
 import play.Logger;
 import play.mvc.Controller;
@@ -15,51 +16,66 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Clubs extends Controller {
-    public static Result index() {
-        List<Location> locations = Location.find.all();
+
+    @Inject
+    private ClubService clubService;
+    @Inject
+    private ActivationService activationService;
+    @Inject
+    private UserService userService;
+    @Inject
+    private LocationService locationService;
+    @Inject
+    private PowerupService powerupService;
+    @Inject
+    private MembershipService membershipService;
+
+    public Result index() {
+        List<Location> locations = locationService.findAll();
+        List<Club> byLocation = clubService.findByLocation(null);
 
         // Set up pseudo-location(null in database) to hold all global clubs
         Location global = new Location();
-        global.name = "Felles";
-        global.clubs.addAll(Club.find.where().eq("location", null).findList().stream().collect(Collectors.toList()));
+        global.setName("Felles");
+        global.getClubs().addAll(byLocation);
         locations.add(0, global);
 
         int cssId = 0;
         for (Location location : locations) {
             cssId++;
-            location.cssId = cssId;
+            location.setCssId(cssId);
         }
         return ok(views.html.club.index.render(locations));
     }
 
-    public static Result show(Long id) {
-        Club club = Club.find.byId(id);
+    public Result show(Long id) {
+        Club club = clubService.findById(id);
         if (club == null) {
             return redirect(routes.Clubs.index());
         }
 
-        club.powerups = new ArrayList<>();
+        ArrayList<Powerup> powerups = new ArrayList<>();
+        club.setPowerups(powerups);
         // Sort the activations by weight:
-        Collections.sort(club.activations, new ActivationSorter());
+        Collections.sort(club.getActivations(), new ActivationSorter());
 
-        for (Activation activation : club.activations) {
+        for (Activation activation : club.getActivations()) {
             Powerup powerup = activation.getPowerup();
-            club.powerups.add(powerup);
+            powerups.add(powerup);
         }
         return ok(views.html.club.show.render(club));
     }
 
-    public static Result update() {
+    public Result update() {
         final Map<String, String[]> postValues = request().body().asFormUrlEncoded();
 
         final Long id = Long.valueOf(postValues.get("id")[0]);
         final String newName = postValues.get("name")[0];
-        final Club club = Club.find.byId(id);
+        final Club club = clubService.findById(id);
 
-        club.name = newName;
+        club.setName(newName);
         //club.description = newDescription;
 
         Club.update(club);
@@ -67,7 +83,7 @@ public class Clubs extends Controller {
         return redirect(routes.Clubs.index());
     }
 
-    public static Result create() {
+    public Result create() {
         try {
             User user = new Authorize.UserSession().getUser();
             boolean authorized = user.isAdmin();
@@ -87,9 +103,9 @@ public class Clubs extends Controller {
         String email = form.get("leader")[0] + form.get("postfix")[0];
         Long locationId = Long.valueOf(form.get("location")[0]);
 
-        Location location = Location.find.byId(locationId);
+        Location location = locationService.findById(locationId);
 
-        User leaderUser = UserService.findByEmail(email);
+        User leaderUser = userService.findByEmail(email);
 
         if (leaderUser == null) {
             return badRequest("Det finnes ingen bruker tilknyttet den emailen, " +
@@ -101,64 +117,64 @@ public class Clubs extends Controller {
         }
 
         Club club = new Club(name, shortName, location);
-        club.save();
+        clubService.save(club);
 
         Membership membership = new Membership(club, leaderUser, MembershipLevel.LEADER);
-        club.members.add(membership);
+        club.getMembers().add(membership);
 
         ArrayList<Activation> activations = new ArrayList<>();
-        PowerupModel.find.all().stream().filter(model -> model.isMandatory).forEach(model -> {
-            Activation activation = new Activation(club, model, model.defaultWeight);
-            club.activations.add(activation);
+        powerupService.findAllMandatory().forEach(model -> {
+            Activation activation = new Activation(club, model, model.getDefaultWeight());
+            club.getActivations().add(activation);
             activations.add(activation);
         });
 
-        membership.save();
+        membershipService.save(membership);
 
         for (Activation activation : activations) {
-            activation.save();
+            activationService.save(activation);
             activation.getPowerup().activate();
         }
-        return redirect(routes.Clubs.show(club.id));
+        return redirect(routes.Clubs.show(club.getId()));
     }
 
 
-    public static Result updatePowerup(Long clubId, Long powerupId) {
+    public Result updatePowerup(Long clubId, Long powerupId) {
         JsonNode json = request().body().asJson();
         Logger.warn("RECEIVED JSON");
         if (json == null || json.isNull()) {
             return badRequest("Expecting Json data");
         }
-        final Club club = Club.find.byId(clubId);
+        final Club club = clubService.findById(clubId);
         Powerup powerup = null;
-        for (Activation activation : club.activations) {
-            if (activation.powerup.id.equals(powerupId)) {
+        for (Activation activation : club.getActivations()) {
+            if (activation.getPowerupModel().getId().equals(powerupId)) {
                 powerup = activation.getPowerup();
             }
         }
         if (powerup == null) {
-            return badRequest("No such powerup for " + club.shortName);
+            return badRequest("No such powerup for " + club.getShortName());
         } else return powerup.update(json);
     }
 
     /**
      * WARNING: THIS RETURNS THE ADMIN FUNCTION
      */
-    public static Result getPowerupContent(Long clubId, Long powerupId) {
+    public Result getPowerupContent(Long clubId, Long powerupId) {
+        final Club club = clubService.findById(clubId);
 
-        final Club club = Club.find.byId(clubId);
         Powerup powerup = null;
 
         if (club == null)
             return notFound(views.html.index.render("Utvalget du leter etter finnes ikke."));
 
-        for (Activation activation : club.activations) {
-            if (activation.powerup.id.equals(powerupId)) {
+        for (Activation activation : club.getActivations()) {
+            if (activation.getPowerupModel().getId().equals(powerupId)) {
                 powerup = activation.getPowerup();
             }
         }
         if (powerup == null) {
-            return notFound(views.html.index.render("Poweruppen du leter etter finnes ikke for" + club.shortName));
+            return notFound(views.html.index.render("Poweruppen du leter etter finnes ikke for" + club.getShortName()));
         } else return ok(powerup.renderAdmin());
     }
 

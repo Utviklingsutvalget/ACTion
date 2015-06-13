@@ -2,7 +2,7 @@ package powerups.core.recruitpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import helpers.UserService;
+import com.google.inject.Inject;
 import models.Club;
 import models.Membership;
 import models.PowerupModel;
@@ -14,7 +14,8 @@ import powerups.Powerup;
 import powerups.core.recruitpowerup.html.admin;
 import powerups.core.recruitpowerup.html.powerup;
 import powerups.models.Pending;
-import utils.Authorize;
+import services.MembershipService;
+import services.UserService;
 import utils.MembershipLevel;
 
 import java.util.HashMap;
@@ -35,6 +36,12 @@ public class RecruitPowerup extends Powerup {
     private boolean boardMember;
     private User user;
     private boolean adminAccess = false;
+    @Inject
+    private UserService userService;
+    @Inject
+    private MembershipService membershipService;
+    @Inject
+    private RecruitService recruitService;
 
     public RecruitPowerup(Club club, PowerupModel powerupModel) {
         super(club, powerupModel);
@@ -47,7 +54,7 @@ public class RecruitPowerup extends Powerup {
             Logger.warn("Sender exists");
             isMember = this.getContext().getMemberLevel() != null && this.getContext().getMemberLevel() != MembershipLevel.SUBSCRIBE;
             Logger.info("Logged in user is already member = " + isMember);
-            pending = Pending.find.byId(new Pending(this.getClub(), this.user).key) != null;
+            pending = recruitService.findById(new Pending(this.getClub(), this.user).getKey()) != null;
             Logger.info("Logged in user is pending = " + pending);
             if(this.getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
                 boardMember = true;
@@ -65,9 +72,9 @@ public class RecruitPowerup extends Powerup {
 
     @Override
     public Html renderAdmin() {
-        Membership membership = Membership.find.byId(new Membership(this.getClub(), this.getContext().getSender()).id);
-        if (this.getContext().getSender().isAdmin() || membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
-            return admin.render(this.getClub(), Pending.getByClubId(this.getClub().id));
+        Membership membership = membershipService.findById(new Membership(this.getClub(), this.getContext().getSender()).getId());
+        if (this.getContext().getSender().isAdmin() || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
+            return admin.render(this.getClub(), recruitService.getByClubId(this.getClub().getId()));
         } else return this.render();
     }
 
@@ -98,14 +105,14 @@ public class RecruitPowerup extends Powerup {
                 map.put(key, val);
 
                 if (val.equals(TERMINATEMEMBERSHIP)) {
-                    User terminatedUser = UserService.findById(key);
-                    Membership terminateMember = Membership.find.byId(new Membership(this.getClub(), terminatedUser).id);
+                    User terminatedUser = userService.findById(key);
+                    Membership terminateMember = membershipService.findById(new Membership(this.getClub(), terminatedUser).getId());
 
                     if (terminatedUser != null && terminateMember != null) {
 
-                        if (terminateMember.level.getLevel() < MembershipLevel.BOARD.getLevel()) {
+                        if (terminateMember.getLevel().getLevel() < MembershipLevel.BOARD.getLevel()) {
                             Ebean.delete(terminateMember);
-                            return ok("Du avsluttet medlemsskapet hos " + this.getClub().name);
+                            return ok("Du avsluttet medlemsskapet hos " + this.getClub().getName());
                         } else {
                             return unauthorized("Kan ikke utføre sletting ettersom din bruker er et styremedlem");
                         }
@@ -135,41 +142,41 @@ public class RecruitPowerup extends Powerup {
 
         for (String key : map.keySet()) {
 
-            user = UserService.findById(key);
+            user = userService.findById(key);
 
             if (map.get(key).equals(ACCEPT)) {
 
                 //Pending p = new Pending(club, user);
-                Pending oldPending = Pending.find.byId(new Pending(this.getClub(), user).key);
+                Pending oldPending = recruitService.findById(new Pending(this.getClub(), user).getKey());
 
                 if (oldPending != null) {
                     Ebean.delete(oldPending);
                 }
 
-                membership = Membership.find.byId(new Membership(this.getClub(), user).id);
+                membership = membershipService.findById(new Membership(this.getClub(), user).getId());
 
                 if (membership != null) {
-                    membership.level = MembershipLevel.MEMBER;
+                    membership.setLevel(MembershipLevel.MEMBER);
                 }
 
                 //membership = new Membership(club, user, MembershipLevel.MEMBER);
                 Ebean.save(membership);
 
-                Logger.info("Removed member: " + user.getEmail() + " from pending at clubName: " + this.getClub().name);
-                Logger.info("Inserted member: " + user.getEmail() + " in clubName: " + this.getClub().name +
-                        " with membershiplevel: " + membership.level);
+                Logger.info("Removed member: " + user.getEmail() + " from pending at clubName: " + this.getClub().getName());
+                Logger.info("Inserted member: " + user.getEmail() + " in clubName: " + this.getClub().getName() +
+                        " with membershiplevel: " + membership.getLevel());
 
 
             } else if (map.get(key).equals(REJECT)) {
 
                 //Pending p = new Pending(club, user);
-                Pending oldPending = Pending.find.byId(new Pending(this.getClub(), user).key);
+                Pending oldPending = recruitService.findById(new Pending(this.getClub(), user).getKey());
 
                 if (oldPending != null) {
                     Ebean.delete(oldPending);
                 }
 
-                Logger.info("Removed Pending user: " + user.getEmail() + " from clubName: " + this.getClub().name);
+                Logger.info("Removed Pending user: " + user.getEmail() + " from clubName: " + this.getClub().getName());
             }
         }
     }
@@ -178,17 +185,17 @@ public class RecruitPowerup extends Powerup {
 
         for (String key : map.keySet()) {
 
-            User user1 = UserService.findById(map.get(key));
+            User user1 = userService.findById(map.get(key));
 
             if (user1 != null) {
                 Pending pendingUser = new Pending(this.getClub(), user1, key);
                 Membership subMember = new Membership(this.getClub(), user1, MembershipLevel.SUBSCRIBE);
 
-                Logger.info("Successful insert into pending, id: " + pendingUser.user.getId() + ", club: " + this.getClub().name +
+                Logger.info("Successful insert into pending, id: " + pendingUser.getUser().getId() + ", club: " + this.getClub().getName() +
                         ", application_message: " + key);
                 Logger.info("Successful insert into membership with subscribe");
 
-                Pending checkForEntry = Pending.find.byId(pendingUser.key);
+                Pending checkForEntry = recruitService.findById(pendingUser.getKey());
 
                 if (checkForEntry == null) {
 

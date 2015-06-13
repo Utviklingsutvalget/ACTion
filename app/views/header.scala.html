@@ -1,8 +1,8 @@
-@(title: String)(implicit user: User = helpers.UserService.findById(session.get("id")))
+@(title: String)(implicit user: User = null))
 
 <div class="row">
     <div class="small-12 columns show-for-medium-up backgroundimagelarge">
-        <img src="@routes.Assets.at("images/header.jpg")">
+        <img src="@routes.Assets.versioned("images/header.jpg")">
 
         <a href="@routes.Application.index()">
             <div class="headercircle-large text-center show-for-large-up">
@@ -25,7 +25,7 @@
 
 <div class="row">
     <div class="small-12 columns hide-for-medium-up">
-        <img id="backgroundimagesmall" src="@routes.Assets.at("images/header.jpg")">
+        <img id="backgroundimagesmall" src="@routes.Assets.versioned("images/header.jpg")">
 
         <a href="@routes.Application.index()">
             <div class="headercircle-small text-center hide-for-medium-up">

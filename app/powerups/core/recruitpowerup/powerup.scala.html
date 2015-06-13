@@ -7,7 +7,7 @@
         <div class="row appMessageNode">
             <form class="powerup-node" id="appMessageNode" data-powerup-value="@user.getId">
                 <div class="medium-12 columns">
-                    <h3>Innmelding for @club.name</h3>
+                    <h3>Innmelding for @club.getName</h3>
                     <p>Skriv en kort kommentar om deg selv her</p>
 
                     <textarea maxlength="250" id="application_message" placeholder="Maks 250 tegn" required></textarea>
@@ -29,7 +29,7 @@
             @if(isMember && !pending) {
             <div class="row">
                 <div class="medium-12 columns medium-centered text-center powerup-node appMessageNode" data-powerup-field="@user.getId" data-powerup-value="TerminateMemberShip">
-                    <p>Du er allerede medlem av @club.name</p>
+                    <p>Du er allerede medlem av @club.getName</p>
                 </div>
             </div>
             <script>

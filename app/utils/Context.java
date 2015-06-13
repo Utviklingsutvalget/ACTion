@@ -23,12 +23,12 @@ public class Context {
         Membership membership = null;
         if(sender != null) {
             for (Membership listMembership : sender.getMemberships()) {
-                if (listMembership.club.equals(resource)) {
+                if (listMembership.getClub().equals(resource)) {
                     membership = listMembership;
                 }
             }
         }
-        memberLevel = membership != null ? membership.level : null;
+        memberLevel = membership != null ? membership.getLevel() : null;
 
     }
 

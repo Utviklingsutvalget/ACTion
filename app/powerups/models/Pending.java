@@ -4,50 +4,41 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
 import models.Club;
 import models.User;
+import models.composite.ClubUserKey;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-public class Pending extends Model {
-
-    public static Finder<PendingKey, Pending> find = new Finder<>(PendingKey.class, Pending.class);
+public class Pending {
 
     @EmbeddedId
-    public PendingKey key;
+    private ClubUserKey key;
 
     @Constraints.Required
     @Constraints.MaxLength(100)
     @Column(length = 100)
-    public String applicationMessage;
+    private String applicationMessage;
 
-    @MapsId("clubId")
     @ManyToOne
     @JoinColumn(name = "club_id", insertable = false, updatable = false)
-    public Club club;
+    private Club club;
 
-    @MapsId("userId")
     @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    public User user;
+    private User user;
 
     public Pending(Club club, User user) {
         this.user = user;
         this.club = club;
-        this.key = new PendingKey(user, club);
+        this.key = new ClubUserKey(club, user);
     }
 
     public Pending(Club club, User user, String applicationMessage) {
         this.user = user;
         this.club = club;
         this.applicationMessage = applicationMessage;
-        this.key = new PendingKey(user, club);
-    }
-
-    public static List<Pending> getByClubId(Long clubId) {
-        return find.where().eq("club_id", clubId).findList();
+        this.key = new ClubUserKey(club, user);
     }
 
     @Transactional
@@ -55,41 +46,36 @@ public class Pending extends Model {
         Ebean.save(pending);
     }
 
+    public ClubUserKey getKey() {
+        return key;
+    }
+
+    public void setKey(final ClubUserKey key) {
+        this.key = key;
+    }
+
+    public String getApplicationMessage() {
+        return applicationMessage;
+    }
+
+    public void setApplicationMessage(final String applicationMessage) {
+        this.applicationMessage = applicationMessage;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(final Club club) {
+        this.club = club;
+    }
+
     public User getUser() {
         return this.user;
     }
 
-    @Embeddable
-    public class PendingKey {
-
-        public String userId;
-
-        public Long clubId;
-
-        public PendingKey(User user, Club club) {
-            this.userId = user.getId();
-            this.clubId = club.id;
-        }
-
-        @Override
-        public int hashCode() {
-            return super.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object other) {
-            if (other == this) return true;
-
-            if (other instanceof PendingKey) {
-
-                PendingKey p = (PendingKey) other;
-
-                return p.clubId.equals(this.clubId) && p.userId.equals(this.userId);
-
-            } else {
-                return false;
-            }
-        }
+    public void setUser(final User user) {
+        this.user = user;
     }
 
 }

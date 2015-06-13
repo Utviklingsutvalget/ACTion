@@ -9,11 +9,11 @@
             <!-- TEXT -->
         <div class="large-10 columns">
                 <!-- HEADER -->
-            <h3><a href="@routes.Events.show(event.id)">@event.name</a></h3>
-            @if(event.club != null) {<h9>@event.club.name</h9>}
+            <h3><a href="@routes.Events.show(event.getId)">@event.getName</a></h3>
+            @if(event.getClub != null) {<h9>@event.getClub.getName</h9>}
             <br /><br />
                 <!-- PARAGRAPH -->
-            <p>@event.description</p>
+            <p>@event.getDescription</p>
             @if(loggedIn) {
                 @eventbutton(event, secondSet)
             }

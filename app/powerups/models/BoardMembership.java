@@ -2,66 +2,72 @@ package powerups.models;
 
 import models.Club;
 import models.User;
-import play.db.ebean.Model;
+import powerups.models.composite.BoardMembershipKey;
 
 import javax.persistence.*;
 
 @Entity
-public class BoardMembership extends Model {
+public class BoardMembership {
 
-    public static Finder<BoardMembershipKey, BoardMembership> find = new Finder<>(BoardMembershipKey.class, BoardMembership.class);
     @EmbeddedId
-    public BoardMembershipKey key;
+    private BoardMembershipKey key;
     @ManyToOne
     @JoinColumn(name = "club_id", insertable = false, updatable = false)
-    public Club club;
+    private Club club;
     @ManyToOne
     @JoinColumn(name = "board_post_id", insertable = false, updatable = false)
-    public BoardPost boardPost;
+    private BoardPost boardPost;
     @OneToOne
     @JoinColumn(name = "user_id")
-    public User user;
-    public int weight;
+    private User user;
+    private int weight;
 
     public BoardMembership(Club club, BoardPost boardPost, User user) {
         this.boardPost = boardPost;
         this.club = club;
         this.user = user;
-        this.weight = boardPost.weight;
+        this.weight = boardPost.getWeight();
         this.key = new BoardMembershipKey(club, boardPost);
     }
 
-    @Embeddable
-    public class BoardMembershipKey {
+    public BoardMembershipKey getKey() {
+        return key;
+    }
 
-        public Long clubId;
-        public Long BoardPostId;
+    public void setKey(final BoardMembershipKey key) {
+        this.key = key;
+    }
 
-        public BoardMembershipKey(Club club, BoardPost boardPost) {
+    public Club getClub() {
+        return club;
+    }
 
-            this.clubId = club.id;
-            this.BoardPostId = boardPost.id;
-        }
+    public void setClub(final Club club) {
+        this.club = club;
+    }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+    public BoardPost getBoardPost() {
+        return boardPost;
+    }
 
-            BoardMembershipKey that = (BoardMembershipKey) o;
+    public void setBoardPost(final BoardPost boardPost) {
+        this.boardPost = boardPost;
+    }
 
-            if (!BoardPostId.equals(that.BoardPostId)) return false;
-            if (!clubId.equals(that.clubId)) return false;
+    public User getUser() {
+        return user;
+    }
 
-            return true;
-        }
+    public void setUser(final User user) {
+        this.user = user;
+    }
 
-        @Override
-        public int hashCode() {
-            int result = clubId.hashCode();
-            result = 31 * result + BoardPostId.hashCode();
-            return result;
-        }
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(final int weight) {
+        this.weight = weight;
     }
 
 }

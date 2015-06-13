@@ -6,13 +6,14 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import helpers.UserService;
+import com.google.inject.Inject;
 import models.User;
 import org.json.JSONObject;
 import play.Configuration;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.UserService;
 import utils.Authorize;
 import utils.GoogleUtility;
 import views.html.error;
@@ -49,8 +50,14 @@ public class OAuth2 extends Controller {
      */
     public static GoogleUtility.DiscoveryDocument dd;
     private static boolean update;
+    @Inject
+    private Users userController;
+    @Inject
+    private Registration registrationController;
+    @Inject
+    private UserService userService;
 
-    public static Result login() {
+    public Result login() {
         //Create an anti-forgery state token
         try {
             createStateToken();
@@ -67,14 +74,14 @@ public class OAuth2 extends Controller {
      *
      * @return Result
      */
-    public static Result authenticate(int _update) {
+    public Result authenticate(int _update) {
         update = _update == 1;
         Logger.info(String.valueOf(update));
 
         if (session().containsKey("id") && !update) {
-            User user = UserService.findById(session("id"));
+            User user = userService.findById(session("id"));
             if (user != null) {
-                return Users.profile();
+                return userController.profile();
             }
 
             destroySessions();
@@ -113,7 +120,7 @@ public class OAuth2 extends Controller {
      *
      * @return Result
      */
-    public static Result exchange() {
+    public Result exchange() {
         Logger.info(session("dummy"));
 
         String code = request().getQueryString("code");
@@ -199,7 +206,7 @@ public class OAuth2 extends Controller {
      * @return Result
      * @see https://developers.google.com/accounts/docs/OAuth2Login#obtainuserinfo
      */
-    public static Result obtainUserInformation(String jwt) {
+    public Result obtainUserInformation(String jwt) {
 
         //Key value use of the Json Web Token
         JSONObject jObject = new JSONObject(jwt);
@@ -230,7 +237,7 @@ public class OAuth2 extends Controller {
                 return unauthorized(error.render("Please verify your Google email and try again"));
 
             //If user exists we dont need to use OpenId Connect
-            if (UserService.userExists(payload.getSubject()) && !update) {
+            if (userService.userExists(payload.getSubject()) && !update) {
 
                 //Create the necessary sessionsd
                 createSessions(payload.getSubject());
@@ -256,7 +263,7 @@ public class OAuth2 extends Controller {
      * @return Result
      * @see https://developers.google.com/accounts/docs/OAuth2Login#authuser
      */
-    public static Result getUserProfileInformation(String accessToken) {
+    public Result getUserProfileInformation(String accessToken) {
 
         try {
             URL url = new URL(dd.getEndpoints(GoogleUtility.USER_INFO_ENDPOINT));
@@ -307,10 +314,10 @@ public class OAuth2 extends Controller {
                     return badRequest(error.render("Kan ikke oppdatere en bruker med en opplysninger fra en annen bruker."));
                 }
 
-                return Registration.autoUpdate(user);
+                return registrationController.autoUpdate(user);
             }
 
-            return Registration.autofill(user);
+            return registrationController.autofill(user);
 
         } catch (MalformedURLException e) {
             return badRequest(error.render("Malformed URL: " + e.getMessage()));
@@ -327,7 +334,7 @@ public class OAuth2 extends Controller {
      *
      * @see https://developers.google.com/accounts/docs/OAuth2Login#createxsrftoken
      */
-    public static void createStateToken() throws NoSuchAlgorithmException {
+    public void createStateToken() throws NoSuchAlgorithmException {
 
         //Only happens if a session is not set
         if (!session().containsValue("state") || session("state") == null) {
@@ -344,7 +351,7 @@ public class OAuth2 extends Controller {
      * expires is managing how long a one time session will
      * last.
      */
-    public static void createSessions(String id) {
+    public void createSessions(String id) {
         long expires = System.currentTimeMillis() + (EXPIRATION_TIME_IN_SECONDS * 1000);
 
         //These probably need some security messures
@@ -358,7 +365,7 @@ public class OAuth2 extends Controller {
      * is deleted from the db or revokes access for
      * this application.
      */
-    public static void destroySessions() {
+    public void destroySessions() {
         session().remove("id");
         session().clear();
     }

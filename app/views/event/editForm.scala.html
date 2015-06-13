@@ -10,7 +10,7 @@
             <div class="large-8 columns">
             @select(
                 eventForm("privacy"),
-                options = options(Event.getPrivacyAsList()),
+                options = options(Event.getPrivacyAsList),
                 'label -> "Privacy",
                 '_showConstraints -> false
             )

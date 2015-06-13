@@ -1,15 +1,20 @@
 package utils;
 
+import com.google.inject.Inject;
 import controllers.OAuth2;
-import helpers.UserService;
+import services.UserService;
 import models.User;
-import play.Logger;
 
 import static play.mvc.Controller.session;
 
 public class Authorize {
 
     public static class UserSession {
+
+        @Inject
+        private UserService userService;
+        @Inject
+        private OAuth2 oAuth2Controller;
 
         private User user;
         private Long expire;
@@ -19,7 +24,7 @@ public class Authorize {
             if(!sessionsExists())
                 throw new SessionException("Session are not set");
 
-            this.user = UserService.findById(session("id"));
+            this.user = userService.findById(session("id"));
             this.expire = Long.parseLong(session("expires"));
         }
 
@@ -51,7 +56,7 @@ public class Authorize {
         }
 
         private void endSession() {
-            OAuth2.destroySessions();
+            oAuth2Controller.destroySessions();
         }
 
         public User getUser() throws SessionException {

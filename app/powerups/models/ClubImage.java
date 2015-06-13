@@ -1,54 +1,51 @@
 package powerups.models;
 
 import models.Club;
-import play.db.ebean.Model;
+import powerups.models.composite.ClubKey;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
-public class ClubImage extends Model {
-    public static Finder<ClubImageKey, ClubImage> find = new Finder<>(ClubImageKey.class, ClubImage.class);
+public class ClubImage {
 
     @EmbeddedId
-    public ClubImageKey key;
+    private ClubKey key;
     @OneToOne
     @JoinColumn(name = "club_id", nullable = true, insertable = false, updatable = false)
-    public Club club;
-    public String imageUrl;
+    private Club club;
+    private String imageUrl;
 
     public ClubImage(Club club, String imageUrl) {
         this.club = club;
         this.imageUrl = imageUrl;
-        this.key = new ClubImageKey(this.club.id);
+        this.key = new ClubKey(this.club.getId());
     }
 
-    public static ClubImage getImageByClub(Club club) {
-        return find.where().eq("club_id", club.id).findUnique();
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    @Embeddable
-    public class ClubImageKey {
-
-        public Long clubId;
-
-        public ClubImageKey(Long clubId) {
-            this.clubId = clubId;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ClubImageKey that = (ClubImageKey) o;
-
-            return clubId.equals(that.clubId);
-
-        }
-
-        @Override
-        public int hashCode() {
-            return clubId.hashCode();
-        }
+    public void setImageUrl(final String imageUrl) {
+        this.imageUrl = imageUrl;
     }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(final Club club) {
+        this.club = club;
+    }
+
+    public ClubKey getKey() {
+        return key;
+    }
+
+    public void setKey(final ClubKey key) {
+        this.key = key;
+    }
+
 }
