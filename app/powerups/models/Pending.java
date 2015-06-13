@@ -23,12 +23,10 @@ public class Pending extends Model {
     @Column(length = 100)
     public String applicationMessage;
 
-    @MapsId("clubId")
     @ManyToOne
     @JoinColumn(name = "club_id", insertable = false, updatable = false)
     public Club club;
 
-    @MapsId("userId")
     @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     public User user;
