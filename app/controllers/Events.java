@@ -123,7 +123,7 @@ public class Events extends Controller {
         if (eventForm.hasErrors()) {
             return badRequest(views.html.event.editForm.render(id, eventForm));
         }
-        eventForm.get().update(id);
+        eventForm.get().update(String.valueOf(id));
         flash("success", "Event " + eventForm.get().name + " has been updated");
         return index();
     }
