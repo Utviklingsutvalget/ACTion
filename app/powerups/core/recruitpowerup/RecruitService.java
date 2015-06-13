@@ -1,12 +1,13 @@
 package powerups.core.recruitpowerup;
 
 import com.avaje.ebean.Ebean;
+import models.composite.ClubUserKey;
 import powerups.models.Pending;
 
 import java.util.List;
 
 public class RecruitService {
-    public Pending findById(final Pending.PendingKey key) {
+    public Pending findById(final ClubUserKey key) {
         return Ebean.find(Pending.class).setId(key).findUnique();
     }
 

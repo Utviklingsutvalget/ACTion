@@ -4,6 +4,7 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
 import models.Club;
 import models.User;
+import models.composite.ClubUserKey;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 public class Pending {
 
     @EmbeddedId
-    private PendingKey key;
+    private ClubUserKey key;
 
     @Constraints.Required
     @Constraints.MaxLength(100)
@@ -30,14 +31,14 @@ public class Pending {
     public Pending(Club club, User user) {
         this.user = user;
         this.club = club;
-        this.key = new PendingKey(user, club);
+        this.key = new ClubUserKey(club, user);
     }
 
     public Pending(Club club, User user, String applicationMessage) {
         this.user = user;
         this.club = club;
         this.applicationMessage = applicationMessage;
-        this.key = new PendingKey(user, club);
+        this.key = new ClubUserKey(club, user);
     }
 
     @Transactional
@@ -45,11 +46,11 @@ public class Pending {
         Ebean.save(pending);
     }
 
-    public PendingKey getKey() {
+    public ClubUserKey getKey() {
         return key;
     }
 
-    public void setKey(final PendingKey key) {
+    public void setKey(final ClubUserKey key) {
         this.key = key;
     }
 
@@ -75,54 +76,6 @@ public class Pending {
 
     public void setUser(final User user) {
         this.user = user;
-    }
-
-    @Embeddable
-    public class PendingKey {
-
-        private String userId;
-        private Long clubId;
-
-        public PendingKey(User user, Club club) {
-            this.userId = user.getId();
-            this.clubId = club.getId();
-        }
-
-        public Long getClubId() {
-            return clubId;
-        }
-
-        public void setClubId(final Long clubId) {
-            this.clubId = clubId;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(final String userId) {
-            this.userId = userId;
-        }
-
-        @Override
-        public int hashCode() {
-            return super.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object other) {
-            if (other == this) return true;
-
-            if (other instanceof PendingKey) {
-
-                PendingKey p = (PendingKey) other;
-
-                return p.clubId.equals(this.clubId) && p.userId.equals(this.userId);
-
-            } else {
-                return false;
-            }
-        }
     }
 
 }

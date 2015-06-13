@@ -2,6 +2,7 @@ package services;
 
 import com.avaje.ebean.Ebean;
 import models.InitiationGroup;
+import models.composite.InitiationKey;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class InitiationGroupService {
         return Ebean.find(InitiationGroup.class).findList();
     }
 
-    public InitiationGroup findById(final InitiationGroup.InitiationKey id) {
+    public InitiationGroup findById(final InitiationKey id) {
         return Ebean.find(InitiationGroup.class)
                 .where()
                 .eq("guardian_id", id.getGuardianId())

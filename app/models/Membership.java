@@ -2,16 +2,20 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
+import models.composite.ClubUserKey;
 import play.data.validation.Constraints;
 import utils.MembershipLevel;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Membership {
 
     @EmbeddedId
-    private MembershipKey id;
+    private ClubUserKey id;
     @ManyToOne
     @JoinColumn(name = "club_id", insertable = false, updatable = false)
     private Club club;
@@ -29,7 +33,7 @@ public class Membership {
         this.club = club;
         this.user = user;
         this.level = level;
-        this.id = new MembershipKey(club, user);
+        this.id = new ClubUserKey(club, user);
     }
 
     @Transactional
@@ -37,11 +41,11 @@ public class Membership {
         Ebean.save(membership);
     }
 
-    public MembershipKey getId() {
+    public ClubUserKey getId() {
         return id;
     }
 
-    public void setId(final MembershipKey id) {
+    public void setId(final ClubUserKey id) {
         this.id = id;
     }
 
@@ -67,53 +71,6 @@ public class Membership {
 
     public void setLevel(final MembershipLevel level) {
         this.level = level;
-    }
-
-    @Embeddable
-    public class MembershipKey {
-
-        private Long clubId;
-
-        private String userId;
-
-        public MembershipKey(Club club, User user) {
-            this.clubId = club.getId();
-            this.userId = user.getId();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            MembershipKey that = (MembershipKey) o;
-
-            return clubId.equals(that.clubId) && userId.equals(that.userId);
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = clubId.hashCode();
-            result = 31 * result + userId.hashCode();
-            return result;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(final String userId) {
-            this.userId = userId;
-        }
-
-        public Long getClubId() {
-            return clubId;
-        }
-
-        public void setClubId(final Long clubId) {
-            this.clubId = clubId;
-        }
     }
 
 }

@@ -1,19 +1,20 @@
 package powerups.models;
 
+import models.Club;
 import play.data.validation.Constraints;
+import powerups.models.composite.ClubKey;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "pl_ClubDescription")
 public class ClubDescription {
 
-    @Id
+    @EmbeddedId
+    private ClubKey key;
     @OneToOne
-    private Long clubId;
+    @JoinColumn(name = "club_id", nullable = true, insertable = false, updatable = false)
+    private Club club;
 
     @Constraints.Required
     @Constraints.MaxLength(10000)
@@ -38,12 +39,20 @@ public class ClubDescription {
         this.description = description;
     }
 
-    public Long getClubId() {
-        return clubId;
+    public ClubKey getKey() {
+        return key;
     }
 
-    public void setClubId(final Long clubId) {
-        this.clubId = clubId;
+    public void setKey(final ClubKey key) {
+        this.key = key;
     }
 
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(final Club club) {
+        this.club = club;
+        this.key.setClubId(club.getId());
+    }
 }

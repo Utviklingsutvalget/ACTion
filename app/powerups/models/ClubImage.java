@@ -1,14 +1,18 @@
 package powerups.models;
 
 import models.Club;
+import powerups.models.composite.ClubKey;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
 public class ClubImage {
 
     @EmbeddedId
-    private ClubImageKey key;
+    private ClubKey key;
     @OneToOne
     @JoinColumn(name = "club_id", nullable = true, insertable = false, updatable = false)
     private Club club;
@@ -17,7 +21,7 @@ public class ClubImage {
     public ClubImage(Club club, String imageUrl) {
         this.club = club;
         this.imageUrl = imageUrl;
-        this.key = new ClubImageKey(this.club.getId());
+        this.key = new ClubKey(this.club.getId());
     }
 
     public String getImageUrl() {
@@ -36,45 +40,12 @@ public class ClubImage {
         this.club = club;
     }
 
-    public ClubImageKey getKey() {
+    public ClubKey getKey() {
         return key;
     }
 
-    public void setKey(final ClubImageKey key) {
+    public void setKey(final ClubKey key) {
         this.key = key;
     }
 
-    @Embeddable
-    public class ClubImageKey {
-
-        private Long clubId;
-
-        public ClubImageKey(Long clubId) {
-            this.clubId = clubId;
-        }
-
-        public Long getClubId() {
-            return clubId;
-        }
-
-        public void setClubId(final Long clubId) {
-            this.clubId = clubId;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ClubImageKey that = (ClubImageKey) o;
-
-            return clubId.equals(that.clubId);
-
-        }
-
-        @Override
-        public int hashCode() {
-            return clubId.hashCode();
-        }
-    }
 }

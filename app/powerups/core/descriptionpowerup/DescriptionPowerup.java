@@ -55,7 +55,7 @@ public class DescriptionPowerup extends Powerup {
     @Override
     public void activate() {
         ClubDescription clubDesc = new ClubDescription();
-        clubDesc.setClubId(this.getClub().getId());
+        clubDesc.setClub(this.getClub());
         clubDesc.setDescription("");
         clubDesc.setDescription("");
         Ebean.save(clubDesc);

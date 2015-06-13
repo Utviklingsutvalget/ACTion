@@ -2,9 +2,10 @@ package services;
 
 import com.avaje.ebean.Ebean;
 import models.Membership;
+import models.composite.ClubUserKey;
 
 public class MembershipService {
-    public Membership findById(final Membership.MembershipKey id) {
+    public Membership findById(final ClubUserKey id) {
         return Ebean.find(Membership.class)
                 .where()
                 .eq("user_id", id.getUserId())
