@@ -1,7 +1,7 @@
 package models;
 
+import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 import powerups.Powerup;
 
 import javax.persistence.*;
@@ -52,7 +52,6 @@ public class Activation extends Model {
     /**
      * The embeddable key used to arrange the relations in this model.
      *
-     * @see play.db.ebean.Model
      * @see com.avaje.ebean.Ebean
      */
     @Embeddable
