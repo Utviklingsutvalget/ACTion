@@ -18,6 +18,7 @@ libraryDependencies += evolutions
 libraryDependencies += "org.webjars" %% "webjars-play" % "2.4.0"
 libraryDependencies += "org.webjars" % "foundation" % "5.5.2"
 libraryDependencies += "org.webjars" % "ckeditor" % "4.4.7-1"
+libraryDependencies += "org.webjars" % "datetimepicker" % "2.3.4"
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.3.2"
 libraryDependencies += "com.google.api-client" % "google-api-client" % "1.17.0-rc"
 libraryDependencies += "org.json" % "json" % "20140107"
