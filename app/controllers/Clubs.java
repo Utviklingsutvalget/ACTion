@@ -1,12 +1,15 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import helpers.UserService;
+import com.google.inject.Inject;
+import services.UserService;
 import models.*;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
+import services.ActivationService;
+import services.ClubService;
 import utils.ActivationSorter;
 import utils.Authorize;
 import utils.MembershipLevel;
@@ -15,16 +18,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Clubs extends Controller {
+
+    @Inject
+    private ClubService clubService;
+    @Inject
+    private ActivationService activationService;
+    @Inject
+    private UserService userService;
+
     public Result index() {
         List<Location> locations = Location.find.all();
+        List<Club> byLocation = clubService.findByLocation(null);
 
         // Set up pseudo-location(null in database) to hold all global clubs
         Location global = new Location();
         global.name = "Felles";
-        global.clubs.addAll(Club.find.where().eq("location", null).findList().stream().collect(Collectors.toList()));
+        global.clubs.addAll(byLocation);
         locations.add(0, global);
 
         int cssId = 0;
@@ -36,7 +47,7 @@ public class Clubs extends Controller {
     }
 
     public Result show(Long id) {
-        Club club = Club.find.byId(id);
+        Club club = clubService.findById(id);
         if (club == null) {
             return redirect(routes.Clubs.index());
         }
@@ -57,7 +68,7 @@ public class Clubs extends Controller {
 
         final Long id = Long.valueOf(postValues.get("id")[0]);
         final String newName = postValues.get("name")[0];
-        final Club club = Club.find.byId(id);
+        final Club club = clubService.findById(id);
 
         club.name = newName;
         //club.description = newDescription;
@@ -89,7 +100,7 @@ public class Clubs extends Controller {
 
         Location location = Location.find.byId(locationId);
 
-        User leaderUser = UserService.findByEmail(email);
+        User leaderUser = userService.findByEmail(email);
 
         if (leaderUser == null) {
             return badRequest("Det finnes ingen bruker tilknyttet den emailen, " +
@@ -101,7 +112,7 @@ public class Clubs extends Controller {
         }
 
         Club club = new Club(name, shortName, location);
-        club.save();
+        clubService.save(club);
 
         Membership membership = new Membership(club, leaderUser, MembershipLevel.LEADER);
         club.members.add(membership);
@@ -116,7 +127,7 @@ public class Clubs extends Controller {
         membership.save();
 
         for (Activation activation : activations) {
-            activation.save();
+            activationService.save(activation);
             activation.getPowerup().activate();
         }
         return redirect(routes.Clubs.show(club.id));
@@ -129,7 +140,7 @@ public class Clubs extends Controller {
         if (json == null || json.isNull()) {
             return badRequest("Expecting Json data");
         }
-        final Club club = Club.find.byId(clubId);
+        final Club club = clubService.findById(clubId);
         Powerup powerup = null;
         for (Activation activation : club.activations) {
             if (activation.powerup.id.equals(powerupId)) {
@@ -145,8 +156,8 @@ public class Clubs extends Controller {
      * WARNING: THIS RETURNS THE ADMIN FUNCTION
      */
     public Result getPowerupContent(Long clubId, Long powerupId) {
+        final Club club = clubService.findById(clubId);
 
-        final Club club = Club.find.byId(clubId);
         Powerup powerup = null;
 
         if (club == null)

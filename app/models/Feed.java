@@ -3,18 +3,14 @@ package models;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Locale;
 
 @Entity
-public class Feed extends Model {
+public class Feed {
 
     private static final String CLUBCOLUMN = "club";
-    public static Finder<Long, Feed> find = new Finder<>(Long.class, Feed.class);
     @Id
     public Long id;
     @ManyToOne
@@ -39,10 +35,6 @@ public class Feed extends Model {
         this.messageTitle = messageTitle;
         this.pictureUrl = pictureUrl;
         this.dateTime = new DateTime();
-    }
-
-    public static List<Feed> findByClub(Club club) {
-        return find.where().eq(CLUBCOLUMN, club).findList();
     }
 
     public String getDateTime() {

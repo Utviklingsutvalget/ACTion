@@ -6,13 +6,14 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import helpers.UserService;
+import com.google.inject.Inject;
 import models.User;
 import org.json.JSONObject;
 import play.Configuration;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.UserService;
 import utils.Authorize;
 import utils.GoogleUtility;
 import views.html.error;
@@ -49,6 +50,12 @@ public class OAuth2 extends Controller {
      */
     public static GoogleUtility.DiscoveryDocument dd;
     private static boolean update;
+    @Inject
+    private Users userController;
+    @Inject
+    private Registration registrationController;
+    @Inject
+    private UserService userService;
 
     public Result login() {
         //Create an anti-forgery state token
@@ -72,9 +79,9 @@ public class OAuth2 extends Controller {
         Logger.info(String.valueOf(update));
 
         if (session().containsKey("id") && !update) {
-            User user = UserService.findById(session("id"));
+            User user = userService.findById(session("id"));
             if (user != null) {
-                return Users.profile();
+                return userController.profile();
             }
 
             destroySessions();
@@ -230,7 +237,7 @@ public class OAuth2 extends Controller {
                 return unauthorized(error.render("Please verify your Google email and try again"));
 
             //If user exists we dont need to use OpenId Connect
-            if (UserService.userExists(payload.getSubject()) && !update) {
+            if (userService.userExists(payload.getSubject()) && !update) {
 
                 //Create the necessary sessionsd
                 createSessions(payload.getSubject());
@@ -307,10 +314,10 @@ public class OAuth2 extends Controller {
                     return badRequest(error.render("Kan ikke oppdatere en bruker med en opplysninger fra en annen bruker."));
                 }
 
-                return Registration.autoUpdate(user);
+                return registrationController.autoUpdate(user);
             }
 
-            return Registration.autofill(user);
+            return registrationController.autofill(user);
 
         } catch (MalformedURLException e) {
             return badRequest(error.render("Malformed URL: " + e.getMessage()));

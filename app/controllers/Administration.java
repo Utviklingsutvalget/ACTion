@@ -3,13 +3,16 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.i18n.phonenumbers.NumberParseException;
-import helpers.UserService;
+import com.google.inject.Inject;
+import services.InitiationGroupService;
+import services.UserService;
 import models.*;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import powerups.Powerup;
+import services.ClubService;
 import utils.ActivationSorter;
 import utils.Authorize;
 import utils.InitiationSorter;
@@ -26,8 +29,15 @@ public class Administration extends Controller {
     private static final Long PRESIDING_COUNCIL_ID = 1L;
     private static final String ITSLEARNINGREDIRECT = "https://nith.itslearning.com/elogin/default.aspx";
 
+    @Inject
+    private ClubService clubService;
+    @Inject
+    private UserService userService;
+    @Inject
+    private InitiationGroupService initiationGroupService;
+
     public Result showClub(Long id) {
-        Club club = Club.find.byId(id);
+        Club club = clubService.findById(id);
 
         if (club == null)
             return notFound(views.html.index.render("Utvalget du leter etter finnes ikke."));
@@ -61,9 +71,9 @@ public class Administration extends Controller {
     public Result showSite() {
         try {
             User user = new Authorize.UserSession().getUser();
-            List<Club> clubList = Club.find.all();
+            List<Club> clubList = clubService.findAll();
             List<Location> locationList = Location.find.all();
-            List<InitiationGroup> initiationGroups = InitiationGroup.find.all();
+            List<InitiationGroup> initiationGroups = initiationGroupService.findAll();
             initiationGroups.sort(new InitiationSorter());
             Integer maxInitGrp = 1;
             for (InitiationGroup initiationGroup : initiationGroups) {
@@ -71,7 +81,11 @@ public class Administration extends Controller {
                     maxInitGrp = initiationGroup.getGroupNumber();
                 }
             }
-            clubList.remove(Club.find.byId(PRESIDING_COUNCIL_ID));
+            Club council = clubList.stream()
+                    .filter(club -> club.getId().equals(PRESIDING_COUNCIL_ID))
+                    .findFirst()
+                    .get();
+            clubList.remove(council);
 
             if (user.isAdmin()) {
                 return ok(views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
@@ -151,7 +165,8 @@ public class Administration extends Controller {
         } catch (Authorize.SessionException e) {
             return notFound();
         }
-        return Application.index();
+        // TODO MAKE SENSE
+        return redirect("/");
     }
 
     public Result deleteClub() {
@@ -182,7 +197,7 @@ public class Administration extends Controller {
         for (Long id : clubMap.keySet()) {
 
             if (confirmDelMap.get(CONFIRM_DELETE).equals(clubMap.get(id))) {
-                Club club = Club.find.byId(id);
+                Club club = clubService.findById(id);
 
                 if (!club.id.equals(PRESIDING_COUNCIL_ID)) {
 
@@ -212,7 +227,7 @@ public class Administration extends Controller {
         String email = form.get("guardian")[0] + form.get("postfix")[0];
         int groupNumber = Integer.valueOf(form.get("group-number")[0]);
         Long locationId = Long.valueOf(form.get("location")[0]);
-        User guardian = UserService.findByEmail(email);
+        User guardian = userService.findByEmail(email);
         Location location = Location.find.byId(locationId);
         String phoneNumber = form.get("phone")[0];
 
@@ -242,7 +257,7 @@ public class Administration extends Controller {
         Long locationId = json.get("location").asLong();
         String userId = json.get("guardian").asText();
 
-        User guardian = UserService.findById(userId);
+        User guardian = userService.findById(userId);
         Location location = Location.find.byId(locationId);
 
         InitiationGroup group = null;

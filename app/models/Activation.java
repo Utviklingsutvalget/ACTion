@@ -1,6 +1,5 @@
 package models;
 
-import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 import powerups.Powerup;
 
@@ -17,7 +16,7 @@ import javax.persistence.*;
  * @see models.Club
  */
 @Entity
-public class Activation extends Model {
+public class Activation {
 
     @EmbeddedId
     public ActivationKey key;

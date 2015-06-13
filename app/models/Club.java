@@ -1,9 +1,8 @@
 package models;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.annotation.Transactional;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
-import play.db.ebean.Transactional;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.descriptionpowerup.DescriptionPowerup;
@@ -14,9 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Club extends Model {
+public class Club {
 
-    public static Finder<Long, Club> find = new Finder<>(Long.class, Club.class);
     @Id
     public Long id;
     @Constraints.Required
@@ -101,5 +99,9 @@ public class Club extends Model {
 
     public List<Feed> getFeedPosts() {
         return feedPosts;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

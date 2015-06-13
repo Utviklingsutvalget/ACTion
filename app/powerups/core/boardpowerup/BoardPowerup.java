@@ -2,7 +2,7 @@ package powerups.core.boardpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import helpers.UserService;
+import com.google.inject.Inject;
 import models.Club;
 import models.Membership;
 import models.PowerupModel;
@@ -15,6 +15,8 @@ import powerups.core.boardpowerup.html.admin;
 import powerups.core.boardpowerup.html.powerup;
 import powerups.models.BoardMembership;
 import powerups.models.BoardPost;
+import services.EventService;
+import services.UserService;
 import utils.Authorize;
 import utils.MembershipLevel;
 
@@ -31,6 +33,8 @@ public class BoardPowerup extends Powerup {
     private List<BoardMembership> boardList;
     private List<Membership> memberList;
     private List<BoardPost> posts;
+    @Inject
+    private UserService userService;
 
     public BoardPowerup(Club club, PowerupModel model) {
         super(club, model);
@@ -113,7 +117,7 @@ public class BoardPowerup extends Powerup {
     private boolean addMembership(JsonNode updateContent) {
         for (BoardPost post : posts) {
             if (post.id == (updateContent.get("title").asLong())) {
-                User user = UserService.findById(updateContent.get("user").asText());
+                User user = userService.findById(updateContent.get("user").asText());
                 if (user == null) {
                     return false;
                 }
@@ -221,7 +225,7 @@ public class BoardPowerup extends Powerup {
             Logger.warn("Checking to see if post needs update");
             // CASE REPLACE BOARD MEMBER
             if (!updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText().equals(boardMembership.user.getId())) {
-                User user = UserService.findById(updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText());
+                User user = userService.findById(updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText());
                 if (user != null) {
                     Logger.warn("Updating");
                     boardMembership.user = user;

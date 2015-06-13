@@ -1,6 +1,6 @@
 package models;
 
-import helpers.UserService;
+import services.UserService;
 import org.hibernate.validator.constraints.Email;
 import play.db.ebean.Model;
 import utils.MembershipLevel;

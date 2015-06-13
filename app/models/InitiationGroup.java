@@ -10,7 +10,6 @@ import javax.persistence.*;
 
 @Entity
 public class InitiationGroup extends Model {
-    public static Finder<InitiationKey, InitiationGroup> find = new Finder<>(InitiationKey.class, InitiationGroup.class);
 
     @EmbeddedId
     private InitiationKey id;

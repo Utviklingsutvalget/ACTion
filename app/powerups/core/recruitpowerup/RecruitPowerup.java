@@ -2,7 +2,7 @@ package powerups.core.recruitpowerup;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import helpers.UserService;
+import com.google.inject.Inject;
 import models.Club;
 import models.Membership;
 import models.PowerupModel;
@@ -14,7 +14,7 @@ import powerups.Powerup;
 import powerups.core.recruitpowerup.html.admin;
 import powerups.core.recruitpowerup.html.powerup;
 import powerups.models.Pending;
-import utils.Authorize;
+import services.UserService;
 import utils.MembershipLevel;
 
 import java.util.HashMap;
@@ -35,6 +35,8 @@ public class RecruitPowerup extends Powerup {
     private boolean boardMember;
     private User user;
     private boolean adminAccess = false;
+    @Inject
+    private UserService userService;
 
     public RecruitPowerup(Club club, PowerupModel powerupModel) {
         super(club, powerupModel);
@@ -98,7 +100,7 @@ public class RecruitPowerup extends Powerup {
                 map.put(key, val);
 
                 if (val.equals(TERMINATEMEMBERSHIP)) {
-                    User terminatedUser = UserService.findById(key);
+                    User terminatedUser = userService.findById(key);
                     Membership terminateMember = Membership.find.byId(new Membership(this.getClub(), terminatedUser).id);
 
                     if (terminatedUser != null && terminateMember != null) {
@@ -135,7 +137,7 @@ public class RecruitPowerup extends Powerup {
 
         for (String key : map.keySet()) {
 
-            user = UserService.findById(key);
+            user = userService.findById(key);
 
             if (map.get(key).equals(ACCEPT)) {
 
@@ -178,7 +180,7 @@ public class RecruitPowerup extends Powerup {
 
         for (String key : map.keySet()) {
 
-            User user1 = UserService.findById(map.get(key));
+            User user1 = userService.findById(map.get(key));
 
             if (user1 != null) {
                 Pending pendingUser = new Pending(this.getClub(), user1, key);
