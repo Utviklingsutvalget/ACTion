@@ -1,9 +1,9 @@
 @(event: Event, loggedIn: Boolean)
 
-@main(event.name) {
+@main(event.getName) {
     <div class="row">
         <div class="large-12 columns small-centered">
-            <img height="200px" src="@event.coverUrl" />
+            <img height="200px" src="@event.getCoverUrl" />
             <br /><br /><br />
         </div>
 
@@ -15,10 +15,10 @@
             <!-- TEXT -->
         <div class="large-10 columns">
                 <!-- HEADER -->
-            <h3>@event.name</h3>
+            <h3>@event.getName</h3>
 
                 <!-- PARAGRAPH -->
-            <p>@event.description</p>
+            <p>@event.getDescription</p>
 
             @if(loggedIn) {
                 @eventbutton(event, false)
@@ -58,9 +58,9 @@
                 <div id="bold-line"></div>
 
                 <ul class="small-block-grid-5 medium-block-grid-4 large-block-grid-5">
-                    @for(part <- event.participants) {
+                    @for(part <- event.getParticipants) {
                         @if(part.getRvsp) {
-                            <li class="skal-bilder"><a href="@routes.Users.show(part.user.getId)"><span data-tooltip class="has-tip tip-top radius" title="@(part.user.getFirstName + " " + part.user.getLastName)" ><img src="@part.user.getPictureUrl" alt="" /></span></a></li>
+                            <li class="skal-bilder"><a href="@routes.Users.show(part.getUser.getId)"><span data-tooltip class="has-tip tip-top radius" title="@(part.getUser.getFirstName + " " + part.getUser.getLastName)" ><img src="@part.getUser.getPictureUrl" alt="" /></span></a></li>
                         }
                     }
                 </ul>
@@ -73,9 +73,9 @@
                 <div id="bold-line"></div>
 
                 <ul class="small-block-grid-5 medium-block-grid-4 large-block-grid-5">
-                    @for(part <- event.participants) {
+                    @for(part <- event.getParticipants) {
                         @if(!part.getRvsp) {
-                            <li class="skal-bilder"><a href="@routes.Users.show(part.user.getId)"><span data-tooltip class="has-tip tip-top radius" title="@(part.user.getFirstName + " " + part.user.getLastName)"><img src="@part.user.getPictureUrl" alt="" /></span></a></li>
+                            <li class="skal-bilder"><a href="@routes.Users.show(part.getUser.getId)"><span data-tooltip class="has-tip tip-top radius" title="@(part.getUser.getFirstName + " " + part.getUser.getLastName)"><img src="@part.getUser.getPictureUrl" alt="" /></span></a></li>
                         }
                     }
                 </ul>
