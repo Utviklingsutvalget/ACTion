@@ -1,7 +1,5 @@
 package models;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.annotation.Transactional;
 import models.composite.ClubUserKey;
 import play.data.validation.Constraints;
 import utils.MembershipLevel;
@@ -34,11 +32,6 @@ public class Membership {
         this.user = user;
         this.level = level;
         this.id = new ClubUserKey(club, user);
-    }
-
-    @Transactional
-    public static void update(Membership membership) {
-        Ebean.save(membership);
     }
 
     public ClubUserKey getId() {
