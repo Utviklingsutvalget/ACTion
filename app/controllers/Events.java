@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 import models.Event;
 import models.Participation;
 import models.User;
@@ -10,6 +11,7 @@ import play.data.Form;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.EventService;
 import utils.Authorize;
 import utils.EventSorter;
 import views.html.error;
@@ -23,8 +25,11 @@ public class Events extends Controller {
 
     public static int EVENT_DURATION = 6;
 
-    public static Result index() {
-        List<Event> events = Event.find.all();
+    @Inject
+    private EventService eventService;
+
+    public Result index() {
+        List<Event> events = eventService.findAll();
         List<Event> allEvents = new ArrayList<>();
         events.sort(new EventSorter());
         List<Event> attendingEvents = new ArrayList<>();
@@ -54,9 +59,8 @@ public class Events extends Controller {
         return ok(views.html.event.index.render(allEvents, attendingEvents, loggedIn));
     }
 
-    public static Result show(Long id) {
-
-        Event event = Event.find.byId(id);
+    public Result show(Long id) {
+        Event event = eventService.findById(id);
         User user = null;
         try {
             user = new Authorize.UserSession().getUser();
@@ -90,7 +94,7 @@ public class Events extends Controller {
         }
     }
 
-    public static Result save() {
+    public Result save() {
 
         try {
             User user = new Authorize.UserSession().getUser();
@@ -100,7 +104,8 @@ public class Events extends Controller {
                 return badRequest(views.html.event.createForm.render(eventForm));
             }
 
-            eventForm.get().save();
+            Event event = eventForm.get();
+            eventService.save(event);
             flash("success", "Event " + eventForm.get().name + " has been created.");
             return index();
 
@@ -111,34 +116,36 @@ public class Events extends Controller {
 
     }
 
-    public static Result edit(Long id) {
+    public Result edit(Long id) {
+        Event event = eventService.findById(id);
         Form<Event> eventForm = form(Event.class).fill(
-                Event.find.byId(id));
+                event);
 
         return ok(views.html.event.editForm.render(id, eventForm));
     }
 
-    public static Result update(Long id) {
+    public Result update(Long id) {
         Form<Event> eventForm = form(Event.class).bindFromRequest();
         if (eventForm.hasErrors()) {
             return badRequest(views.html.event.editForm.render(id, eventForm));
         }
-        eventForm.get().update(String.valueOf(id));
+        Event event = eventForm.get();
+        eventService.update(event);
         flash("success", "Event " + eventForm.get().name + " has been updated");
         return index();
     }
 
-    public static Result delete(Long id) {
+    public Result delete(Long id) {
+        Event event = eventService.findById(id);
 
-        Event event = Event.find.byId(id);
-        Event.find.ref(id).delete();
+        eventService.delete(event);
         flash("success", "Event " + event.name + " has been deleted");
 
         return index();
     }
 
     @BodyParser.Of(BodyParser.Json.class)
-    public static Result attend() {
+    public Result attend() {
         User user;
         try {
             user = new Authorize.UserSession().getUser();
@@ -148,7 +155,7 @@ public class Events extends Controller {
         JsonNode json = request().body().asJson();
         Long eventId = json.findValue("event").asLong();
         boolean newRvsp = json.findValue("attend").asBoolean();
-        Event event = Event.find.byId(eventId);
+        Event event = eventService.findById(eventId);
         if (event == null) {
             return internalServerError("No such event");
         }

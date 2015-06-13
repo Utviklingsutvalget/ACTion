@@ -4,7 +4,6 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,9 +11,8 @@ import java.util.List;
 import java.util.Locale;
 
 @Entity
-public class Event extends Model {
+public class Event {
 
-    public static Finder<Long, Event> find = new Finder<>(Long.class, Event.class);
     @Id
     public Long id;
     @Constraints.Required
