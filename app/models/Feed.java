@@ -123,7 +123,7 @@ public class Feed {
 
         Feed feed = (Feed) o;
 
-        return id.equals(feed.id);
+        return getId().equals(feed.getId());
 
     }
 }

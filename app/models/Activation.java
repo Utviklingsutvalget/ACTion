@@ -116,14 +116,14 @@ public class Activation {
 
             ActivationKey that = (ActivationKey) o;
 
-            return clubId.equals(that.clubId) && powerupId.equals(that.powerupId);
+            return getClubId().equals(that.getClubId()) && getPowerupId().equals(that.getPowerupId());
 
         }
 
         @Override
         public int hashCode() {
-            int result = powerupId.hashCode();
-            result = 31 * result + clubId.hashCode();
+            int result = getPowerupId().hashCode();
+            result = 31 * result + getClubId().hashCode();
             return result;
         }
     }
