@@ -5,13 +5,13 @@ function initiationSearch() {
         var parent = $(this).closest('.location-container');
         var locationId = parent.data('location-id');
         var input = parent.find('.initiation-input').val();
-        if(input == "") {
+        if(input === "") {
             return false;
         }
         var target = parent.find('.guardian-container');
         var dataObject = {};
-        dataObject['location'] = locationId;
-        dataObject['query'] = input;
+        dataObject.location = locationId;
+        dataObject.query = input;
 
         $.ajax({
             url: "/initiation",

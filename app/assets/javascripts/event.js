@@ -9,8 +9,8 @@ $(function() {
         console.log(attend);
 
         var dataObject = {};
-        dataObject['event'] = eventId;
-        dataObject['attend'] = attend;
+        dataObject.event = eventId;
+        dataObject.attend = attend;
 
         var jqhxr = $.ajax({
             url: "/events/attend",
@@ -27,8 +27,8 @@ $(function() {
                 target.removeClass(className);
                 target.text("Skal");
             } else if(!attend) {
-                target.addClass(className)
-                target.text("Skal ikke")
+                target.addClass(className);
+                target.text("Skal ikke");
             }
         });
     });

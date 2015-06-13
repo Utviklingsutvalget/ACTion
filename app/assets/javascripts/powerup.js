@@ -3,7 +3,7 @@ function powerup() {
     $(document).on('click', '.updatepowerup', function (e) {
         e.preventDefault();
         var powerup = buildAndReturnPowerup($(this));
-        powerup.update()
+        powerup.update();
 
     });
 
@@ -47,7 +47,7 @@ function getPowerupHtml(id) {
 }
 
 function createStandardButton(powerupId, buttonText) {
-    if(typeof(buttonText) == undefined || buttonText == null) {
+    if(typeof(buttonText) === undefined || buttonText === null) {
         buttonText = "Save Changes";
     }
 
