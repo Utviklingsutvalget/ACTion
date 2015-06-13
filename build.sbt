@@ -23,7 +23,6 @@ libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.7.2",
   "com.googlecode.libphonenumber" % "libphonenumber" % "3.1",
   javaJdbc,
-  javaEbean,
   cache,
   javaWs
 )
