@@ -87,7 +87,7 @@ server.pid
 .cache
 RUNNING_PID
 
-!activator-launch-1.2.2.jar
+!activator-launch-1.3.4.jar
 
 ### vim ###
 [._]*.s[a-w][a-z]
