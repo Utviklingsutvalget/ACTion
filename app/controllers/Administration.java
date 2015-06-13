@@ -47,18 +47,19 @@ public class Administration extends Controller {
             return notFound(views.html.index.render("Utvalget du leter etter finnes ikke."));
 
 
-        club.powerups = new ArrayList<>();
+        ArrayList<Powerup> powerups = new ArrayList<>();
+        club.setPowerups(powerups);
         // Sort the activations by weight:
-        Collections.sort(club.activations, new ActivationSorter());
+        Collections.sort(club.getActivations(), new ActivationSorter());
 
-        for (Activation activation : club.activations) {
+        for (Activation activation : club.getActivations()) {
             Powerup powerup = activation.getPowerup();
-            club.powerups.add(powerup);
+            powerups.add(powerup);
         }
         try {
             User user = new Authorize.UserSession().getUser();
             Membership membership = membershipService.findById(new Membership(club, user).id);
-            if (user.isAdmin() || membership.level.getLevel() >= MembershipLevel.BOARD.getLevel()) {
+            if (user.isAdmin() || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
                 return ok(views.html.club.admin.show.render(club));
             } else {
                 return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
@@ -130,11 +131,11 @@ public class Administration extends Controller {
 
                 for (Location location : existingLocations) {
 
-                    String locationName = locationMap.get(location.id);
+                    String locationName = locationMap.get(location.getId());
 
-                    if (locationName != null && !locationName.equals("") && !locationName.equals(location.name)) {
+                    if (locationName != null && !locationName.equals("") && !locationName.equals(location.getName())) {
 
-                        updateLocations(location.id, locationName);
+                        updateLocations(location.getId(), locationName);
                     }
                 }
             }
@@ -151,10 +152,10 @@ public class Administration extends Controller {
 
         Location location = locationService.findById(locationId);
 
-        location.name = newLocationName;
-        Logger.info("updated locationId: " + location.id + ", new name: " + location.name);
+        location.setName(newLocationName);
+        Logger.info("updated locationId: " + location.getId() + ", new name: " + location.getName());
 
-        Ebean.save(location);
+        locationService.update(location);
     }
 
     public Result makeAdmin() {
@@ -163,7 +164,7 @@ public class Administration extends Controller {
             List<SuperUser> superUsers = superUserService.findAll();
             if (superUsers.isEmpty()) {
                 SuperUser superUser = new SuperUser(user);
-                superUser.user = user;
+                superUser.setUser(user);
                 Ebean.save(superUser);
             }
         } catch (Authorize.SessionException e) {
@@ -203,7 +204,7 @@ public class Administration extends Controller {
             if (confirmDelMap.get(CONFIRM_DELETE).equals(clubMap.get(id))) {
                 Club club = clubService.findById(id);
 
-                if (!club.id.equals(PRESIDING_COUNCIL_ID)) {
+                if (!club.getId().equals(PRESIDING_COUNCIL_ID)) {
 
                     club.delete();
                     return ok("Utvalg slettet");

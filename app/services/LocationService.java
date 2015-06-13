@@ -13,4 +13,8 @@ public class LocationService {
     public Location findById(final Long locationId) {
         return Ebean.find(Location.class).setId(locationId).findUnique();
     }
+
+    public void update(final Location location) {
+        Ebean.update(location);
+    }
 }

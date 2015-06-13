@@ -38,14 +38,14 @@ public class Clubs extends Controller {
 
         // Set up pseudo-location(null in database) to hold all global clubs
         Location global = new Location();
-        global.name = "Felles";
-        global.clubs.addAll(byLocation);
+        global.setName("Felles");
+        global.getClubs().addAll(byLocation);
         locations.add(0, global);
 
         int cssId = 0;
         for (Location location : locations) {
             cssId++;
-            location.cssId = cssId;
+            location.setCssId(cssId);
         }
         return ok(views.html.club.index.render(locations));
     }
@@ -56,13 +56,14 @@ public class Clubs extends Controller {
             return redirect(routes.Clubs.index());
         }
 
-        club.powerups = new ArrayList<>();
+        ArrayList<Powerup> powerups = new ArrayList<>();
+        club.setPowerups(powerups);
         // Sort the activations by weight:
         Collections.sort(club.activations, new ActivationSorter());
 
-        for (Activation activation : club.activations) {
+        for (Activation activation : club.getActivations()) {
             Powerup powerup = activation.getPowerup();
-            club.powerups.add(powerup);
+            powerups.add(powerup);
         }
         return ok(views.html.club.show.render(club));
     }
@@ -74,7 +75,7 @@ public class Clubs extends Controller {
         final String newName = postValues.get("name")[0];
         final Club club = clubService.findById(id);
 
-        club.name = newName;
+        club.setName(newName);
         //club.description = newDescription;
 
         Club.update(club);
@@ -119,12 +120,12 @@ public class Clubs extends Controller {
         clubService.save(club);
 
         Membership membership = new Membership(club, leaderUser, MembershipLevel.LEADER);
-        club.members.add(membership);
+        club.getMembers().add(membership);
 
         ArrayList<Activation> activations = new ArrayList<>();
         powerupService.findAllMandatory().forEach(model -> {
-            Activation activation = new Activation(club, model, model.defaultWeight);
-            club.activations.add(activation);
+            Activation activation = new Activation(club, model, model.getDefaultWeight());
+            club.getActivations().add(activation);
             activations.add(activation);
         });
 
@@ -134,7 +135,7 @@ public class Clubs extends Controller {
             activationService.save(activation);
             activation.getPowerup().activate();
         }
-        return redirect(routes.Clubs.show(club.id));
+        return redirect(routes.Clubs.show(club.getId()));
     }
 
 
@@ -146,13 +147,13 @@ public class Clubs extends Controller {
         }
         final Club club = clubService.findById(clubId);
         Powerup powerup = null;
-        for (Activation activation : club.activations) {
-            if (activation.getPowerupModel().id.equals(powerupId)) {
+        for (Activation activation : club.getActivations()) {
+            if (activation.getPowerupModel().getId().equals(powerupId)) {
                 powerup = activation.getPowerup();
             }
         }
         if (powerup == null) {
-            return badRequest("No such powerup for " + club.shortName);
+            return badRequest("No such powerup for " + club.getShortName());
         } else return powerup.update(json);
     }
 
@@ -167,13 +168,13 @@ public class Clubs extends Controller {
         if (club == null)
             return notFound(views.html.index.render("Utvalget du leter etter finnes ikke."));
 
-        for (Activation activation : club.activations) {
-            if (activation.powerup.id.equals(powerupId)) {
+        for (Activation activation : club.getActivations()) {
+            if (activation.getPowerupModel().getId().equals(powerupId)) {
                 powerup = activation.getPowerup();
             }
         }
         if (powerup == null) {
-            return notFound(views.html.index.render("Poweruppen du leter etter finnes ikke for" + club.shortName));
+            return notFound(views.html.index.render("Poweruppen du leter etter finnes ikke for" + club.getShortName()));
         } else return ok(powerup.renderAdmin());
     }
 
