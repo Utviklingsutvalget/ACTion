@@ -22,7 +22,7 @@ public class Participation {
         this.event = event;
         this.user = user;
         if (user != null && event != null) {
-            this.id = new ParticipationKey(event.id, user.getId());
+            this.id = new ParticipationKey(event.getId(), user.getId());
 
             if (user == event.getHost()) {
                 setHostRvsp();

@@ -55,7 +55,7 @@ public class Feeds extends Controller {
 
             for (Club club : clubList) {
 
-                Membership membership = membershipService.findById(new Membership(club, user).id);
+                Membership membership = membershipService.findById(new Membership(club, user).getId());
 
                 //if (membership != null) {
 

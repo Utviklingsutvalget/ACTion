@@ -44,8 +44,8 @@ public class BoardPowerup extends Powerup {
         super(club, model);
 
         if (club != null && model != null) {
-            boardList = this.getClub().boardMembers;
-            memberList = club.members;
+            boardList = this.getClub().getBoardMembers();
+            memberList = club.getMembers();
         } else {
             boardList = new ArrayList<>();
             memberList = new ArrayList<>();
@@ -179,7 +179,7 @@ public class BoardPowerup extends Powerup {
     }
 
     private boolean deleteMembership(BoardMembership boardMembership) {
-        if (boardMembership.boardPost.isMandatory) {
+        if (boardMembership.getBoardPost().isMandatory()) {
             return false;
         } else {
             Logger.warn("Deleting post");
@@ -195,14 +195,14 @@ public class BoardPowerup extends Powerup {
 
         // Check if the user holding the post has other board memberships
         Logger.warn("Begin looping");
-        for (BoardMembership boardMembership2 : this.getClub().boardMembers) {
+        for (BoardMembership boardMembership2 : this.getClub().getBoardMembers()) {
 
             Logger.warn("Checking if post is different");
-            if (!boardMembership2.boardPost.equals(boardMembership.boardPost)) {
+            if (!boardMembership2.getBoardPost().equals(boardMembership.getBoardPost())) {
                 Logger.warn("Post was different");
 
                 Logger.warn("Checking if the user for a different post is the same");
-                if (boardMembership2.user.equals(user)) {
+                if (boardMembership2.getUser().equals(user)) {
                     Logger.warn("User is the same, returning true");
                     userHasOtherPosts = true;
                     break;
@@ -213,26 +213,26 @@ public class BoardPowerup extends Powerup {
     }
 
     private boolean userHasOtherPosts(BoardMembership boardMembership) {
-        User user = boardMembership.user;
+        User user = boardMembership.getUser();
         return userHasOtherPosts(boardMembership, user);
     }
 
     private Result updateMemberships(JsonNode updateContent) {
-        for (BoardMembership boardMembership : this.getClub().boardMembers) {
+        for (BoardMembership boardMembership : this.getClub().getBoardMembers()) {
 
             // CASE DELETE BOARD MEMBER
-            if (updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText().equals("")) {
+            if (updateContent.get(String.valueOf(boardMembership.getBoardPost().getId())).asText().equals("")) {
                 if (!deleteMembership(boardMembership)) {
                     return unauthorized("Obligatorisk styrepost kan ikke være tom");
                 }
             }
             Logger.warn("Checking to see if post needs update");
             // CASE REPLACE BOARD MEMBER
-            if (!updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText().equals(boardMembership.user.getId())) {
-                User user = userService.findById(updateContent.get(String.valueOf(boardMembership.boardPost.id)).asText());
+            if (!updateContent.get(String.valueOf(boardMembership.getBoardPost().getId())).asText().equals(boardMembership.getUser().getId())) {
+                User user = userService.findById(updateContent.get(String.valueOf(boardMembership.getBoardPost().getId())).asText());
                 if (user != null) {
                     Logger.warn("Updating");
-                    boardMembership.user = user;
+                    boardMembership.setUser(user);
                     Ebean.update(boardMembership);
                 }
             }
@@ -242,28 +242,28 @@ public class BoardPowerup extends Powerup {
     }
 
     private void validateMemberLevels() {
-        for (Membership membership : this.getClub().members) {
-            Logger.warn("Checking memberships for " + membership.user.getFirstName());
-            if (membership.level != MembershipLevel.SUBSCRIBE && membership.level != MembershipLevel.COUNCIL) {
+        for (Membership membership : this.getClub().getMembers()) {
+            Logger.warn("Checking memberships for " + membership.getUser().getFirstName());
+            if (membership.getLevel() != MembershipLevel.SUBSCRIBE && membership.getLevel() != MembershipLevel.COUNCIL) {
 
                 boolean levelChanged = false;
-                for (BoardMembership boardMembership : this.getClub().boardMembers) {
-                    if (boardMembership.user.equals(membership.user)) {
-                        Logger.warn("Found " + membership.user.getFirstName() + " to be a board member");
+                for (BoardMembership boardMembership : this.getClub().getBoardMembers()) {
+                    if (boardMembership.getUser().equals(membership.getUser())) {
+                        Logger.warn("Found " + membership.getUser().getFirstName() + " to be a board member");
                         // We now know this user is at least a board member.
                         if (!levelChanged) {
                             levelChanged = true;
-                            membership.level = MembershipLevel.BOARD;
+                            membership.setLevel(MembershipLevel.BOARD);
                         }
 
-                        String postTitle = boardMembership.boardPost.title;
+                        String postTitle = boardMembership.getBoardPost().getTitle();
                         if (postTitle.equals(LEADER)) {
                             levelChanged = true;
-                            membership.level = MembershipLevel.LEADER;
+                            membership.setLevel(MembershipLevel.LEADER);
                             break;
                         } else if (postTitle.equals(VICE)) {
                             levelChanged = true;
-                            membership.level = MembershipLevel.VICE;
+                            membership.setLevel(MembershipLevel.VICE);
                             // We also break for VICE as noone can be both leader and vice.
                             break;
                         }
@@ -273,7 +273,7 @@ public class BoardPowerup extends Powerup {
                 if (levelChanged) {
                     Ebean.update(membership);
                 } else {
-                    membership.level = MembershipLevel.MEMBER;
+                    membership.setLevel(MembershipLevel.MEMBER);
                     Ebean.update(membership);
                 }
             }

@@ -136,13 +136,13 @@ public class User {
             return false;
         } else {
             for (SuperUser superUser : superUsers) {
-                if (superUser.user.equals(this)) {
+                if (superUser.getUser().equals(this)) {
                     return true;
                 }
             }
         }
         for (Membership mem : this.memberships) {
-            if (mem.level == MembershipLevel.COUNCIL) {
+            if (mem.getLevel() == MembershipLevel.COUNCIL) {
                 return true;
             }
         }

@@ -28,7 +28,7 @@ public class InitiationGroup {
         this.location = location;
         this.groupNumber = groupNumber;
 
-        this.id = new InitiationKey(guardian.getId(), location.id);
+        this.id = new InitiationKey(guardian.getId(), location.getId());
     }
 
     public InitiationGroup(User guardian, Location location) {

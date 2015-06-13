@@ -59,7 +59,7 @@ public class Clubs extends Controller {
         ArrayList<Powerup> powerups = new ArrayList<>();
         club.setPowerups(powerups);
         // Sort the activations by weight:
-        Collections.sort(club.activations, new ActivationSorter());
+        Collections.sort(club.getActivations(), new ActivationSorter());
 
         for (Activation activation : club.getActivations()) {
             Powerup powerup = activation.getPowerup();
