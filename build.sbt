@@ -8,7 +8,7 @@ lazy val ACTion = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
 
 javacOptions in Compile ++= Seq("-source", "1.8", "-target", "1.8")
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.6"
 
 resolvers += Resolver.url("Objectify Play Repository", url("http://schaloner.github.com/releases/"))(Resolver.ivyStylePatterns)
 
