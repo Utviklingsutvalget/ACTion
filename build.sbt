@@ -1,5 +1,3 @@
-import play.PlayJava
-
 name := "ACTion"
 
 version := "1.0-SNAPSHOT"
