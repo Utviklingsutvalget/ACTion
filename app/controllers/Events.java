@@ -13,9 +13,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.EventService;
 import services.ParticipationService;
-import utils.Authorize;
+import services.UserService;
 import utils.EventSorter;
-import views.html.error;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,46 +29,40 @@ public class Events extends Controller {
     private EventService eventService;
     @Inject
     private ParticipationService participationService;
+    @Inject
+    private UserService userService;
 
     public Result index() {
         List<Event> events = eventService.findAll();
         List<Event> allEvents = new ArrayList<>();
         events.sort(new EventSorter());
         List<Event> attendingEvents = new ArrayList<>();
-        User user = null;
-        try {
-            user = new Authorize.UserSession().getUser();
-            for (Event e : events) {
-                if (!e.getStartTime().isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
-                    allEvents.add(e);
-                }
-                Participation participation = new Participation(e, user);
-                int i;
-                List<Participation> participants = e.getParticipants();
-                if (participants.contains(participation)) {
-                    i = participants.indexOf(participation);
-                    participation = participants.get(i);
-                    e.setUserHosting(participation.getRvspObject() == Participation.Status.HOSTING);
-                    if (participation.getRvsp()) {
-                        attendingEvents.add(e);
-                    }
-                }
-                e.setUserAttending(participation.getRvsp());
+        User user = userService.getCurrentUser(session());
+        for (Event e : events) {
+            if (!e.getStartTime().isBefore(LocalDateTime.now().plusHours(EVENT_DURATION))) {
+                allEvents.add(e);
             }
-        } catch (Authorize.SessionException ignored) {
-
+            Participation participation = new Participation(e, user);
+            int i;
+            List<Participation> participants = e.getParticipants();
+            if (participants.contains(participation)) {
+                i = participants.indexOf(participation);
+                participation = participants.get(i);
+                e.setUserHosting(participation.getRvspObject() == Participation.Status.HOSTING);
+                if (participation.getRvsp()) {
+                    attendingEvents.add(e);
+                }
+            }
+            e.setUserAttending(participation.getRvsp());
         }
+
         final boolean loggedIn = user != null;
         return ok(views.html.event.index.render(allEvents, attendingEvents, loggedIn));
     }
 
     public Result show(Long id) {
         Event event = eventService.findById(id);
-        User user = null;
-        try {
-            user = new Authorize.UserSession().getUser();
-        } catch (Authorize.SessionException ignored) {
-        }
+        User user = userService.getCurrentUser(session());
         Participation participation = new Participation(event, user);
         if (event.getParticipants().contains(participation)) {
             int i = event.getParticipants().indexOf(participation);
@@ -86,37 +79,24 @@ public class Events extends Controller {
     }
 
     public Result create() {
+        User user = userService.getCurrentUser(session());
 
-        try {
-            User user = new Authorize.UserSession().getUser();
-
-            Form<Event> eventForm = form(Event.class);
-            return ok(views.html.event.createForm.render(eventForm));
-
-        } catch (Authorize.SessionException e) {
-            return badRequest(error.render(e.getMessage()));
-        }
+        Form<Event> eventForm = form(Event.class);
+        return ok(views.html.event.createForm.render(eventForm));
     }
 
     public Result save() {
+        User user = userService.getCurrentUser(session());
 
-        try {
-            User user = new Authorize.UserSession().getUser();
-
-            Form<Event> eventForm = form(Event.class).bindFromRequest();
-            if (eventForm.hasErrors()) {
-                return badRequest(views.html.event.createForm.render(eventForm));
-            }
-
-            Event event = eventForm.get();
-            eventService.save(event);
-            flash("success", "Event " + eventForm.get().getName() + " has been created.");
-            return index();
-
-        } catch (Authorize.SessionException e) {
-            return badRequest(error.render(e.getMessage()));
+        Form<Event> eventForm = form(Event.class).bindFromRequest();
+        if (eventForm.hasErrors()) {
+            return badRequest(views.html.event.createForm.render(eventForm));
         }
 
+        Event event = eventForm.get();
+        eventService.save(event);
+        flash("success", "Event " + eventForm.get().getName() + " has been created.");
+        return index();
 
     }
 
@@ -150,10 +130,8 @@ public class Events extends Controller {
 
     @BodyParser.Of(BodyParser.Json.class)
     public Result attend() {
-        User user;
-        try {
-            user = new Authorize.UserSession().getUser();
-        } catch (Authorize.SessionException e) {
+        User user = userService.getCurrentUser(session());
+        if(user == null) {
             return unauthorized();
         }
         JsonNode json = request().body().asJson();

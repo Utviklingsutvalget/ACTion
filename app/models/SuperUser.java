@@ -13,7 +13,6 @@ public class SuperUser {
     private User user;
 
     public SuperUser(User user) {
-
         this.user = user;
         this.key = new UserKey(user.getId());
     }

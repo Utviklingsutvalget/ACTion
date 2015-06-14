@@ -102,6 +102,9 @@ public class UserService extends UserServicePlugin {
     }
 
     public boolean isUserAdmin(final User user) {
+        if(user == null) {
+            return false;
+        }
         List<SuperUser> superUsers = superUserService.findAll();
         if (superUsers.isEmpty()) {
             return false;

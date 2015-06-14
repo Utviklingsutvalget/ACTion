@@ -59,7 +59,7 @@ public class Administration extends Controller {
         try {
             User user = new Authorize.UserSession().getUser();
             Membership membership = membershipService.findById(new Membership(club, user).getId());
-            if (user.isAdmin() || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
+            if (userService.isUserAdmin(user) || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
                 return ok(views.html.club.admin.show.render(club));
             } else {
                 return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
@@ -92,7 +92,7 @@ public class Administration extends Controller {
                     .get();
             clubList.remove(council);
 
-            if (user.isAdmin()) {
+            if (userService.isUserAdmin(user)) {
                 return ok(views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
             }
         } catch (Authorize.SessionException e) {
@@ -111,7 +111,7 @@ public class Administration extends Controller {
         try {
 
             User user = new Authorize.UserSession().getUser();
-            if(!user.isAdmin()) {
+            if(userService.isUserAdmin(user)) {
                 return badRequest("Ingen tilgang");
             }
 
@@ -159,19 +159,16 @@ public class Administration extends Controller {
     }
 
     public Result makeAdmin() {
-        try {
-            User user = new Authorize.UserSession().getUser();
-            List<SuperUser> superUsers = superUserService.findAll();
-            if (superUsers.isEmpty()) {
-                SuperUser superUser = new SuperUser(user);
-                superUser.setUser(user);
-                Ebean.save(superUser);
-            }
-        } catch (Authorize.SessionException e) {
-            return notFound();
+        User user = userService.getCurrentUser(session());
+        List<SuperUser> superUsers = superUserService.findAll();
+        System.out.println(superUsers);
+        if (superUsers.isEmpty()) {
+            SuperUser superUser = new SuperUser(user);
+            superUser.setUser(user);
+            Ebean.save(superUser);
         }
         // TODO MAKE SENSE
-        return redirect("/");
+        return redirect(routes.Application.index());
     }
 
     public Result deleteClub() {
@@ -215,14 +212,10 @@ public class Administration extends Controller {
     }
 
     public Result addGuardian() {
-        try {
-            User user = new Authorize.UserSession().getUser();
-            boolean authorized = user.isAdmin();
-            if (!authorized) {
-                return unauthorized();
-            }
-        } catch (Authorize.SessionException e) {
-            e.printStackTrace();
+        User user = userService.getCurrentUser(session());
+        boolean authorized = userService.isUserAdmin(user);
+        if (!authorized) {
+            return unauthorized();
         }
 
         Map<String, String[]> form = request().body().asFormUrlEncoded();

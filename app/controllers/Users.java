@@ -8,23 +8,17 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.UserService;
-import utils.Authorize;
 import views.html.user.profile;
 import views.html.user.show;
 
 public class Users extends Controller {
 
     @Inject
-    private OAuth2 oAuth2Controller;
-
-    @Inject
-    private Application applicationController;
-    @Inject
     private UserService userService;
 
     /**
      * User proifle page
-     *
+     * <p>
      * If the user is not logged in, or if the sessions have expired
      * the user is redirected to the login page.
      *
@@ -32,19 +26,22 @@ public class Users extends Controller {
      */
     public Result profile() {
         User user = userService.getCurrentUser(session());
-        if(user == null) {
+        if (user == null) {
             return redirect(routes.Application.authenticateDefault());
         }
         boolean admin = userService.isUserAdmin(user);
+        System.out.println(admin);
+        System.out.println(admin);
+        System.out.println(admin);
+        System.out.println(admin);
         return ok(profile.render(user, admin));
     }
 
     public Result show(final String id) {
         User user = userService.findById(id);
         User loggedInUser;
-        try {
-            loggedInUser = new Authorize.UserSession().getUser();
-        } catch (Authorize.SessionException e) {
+        loggedInUser = userService.getCurrentUser(session());
+        if (loggedInUser == null) {
             return redirect(routes.Application.authenticateDefault());
         }
         if (user == null || user.equals(loggedInUser)) {
@@ -59,7 +56,7 @@ public class Users extends Controller {
         Logger.warn("RECEIVED REQUEST");
         User user;
         user = userService.getCurrentUser(session());
-        if(user == null) {
+        if (user == null) {
             return unauthorized();
         }
         boolean authorized = userService.isUserAdmin(user);
