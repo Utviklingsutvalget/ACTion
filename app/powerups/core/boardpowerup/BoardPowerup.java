@@ -17,7 +17,6 @@ import powerups.models.BoardMembership;
 import powerups.models.BoardPost;
 import services.MembershipService;
 import services.UserService;
-import utils.Authorize;
 import utils.MembershipLevel;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class BoardPowerup extends Powerup {
     @Override
     public Html renderAdmin() {
         Membership membership = membershipService.findById(new Membership(this.getClub(), this.getContext().getSender()).getId());
-        if (this.getContext().getSender().isAdmin() || membership.getLevel() == MembershipLevel.LEADER) {
+        if (userService.isUserAdmin(this.getContext().getSender()) || membership.getLevel() == MembershipLevel.LEADER) {
             return admin.render(boardList, memberList, posts);
         } else
             return new Html("<div class=\"medium-12 colums text-center\">Styremedlemmer har ikke tilgang til å endre styremedlemmer.</div>");
@@ -155,22 +154,19 @@ public class BoardPowerup extends Powerup {
         boolean createdMandatory = false;
 
         if (isMandatory) {
-            try {
-                User user = new Authorize.UserSession().getUser();
+            // TODO WILL BREAK!
+            User user = userService.getCurrentUser(null);
 
-                if (user.isAdmin()) {
+            if (userService.isUserAdmin(user)) {
 
-                    BoardPost newMandatoryPost = new BoardPost(title, true, defaultWeight);
-                    createdMandatory = true;
-                    Ebean.save(newMandatoryPost);
+                BoardPost newMandatoryPost = new BoardPost(title, true, defaultWeight);
+                createdMandatory = true;
+                Ebean.save(newMandatoryPost);
 
-                }
-
-                return createdMandatory;
-
-            } catch (Authorize.SessionException e) {
-                e.printStackTrace();
             }
+
+            return createdMandatory;
+
         }
 
         BoardPost newPost = new BoardPost(title, isMandatory, defaultWeight);

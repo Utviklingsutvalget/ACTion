@@ -4,11 +4,15 @@ import com.feth.play.module.pa.controllers.Authenticate;
 import com.google.inject.Inject;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.UserService;
 
 public class Application extends Controller {
 
     @Inject
     private Feeds feedController;
+
+    @Inject
+    private UserService userService;
 
     public Result authenticateDefault() {
         return authenticate("google");

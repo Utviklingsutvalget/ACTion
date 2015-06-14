@@ -6,18 +6,18 @@ import models.*;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import play.Logger;
 import play.mvc.Result;
 import play.mvc.Results;
 import play.twirl.api.Html;
 import powerups.Powerup;
 import powerups.core.eventpowerup.html.admin;
 import powerups.core.eventpowerup.html.powerup;
+import services.UserService;
 import utils.EventSorter;
 import utils.MembershipLevel;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +27,8 @@ public class EventPowerup extends Powerup {
 
     private List<Event> events;
     private boolean userPresent;
+    @Inject
+    private UserService userService;
 
     public EventPowerup(Club club, PowerupModel model) {
         super(club, model);
@@ -78,7 +80,7 @@ public class EventPowerup extends Powerup {
     @Override
     public Result update(JsonNode updateContent) {
         User user = getContext().getSender();
-        if (!(user.isAdmin() || getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
+        if (!(userService.isUserAdmin(user) || getContext().getMemberLevel().getLevel() >= MembershipLevel.BOARD.getLevel())) {
             return Results.unauthorized("Ingen tilgang til å opprette events for " + this.getClub().getName());
         }
         String name = updateContent.get("name").asText();

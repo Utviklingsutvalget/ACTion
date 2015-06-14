@@ -1,4 +1,6 @@
-@(title: String)(implicit user: User = null))
+@import com.feth.play.module.pa.views.html._
+
+@(title: String)
 
 <div class="row">
     <div class="small-12 columns show-for-medium-up backgroundimagelarge">
@@ -50,10 +52,12 @@
             <li><a class="headertext" href="@routes.Events.index()">Eventer </a></li>
             <li><a class="headertext" href="@routes.Clubs.index()">Utvalg </a></li>
             @*<li><a class="headertext" href="@routes.Initiation.index()">Fadderuka </a></li>*@
-            @if(user != null) {
-                <li><a class="headertext" href="@routes.Users.profile()">Profil </a></li>
-            } else {
-                <li><a class="headertext" href="@routes.Application.authenticateDefault()">Login </a></li>
+            @currentAuth() { user =>
+                @if(user != null) {
+                    <li><a class="headertext" href="@routes.Users.profile()">Profil</a></li>
+                } else {
+                    <li><a class="headertext" href="@routes.Application.authenticateDefault()">Login</a></li>
+                }
             }
         </ul>
 
@@ -73,10 +77,12 @@
             <li><a class="headertext" href="@routes.Events.index()">Eventer </a></li>
             <li><a class="headertext" href="@routes.Clubs.index()">Utvalg </a></li>
             @*<li><a class="headertext" href="@routes.Initiation.index()">Fadderuka </a></li>*@
-            @if(user != null) {
-                <li><a class="headertext" href="@routes.Users.profile()">Profil </a></li>
-            } else {
-                <li><a class="headertext" href="@routes.Application.authenticateDefault()">Login </a></li>
+            @currentAuth() { user =>
+                @if(user != null) {
+                    <li><a class="headertext" href="@routes.Users.profile()">Profil</a></li>
+                } else {
+                    <li><a class="headertext" href="@routes.Application.authenticateDefault()">Login</a></li>
+                }
             }
         </ul>
     </div>
@@ -89,10 +95,10 @@
         <div id="line" class="lineright"></div>
     </div>
     <div class="small-4 columns text-center show-for-medium-up">
-        <h4><strong>@title<br /> <br /></strong></h4>
+        <h4><strong>@title <br /> <br /></strong></h4>
     </div>
     <div class="small-4 columns text-center hide-for-medium-up">
-        <h4><strong id="alt-title">@title<br /> <br /></strong></h4>
+        <h4><strong id="alt-title">@title <br /> <br /></strong></h4>
     </div>
     <div class="small-4 columns">
         <div id="line" class="lineleft"></div>
