@@ -1,5 +1,9 @@
 package models;
 
+import com.feth.play.module.pa.user.AuthUser;
+import com.feth.play.module.pa.user.EmailIdentity;
+import com.feth.play.module.pa.user.FirstLastNameIdentity;
+import com.feth.play.module.pa.user.PicturedIdentity;
 import com.google.inject.Inject;
 import org.hibernate.validator.constraints.Email;
 import services.SuperUserService;
@@ -36,6 +40,23 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.pictureUrl = picureUrl;
+    }
+
+    public User(final AuthUser authUser) {
+        this.id = authUser.getId();
+        if (authUser instanceof EmailIdentity) {
+            EmailIdentity identity = (EmailIdentity) authUser;
+            this.email = identity.getEmail();
+        }
+        if(authUser instanceof FirstLastNameIdentity) {
+            FirstLastNameIdentity identity = (FirstLastNameIdentity) authUser;
+            this.firstName = identity.getFirstName();
+            this.lastName = identity.getLastName();
+        }
+        if(authUser instanceof PicturedIdentity) {
+            PicturedIdentity identity = (PicturedIdentity) authUser;
+            this.pictureUrl = identity.getPicture();
+        }
     }
 
     public static List<String> genderAsList() {

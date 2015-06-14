@@ -53,7 +53,7 @@
             @if(user != null) {
                 <li><a class="headertext" href="@routes.Users.profile()">Profil </a></li>
             } else {
-                <li><a class="headertext" href="@routes.OAuth2.login()">Login </a></li>
+                <li><a class="headertext" href="@routes.Application.authenticateDefault()">Login </a></li>
             }
         </ul>
 
@@ -76,7 +76,7 @@
             @if(user != null) {
                 <li><a class="headertext" href="@routes.Users.profile()">Profil </a></li>
             } else {
-                <li><a class="headertext" href="@routes.OAuth2.login()">Login </a></li>
+                <li><a class="headertext" href="@routes.Application.authenticateDefault()">Login </a></li>
             }
         </ul>
     </div>

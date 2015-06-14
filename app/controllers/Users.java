@@ -38,7 +38,7 @@ public class Users extends Controller {
             boolean admin = user.isAdmin();
             return ok(profile.render(user, admin));
         } catch (Authorize.SessionException e) {
-            return Results.redirect(routes.OAuth2.login());
+            return Results.redirect(routes.Application.authenticateDefault());
         }
     }
 
@@ -48,7 +48,7 @@ public class Users extends Controller {
         try {
             loggedInUser = new Authorize.UserSession().getUser();
         } catch (Authorize.SessionException e) {
-            return redirect(routes.OAuth2.authenticate(0));
+            return redirect(routes.Application.authenticateDefault());
         }
         if (user == null || user.equals(loggedInUser)) {
             return redirect(routes.Users.profile());

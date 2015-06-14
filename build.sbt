@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   javaWs
 )
 
+
 libraryDependencies += evolutions
 libraryDependencies += "org.webjars" %% "webjars-play" % "2.4.0"
 libraryDependencies += "org.webjars" % "foundation" % "5.5.2"
@@ -27,7 +28,11 @@ libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.6"
 libraryDependencies += "com.google.http-client" % "google-http-client-jackson2" % "1.11.0-beta"
 libraryDependencies += "org.jsoup" % "jsoup" % "1.7.2"
 libraryDependencies += "com.googlecode.libphonenumber" % "libphonenumber" % "3.1"
+libraryDependencies += "com.feth" %% "play-authenticate" % "0.7.0-SNAPSHOT"
+
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
+
+resolvers += Resolver.sonatypeRepo("snapshots")
