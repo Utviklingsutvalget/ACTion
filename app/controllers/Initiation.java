@@ -8,6 +8,7 @@ import models.Location;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 import services.LocationService;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class Initiation extends Controller {
     private LocationService locationService;
 
     public Result index() {
-        return ok(views.html.initiation.index.render());
+        return ok((Content) views.html.initiation.index.render());
     }
 
     @BodyParser.Of(BodyParser.Json.class)
@@ -96,6 +97,6 @@ public class Initiation extends Controller {
                 }
             }
         }
-        return ok(views.html.initiation.search.render(query, groupMap));
+        return ok((Content) views.html.initiation.search.render(query, groupMap));
     }
 }
