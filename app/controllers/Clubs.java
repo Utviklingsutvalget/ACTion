@@ -2,14 +2,14 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import services.*;
 import models.*;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 import powerups.Powerup;
+import services.*;
 import utils.ActivationSorter;
-import utils.Authorize;
 import utils.MembershipLevel;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class Clubs extends Controller {
             cssId++;
             location.setCssId(cssId);
         }
-        return ok(views.html.club.index.render(locations));
+        return ok((Content) views.html.club.index.render(locations));
     }
 
     public Result show(Long id) {
@@ -65,7 +65,7 @@ public class Clubs extends Controller {
             Powerup powerup = activation.getPowerup();
             powerups.add(powerup);
         }
-        return ok(views.html.club.show.render(club));
+        return ok((Content) views.html.club.show.render(club));
     }
 
     public Result update() {
@@ -84,14 +84,10 @@ public class Clubs extends Controller {
     }
 
     public Result create() {
-        try {
-            User user = new Authorize.UserSession().getUser();
-            boolean authorized = user.isAdmin();
-            if (!authorized) {
-                return unauthorized();
-            }
-        } catch (Authorize.SessionException e) {
-            e.printStackTrace();
+        User user = userService.getCurrentUser(session());
+        boolean authorized = userService.isUserAdmin(user);
+        if (!authorized) {
+            return unauthorized();
         }
 
         Map<String, String[]> form = request().body().asFormUrlEncoded();
@@ -166,7 +162,7 @@ public class Clubs extends Controller {
         Powerup powerup = null;
 
         if (club == null)
-            return notFound(views.html.index.render("Utvalget du leter etter finnes ikke."));
+            return notFound((Content) views.html.index.render("Utvalget du leter etter finnes ikke."));
 
         for (Activation activation : club.getActivations()) {
             if (activation.getPowerupModel().getId().equals(powerupId)) {
@@ -174,7 +170,7 @@ public class Clubs extends Controller {
             }
         }
         if (powerup == null) {
-            return notFound(views.html.index.render("Poweruppen du leter etter finnes ikke for" + club.getShortName()));
+            return notFound((Content) views.html.index.render("Poweruppen du leter etter finnes ikke for" + club.getShortName()));
         } else return ok(powerup.renderAdmin());
     }
 
