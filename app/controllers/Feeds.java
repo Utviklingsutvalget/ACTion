@@ -8,11 +8,11 @@ import models.User;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 import services.ClubService;
 import services.FeedService;
 import services.MembershipService;
 import services.UserService;
-import utils.Authorize;
 import utils.FeedSorter;
 
 import java.util.ArrayList;
@@ -68,12 +68,12 @@ public class Feeds extends Controller {
 
             setupDefaultLists(defaultInitial, defaultRemaining);
 
-            return ok(views.html.feed.index.render(defaultRemaining, defaultInitial));
+            return ok((Content) views.html.feed.index.render(defaultRemaining, defaultInitial));
         }
 
         //setupUserLists(feedList, initialList, remainingList);
         setupDefaultLists(initialList, remainingList);
-        return ok(views.html.feed.index.render(remainingList, initialList));
+        return ok((Content) views.html.feed.index.render(remainingList, initialList));
     }
 
     // Pretty much does the same thing as setupuserLists except fetching all feeds.
