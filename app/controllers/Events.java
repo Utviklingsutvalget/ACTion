@@ -11,6 +11,7 @@ import play.data.Form;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 import services.EventService;
 import services.ParticipationService;
 import services.UserService;
@@ -57,7 +58,7 @@ public class Events extends Controller {
         }
 
         final boolean loggedIn = user != null;
-        return ok(views.html.event.index.render(allEvents, attendingEvents, loggedIn));
+        return ok((Content) views.html.event.index.render(allEvents, attendingEvents, loggedIn));
     }
 
     public Result show(Long id) {
@@ -71,9 +72,9 @@ public class Events extends Controller {
             event.setUserAttending(event.getParticipants().get(i).getRvsp());
         }
         if (user != null) {
-            return ok(views.html.event.show.render(event, true));
+            return ok((Content) views.html.event.show.render(event, true));
         } else {
-            return ok(views.html.event.show.render(event, false));
+            return ok((Content) views.html.event.show.render(event, false));
         }
 
     }
@@ -105,7 +106,7 @@ public class Events extends Controller {
         Form<Event> eventForm = form(Event.class).fill(
                 event);
 
-        return ok(views.html.event.editForm.render(id, eventForm));
+        return ok((Content) views.html.event.editForm.render(id, eventForm));
     }
 
     public Result update(Long id) {
