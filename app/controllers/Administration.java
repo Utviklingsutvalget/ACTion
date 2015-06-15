@@ -4,17 +4,20 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.inject.Inject;
-import services.*;
 import models.*;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 import powerups.Powerup;
+import services.*;
 import utils.ActivationSorter;
 import utils.Authorize;
 import utils.InitiationSorter;
 import utils.MembershipLevel;
+import views.html.club.admin.show;
+import views.html.index;
 
 import java.util.*;
 
@@ -44,7 +47,7 @@ public class Administration extends Controller {
         Club club = clubService.findById(id);
 
         if (club == null)
-            return notFound(views.html.index.render("Utvalget du leter etter finnes ikke."));
+            return notFound((Content) index.render("Utvalget du leter etter finnes ikke."));
 
 
         ArrayList<Powerup> powerups = new ArrayList<>();
@@ -60,12 +63,12 @@ public class Administration extends Controller {
             User user = new Authorize.UserSession().getUser();
             Membership membership = membershipService.findById(new Membership(club, user).getId());
             if (userService.isUserAdmin(user) || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
-                return ok(views.html.club.admin.show.render(club));
+                return ok((Content) show.render(club));
             } else {
-                return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
+                return forbidden((Content) index.render("Du har ikke tilgang til å se denne siden."));
             }
         } catch (Authorize.SessionException e) {
-            return forbidden(views.html.index.render("Du må være innlogget som administrator for å administrere siden"));
+            return forbidden((Content) index.render("Du må være innlogget som administrator for å administrere siden"));
         }
     }
 
@@ -93,12 +96,12 @@ public class Administration extends Controller {
             clubList.remove(council);
 
             if (userService.isUserAdmin(user)) {
-                return ok(views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
+                return ok((Content) views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
             }
         } catch (Authorize.SessionException e) {
-            return forbidden(views.html.index.render("Du må være innlogget som administrator for å administrere siden"));
+            return forbidden((Content) views.html.index.render("Du må være innlogget som administrator for å administrere siden"));
         }
-        return forbidden(views.html.index.render("Du har ikke tilgang til å se denne siden."));
+        return forbidden((Content) views.html.index.render("Du har ikke tilgang til å se denne siden."));
     }
 
     //@BodyParser.Of(BodyParser.Json.class)
@@ -111,7 +114,7 @@ public class Administration extends Controller {
         try {
 
             User user = new Authorize.UserSession().getUser();
-            if(userService.isUserAdmin(user)) {
+            if (userService.isUserAdmin(user)) {
                 return badRequest("Ingen tilgang");
             }
 
