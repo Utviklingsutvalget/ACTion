@@ -73,7 +73,7 @@ public class RecruitPowerup extends Powerup {
     @Override
     public Html renderAdmin() {
         Membership membership = membershipService.findById(new Membership(this.getClub(), this.getContext().getSender()).getId());
-        if (this.getContext().getSender().isAdmin() || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
+        if (userService.isUserAdmin(this.getContext().getSender()) || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
             return admin.render(this.getClub(), recruitService.getByClubId(this.getClub().getId()));
         } else return this.render();
     }

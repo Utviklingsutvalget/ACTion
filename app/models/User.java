@@ -1,10 +1,11 @@
 package models;
 
-import com.google.inject.Inject;
+import com.feth.play.module.pa.user.AuthUser;
+import com.feth.play.module.pa.user.EmailIdentity;
+import com.feth.play.module.pa.user.FirstLastNameIdentity;
+import com.feth.play.module.pa.user.PicturedIdentity;
 import org.hibernate.validator.constraints.Email;
-import services.SuperUserService;
 import services.UserService;
-import utils.MembershipLevel;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,15 +28,29 @@ public class User {
     @Transient
     private String gravatarUrl;
 
-    @Inject
-    private SuperUserService superUserService;
-
     public User(String id, String firstName, String lastName, Gender gender, String email, String picureUrl) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.pictureUrl = picureUrl;
+    }
+
+    public User(final AuthUser authUser) {
+        this.id = authUser.getId();
+        if (authUser instanceof EmailIdentity) {
+            EmailIdentity identity = (EmailIdentity) authUser;
+            this.email = identity.getEmail();
+        }
+        if(authUser instanceof FirstLastNameIdentity) {
+            FirstLastNameIdentity identity = (FirstLastNameIdentity) authUser;
+            this.firstName = identity.getFirstName();
+            this.lastName = identity.getLastName();
+        }
+        if(authUser instanceof PicturedIdentity) {
+            PicturedIdentity identity = (PicturedIdentity) authUser;
+            this.pictureUrl = identity.getPicture();
+        }
     }
 
     public static List<String> genderAsList() {
@@ -128,25 +143,6 @@ public class User {
         int result = super.hashCode();
         result = 31 * result + id.hashCode();
         return result;
-    }
-
-    public boolean isAdmin() {
-        List<SuperUser> superUsers = superUserService.findAll();
-        if (superUsers.isEmpty()) {
-            return false;
-        } else {
-            for (SuperUser superUser : superUsers) {
-                if (superUser.getUser().equals(this)) {
-                    return true;
-                }
-            }
-        }
-        for (Membership mem : this.memberships) {
-            if (mem.getLevel() == MembershipLevel.COUNCIL) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private String getGravatarUrl() {

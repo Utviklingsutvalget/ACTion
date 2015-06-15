@@ -10,4 +10,8 @@ public class SuperUserService {
     public List<SuperUser> findAll() {
         return Ebean.find(SuperUser.class).findList();
     }
+
+    public void save(final SuperUser superUser) {
+        Ebean.save(superUser);
+    }
 }
