@@ -4,6 +4,7 @@ import com.feth.play.module.pa.controllers.Authenticate;
 import com.google.inject.Inject;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 import services.UserService;
 
 public class Application extends Controller {
@@ -32,5 +33,9 @@ public class Application extends Controller {
 
     public Result authenticate(String provider) {
         return Authenticate.authenticate(provider);
+    }
+
+    public Result terms() {
+        return ok((Content) views.html.user.registration.terms.render());
     }
 }

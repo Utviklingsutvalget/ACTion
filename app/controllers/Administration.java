@@ -13,7 +13,6 @@ import play.twirl.api.Content;
 import powerups.Powerup;
 import services.*;
 import utils.ActivationSorter;
-import utils.Authorize;
 import utils.InitiationSorter;
 import utils.MembershipLevel;
 import views.html.club.admin.show;
@@ -59,16 +58,15 @@ public class Administration extends Controller {
             Powerup powerup = activation.getPowerup();
             powerups.add(powerup);
         }
-        try {
-            User user = new Authorize.UserSession().getUser();
-            Membership membership = membershipService.findById(new Membership(club, user).getId());
-            if (userService.isUserAdmin(user) || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
-                return ok((Content) show.render(club));
-            } else {
-                return forbidden((Content) index.render("Du har ikke tilgang til å se denne siden."));
-            }
-        } catch (Authorize.SessionException e) {
+        User user = userService.getCurrentUser(session());
+        if(user == null) {
             return forbidden((Content) index.render("Du må være innlogget som administrator for å administrere siden"));
+        }
+        Membership membership = membershipService.findById(new Membership(club, user).getId());
+        if (userService.isUserAdmin(user) || membership.getLevel().getLevel() >= MembershipLevel.BOARD.getLevel()) {
+            return ok(show.render(club));
+        } else {
+            return forbidden((Content) index.render("Du har ikke tilgang til å se denne siden."));
         }
     }
 
@@ -77,31 +75,26 @@ public class Administration extends Controller {
     }
 
     public Result showSite() {
-        try {
-            User user = new Authorize.UserSession().getUser();
-            List<Club> clubList = clubService.findAll();
-            List<Location> locationList = locationService.findAll();
-            List<InitiationGroup> initiationGroups = initiationGroupService.findAll();
-            initiationGroups.sort(new InitiationSorter());
-            Integer maxInitGrp = 1;
-            for (InitiationGroup initiationGroup : initiationGroups) {
-                if (initiationGroup.getGroupNumber() > maxInitGrp) {
-                    maxInitGrp = initiationGroup.getGroupNumber();
-                }
-            }
-            Club council = clubList.stream()
-                    .filter(club -> club.getId().equals(PRESIDING_COUNCIL_ID))
-                    .findFirst()
-                    .get();
-            clubList.remove(council);
-
-            if (userService.isUserAdmin(user)) {
-                return ok((Content) views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
-            }
-        } catch (Authorize.SessionException e) {
-            return forbidden((Content) views.html.index.render("Du må være innlogget som administrator for å administrere siden"));
+        User user = userService.getCurrentUser(session());
+        if(user == null || !userService.isUserAdmin(user)) {
+            return forbidden((Content) index.render("Du må være innlogget som administrator for å administrere siden"));
         }
-        return forbidden((Content) views.html.index.render("Du har ikke tilgang til å se denne siden."));
+        List<Club> clubList = clubService.findAll();
+        List<Location> locationList = locationService.findAll();
+        List<InitiationGroup> initiationGroups = initiationGroupService.findAll();
+        initiationGroups.sort(new InitiationSorter());
+        Integer maxInitGrp = 1;
+        for (InitiationGroup initiationGroup : initiationGroups) {
+            if (initiationGroup.getGroupNumber() > maxInitGrp) {
+                maxInitGrp = initiationGroup.getGroupNumber();
+            }
+        }
+        Club council = clubList.stream()
+                .filter(club -> club.getId().equals(PRESIDING_COUNCIL_ID))
+                .findFirst()
+                .get();
+        clubList.remove(council);
+        return ok((Content) views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
     }
 
     //@BodyParser.Of(BodyParser.Json.class)
@@ -111,40 +104,34 @@ public class Administration extends Controller {
         Map<Long, String> locationMap = new HashMap<>();
         List<Location> existingLocations = locationService.findAll();
 
-        try {
+        User user = userService.getCurrentUser(session());
+        if (user == null || userService.isUserAdmin(user)) {
+            return badRequest("Ingen tilgang");
+        }
 
-            User user = new Authorize.UserSession().getUser();
-            if (userService.isUserAdmin(user)) {
-                return badRequest("Ingen tilgang");
+        if (json != null) {
+
+            Iterator<String> iter = json.fieldNames();
+
+            while (iter.hasNext()) {
+
+                String fieldName = iter.next();
+                String locationName = json.get(fieldName).asText();
+                Long locationId = Long.parseLong(fieldName);
+
+                //Logger.info("LocationName: " + locationName + ", LocationId: " + locationId.toString());
+                locationMap.put(locationId, locationName);
             }
 
-            if (json != null) {
+            for (Location location : existingLocations) {
 
-                Iterator<String> iter = json.fieldNames();
+                String locationName = locationMap.get(location.getId());
 
-                while (iter.hasNext()) {
+                if (locationName != null && !locationName.equals("") && !locationName.equals(location.getName())) {
 
-                    String fieldName = iter.next();
-                    String locationName = json.get(fieldName).asText();
-                    Long locationId = Long.parseLong(fieldName);
-
-                    //Logger.info("LocationName: " + locationName + ", LocationId: " + locationId.toString());
-                    locationMap.put(locationId, locationName);
-                }
-
-                for (Location location : existingLocations) {
-
-                    String locationName = locationMap.get(location.getId());
-
-                    if (locationName != null && !locationName.equals("") && !locationName.equals(location.getName())) {
-
-                        updateLocations(location.getId(), locationName);
-                    }
+                    updateLocations(location.getId(), locationName);
                 }
             }
-
-        } catch (Authorize.SessionException e) {
-            e.printStackTrace();
         }
 
         return ok("Lokasjon oppdatert");

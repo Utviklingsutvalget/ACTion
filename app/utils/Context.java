@@ -1,14 +1,18 @@
 package utils;
 
+import com.google.inject.Inject;
 import models.Club;
 import models.Membership;
 import models.User;
+import services.UserService;
 
 /**
  * An objective representation of what a user intends to do.
  */
 public class Context {
 
+    @Inject
+    private static UserService userService;
     private final User sender;
     private final MembershipLevel memberLevel;
 
@@ -40,14 +44,10 @@ public class Context {
     }
 
     public static Context getContext(Club club) {
+        // TODO Yes, really! This needs fixing
+        User user = userService.getCurrentUser(null);
+        return new Context(user, club);
 
-        try {
-            User user = new Authorize.UserSession().getUser();
-            return new Context(user, club);
-
-        } catch(Authorize.SessionException e) {
-            return new Context(null, club);
-        }
     }
 
     public MembershipLevel getMemberLevel() {
