@@ -161,13 +161,11 @@ public class Administration extends Controller {
     public Result makeAdmin() {
         User user = userService.getCurrentUser(session());
         List<SuperUser> superUsers = superUserService.findAll();
-        System.out.println(superUsers);
         if (superUsers.isEmpty()) {
             SuperUser superUser = new SuperUser(user);
             superUser.setUser(user);
-            Ebean.save(superUser);
+            superUserService.save(superUser);
         }
-        // TODO MAKE SENSE
         return redirect(routes.Application.index());
     }
 
