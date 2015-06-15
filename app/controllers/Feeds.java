@@ -11,9 +11,9 @@ import play.mvc.Result;
 import services.ClubService;
 import services.FeedService;
 import services.MembershipService;
+import services.UserService;
 import utils.Authorize;
 import utils.FeedSorter;
-import utils.MembershipLevel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +30,8 @@ public class Feeds extends Controller {
     private FeedService feedService;
     @Inject
     private MembershipService membershipService;
+    @Inject
+    private UserService userService;
 
     public Result index() {
 
@@ -41,17 +43,9 @@ public class Feeds extends Controller {
 
         //Check all clubs for membership with given user. extract n amount
         //of feeds from each club and return list to render.
-        try {
-            User user = new Authorize.UserSession().getUser();
+        User user = userService.getCurrentUser(session());
+        if(user != null) {
             List<Club> clubList = clubService.findAll();
-
-            // Keeping this in as bugs with empty user tables have caused
-            // Authorize check to go through but return a null object for user.
-            if (user == null) {
-                Logger.warn("The user table is empty, yet passes Authorization check, " +
-                        "returning internal server error. Check database, user table");
-                return internalServerError(views.html.error.render("Noe gikk galt, kontakt administrator"));
-            }
 
             for (Club club : clubList) {
 
@@ -66,7 +60,8 @@ public class Feeds extends Controller {
                 //}
             }
 
-        } catch (Authorize.SessionException e) {
+        } else {
+            System.out.println("Ooopsie");
 
             List<Feed> defaultInitial = new ArrayList<>();
             List<Feed> defaultRemaining = new ArrayList<>();
