@@ -28,7 +28,7 @@ public class User {
     @Transient
     private String gravatarUrl;
 
-    public User(String id, String firstName, String lastName, Gender gender, String email, String picureUrl) {
+    public User(String id, String firstName, String lastName, String email, String picureUrl) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -42,24 +42,15 @@ public class User {
             EmailIdentity identity = (EmailIdentity) authUser;
             this.email = identity.getEmail();
         }
-        if(authUser instanceof FirstLastNameIdentity) {
+        if (authUser instanceof FirstLastNameIdentity) {
             FirstLastNameIdentity identity = (FirstLastNameIdentity) authUser;
             this.firstName = identity.getFirstName();
             this.lastName = identity.getLastName();
         }
-        if(authUser instanceof PicturedIdentity) {
+        if (authUser instanceof PicturedIdentity) {
             PicturedIdentity identity = (PicturedIdentity) authUser;
             this.pictureUrl = identity.getPicture();
         }
-    }
-
-    public static List<String> genderAsList() {
-        ArrayList<String> list = new ArrayList<>();
-
-        for (Gender gender : Gender.values()) {
-            list.add(gender.toString());
-        }
-        return list;
     }
 
     @PostLoad
@@ -128,9 +119,12 @@ public class User {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         final User user = (User) o;
 
@@ -151,23 +145,5 @@ public class User {
 
     public void setGravatarUrl(String gravatarUrl) {
         this.gravatarUrl = gravatarUrl;
-    }
-
-    public enum Gender {
-        MALE, FEMALE, UNSPECIFIED;
-
-        @Override
-        public String toString() {
-            switch (this) {
-                case MALE:
-                    return "Mann";
-                case FEMALE:
-                    return "Kvinne";
-                case UNSPECIFIED:
-                    return "Ukjent/Uspesifisert";
-                default:
-                    return "Ukjent/Uspesifisert";
-            }
-        }
     }
 }
