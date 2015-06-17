@@ -76,6 +76,16 @@ create table feed (
   constraint pk_feed primary key (id))
 ;
 
+create table initiation_event (
+  id                        bigint not null,
+  time                      timestamp,
+  title                     varchar(255),
+  description               varchar(300),
+  location                  varchar(255),
+  initiation_schedule_id    bigint,
+  constraint pk_initiation_event primary key (id))
+;
+
 create table initiation_group (
   guardian_id               varchar(255),
   location_id               bigint,
@@ -83,6 +93,13 @@ create table initiation_group (
   group_number              integer,
   constraint uq_initiation_group_guardian_id unique (guardian_id),
   constraint pk_initiation_group primary key (guardian_id, location_id))
+;
+
+create table initiation_schedule (
+  id                        bigint not null,
+  campus_id                 bigint,
+  year                      integer,
+  constraint pk_initiation_schedule primary key (id))
 ;
 
 create table location (
@@ -155,7 +172,11 @@ create sequence event_seq;
 
 create sequence feed_seq;
 
+create sequence initiation_event_seq;
+
 create sequence initiation_group_seq;
+
+create sequence initiation_schedule_seq;
 
 create sequence location_seq;
 
@@ -195,24 +216,28 @@ alter table feed add constraint fk_feed_user_11 foreign key (user_id) references
 create index ix_feed_user_11 on feed (user_id);
 alter table feed add constraint fk_feed_club_12 foreign key (club_id) references club (id) on delete restrict on update restrict;
 create index ix_feed_club_12 on feed (club_id);
-alter table initiation_group add constraint fk_initiation_group_guardian_13 foreign key (guardian_id) references user (id) on delete restrict on update restrict;
-create index ix_initiation_group_guardian_13 on initiation_group (guardian_id);
-alter table initiation_group add constraint fk_initiation_group_location_14 foreign key (location_id) references location (id) on delete restrict on update restrict;
-create index ix_initiation_group_location_14 on initiation_group (location_id);
-alter table membership add constraint fk_membership_club_15 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_membership_club_15 on membership (club_id);
-alter table membership add constraint fk_membership_user_16 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_membership_user_16 on membership (user_id);
-alter table participation add constraint fk_participation_event_17 foreign key (event_id) references event (id) on delete restrict on update restrict;
-create index ix_participation_event_17 on participation (event_id);
-alter table participation add constraint fk_participation_user_18 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_participation_user_18 on participation (user_id);
-alter table pending add constraint fk_pending_club_19 foreign key (club_id) references club (id) on delete restrict on update restrict;
-create index ix_pending_club_19 on pending (club_id);
-alter table pending add constraint fk_pending_user_20 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_pending_user_20 on pending (user_id);
-alter table super_user add constraint fk_super_user_user_21 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_super_user_user_21 on super_user (user_id);
+alter table initiation_event add constraint fk_initiation_event_initiatio_13 foreign key (initiation_schedule_id) references initiation_schedule (id) on delete restrict on update restrict;
+create index ix_initiation_event_initiatio_13 on initiation_event (initiation_schedule_id);
+alter table initiation_group add constraint fk_initiation_group_guardian_14 foreign key (guardian_id) references user (id) on delete restrict on update restrict;
+create index ix_initiation_group_guardian_14 on initiation_group (guardian_id);
+alter table initiation_group add constraint fk_initiation_group_location_15 foreign key (location_id) references location (id) on delete restrict on update restrict;
+create index ix_initiation_group_location_15 on initiation_group (location_id);
+alter table initiation_schedule add constraint fk_initiation_schedule_campus_16 foreign key (campus_id) references location (id) on delete restrict on update restrict;
+create index ix_initiation_schedule_campus_16 on initiation_schedule (campus_id);
+alter table membership add constraint fk_membership_club_17 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_membership_club_17 on membership (club_id);
+alter table membership add constraint fk_membership_user_18 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_membership_user_18 on membership (user_id);
+alter table participation add constraint fk_participation_event_19 foreign key (event_id) references event (id) on delete restrict on update restrict;
+create index ix_participation_event_19 on participation (event_id);
+alter table participation add constraint fk_participation_user_20 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_participation_user_20 on participation (user_id);
+alter table pending add constraint fk_pending_club_21 foreign key (club_id) references club (id) on delete restrict on update restrict;
+create index ix_pending_club_21 on pending (club_id);
+alter table pending add constraint fk_pending_user_22 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_pending_user_22 on pending (user_id);
+alter table super_user add constraint fk_super_user_user_23 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_super_user_user_23 on super_user (user_id);
 
 
 
@@ -236,7 +261,11 @@ drop table if exists event;
 
 drop table if exists feed;
 
+drop table if exists initiation_event;
+
 drop table if exists initiation_group;
+
+drop table if exists initiation_schedule;
 
 drop table if exists location;
 
@@ -270,7 +299,11 @@ drop sequence if exists event_seq;
 
 drop sequence if exists feed_seq;
 
+drop sequence if exists initiation_event_seq;
+
 drop sequence if exists initiation_group_seq;
+
+drop sequence if exists initiation_schedule_seq;
 
 drop sequence if exists location_seq;
 
