@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Activation;
 import models.Club;
 import models.PowerupModel;
+import play.Logger;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import utils.Context;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * The superclass of every Powerup. The nature of a powerup is fickle. Once its class name has been set in its
@@ -79,8 +79,8 @@ public abstract class Powerup implements Serializable {
             Class<? extends Powerup> c = (Class<? extends Powerup>) Class.forName("powerups." + powerupModel.getClassName());
             Constructor<? extends Powerup> constructor = c.getDeclaredConstructor(Club.class, PowerupModel.class);
             return constructor.newInstance(club, powerupModel);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-
+        } catch (ReflectiveOperationException e) {
+            Logger.error("Error activating power " + powerupModel.getClassName(), e.getCause());
             return new Powerup(club, powerupModel) {
                 @Override
                 public Html render() {
