@@ -45,8 +45,9 @@ public class Context {
 
     public static Context getContext(Club club) {
         // TODO Yes, really! This needs fixing
-        User user = userService.getCurrentUser(null);
-        return new Context(user, club);
+
+        //User user = userService.getCurrentUser(null);
+        return new Context(null, club);
 
     }
 
