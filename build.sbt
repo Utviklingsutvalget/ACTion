@@ -15,6 +15,7 @@ libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.4.0",
   "org.webjars" % "foundation" % "5.5.2",
   "org.webjars" % "ckeditor" % "4.4.7-1",
+  "org.webjars" % "angularjs" % "1.4.1",
   "org.webjars" % "datetimepicker" % "2.3.4",
   "org.apache.commons" % "commons-lang3" % "3.3.2",
   "com.google.api-client" % "google-api-client" % "1.17.0-rc",
@@ -29,6 +30,10 @@ libraryDependencies ++= Seq(
 
 
 libraryDependencies += evolutions
+
+pipelineStages := Seq(rjs)
+
+RjsKeys.appDir := new File("app/assets")
 
 libraryDependencies in Test += "junit" % "junit" % "4.12"
 
