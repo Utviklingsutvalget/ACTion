@@ -1,12 +1,19 @@
 package models;
 
+import play.data.validation.Constraints;
+
+import javax.persistence.Id;
 import java.time.Year;
 import java.util.List;
 
 public class FadderPlan {
+    @Id
     private Long id;
+    @Constraints.Required
     private String campus;
+    @Constraints.Required
     private List<FadderEvent> events;
+    @Constraints.Required
     private Year year;
 
     public FadderPlan(Long id, String campus, List<FadderEvent> events, Year year) {
