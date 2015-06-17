@@ -3,10 +3,13 @@ package models;
 import play.data.validation.Constraints;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
-public class FadderEvent {
+@Entity
+public class InitiationEvent {
     @Id
     private Long id;
     @Constraints.Required
@@ -18,8 +21,11 @@ public class FadderEvent {
     private String description;
     @Constraints.Required
     private String location;
+    @ManyToOne
+    @Constraints.Required
+    private InitiationSchedule initiationSchedule;
 
-    public FadderEvent(Long id, LocalDateTime time, String title, String description, String location) {
+    public InitiationEvent(Long id, LocalDateTime time, String title, String description, String location) {
         this.id = id;
         this.time= time;
         this.title= title;

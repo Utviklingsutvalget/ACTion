@@ -2,21 +2,27 @@ package models;
 
 import play.data.validation.Constraints;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.time.Year;
 import java.util.List;
 
-public class FadderPlan {
+@Entity
+public class InitiationSchedule {
     @Id
     private Long id;
     @Constraints.Required
-    private String campus;
+    @ManyToOne
+    private Location campus;
     @Constraints.Required
-    private List<FadderEvent> events;
+    @OneToMany
+    private List<InitiationEvent> events;
     @Constraints.Required
     private Year year;
 
-    public FadderPlan(Long id, String campus, List<FadderEvent> events, Year year) {
+    public InitiationSchedule(Long id, Location campus, List<InitiationEvent> events, Year year) {
         this.campus = campus;
         this.events = events;
         this.year = year;
@@ -30,19 +36,19 @@ public class FadderPlan {
         this.id = id;
     }
 
-    public String getCampus() {
+    public Location getCampus() {
         return campus;
     }
 
-    public void setCampus(String campus) {
+    public void setCampus(Location campus) {
         this.campus = campus;
     }
 
-    public List<FadderEvent> getEvents() {
+    public List<InitiationEvent> getEvents() {
         return events;
     }
 
-    public void setEvents(List<FadderEvent> events) {
+    public void setEvents(List<InitiationEvent> events) {
         this.events = events;
     }
 
