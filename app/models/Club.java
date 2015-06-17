@@ -16,6 +16,7 @@ import java.util.List;
 public class Club {
 
     @Id
+    @GeneratedValue
     private Long id;
     @Constraints.Required
     private String name;
