@@ -48,6 +48,8 @@ POST          /admin/site/delete                    controllers.Administration.d
 POST          /admin/guardian/add                   controllers.Administration.addGuardian()
 DELETE        /admin/guardian                       controllers.Administration.deleteGuardian()
 GET           /admin/itslearning                    controllers.Administration.redirectToItsLearning()
+GET           /admin/initiation                     controllers.InitiationAdminController.index()
+GET           /admin/initiation/schedules/new       controllers.InitiationAdminController.newSchedule()
 
 
 #Feed

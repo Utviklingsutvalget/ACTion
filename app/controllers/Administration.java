@@ -13,7 +13,6 @@ import play.twirl.api.Content;
 import powerups.Powerup;
 import services.*;
 import utils.ActivationSorter;
-import utils.InitiationSorter;
 import utils.MembershipLevel;
 import views.html.club.admin.show;
 import views.html.index;
@@ -81,20 +80,13 @@ public class Administration extends Controller {
         }
         List<Club> clubList = clubService.findAll();
         List<Location> locationList = locationService.findAll();
-        List<InitiationGroup> initiationGroups = initiationGroupService.findAll();
-        initiationGroups.sort(new InitiationSorter());
-        Integer maxInitGrp = 1;
-        for (InitiationGroup initiationGroup : initiationGroups) {
-            if (initiationGroup.getGroupNumber() > maxInitGrp) {
-                maxInitGrp = initiationGroup.getGroupNumber();
-            }
-        }
+
         Club council = clubList.stream()
                 .filter(club -> club.getId().equals(PRESIDING_COUNCIL_ID))
                 .findFirst()
                 .get();
         clubList.remove(council);
-        return ok((Content) views.html.admin.site.render(locationList, clubList, initiationGroups, maxInitGrp));
+        return ok((Content) views.html.admin.site.render(locationList, clubList));
     }
 
     //@BodyParser.Of(BodyParser.Json.class)

@@ -1,0 +1,14 @@
+@(title: String, navIdent: String)(content: Html)
+
+@main(title) {
+    <dl class="sub-nav">
+        <dd @if("site".eq(navIdent)){class="active"}>
+            <a href="@routes.Administration.showSite()">Hovedadmin</a>
+        </dd>
+        <dd @if("initiation".eq(navIdent)){class="active"}>
+            <a href="@(routes.InitiationAdminController.index())">Fadderadmin</a>
+        </dd>
+    </dl>
+
+    @content
+}

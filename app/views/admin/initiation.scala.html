@@ -1,0 +1,100 @@
+@(initGroups: java.util.List[InitiationGroup], locations: java.util.List[Location], maxGroup: Integer)
+
+@views.html.admin.layout("Fadderadmin", "initiation") {
+    <!-- GUARDIAN DISPLAY -->
+
+    @_subheader("Faddereventer")
+    <a class="button radius" href="@routes.InitiationAdminController.newSchedule()">
+        Opprett ny ordning
+    </a>
+
+    @_subheader("Faddergrupper")
+
+    <div class="row">
+        <div class="medium-6 columns">
+            <form>
+                <fieldset>
+                    <legend>Faddere</legend>
+
+                    <div id="admin-faddere-oversikt" class="admin-faddere-oversikt">
+                        <div class="row collapse">
+                            <div class="responseShow">
+
+                            </div>
+
+                            @for(group <- initGroups) {
+                                <div class="small-9 columns displayGuardian">
+                                    <span class="prefix">@group.getGuardian.getFirstName
+                                        @group.getGuardian.getLastName, gruppe: @group.getGroupNumber</span>
+                                </div>
+                                    <!-- This part is not yet functional -->
+                                <div class="small-3 columns">
+                                    <div data-guardian-id="@group.getGuardian.getId"
+                                    data-guardian-group="@group.getLocation.getId"
+                                    class="button postfix alert submitDeleteGuardian">Slett
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+        </div>
+
+
+            <!-- ADD GUARDIAN -->
+        <div id="addguardian" class="medium-6 columns">
+            <form class="email-check-form" method="post" action="@routes.Administration.addGuardian()">
+                <fieldset>
+                    <legend>Legg til fadder</legend>
+
+                    <div class="large-12 columns collapse">
+                        <div class="row collapse">
+
+                            <div class="small-7 columns">
+                                <label>E-post
+                                    <input id="guardian-email" class="user-email" type="text" name="guardian" placeholder="e-post" required>
+                                </label>
+                            </div>
+
+                            <div class="small-5 columns collapse">
+                                <label>&nbsp;</label>
+                                <span class="postfix radius">@@student.westerdals.no</span>
+                                <input class="email-postfix" type="hidden" name="postfix" value="@@student.westerdals.no">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="small-5 columns collapse">
+                        <label>Gruppenummer
+                            <input type="number" name="group-number" min="1" max="100" placeholder="@maxGroup">
+                        </label>
+                    </div>
+
+                    <div class="small-7 columns collapse">
+                        <label>Lokasjon
+                            <select name="location">
+                            @for(location <- locations) {
+                                <option value="@location.getId">@location.getName</option>
+                            }
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="medium-12 columns text-left collapse">
+                        <label>
+                            Telephone:
+                            <input type="tel" name="phone" placeholder="eks: 123 45 678" required>
+                        </label>
+                    </div>
+
+                    <div class="small-12 columns collapse">
+                        <button class="update-init-group small button">Lagre</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+}
