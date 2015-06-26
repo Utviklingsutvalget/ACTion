@@ -1,6 +1,6 @@
 package powerups.models.composite;
 
-import models.Club;
+import models.clubs.Club;
 import powerups.models.BoardPost;
 
 import javax.persistence.Embeddable;

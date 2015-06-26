@@ -1,7 +1,7 @@
 package powerups.core.clubimage;
 
 import com.avaje.ebean.Ebean;
-import models.Club;
+import models.clubs.Club;
 import powerups.models.ClubImage;
 import powerups.models.composite.ClubKey;
 

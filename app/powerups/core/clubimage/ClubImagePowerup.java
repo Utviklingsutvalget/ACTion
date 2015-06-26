@@ -3,7 +3,7 @@ package powerups.core.clubimage;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import models.Club;
+import models.clubs.Club;
 import models.PowerupModel;
 import play.mvc.Result;
 import play.mvc.Results;

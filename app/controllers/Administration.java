@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.inject.Inject;
 import models.*;
+import models.clubs.Club;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;

@@ -1,5 +1,6 @@
 package models;
 
+import models.clubs.Club;
 import models.composite.ClubUserKey;
 import play.data.validation.Constraints;
 import utils.MembershipLevel;

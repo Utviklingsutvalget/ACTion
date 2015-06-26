@@ -3,7 +3,7 @@ package powerups.core.boardpowerup;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import models.Club;
+import models.clubs.Club;
 import models.Membership;
 import models.PowerupModel;
 import models.User;

@@ -1,7 +1,7 @@
 package services;
 
 import com.avaje.ebean.Ebean;
-import models.Club;
+import models.clubs.Club;
 import models.Location;
 
 import java.util.List;

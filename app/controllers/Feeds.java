@@ -1,7 +1,7 @@
 package controllers;
 
 import com.google.inject.Inject;
-import models.Club;
+import models.clubs.Club;
 import models.Feed;
 import models.Membership;
 import models.User;

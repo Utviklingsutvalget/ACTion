@@ -1,6 +1,6 @@
 package powerups.models;
 
-import models.Club;
+import models.clubs.Club;
 import powerups.models.composite.ClubKey;
 
 import javax.persistence.EmbeddedId;

@@ -1,5 +1,6 @@
 package models;
 
+import models.clubs.Club;
 import models.composite.ActivationKey;
 import play.data.validation.Constraints;
 import powerups.Powerup;
@@ -17,7 +18,7 @@ import javax.persistence.ManyToOne;
  *
  * @see models.PowerupModel
  * @see powerups.Powerup
- * @see models.Club
+ * @see Club
  */
 @Entity
 public class Activation {

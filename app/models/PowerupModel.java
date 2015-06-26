@@ -1,5 +1,6 @@
 package models;
 
+import models.clubs.Club;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -46,7 +47,7 @@ public class PowerupModel {
      * This field is used to determine if any new clubs should automatically have this powerup activated for them.
      *
      * @see models.Activation
-     * @see models.Club
+     * @see Club
      */
     @Constraints.Required
     private boolean isMandatory;

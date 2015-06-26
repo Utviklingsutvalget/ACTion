@@ -2,7 +2,7 @@ package powerups;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Activation;
-import models.Club;
+import models.clubs.Club;
 import models.PowerupModel;
 import play.Logger;
 import play.mvc.Result;

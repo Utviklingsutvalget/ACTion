@@ -1,6 +1,6 @@
 package powerups.models;
 
-import models.Club;
+import models.clubs.Club;
 import models.User;
 import powerups.models.composite.BoardMembershipKey;
 

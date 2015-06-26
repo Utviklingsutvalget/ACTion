@@ -2,7 +2,7 @@ package powerups.models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
-import models.Club;
+import models.clubs.Club;
 import models.User;
 import models.composite.ClubUserKey;
 import play.data.validation.Constraints;

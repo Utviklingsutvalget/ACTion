@@ -1,6 +1,6 @@
 package powerups.models;
 
-import models.Club;
+import models.clubs.Club;
 import play.data.validation.Constraints;
 import powerups.models.composite.ClubKey;
 

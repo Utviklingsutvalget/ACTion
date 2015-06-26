@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import models.*;
+import models.clubs.Club;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;

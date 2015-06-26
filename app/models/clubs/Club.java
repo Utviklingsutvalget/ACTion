@@ -1,7 +1,8 @@
-package models;
+package models.clubs;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
+import models.*;
 import play.data.validation.Constraints;
 import play.twirl.api.Html;
 import powerups.Powerup;

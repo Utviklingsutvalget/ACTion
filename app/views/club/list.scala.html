@@ -1,3 +1,4 @@
+@import models.clubs.Club
 @(clubs: java.util.List[Club])
 @for(club <- clubs) {
     <dt><a href='@routes.Clubs.show(club.getId)'>@club.getName</a></dt>
