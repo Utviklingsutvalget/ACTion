@@ -22,4 +22,8 @@ public class ClubService {
     public void save(final Club club) {
         Ebean.save(club);
     }
+
+    public void deleteClub(final Club club) {
+        Ebean.delete(club);
+    }
 }

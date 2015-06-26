@@ -2,7 +2,9 @@
 @(club: Club)
 
 @main(club.getName) {
+    @*
     <div class="powerup-container" data-powerups-for='@club.getId'>
+
         @for(powerup <- club.getPowerups) {
             <div class="row powerup" data-powerup-id="@powerup.getModel.getId">
                 <div class="medium-10 medium-centered columns">
@@ -31,5 +33,6 @@
         $ ( '#alt-title' ).replaceWith ("<strong>@(club.getShortName)</strong>");
         </script>
     </div>
+    *@
 
 }

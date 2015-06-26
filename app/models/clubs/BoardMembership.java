@@ -1,8 +1,6 @@
-package powerups.models;
+package models.clubs;
 
-import models.clubs.Club;
 import models.User;
-import powerups.models.composite.BoardMembershipKey;
 
 import javax.persistence.*;
 

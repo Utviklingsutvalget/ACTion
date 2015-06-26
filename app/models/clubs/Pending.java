@@ -1,8 +1,7 @@
-package powerups.models;
+package models.clubs;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
-import models.clubs.Club;
 import models.User;
 import models.composite.ClubUserKey;
 import play.data.validation.Constraints;

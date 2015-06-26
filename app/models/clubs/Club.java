@@ -2,12 +2,11 @@ package models.clubs;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
-import models.*;
+import models.Event;
+import models.Feed;
+import models.Location;
+import models.Membership;
 import play.data.validation.Constraints;
-import play.twirl.api.Html;
-import powerups.Powerup;
-import powerups.core.descriptionpowerup.DescriptionPowerup;
-import powerups.models.BoardMembership;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,19 +25,13 @@ public class Club {
     @ManyToOne
     private Location location;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
-    private List<BoardMembership> boardMembers = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
     private List<Membership> members = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "club")
-    private List<Activation> activations = new ArrayList<>();
     @OneToMany
     private List<Event> events = new ArrayList<>();
-    @Transient
-    private List<Powerup> powerups;
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<Feed> feedPosts = new ArrayList<>();
-    @Transient
-    private Html listDesc;
+    @OneToOne(mappedBy = "club")
+    private ClubInfo info = new ClubInfo();
 
     public Club(String name, String shortName, Location location) {
         this.name = name;
@@ -49,6 +42,14 @@ public class Club {
     @Transactional
     public static void update(Club club) {
         Ebean.update(club);
+    }
+
+    public ClubInfo getInfo() {
+        return info;
+    }
+
+    public void setInfo(final ClubInfo info) {
+        this.info = info;
     }
 
     public String getName() {
@@ -75,28 +76,12 @@ public class Club {
         this.location = location;
     }
 
-    public List<BoardMembership> getBoardMembers() {
-        return boardMembers;
-    }
-
-    public void setBoardMembers(final List<BoardMembership> boardMembers) {
-        this.boardMembers = boardMembers;
-    }
-
     public List<Membership> getMembers() {
         return members;
     }
 
     public void setMembers(final List<Membership> members) {
         this.members = members;
-    }
-
-    public List<Activation> getActivations() {
-        return activations;
-    }
-
-    public void setActivations(final List<Activation> activations) {
-        this.activations = activations;
     }
 
     public List<Event> getEvents() {
@@ -107,28 +92,6 @@ public class Club {
         this.events = events;
     }
 
-    public List<Powerup> getPowerups() {
-        return powerups;
-    }
-
-    public void setPowerups(final List<Powerup> powerups) {
-        this.powerups = powerups;
-    }
-
-    @Transactional
-    public void delete() {
-        deactivatePowerups();
-        disInheritEvents();
-        Ebean.delete(this);
-    }
-
-    public void deactivatePowerups() {
-        for (Activation activation : this.activations) {
-            Powerup powerup = activation.getPowerup();
-            powerup.deActivate();
-        }
-        Ebean.delete(this.activations);
-    }
 
     public void disInheritEvents() {
         for (Event event : this.events) {
@@ -136,27 +99,6 @@ public class Club {
             Ebean.update(event);
         }
 
-    }
-
-    // TODO FIND MORE LOGICAL WAY TO IMPLEMENT
-    public void setDescriptions() {
-        for (Activation activation : activations) {
-            Powerup powerup = activation.getPowerup();
-            if (powerup instanceof DescriptionPowerup) {
-                setListDesc(((DescriptionPowerup) powerup).renderList());
-            }
-        }
-    }
-
-    public Html getListDesc() {
-        if (listDesc == null) {
-            setDescriptions();
-        }
-        return listDesc;
-    }
-
-    private void setListDesc(Html listDesc) {
-        this.listDesc = listDesc;
     }
 
     public int getNumberOfMembers() {
