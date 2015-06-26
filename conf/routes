@@ -7,8 +7,8 @@ GET           /                                     controllers.Application.inde
 GET           /terms                                controllers.Application.terms()
 
 # Initiation week
-#GET           /initiation                      controllers.Initiation.index()
-#POST          /initiation                      controllers.Initiation.search()
+GET           /initiation                           controllers.Initiation.index()
+POST          /initiation                           controllers.Initiation.search()
 
 # Users
 GET           /users/profile                        controllers.Users.profile()
