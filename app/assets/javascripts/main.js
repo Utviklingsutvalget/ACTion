@@ -33,6 +33,10 @@
     };
 
     // Load the app. This is kept minimal so it doesn't need much updating.
-    require(['angular', 'jquery', 'foundation', 'application']);
+    require(['angular', 'jquery', 'foundation', 'application'], function(angular) {
+        $(document).ready(function () {
+            $(document).foundation();
+        });
+    });
 
 })(requirejs);
