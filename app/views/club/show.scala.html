@@ -1,38 +1,21 @@
 @import models.clubs.Club
+@import views.html.club._description
 @(club: Club)
 
 @main(club.getName) {
-    @*
-    <div class="powerup-container" data-powerups-for='@club.getId'>
 
-        @for(powerup <- club.getPowerups) {
-            <div class="row powerup" data-powerup-id="@powerup.getModel.getId">
-                <div class="medium-10 medium-centered columns">
-                    @if(powerup.getModel.isHasMenuEntry) {
-                        <div class="small-4 columns">
-                            <div id="line" class="lineright"></div>
-                        </div>
-                        <div class="small-4 columns text-center">
-                            <h5><strong>@powerup.getModel.getFriendlyName </strong><br /> <br /></h5>
-                        </div>
+    <div class="medium-10 columns medium-centered">
+        <div data-magellan-expedition="fixed" class="">
+            <dl class="sub-nav">
+                <dd data-magellan-arrival="2" class=""><a href="#description">Om utvalget</a></dd>
+                <dd data-magellan-arrival="3" class=""><a href="#board">Styret</a></dd>
+                <dd data-magellan-arrival="4"><a href="#events">Eventer</a></dd>
+                <dd data-magellan-arrival="7"><a href="#feed">Feed</a></dd>
+                <dd data-magellan-arrival="5"><a href="#join">Innmelding</a></dd>
+            </dl>
+        </div>
 
-                        <div class="small-4 columns">
-                            <div id="line" class="lineleft"></div>
-                        </div>
-                    }
-                <div class="powerup-content medium-12 columns">
-                @powerup.render()
-                </div>
-                </div>
-            </div>
-
-        }
-        <script>
-        $ ( document ).ready ( powerup ( ) ) ;
-        //noinspection BadExpressionStatementJS
-        $ ( '#alt-title' ).replaceWith ("<strong>@(club.getShortName)</strong>");
-        </script>
+        @_description(club.getDescription)
     </div>
-    *@
 
 }
