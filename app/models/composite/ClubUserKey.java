@@ -1,6 +1,6 @@
 package models.composite;
 
-import models.Club;
+import models.clubs.Club;
 import models.User;
 
 import javax.persistence.Embeddable;

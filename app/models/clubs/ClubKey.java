@@ -1,4 +1,4 @@
-package powerups.models.composite;
+package models.clubs;
 
 import javax.persistence.Embeddable;
 

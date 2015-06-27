@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Ebean;
+import models.clubs.Club;
 import play.db.ebean.Transactional;
 
 import javax.persistence.Entity;

@@ -1,4 +1,4 @@
-package powerups.models;
+package models.clubs;
 
 import play.data.validation.Constraints;
 

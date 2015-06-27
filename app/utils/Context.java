@@ -1,7 +1,7 @@
 package utils;
 
 import com.google.inject.Inject;
-import models.Club;
+import models.clubs.Club;
 import models.Membership;
 import models.User;
 import services.UserService;

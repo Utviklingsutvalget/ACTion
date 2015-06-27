@@ -1,5 +1,8 @@
+@import models.clubs.Club
 @(clubs: java.util.List[Club])
 @for(club <- clubs) {
-    <dt><a href='@routes.Clubs.show(club.getId)'>@club.getName</a></dt>
-    @club.getListDesc
+    @defining(club.getInfo) { info =>
+        <dt><a href='@routes.Clubs.show(club.getId)'>@club.getName</a></dt>
+        @info.getListDescription
+    }
 }

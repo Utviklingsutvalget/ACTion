@@ -5,19 +5,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.inject.Inject;
 import models.*;
+import models.clubs.Club;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Content;
-import powerups.Powerup;
 import services.*;
-import utils.ActivationSorter;
+import utils.InitiationSorter;
 import utils.MembershipLevel;
 import views.html.club.admin.show;
 import views.html.index;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class Administration extends Controller {
 
@@ -44,21 +47,11 @@ public class Administration extends Controller {
     public Result showClub(Long id) {
         Club club = clubService.findById(id);
 
-        if (club == null)
+        if (club == null) {
             return notFound((Content) index.render("Utvalget du leter etter finnes ikke."));
-
-
-        ArrayList<Powerup> powerups = new ArrayList<>();
-        club.setPowerups(powerups);
-        // Sort the activations by weight:
-        Collections.sort(club.getActivations(), new ActivationSorter());
-
-        for (Activation activation : club.getActivations()) {
-            Powerup powerup = activation.getPowerup();
-            powerups.add(powerup);
         }
         User user = userService.getCurrentUser(session());
-        if(user == null) {
+        if (user == null) {
             return forbidden((Content) index.render("Du må være innlogget som administrator for å administrere siden"));
         }
         Membership membership = membershipService.findById(new Membership(club, user).getId());
@@ -75,17 +68,12 @@ public class Administration extends Controller {
 
     public Result showSite() {
         User user = userService.getCurrentUser(session());
-        if(user == null || !userService.isUserAdmin(user)) {
+        if (user == null || !userService.isUserAdmin(user)) {
             return forbidden((Content) index.render("Du må være innlogget som administrator for å administrere siden"));
         }
         List<Club> clubList = clubService.findAll();
         List<Location> locationList = locationService.findAll();
 
-        Club council = clubList.stream()
-                .filter(club -> club.getId().equals(PRESIDING_COUNCIL_ID))
-                .findFirst()
-                .get();
-        clubList.remove(council);
         return ok((Content) views.html.admin.site.render(locationList, clubList));
     }
 
@@ -181,11 +169,9 @@ public class Administration extends Controller {
             if (confirmDelMap.get(CONFIRM_DELETE).equals(clubMap.get(id))) {
                 Club club = clubService.findById(id);
 
-                if (!club.getId().equals(PRESIDING_COUNCIL_ID)) {
+                clubService.deleteClub(club);
+                return ok("Utvalg slettet");
 
-                    club.delete();
-                    return ok("Utvalg slettet");
-                }
             }
         }
         return badRequest("Sletting ble ikke foretatt");

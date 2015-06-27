@@ -1,19 +1,19 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import models.*;
+import models.Location;
+import models.Membership;
+import models.User;
+import models.clubs.Club;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Content;
-import powerups.Powerup;
-import services.*;
-import utils.ActivationSorter;
-import utils.MembershipLevel;
+import services.ClubService;
+import services.LocationService;
+import services.MembershipService;
+import services.UserService;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -22,13 +22,9 @@ public class Clubs extends Controller {
     @Inject
     private ClubService clubService;
     @Inject
-    private ActivationService activationService;
-    @Inject
     private UserService userService;
     @Inject
     private LocationService locationService;
-    @Inject
-    private PowerupService powerupService;
     @Inject
     private MembershipService membershipService;
 
@@ -56,15 +52,6 @@ public class Clubs extends Controller {
             return redirect(routes.Clubs.index());
         }
 
-        ArrayList<Powerup> powerups = new ArrayList<>();
-        club.setPowerups(powerups);
-        // Sort the activations by weight:
-        Collections.sort(club.getActivations(), new ActivationSorter());
-
-        for (Activation activation : club.getActivations()) {
-            Powerup powerup = activation.getPowerup();
-            powerups.add(powerup);
-        }
         return ok((Content) views.html.club.show.render(club));
     }
 
@@ -115,63 +102,10 @@ public class Clubs extends Controller {
         Club club = new Club(name, shortName, location);
         clubService.save(club);
 
-        Membership membership = new Membership(club, leaderUser, MembershipLevel.LEADER);
+        Membership membership = new Membership(club, leaderUser);
         club.getMembers().add(membership);
 
-        ArrayList<Activation> activations = new ArrayList<>();
-        powerupService.findAllMandatory().forEach(model -> {
-            Activation activation = new Activation(club, model, model.getDefaultWeight());
-            club.getActivations().add(activation);
-            activations.add(activation);
-        });
-
-        membershipService.save(membership);
-
-        for (Activation activation : activations) {
-            activationService.save(activation);
-            activation.getPowerup().activate();
-        }
         return redirect(routes.Clubs.show(club.getId()));
-    }
-
-
-    public Result updatePowerup(Long clubId, Long powerupId) {
-        JsonNode json = request().body().asJson();
-        Logger.warn("RECEIVED JSON");
-        if (json == null || json.isNull()) {
-            return badRequest("Expecting Json data");
-        }
-        final Club club = clubService.findById(clubId);
-        Powerup powerup = null;
-        for (Activation activation : club.getActivations()) {
-            if (activation.getPowerupModel().getId().equals(powerupId)) {
-                powerup = activation.getPowerup();
-            }
-        }
-        if (powerup == null) {
-            return badRequest("No such powerup for " + club.getShortName());
-        } else return powerup.update(json);
-    }
-
-    /**
-     * WARNING: THIS RETURNS THE ADMIN FUNCTION
-     */
-    public Result getPowerupContent(Long clubId, Long powerupId) {
-        final Club club = clubService.findById(clubId);
-
-        Powerup powerup = null;
-
-        if (club == null)
-            return notFound((Content) views.html.index.render("Utvalget du leter etter finnes ikke."));
-
-        for (Activation activation : club.getActivations()) {
-            if (activation.getPowerupModel().getId().equals(powerupId)) {
-                powerup = activation.getPowerup();
-            }
-        }
-        if (powerup == null) {
-            return notFound((Content) views.html.index.render("Poweruppen du leter etter finnes ikke for" + club.getShortName()));
-        } else return ok(powerup.renderAdmin());
     }
 
 }
