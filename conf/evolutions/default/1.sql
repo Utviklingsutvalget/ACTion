@@ -22,8 +22,8 @@ create table board_post (
 
 create table club (
   id                        bigint not null,
-  name                      varchar(255),
-  short_name                varchar(255),
+  name                      varchar(255) not null,
+  short_name                varchar(255) not null,
   location_id               bigint,
   constraint pk_club primary key (id))
 ;

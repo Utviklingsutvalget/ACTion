@@ -1,0 +1,10 @@
+@import views.html.admin.clubs._form
+@(locations: java.util.List[Location], form: Form[clubs.Club])
+
+@views.html.admin.layout("Foreningsadministrasjon", "club") {
+
+    @_subheader("Opprett forening")
+    <div class="small-12 columns">
+    @_form(locations, form)
+    </div>
+}

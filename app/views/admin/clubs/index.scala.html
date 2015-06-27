@@ -5,6 +5,10 @@
     <!-- club -->
     @_subheader("Utvalg")
 
+    <a class="button radius" href="@routes.ClubAdminController.startCreate()">
+        Opprett ny forening
+    </a>
+
     <!-- EXISITING CLUB LIST -->
     <div class="row" data-equalizer>
         <div class="medium-6 columns">
@@ -28,11 +32,11 @@
                         <div id="deleteModal" class="reveal-modal deleteModal" data-reveal>
                             <h2>Sletting av utvalg</h2>
                             <p class="lead">
-                                N�r du sletter et utvalg fjernes alle medlemmer, eventer og tilh�rende utvalgsrelatert info.
-                                <br>V�r sikker p� at du sletter korrekt utvalg</p>
+                                Når du sletter et utvalg fjernes alle medlemmer, eventer og tilhørende utvalgsrelatert info.
+                                <br>Vær sikker på at du sletter korrekt utvalg</p>
 
                                 <!-- class confirmDelete must not be removed -->
-                            <input class="confirmDelete" type="text" placeholder="Skriv navn p� utvalg fra listen her">
+                            <input class="confirmDelete" type="text" placeholder="Skriv navn på utvalg fra listen her">
 
                                 <!-- class deleteClub must not be removed -->
                             <form class="pricing-table medium-12 columns deleteClub" action="@routes.Administration.deleteClub()" method="post">
@@ -59,58 +63,6 @@
         </div>
 
 
-            <!-- CREATE CLUB -->
-        <div class="medium-6 columns">
-            <form class="email-check-form" action="@routes.Clubs.create()" method="post">
-                <fieldset>
-                    <legend>Opprett et utvalg</legend>
 
-                    <div class="medium-12 columns">
-                        <label>Utvalgsnavn
-                            <input type="text" name="name" placeholder="Skriv inn navnet på utvalget" required>
-                        </label>
-                    </div>
-
-                    <div class="medium-12 columns">
-                        <label>Kort navn
-                            <input type="text" name="shortName" placeholder="Forkortelse" required>
-                        </label>
-                    </div>
-
-                    <div class="large-12 columns">
-                        <div class="row collapse">
-
-                            <div class="small-7 columns">
-                                <label>E-post
-                                    <input class="user-email" type="text" name="leader" placeholder="leders email" required>
-                                </label>
-                            </div>
-
-                            <div class="small-5 columns">
-                                <label>&nbsp;</label>
-                                <span class="postfix radius">@@student.westerdals.no</span>
-                                <input class="email-postfix" type="hidden" name="postfix" value="@@student.westerdals.no">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="large-12 columns">
-                        <label>Lokasjon
-                            <select name="location">
-                                <option value="-1">Felles</option>
-                                @for(location <- locations) {
-                                    <option value="@location.getId">@location.getName</option>
-                                }
-                            </select>
-                        </label>
-                    </div>
-
-                    <div class="small-12 columns cta-button">
-                        <input class="button small newclub" type="submit" value="Opprett utvalg">
-                    </div>
-                </fieldset>
-            </form>
-        </div>
     </div>
 }

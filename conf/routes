@@ -39,7 +39,6 @@ GET           /events/:id                            controllers.Events.show(id:
 POST          /events/:id/delete                     controllers.Events.delete(id: Long)
 
 # Adminstration
-GET           /admin/clubs/:id                       controllers.Administration.showClub(id: Long)
 GET           /admin/site                            controllers.Administration.showSite()
 POST          /admin/site                            controllers.Administration.updateLocation()
 POST          /admin/site/delete                     controllers.Administration.deleteClub()
@@ -48,6 +47,9 @@ DELETE        /admin/guardian                        controllers.Administration.
 GET           /admin/itslearning                     controllers.Administration.redirectToItsLearning()
 
 GET           /admin/clubs                           controllers.ClubAdminController.index()
+GET           /admin/clubs/new                       controllers.ClubAdminController.startCreate()
+POST          /admin/clubs/new                       controllers.ClubAdminController.create()
+GET           /admin/clubs/:id                       controllers.Administration.showClub(id: Long)
 
 GET           /admin/initiation                      controllers.InitiationAdminController.index()
 GET           /admin/initiation/schedules/new        controllers.InitiationAdminController.newSchedule()

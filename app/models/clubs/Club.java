@@ -6,7 +6,6 @@ import models.Event;
 import models.Feed;
 import models.Location;
 import models.Membership;
-import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,9 +17,9 @@ public class Club {
     @Id
     @GeneratedValue
     private Long id;
-    @Constraints.Required
+    @Column(nullable = false)
     private String name;
-    @Constraints.Required
+    @Column(nullable = false)
     private String shortName;
     @ManyToOne
     private Location location;

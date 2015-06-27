@@ -1,0 +1,37 @@
+@import views.html.helper.FieldConstructor
+@(locations: java.util.List[Location], form: Form[clubs.Club])
+
+<!-- CREATE CLUB -->
+
+@helper.form(action = routes.ClubAdminController.create()) {
+@*<form class="email-check-form" action="@routes.Clubs.create()" method="post">*@
+    @for(error <- form("email").errors) {
+        <p>@error.message</p>
+    }
+    <fieldset>
+        <legend>Opprett et utvalg</legend>
+
+        <div class="medium-12 columns">
+            @helper.inputText(form("name"), 'placeholder -> "Skriv inn navnet på utvalget", 'required -> "", '_label -> "Utvalgsnavn")
+        </div>
+
+        <div class="medium-12 columns">
+            @helper.inputText(form("shortName"), 'placeholder -> "Skriv inn forkortelse", 'required -> "", '_label -> "Forkortelse")
+        </div>
+
+        <div class="large-12 columns">
+            @fieldconstructors.postfix_field(form("leader"), 7, 5, 'placeholder -> "Leders epost",
+                'required -> "",'_label -> "Leders epost", 'postfix -> "@student.westerdals.no")
+        </div>
+
+        <div class="large-12 columns">
+            @defining(locations.map(location => (location.getId.toString, location.getName))) { locationOptions =>
+                @helper.select(form("location"), locationOptions.toSeq, '_default -> "Felles", '_label -> "Lokasjon")
+            }
+        </div>
+
+        <div class="small-12 columns cta-button">
+            <input class="button small newclub" type="submit" value="Opprett utvalg">
+        </div>
+    </fieldset>
+}
