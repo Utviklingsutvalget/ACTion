@@ -1,13 +1,21 @@
 @(element: Field, presize: Int, postSize: Int, args: (Symbol, Any)*)
 
 @defining(args.toMap) { argMap =>
-    <div class="row collapse">
-        <label>@argMap.get('_label).map(_.toString).getOrElse(element.name)</label>
-        <div class="small-@(presize) columns">
-            <input type="text" name="@(element.name)" placeholder="@argMap.get('placeholder).map(_.toString).getOrElse(element.name)"/>
+    @if(element.hasErrors) {
+        <div data-alert class="alert-box alert round">
+            @element.errors.map { error =>
+                <p>@error.message</p>
+            }
+            <a href="#" class="close">&times;</a>
         </div>
-        <div class="small-@(postSize) columns">
-            <span class="postfix">@argMap.get('postfix).map(_.toString).get</span>
-        </div>
+    }
+<div class="row collapse">
+    <label>@argMap.get('_label).map(_.toString).getOrElse(element.name)</label>
+    <div class="small-@(presize) columns">
+        <input type="text" name="@(element.name)" value="@element.value" placeholder="@argMap.get('placeholder).map(_.toString).getOrElse(element.name)"/>
     </div>
+    <div class="small-@(postSize) columns">
+        <span class="postfix">@argMap.get('postfix).map(_.toString).get</span>
+</div>
+</div>
 }

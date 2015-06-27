@@ -28,6 +28,9 @@ public class User {
     @Transient
     private String gravatarUrl;
 
+    public User() {
+    }
+
     public User(String id, String firstName, String lastName, String email, String picureUrl) {
         this.id = id;
         this.firstName = firstName;

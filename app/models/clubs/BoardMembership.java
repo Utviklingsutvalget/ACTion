@@ -20,6 +20,11 @@ public class BoardMembership {
     private User user;
     private int weight;
 
+    public BoardMembership(String email) {
+        user = new User();
+        user.setEmail(email);
+    }
+
     public BoardMembership(Club club, BoardPost boardPost, User user) {
         this.boardPost = boardPost;
         this.club = club;

@@ -4,7 +4,9 @@ import com.feth.play.module.pa.exceptions.AccessDeniedException;
 import com.feth.play.module.pa.exceptions.AuthException;
 import controllers.routes;
 import helpers.formatters.LocationFormatter;
+import helpers.formatters.UserFormatter;
 import models.Location;
+import models.User;
 import play.Application;
 import play.GlobalSettings;
 import play.data.format.Formatters;
@@ -28,6 +30,7 @@ public class Global extends GlobalSettings {
     @Override
     public void onStart(final Application app) {
         Formatters.register(Location.class, new LocationFormatter());
+        Formatters.register(User.class, new UserFormatter());
         PlayAuthenticate.setResolver(new Resolver() {
 
             @Override

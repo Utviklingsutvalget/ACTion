@@ -2,11 +2,7 @@ package models.clubs;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.annotation.Transactional;
-import models.Event;
-import models.Feed;
-import models.Location;
-import models.Membership;
-import play.data.validation.Constraints;
+import models.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,12 +26,12 @@ public class Club {
     private List<Event> events = new ArrayList<>();
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<Feed> feedPosts = new ArrayList<>();
-    @Constraints.Required
-    @Constraints.MaxLength(10000)
+    @Column(nullable = true, length = 10000)
     private String description;
-    @Constraints.Required
-    @Constraints.MaxLength(300)
+    @Column(nullable = true, length = 300)
     private String listDescription;
+    @OneToOne
+    private User owner;
     @OneToMany(cascade = CascadeType.ALL)
     private List<BoardMembership> boardMemberships;
     @OneToMany(cascade = CascadeType.ALL)
@@ -151,5 +147,13 @@ public class Club {
 
     public void setId(final Long id) {
         this.id = id;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(final User owner) {
+        this.owner = owner;
     }
 }

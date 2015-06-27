@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Location;
+import models.User;
 import models.clubs.Club;
 import play.Logger;
 import play.data.Form;
@@ -10,10 +11,12 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 import services.ClubService;
 import services.LocationService;
+import services.UserService;
 import views.html.admin.clubs.create;
 import views.html.admin.clubs.index;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,8 @@ public class ClubAdminController extends Controller {
 
     @Inject
     private LocationService locationService;
+    @Inject
+    private UserService userService;
 
     public Result index() {
         List<Location> locations = locationService.findAll();
@@ -48,6 +53,16 @@ public class ClubAdminController extends Controller {
 
         String locationId = data.get("location");
         club.setLocation(getLocationFromStringId(locations, locationId));
+
+        User owner = club.getOwner();
+        User fromDatabase = userService.findByEmail(owner.getEmail());
+        if(fromDatabase == null) {
+            ArrayList<ValidationError> value = new ArrayList<>();
+            value.add(new ValidationError("owner", "Leder finnes ikke i systemet"));
+            form.errors().put("owner", value);
+        } else {
+            club.setOwner(fromDatabase);
+        }
 
         if(form.hasErrors()) {
             return ok(create.render(locations, form));

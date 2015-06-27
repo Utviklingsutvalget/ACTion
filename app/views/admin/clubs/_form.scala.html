@@ -5,26 +5,32 @@
 
 @helper.form(action = routes.ClubAdminController.create()) {
 @*<form class="email-check-form" action="@routes.Clubs.create()" method="post">*@
-    @for(error <- form("email").errors) {
-        <p>@error.message</p>
-    }
     <fieldset>
         <legend>Opprett et utvalg</legend>
 
-        <div class="medium-12 columns">
+        <div class="small-12 columns">
             @helper.inputText(form("name"), 'placeholder -> "Skriv inn navnet på utvalget", 'required -> "", '_label -> "Utvalgsnavn")
         </div>
 
-        <div class="medium-12 columns">
+        <div class="small-12 columns">
             @helper.inputText(form("shortName"), 'placeholder -> "Skriv inn forkortelse", 'required -> "", '_label -> "Forkortelse")
         </div>
 
-        <div class="large-12 columns">
-            @fieldconstructors.postfix_field(form("leader"), 7, 5, 'placeholder -> "Leders epost",
-                'required -> "",'_label -> "Leders epost", 'postfix -> "@student.westerdals.no")
+        <div class="small-12 columns">
+            @helper.textarea(form("description"), 'placeholder -> "Fyll inn beskrivelse(støtter markdown)", '_label -> "Beskrivelse")
         </div>
 
-        <div class="large-12 columns">
+        <div class="small-12 columns">
+        @(helper.textarea(form("listDescription"),
+                'placeholder -> "Fyll inn listebeskrivelse(vises i listen av foreninger", '_label -> "Listebeskrivelse"))
+        </div>
+
+        <div class="small-12 columns">
+            @fieldconstructors.postfix_field(form("owner"), 7, 5, 'placeholder -> "Leders epost",
+                'required -> "",'_label -> "Leders epost", 'postfix -> "@utils.Constants.")
+        </div>
+
+        <div class="small-12 columns">
             @defining(locations.map(location => (location.getId.toString, location.getName))) { locationOptions =>
                 @helper.select(form("location"), locationOptions.toSeq, '_default -> "Felles", '_label -> "Lokasjon")
             }
