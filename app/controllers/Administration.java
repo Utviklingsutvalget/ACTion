@@ -135,6 +135,7 @@ public class Administration extends Controller {
             SuperUser superUser = new SuperUser(user);
             superUser.setUser(user);
             superUserService.save(superUser);
+            return redirect(routes.Administration.showSite());
         }
         return redirect(routes.Application.index());
     }
