@@ -12,7 +12,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Content;
 import services.*;
-import utils.InitiationSorter;
 import utils.MembershipLevel;
 import views.html.club.admin.show;
 import views.html.index;
