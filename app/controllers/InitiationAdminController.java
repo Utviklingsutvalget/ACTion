@@ -4,6 +4,7 @@ import models.InitiationGroup;
 import models.Location;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 import services.InitiationGroupService;
 import services.LocationService;
 import utils.InitiationSorter;
@@ -29,7 +30,7 @@ public class InitiationAdminController extends Controller {
                 maxInitGrp = initiationGroup.getGroupNumber();
             }
         }
-        return ok(initiation.render(initiationGroups, locations, maxInitGrp));
+        return ok((Content) initiation.render(initiationGroups, locations, maxInitGrp));
     }
 
     public Result newSchedule() {
