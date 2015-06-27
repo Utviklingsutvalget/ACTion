@@ -3,12 +3,16 @@ import com.feth.play.module.pa.PlayAuthenticate.Resolver;
 import com.feth.play.module.pa.exceptions.AccessDeniedException;
 import com.feth.play.module.pa.exceptions.AuthException;
 import controllers.routes;
+import helpers.formatters.LocationFormatter;
+import models.Location;
 import play.Application;
 import play.GlobalSettings;
+import play.data.format.Formatters;
 import play.libs.F;
 import play.mvc.Call;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.twirl.api.Content;
 
 import static play.mvc.Results.notFound;
 
@@ -17,12 +21,13 @@ public class Global extends GlobalSettings {
     @Override
     public F.Promise<Result> onHandlerNotFound(Http.RequestHeader request) {
         return F.Promise.<Result>pure(notFound(
-                views.html.error.render("Kunne ikke finne " + request.uri())
+                (Content) views.html.error.render("Kunne ikke finne " + request.uri())
         ));
     }
 
     @Override
     public void onStart(final Application app) {
+        Formatters.register(Location.class, new LocationFormatter());
         PlayAuthenticate.setResolver(new Resolver() {
 
             @Override

@@ -24,6 +24,13 @@ public class Location {
     @Transient
     private int cssId;
 
+    public Location() {
+    }
+
+    public Location(long id) {
+        this.id = id;
+    }
+
     @Transactional
     public static void update(Location location) {
         Ebean.update(location);
