@@ -1,8 +1,11 @@
 @import models.clubs.Club
 @(clubs: java.util.List[Club])
 @for(club <- clubs) {
-    @defining(club.getInfo) { info =>
-        <dt><a href='@routes.Clubs.show(club.getId)'>@club.getName</a></dt>
-        @info.getListDescription
+    <dt><a href='@routes.Clubs.show(club.getId)'>@club.getName</a></dt>
+    @if(club.getListDescription != null) {
+        @club.getListDescription
+    } else {
+        Denne forening har ingen beskrivelse
     }
+
 }
