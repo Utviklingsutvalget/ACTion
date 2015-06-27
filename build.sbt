@@ -31,12 +31,7 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += evolutions
 
-pipelineStages := Seq(rjs)
-
-RjsKeys.appDir := new File("app/assets")
-
 libraryDependencies in Test += "junit" % "junit" % "4.12"
-
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.

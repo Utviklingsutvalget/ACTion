@@ -1,0 +1,394 @@
+//colors
+$white: #ffffff;
+$red: red;
+$black: #000;
+$color_celeste_approx: #cfcfcf;
+$color_gallery_approx: #ededed;
+
+//urls
+$url_0: url(../../public/images/header.jpg);
+$url_1: url(../img/forest.jpg);
+
+body {
+  background-color: $white;
+}
+#menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 10px;
+  width: 10px;
+  background-color: $red;
+}
+.buttonpanellarge {
+  top: 20px;
+  position: relative;
+  padding-bottom: 30px;
+}
+.eventer-fixed {
+  position: fixed;
+  margin-left: -46px;
+}
+.buttonpanel {
+  padding-top: 270px;
+}
+.buttonpanelsmall {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+.buttonpanel-underpage {
+  margin-top: 20px;
+  .headertext {
+    color: $white;
+  }
+}
+.buttonpanellarge-underpage {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  .headertext {
+    color: $white;
+  }
+}
+.headertext {
+  color: $black;
+}
+.headertext-underpage {
+  color: $white;
+  a:hover {
+    color: $color_celeste_approx;
+  }
+}
+.headertextbig {
+  font-size: 70px;
+  text-transform: uppercase;
+}
+.backgroundimagelarge {
+  top: 10px;
+  img {
+    top: 0;
+    border: 3px solid $color_gallery_approx;
+  }
+}
+#backgroundimagesmall {
+  width: 100%;
+  height: 260px;
+  background: $url_0 center;
+  background-size: cover;
+  left: 0;
+  position: absolute;
+  //Instead of the line below you could use @includebox-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: 0 0 5px $black;
+}
+#backgroundimgsmall {
+  position: absolute;
+  height: 50px;
+  width: 100%;
+  background-image: $url_1;
+  background-size: cover;
+}
+.paragraph-date {
+  margin-top: 8px;
+}
+.paragraph-date-events {
+  margin-top: 2px;
+}
+#footer {
+  background-color: $black;
+  width: 100%;
+  padding-top: 30px;
+}
+.footertext {
+  color: $white;
+}
+#line {
+  opacity: 0.3;
+  height: 1px;
+  margin-top: 15px;
+  width: 80%;
+  background-color: $black;
+}
+.lineright {
+  margin-left: 20%;
+}
+.lineleft {
+  margin-right: 20%;
+}
+#line-big {
+  opacity: 0.3;
+  height: 1px;
+  margin-top: 15px;
+  width: 40%;
+  background-color: $black;
+}
+.lineright-big {
+  margin-left: 60%;
+}
+.lineleft-big {
+  margin-right: 60%;
+}
+#line-separator {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  opacity: 0.3;
+  height: 1px;
+  width: 90%;
+  background-color: $black;
+}
+#line-separator-wide {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  opacity: 0.3;
+  height: 1px;
+  width: 100%;
+  background-color: $black;
+}
+.line-separator-mid {
+  margin-left: 5%;
+}
+#line-separator-bubble {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 1px;
+  width: 60%;
+  background-color: $white;
+}
+.line-separator-mid-bubble {
+  margin-left: 20%;
+}
+.profile-photo {
+  //Instead of the line below you could use @includeborder-radius($radius, $vertical-radius)
+  border-radius: 100%;
+  width: 90%;
+  height: 90%;
+  margin-right: 5%;
+  margin-left: 5%;
+}
+.footer-photos {
+  //Instead of the line below you could use @includeborder-radius($radius, $vertical-radius)
+  border-radius: 100%;
+  width: 70%;
+  height: 70%;
+  margin-right: 15%;
+  margin-left: 15%;
+}
+#bold-line {
+  height: 2px;
+  width: 20%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: $black;
+  margin-bottom: 15px;
+}
+.utvalg-content-placement {
+  margin-top: 20px;
+}
+.utvalg-width {
+  width: 90%;
+}
+.event_img {
+  max-height: 200px;
+}
+.week_nr {
+  margin-left: 10px;
+  margin-top: 50px;
+}
+.week_dates {
+  margin-left: 10px;
+}
+.week_content {
+  margin-top: 40px;
+}
+#commentfield {
+  max-width: 100%;
+}
+.horizontal-separator {
+  width: 1px;
+  height: 100%;
+  background-color: $black;
+  float: none;
+  position: absolute;
+  top: 0;
+  opacity: 0.3;
+  right: 40px;
+}
+.button-photochange {
+  position: absolute;
+  bottom: 25px;
+  left: 30px;
+  //Instead of the line below you could use @includebox-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: 0 0 10px $black;
+  height: 33px;
+  opacity: 1;
+}
+.img-gallery {
+  padding-bottom: 15px;
+}
+.skal-bilder {
+  padding-bottom: 25px;
+  img {
+    //Instead of the line below you could use @includebox-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    box-shadow: 0 0 3px $black;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+.add-button {
+  right: 0;
+  margin-right: 0;
+}
+.headercircle-large {
+  position: absolute;
+  bottom: 50px;
+  right: 100px;
+  width: 250px;
+  height: 250px;
+  //Instead of the line below you could use @includeborder-radius($radius, $vertical-radius)
+  border-radius: 100%;
+  background-color: $black;
+  padding-top: 60px;
+  h5 {
+    color: $white;
+  }
+  h3 {
+    color: $white;
+  }
+}
+.headercircle-medium {
+  position: absolute;
+  bottom: 10px;
+  right: 70px;
+  width: 240px;
+  height: 240px;
+  //Instead of the line below you could use @includeborder-radius($radius, $vertical-radius)
+  border-radius: 100%;
+  background-color: $black;
+  padding-top: 60px;
+  h5 {
+    color: $white;
+  }
+  h3 {
+    color: $white;
+  }
+}
+.headercircle-small {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  top: 20px;
+  width: 200px;
+  height: 200px;
+  //Instead of the line below you could use @includeborder-radius($radius, $vertical-radius)
+  border-radius: 100%;
+  background-color: $black;
+  padding-top: 40px;
+  h6 {
+    color: $white;
+  }
+  h3 {
+    color: $white;
+  }
+}
+.headercircle-large-underpage {
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  //Instead of the line below you could use @includeborder-radius($radius, $vertical-radius)
+  border-radius: 100%;
+  background-color: $white;
+  padding-top: 40px;
+}
+.headercircle-small-underpage {
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  //Instead of the line below you could use @includeborder-radius($radius, $vertical-radius)
+  border-radius: 100%;
+  background-color: $white;
+  padding-top: 25px;
+  h4 {
+    color: $black;
+  }
+}
+.banner {
+  position: relative;
+  overflow: auto;
+  li {
+    list-style: none;
+  }
+  ul li {
+    float: left;
+  }
+}
+#black-bg-underpage {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 200px;
+  background-color: $black;
+}
+#tirsdag {
+  max-height: 10000px;
+  overflow: hidden;
+  &:target {
+    max-height: 0;
+  }
+}
+.header-underpage-large {
+  height: 200px;
+  background-color: $black;
+}
+.header-underpage-small {
+  height: 220px;
+  background-color: $black;
+}
+.underlinks {
+  font-weight: bold;
+  font-size: 20px;
+}
+.underlinks-small {
+  font-size: 15px;
+}
+.admin-utvalg-oversikt {
+  height: 360px;
+  overflow: scroll;
+}
+.admin-faddere-oversikt {
+  height: 286px;
+  overflow: scroll;
+}
+#bildetext-header {
+  position: absolute;
+  left: 30px;
+  bottom: -10px;
+  p {
+    color: $white;
+  }
+}
+#bildetext-header-small {
+  position: absolute;
+  left: 15px;
+  top: 225px;
+  //Instead of the line below you could use @includetext-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  text-shadow: 1px 1px $black;
+  p {
+    color: $white;
+  }
+}
+.headercolumn-underpage .headertext {
+  color: $white;
+}
+img.img-gallery:hover {
+  opacity: 0.8;
+}
+.nyhet img {
+  height: 200px;
+}

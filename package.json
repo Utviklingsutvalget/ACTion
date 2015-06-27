@@ -1,0 +1,16 @@
+{
+  "name": "action",
+  "version": "0.0.1",
+
+  "devDependencies": {
+    "angular": "1.4.1",
+    "foundation-sites": "5.5.2",
+    "gulp": "^3.9.0",
+    "gulp-cached": "~1.1.0",
+    "gulp-concat": "~2.6.0",
+    "gulp-jshint": "~1.11.0",
+    "gulp-remember": "~0.3.0",
+    "gulp-sass": "2.0.2",
+    "jquery": "2.1.4"
+  }
+}
