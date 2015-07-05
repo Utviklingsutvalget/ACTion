@@ -2,6 +2,7 @@ package controllers;
 
 import models.Location;
 import models.User;
+import models.clubs.BoardMembership;
 import models.clubs.Club;
 import play.Logger;
 import play.data.Form;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ClubAdminController extends Controller {
 
@@ -52,7 +54,7 @@ public class ClubAdminController extends Controller {
         Club club = form.get();
 
         String locationId = data.get("location");
-        club.setLocation(getLocationFromStringId(locations, locationId));
+        club.setLocation(locationService.getLocationFromStringId(locations, locationId));
 
         User owner = club.getOwner();
         User fromDatabase = userService.findByEmail(owner.getEmail());
@@ -62,6 +64,7 @@ public class ClubAdminController extends Controller {
             form.errors().put("owner", value);
         } else {
             club.setOwner(fromDatabase);
+            club.getBoardMemberships().add(new BoardMembership(club, "Leder", fromDatabase, 0));
         }
 
         if(form.hasErrors()) {
@@ -72,13 +75,7 @@ public class ClubAdminController extends Controller {
     }
 
     private void discardError(final Form<?> form, String field) {
-        List<ValidationError> location = form.errors().remove(field);
+        form.errors().remove(field);
     }
 
-    private Location getLocationFromStringId(final List<Location> locations, final String locationId) {
-        return locations.stream()
-                .filter(loc -> loc.getId() == Long .parseLong(locationId))
-                .findFirst()
-                .orElseGet(null);
-    }
 }
