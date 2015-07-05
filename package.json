@@ -6,13 +6,13 @@
     "angular": "1.4.1",
     "foundation-sites": "5.5.2",
     "ng-file-upload": "~5.0.9",
-    "ng-file-upload-shim": "~5.0.9",
     "gulp": "^3.9.0",
     "gulp-cached": "~1.1.0",
     "gulp-concat": "~2.6.0",
     "gulp-jshint": "~1.11.0",
     "gulp-remember": "~0.3.0",
     "gulp-sass": "2.0.2",
-    "jquery": "2.1.4"
+    "jquery": "2.1.4",
+    "jquery-datetimepicker": "~2.4.0"
   }
 }
