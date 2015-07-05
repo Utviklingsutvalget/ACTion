@@ -3,6 +3,7 @@ package services;
 import com.avaje.ebean.Ebean;
 import models.clubs.Club;
 import models.Location;
+import play.db.ebean.Transactional;
 
 import java.util.List;
 
@@ -19,14 +20,17 @@ public class ClubService {
         return Ebean.find(Club.class).where().eq("location", location).findList();
     }
 
+    @Transactional
     public void save(final Club club) {
         Ebean.save(club);
     }
 
+    @Transactional
     public void deleteClub(final Club club) {
         Ebean.delete(club);
     }
 
+    @Transactional
     public void update(final Club club) {
         Ebean.update(club);
     }
