@@ -6,13 +6,13 @@ angular.module('action').controller('FileUploadController', function($scope, Upl
     $scope.upload = function (file) {
         if (file) {
             Upload.upload({
-                url: '/api/projects/upload',
+                url: '/api/upload',
                 file: file
             }).progress(function (evt) {
                 $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
             }).success(function (data, status, headers, config) {
                 config.file.id = data.id;
-                config.file.asLink = data.asLink;
+                config.file.url = data.url;
                 $scope.file.error = undefined;
                 $scope.progress = undefined;
             }).error(function(data) {

@@ -18,8 +18,8 @@
     <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
 
     <div class="small-12 medium-6 large-4 columns" ng-model="file">
-        <img ng-src="{{file.asLink}}" src="@imageLink">
-        <input type="hidden" name="@(element.name)" value="@element.value"/>
+        <img ng-src="{{file.url}}" src="@imageLink">
+        <input type="hidden" ng-value="file.id" name="@(element.name)" value="@element.value"/>
     </div>
     <div class="row" ng-model="file">
                             {{file.error}}

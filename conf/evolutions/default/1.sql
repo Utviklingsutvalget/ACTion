@@ -16,7 +16,7 @@ create table club (
   name                      varchar(255) not null,
   short_name                varchar(255) not null,
   location_id               bigint,
-  uploaded_file_id          varchar(255),
+  uploaded_file_id          varchar(40),
   description               varchar(10000),
   list_description          varchar(300),
   owner_id                  varchar(255),
@@ -112,9 +112,8 @@ create table super_user (
 ;
 
 create table uploaded_file (
-  id                        varchar(255) not null,
-  uploaded_by_id            varchar(255),
-  file_name                 varchar(255),
+  id                        varchar(40) not null,
+  name                      varchar(255),
   constraint pk_uploaded_file primary key (id))
 ;
 
@@ -150,8 +149,6 @@ create sequence participation_seq;
 create sequence pending_seq;
 
 create sequence super_user_seq;
-
-create sequence uploaded_file_seq;
 
 create sequence user_seq;
 
@@ -195,8 +192,6 @@ alter table pending add constraint fk_pending_user_19 foreign key (user_id) refe
 create index ix_pending_user_19 on pending (user_id);
 alter table super_user add constraint fk_super_user_user_20 foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_super_user_user_20 on super_user (user_id);
-alter table uploaded_file add constraint fk_uploaded_file_uploadedBy_21 foreign key (uploaded_by_id) references user (id) on delete restrict on update restrict;
-create index ix_uploaded_file_uploadedBy_21 on uploaded_file (uploaded_by_id);
 
 
 
@@ -257,8 +252,6 @@ drop sequence if exists participation_seq;
 drop sequence if exists pending_seq;
 
 drop sequence if exists super_user_seq;
-
-drop sequence if exists uploaded_file_seq;
 
 drop sequence if exists user_seq;
 

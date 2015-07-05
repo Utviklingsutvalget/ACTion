@@ -1,0 +1,5 @@
+@(image: UploadedFile)
+
+<div class="medium-12 columns">
+    <img src="@if(image != null){@image.getUrl}else{@routes.Assets.versioned("images/no_club_image.jpg")}">
+</div>

@@ -56,6 +56,8 @@ GET           /admin/clubs/:id                       controllers.Administration.
 GET           /admin/initiation                      controllers.InitiationAdminController.index()
 GET           /admin/initiation/schedules/new        controllers.InitiationAdminController.newSchedule()
 
+POST          /api/upload                               controllers.UploadController.postFile()
+
 
 #Feed
 GET           /feed                                  controllers.Feeds.index()

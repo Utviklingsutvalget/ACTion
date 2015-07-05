@@ -1,42 +1,57 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import plugins.S3Plugin;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.UUID;
 
 @Entity
 public class UploadedFile {
 
     @Id
-    @GeneratedValue
-    private String id;
-    @ManyToOne
-    private User uploadedBy;
+    private UUID id;
 
-    private String fileName;
+    private String name;
+    @Transient
+    private File file;
 
-    public String getId() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    @JsonGetter
+    public URL getUrl() throws MalformedURLException {
+        return new URL("https://s3.amazonaws.com/" + S3Plugin.s3Bucket + "/" + getActualFileName());
+    }
+
+    public String getActualFileName() {
+        return id + "/" + name;
+    }
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(final String id) {
+    public void setId(final UUID id) {
         this.id = id;
     }
 
-    public User getUploadedBy() {
-        return uploadedBy;
+    public File getFile() {
+        return file;
     }
 
-    public void setUploadedBy(final User uploadedBy) {
-        this.uploadedBy = uploadedBy;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(final String fileName) {
-        this.fileName = fileName;
+    public void setFile(final File file) {
+        this.file = file;
     }
 }

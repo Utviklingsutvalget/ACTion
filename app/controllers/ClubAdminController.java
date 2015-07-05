@@ -11,6 +11,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Content;
 import services.ClubService;
+import services.FileService;
 import services.LocationService;
 import services.UserService;
 import views.html.admin.clubs.create;
@@ -32,6 +33,8 @@ public class ClubAdminController extends Controller {
     private LocationService locationService;
     @Inject
     private UserService userService;
+    @Inject
+    private FileService fileService;
 
     public Result update(Long id) {
         List<Location> locations = locationService.findAll();
@@ -39,6 +42,7 @@ public class ClubAdminController extends Controller {
         Map<String, String> data = form.data();
         Logger.warn("Received following data: " + data);
         discardError(form, "location");
+        discardError(form, "uploadedFile");
         Club club = form.get();
         Club fromDb = clubService.findById(id);
         if(fromDb == null) {
@@ -46,6 +50,8 @@ public class ClubAdminController extends Controller {
         }
         club.setId(id);
 
+        String uploadedFileId = data.get("uploadedFile");
+        club.setUploadedFile(fileService.getUploadedFileFromStringId(uploadedFileId));
         String locationId = data.get("location");
         club.setLocation(locationService.getLocationFromStringId(locations, locationId));
 

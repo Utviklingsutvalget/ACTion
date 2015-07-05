@@ -4,8 +4,10 @@ import com.feth.play.module.pa.exceptions.AccessDeniedException;
 import com.feth.play.module.pa.exceptions.AuthException;
 import controllers.routes;
 import helpers.formatters.LocationFormatter;
+import helpers.formatters.UploaderFileFormatter;
 import helpers.formatters.UserFormatter;
 import models.Location;
+import models.UploadedFile;
 import models.User;
 import play.Application;
 import play.GlobalSettings;
@@ -31,6 +33,7 @@ public class Global extends GlobalSettings {
     public void onStart(final Application app) {
         Formatters.register(Location.class, new LocationFormatter());
         Formatters.register(User.class, new UserFormatter());
+        Formatters.register(UploadedFile.class, new UploaderFileFormatter());
         PlayAuthenticate.setResolver(new Resolver() {
 
             @Override
