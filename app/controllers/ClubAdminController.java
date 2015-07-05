@@ -62,15 +62,15 @@ public class ClubAdminController extends Controller {
             ArrayList<ValidationError> value = new ArrayList<>();
             value.add(new ValidationError("owner", "Leder finnes ikke i systemet"));
             form.errors().put("owner", value);
-        } else {
-            club.setOwner(fromDatabase);
-            club.getBoardMemberships().add(new BoardMembership(club, "Leder", fromDatabase, 0));
         }
 
         if(form.hasErrors()) {
             return ok(create.render(locations, form));
         }
         clubService.save(club);
+        club.setOwner(fromDatabase);
+        club.getBoardMemberships().add(new BoardMembership(club, "Leder", fromDatabase, 0));
+        clubService.update(club);
         return redirect(routes.Clubs.show(club.getId()));
     }
 

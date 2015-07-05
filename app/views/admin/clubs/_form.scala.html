@@ -21,13 +21,12 @@
         </div>
 
         <div class="small-12 columns">
-        @(helper.textarea(form("listDescription"),
-                'placeholder -> "Fyll inn listebeskrivelse(vises i listen av foreninger", '_label -> "Listebeskrivelse"))
+            @helper.textarea(form("listDescription"), 'placeholder -> "Fyll inn listebeskrivelse(vises i listen av foreninger", '_label -> "Listebeskrivelse")
         </div>
 
         <div class="small-12 columns">
             @fieldconstructors.postfix_field(form("owner"), 7, 5, 'placeholder -> "Leders epost",
-                'required -> "",'_label -> "Leders epost", 'postfix -> "@utils.Constants.")
+                'required -> "",'_label -> "Leders epost", 'postfix -> utils.Constants.EMAIL_SUFFIX)
         </div>
 
         <div class="small-12 columns">

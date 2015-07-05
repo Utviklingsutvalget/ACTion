@@ -7,6 +7,7 @@ import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 import services.UserService;
 import views.html.user.profile;
 import views.html.user.show;
@@ -30,11 +31,7 @@ public class Users extends Controller {
             return redirect(routes.Application.authenticateDefault());
         }
         boolean admin = userService.isUserAdmin(user);
-        System.out.println(admin);
-        System.out.println(admin);
-        System.out.println(admin);
-        System.out.println(admin);
-        return ok(profile.render(user, admin));
+        return ok((Content) profile.render(user, admin));
     }
 
     public Result show(final String id) {

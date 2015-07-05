@@ -7,19 +7,14 @@
     <div class="row">
         <div class="medium-10 columns medium-centered text-center">
             <div class="medium-6 columns small-centered">
-                <img class="profile-photo" src="@(user.getPictureUrl)" alt="" />
+                <img class="has-tip tip-top profile-photo" title="Bruk gravatar.com til å endre profilbilde. Lag deg en bruker der med din @@student.westerdals.no-mail, og legg til profilbilde.
+                Da skal profilbilde ditt oppdateres her." src="@(user.getPictureUrl)" alt="" />
                 <br/><br/>
-                <div data-alert class="alert-box info radius">
-                    Bruk gravatar.com til å endre profilbilde. Lag deg en bruker der med din @@student.westerdals.no-mail, og legg til profilbilde.
-                    Da skal profilbilde ditt oppdateres her.
-                    <a href="#" class="close">&times;</a>
-                </div>
             </div>
             <br /><br />
             @defining(user.getFirstName + " " + user.getLastName) { fullName =>
                 <h1>@fullName</h1>
             }
-
 
             <h5><em>@user.getEmail</em></h5>
         </div>

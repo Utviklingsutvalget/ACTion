@@ -4,6 +4,7 @@ import com.feth.play.module.pa.user.AuthUser;
 import com.feth.play.module.pa.user.EmailIdentity;
 import com.feth.play.module.pa.user.FirstLastNameIdentity;
 import com.feth.play.module.pa.user.PicturedIdentity;
+import models.clubs.BoardMembership;
 import org.hibernate.validator.constraints.Email;
 import services.UserService;
 
@@ -16,6 +17,8 @@ public class User {
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private List<Membership> memberships = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<BoardMembership> boardMemberships = new ArrayList<>();
     @Id
     private String id;
     private String firstName;
@@ -27,10 +30,8 @@ public class User {
     private List<Participation> participations = new ArrayList<>();
     @Transient
     private String gravatarUrl;
-
     public User() {
     }
-
     public User(String id, String firstName, String lastName, String email, String picureUrl) {
         this.id = id;
         this.firstName = firstName;
@@ -54,6 +55,22 @@ public class User {
             PicturedIdentity identity = (PicturedIdentity) authUser;
             this.pictureUrl = identity.getPicture();
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final User user = (User) o;
+
+        return !(id != null ? !id.equals(user.id) : user.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
     @PostLoad
@@ -118,28 +135,6 @@ public class User {
 
     public void setParticipations(List<Participation> participations) {
         this.participations = participations;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final User user = (User) o;
-
-        return id.equalsIgnoreCase(user.id);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + id.hashCode();
-        return result;
     }
 
     private String getGravatarUrl() {
