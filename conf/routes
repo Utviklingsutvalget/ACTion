@@ -49,6 +49,8 @@ GET           /admin/itslearning                     controllers.Administration.
 GET           /admin/clubs                           controllers.ClubAdminController.index()
 GET           /admin/clubs/new                       controllers.ClubAdminController.startCreate()
 POST          /admin/clubs/new                       controllers.ClubAdminController.create()
+GET           /admin/clubs/:id/edit                  controllers.ClubAdminController.edit(id: Long)
+POST          /admin/clubs/:id/edit                  controllers.ClubAdminController.update(id: Long)
 GET           /admin/clubs/:id                       controllers.Administration.showClub(id: Long)
 
 GET           /admin/initiation                      controllers.InitiationAdminController.index()

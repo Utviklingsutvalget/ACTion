@@ -18,6 +18,6 @@ public class UserFormatter extends Formatters.SimpleFormatter<User> {
 
     @Override
     public String print(final User user, final Locale locale) {
-        return user.getEmail();
+        return user.getEmail().replace(Constants.EMAIL_SUFFIX, "");
     }
 }

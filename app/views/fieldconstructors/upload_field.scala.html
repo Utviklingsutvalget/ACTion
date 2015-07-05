@@ -1,0 +1,28 @@
+@(element: Field, imageLink: String ,args: (Symbol, Any)*)
+
+@defining(args.toMap) { argMap =>
+    <div ng-controller="FileUploadController">
+    <div class="small-12 small-centered columns">
+        <div ng-model="progress">
+            <div ng-if="progress" class="progress [radius round]">
+                <span class="meter" style="width: {{progress}}%"></span>
+            </div>
+        </div>
+    </div>
+    <div class="small-12 medium-6 large-8 columns">
+        <div ngf-drop ngf-select ng-model="file" class="drop-box margin-bottom-25"
+        ngf-drag-over-class="dragover" ngf-multiple="false" ngf-allow-dir="false"
+        ngf-accept="'.jpg,.png'">Trykk her<br>
+            Eller dra en fil hit for å laste opp</div>
+    </div>
+    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+    <div class="small-12 medium-6 large-4 columns" ng-model="file">
+        <img ng-src="{{file.asLink}}" src="@imageLink">
+        <input type="hidden" name="@(element.name)" value="@element.value"/>
+    </div>
+    <div class="row" ng-model="file">
+                            {{file.error}}
+    </div>
+</div>
+}

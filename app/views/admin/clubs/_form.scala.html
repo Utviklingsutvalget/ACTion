@@ -1,9 +1,8 @@
-@import views.html.helper.FieldConstructor
-@(locations: java.util.List[Location], form: Form[clubs.Club])
+@(locations: java.util.List[Location], form: Form[clubs.Club], target: play.api.mvc.Call)
 
 <!-- CREATE CLUB -->
 
-@helper.form(action = routes.ClubAdminController.create()) {
+@helper.form(action = target) {
 @*<form class="email-check-form" action="@routes.Clubs.create()" method="post">*@
     <fieldset>
         <legend>Opprett et utvalg</legend>
@@ -14,6 +13,10 @@
 
         <div class="small-12 columns">
             @helper.inputText(form("shortName"), 'placeholder -> "Skriv inn forkortelse", 'required -> "", '_label -> "Forkortelse")
+        </div>
+
+        <div class="small-12 columns">
+            @fieldconstructors.upload_field(form("uploadedFile"), null)
         </div>
 
         <div class="small-12 columns">

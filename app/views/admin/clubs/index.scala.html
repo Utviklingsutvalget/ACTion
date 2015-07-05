@@ -11,57 +11,49 @@
 
     <!-- EXISITING CLUB LIST -->
     <div class="row" data-equalizer>
-        <div class="medium-6 columns">
-            <form>
-                <fieldset>
-                    <legend>Eksisterende</legend>
-
-                    <div id="clubDelete" class="admin-utvalg-oversikt">
-
-                        @for(club <- clubs) {
-                            <div class="row collapse">
-                                <div class="small-9 columns">
-                                    <span class="prefix" data-club-name="@club.getName">@club.getName</span>
-                                </div>
-
-                                <div class="small-3 columns">
-                                    <a data-reveal-id="deleteModal" class="button postfix alert">Slett</a>
-                                </div>
-                            </div>
-                        }
-                        <div id="deleteModal" class="reveal-modal deleteModal" data-reveal>
-                            <h2>Sletting av utvalg</h2>
-                            <p class="lead">
-                                Når du sletter et utvalg fjernes alle medlemmer, eventer og tilhørende utvalgsrelatert info.
-                                <br>Vær sikker på at du sletter korrekt utvalg</p>
-
-                                <!-- class confirmDelete must not be removed -->
-                            <input class="confirmDelete" type="text" placeholder="Skriv navn på utvalg fra listen her">
-
-                                <!-- class deleteClub must not be removed -->
-                            <form class="pricing-table medium-12 columns deleteClub" action="@routes.Administration.deleteClub()" method="post">
-                                <br>
-                                <label class="insertCallback">Sletting av utvalg</label>
-                                <br>
-                                <label>
-                                    Utvalg:
-                                    <select class="clubDropDownList">
-                                    @for(club <- clubs) {
-                                            <!-- class clubId and data-club-name must not be removed -->
-                                        <option class="clubId" data-club-name="@club.getName" data-club-id="@club.getId" value="@club.getId">@club.getName</option>
-                                    }
-                                    </select>
-                                </label>
-                                    <!-- button has been given class due to submit not responding to form -->
-                                <input class="submitDeleteClub button medium-4 columns alert" type="submit" value="Slett Utvalg">
-                            </form>
-                            <a class="close-reveal-modal">&#215;</a>
-                        </div>
+        <div class="panel">
+            <h2>Du kan administrere følgende foreninger:</h2>
+            @for(club <- clubs) {
+                <div class="panel row callout">
+                    <h3>@(club.getName) (@(club.getShortName))</h3>
+                    <div class="small-12 medium-8 columns">
+                        <strong>Lokasjon: </strong> @if(club.getLocation == null) {@club.getLocation} else {"Felles"}
                     </div>
-                </fieldset>
-            </form>
-        </div>
+                    <div class="small-12 medium-4 columns">
+                        <a class="button warning" href="@routes.ClubAdminController.edit(club.getId)">Endre</a>
+                        <a class="button alert" href="#">Slett Utvalg</a>
+                    </div>
+                </div>
+            }
+            <div id="deleteModal" class="reveal-modal deleteModal" data-reveal>
+                <h2>Sletting av utvalg</h2>
+                <p class="lead">
+                    Når du sletter et utvalg fjernes alle medlemmer, eventer og tilhørende utvalgsrelatert info.
+                    <br>Vær sikker på at du sletter korrekt utvalg</p>
 
+                    <!-- class confirmDelete must not be removed -->
+                <input class="confirmDelete" type="text" placeholder="Skriv navn på utvalg fra listen her">
+
+                    <!-- class deleteClub must not be removed -->
+                <form class="pricing-table medium-12 columns deleteClub" action="@routes.Administration.deleteClub()" method="post">
+                    <br>
+                    <label class="insertCallback">Sletting av utvalg</label>
+                    <br>
+                    <label>
+                        Utvalg:
+                        <select class="clubDropDownList">
+                        @for(club <- clubs) {
+                                <!-- class clubId and data-club-name must not be removed -->
+                            <option class="clubId" data-club-name="@club.getName" data-club-id="@club.getId" value="@club.getId">@club.getName</option>
+                        }
+                        </select>
+                    </label>
+                        <!-- button has been given class due to submit not responding to form -->
+                    <input class="submitDeleteClub button medium-4 columns alert" type="submit" value="Slett Utvalg">
+                </form>
+                <a class="close-reveal-modal">&#215;</a>
+            </div>
+        </div>
 
 
     </div>

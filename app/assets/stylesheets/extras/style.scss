@@ -392,3 +392,14 @@ img.img-gallery:hover {
 .nyhet img {
   height: 200px;
 }
+
+.drop-box {
+  padding: 50px 0px;
+  background: #ebf3f7;
+  border: 2px dotted #c0cacf;
+  text-align: center;
+  font-size: rem-calc(16);
+  font-weight: bold;
+  color: rgba(0,0,0,0.7);
+  cursor: pointer;
+}

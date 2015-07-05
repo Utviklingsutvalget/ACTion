@@ -1,31 +1,27 @@
 package models;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.annotation.Transactional;
-import play.data.validation.Constraints;
-
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+@Entity
 public class UploadedFile {
+
     @Id
-    private String path;
+    @GeneratedValue
+    private String id;
     @ManyToOne
     private User uploadedBy;
-    @Constraints.Required
-    private FileType fileType;
 
-    @Transactional
-    public static void update(UploadedFile file) {
-        Ebean.update(file);
+    private String fileName;
+
+    public String getId() {
+        return id;
     }
 
-    public FileType getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(final FileType fileType) {
-        this.fileType = fileType;
+    public void setId(final String id) {
+        this.id = id;
     }
 
     public User getUploadedBy() {
@@ -36,15 +32,11 @@ public class UploadedFile {
         this.uploadedBy = uploadedBy;
     }
 
-    public String getPath() {
-        return path;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setPath(final String path) {
-        this.path = path;
-    }
-
-    public enum FileType {
-        CLUBIMAGE
+    public void setFileName(final String fileName) {
+        this.fileName = fileName;
     }
 }

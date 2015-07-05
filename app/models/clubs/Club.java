@@ -26,6 +26,8 @@ public class Club {
     private List<Event> events = new ArrayList<>();
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<Feed> feedPosts = new ArrayList<>();
+    @ManyToOne
+    private UploadedFile uploadedFile;
     @Column(nullable = true, length = 10000)
     private String description;
     @Column(nullable = true, length = 300)
@@ -36,7 +38,6 @@ public class Club {
     private List<BoardMembership> boardMemberships;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Pending> pendingMemberships;
-
     public Club(String name, String shortName, Location location) {
         this.name = name;
         this.shortName = shortName;
@@ -46,6 +47,14 @@ public class Club {
     @Transactional
     public static void update(Club club) {
         Ebean.update(club);
+    }
+
+    public UploadedFile getUploadedFile() {
+        return uploadedFile;
+    }
+
+    public void setUploadedFile(final UploadedFile uploadedFile) {
+        this.uploadedFile = uploadedFile;
     }
 
     public String getDescription() {

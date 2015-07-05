@@ -14,6 +14,7 @@ import services.ClubService;
 import services.LocationService;
 import services.UserService;
 import views.html.admin.clubs.create;
+import views.html.admin.clubs.edit;
 import views.html.admin.clubs.index;
 
 import javax.inject.Inject;
@@ -31,6 +32,59 @@ public class ClubAdminController extends Controller {
     private LocationService locationService;
     @Inject
     private UserService userService;
+
+    public Result update(Long id) {
+        List<Location> locations = locationService.findAll();
+        Form<Club> form = Form.form(Club.class).bindFromRequest(request());
+        Map<String, String> data = form.data();
+        Logger.warn("Received following data: " + data);
+        discardError(form, "location");
+        Club club = form.get();
+        Club fromDb = clubService.findById(id);
+        if(fromDb == null) {
+            return notFound();
+        }
+        club.setId(id);
+
+        String locationId = data.get("location");
+        club.setLocation(locationService.getLocationFromStringId(locations, locationId));
+
+        User owner = club.getOwner();
+        User userFromDb = userService.findByEmail(owner.getEmail());
+        if(userFromDb == null) {
+            ArrayList<ValidationError> value = new ArrayList<>();
+            value.add(new ValidationError("owner", "Leder finnes ikke i systemet"));
+            form.errors().put("owner", value);
+        }
+
+        if(form.hasErrors()) {
+            return ok(edit.render(locations, form, id));
+        }
+        List<BoardMembership> boardMemberships = club.getBoardMemberships();
+        assert userFromDb != null;
+        if(!fromDb.getBoardMemberships().stream()
+                .filter(boardMembership -> boardMembership.getUser()
+                        .getEmail()
+                        .equals(userFromDb.getEmail()))
+                .findAny()
+                .isPresent()) {
+            boardMemberships.add(new BoardMembership(club, "Leder", userFromDb, 0));
+        }
+        club.setOwner(userFromDb);
+        clubService.update(club);
+        return redirect(routes.Clubs.show(club.getId()));
+    }
+
+    public Result edit(Long id) {
+        Club club = clubService.findById(id);
+        List<Location> locations = locationService.findAll();
+        if(club == null) {
+            return notFound();
+        }
+        Form<Club> form = Form.form(Club.class).fill(club);
+
+        return ok(edit.render(locations, form, id));
+    }
 
     public Result index() {
         List<Location> locations = locationService.findAll();

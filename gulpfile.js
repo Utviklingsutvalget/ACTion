@@ -9,9 +9,12 @@ var sass = require('gulp-sass');
 gulp.task('default', ['scripts', 'sass', 'watch']);
 
 var sources = [
+    'node_modules/ng-file-upload/dist/FileAPI.min.js',
     'node_modules/jquery/dist/jquery.min.js',
     'node_modules/foundation-sites/js/foundation.min.js',
     'node_modules/angular/angular.min.js',
+    //'node_modules/ng-file-upload/ng-file-upload-shim.js',
+    'node_modules/ng-file-upload/dist/ng-file-upload-all.min.js',
 
     // Internal sources last
     'app/assets/javascripts/**/*.js'
