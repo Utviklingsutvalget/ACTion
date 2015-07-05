@@ -1,0 +1,21 @@
+@(form: Form[InitiationEvent])
+
+@helper.form(action = routes.InitiationAdminController.createEvent()) {
+    <fieldset>
+        <legend>Opprett Fadderevent</legend>
+
+        <div class="small-12 columns">
+        @helper.inputText(form("title"), 'placeholder -> "Tittel", 'required -> "", '_label -> "Tittel")
+        </div>
+
+        <div class="small-12 columns">
+        @helper.inputText(form("location"), 'placeholder -> "Lokasjon", 'required -> "", '_label -> "Lokasjon")
+        </div>
+
+        <div class="small-12 columns">
+           @helper.textarea(form("description"), 'placeholder -> "Beskrivelse", 'required -> "", '_label -> "Beskrivelse",
+               'rows -> 10, 'maxlength -> 300)
+        </div>
+
+    </fieldset>
+}

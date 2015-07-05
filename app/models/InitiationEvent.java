@@ -22,7 +22,6 @@ public class InitiationEvent {
     @Constraints.Required
     private String location;
     @ManyToOne
-    @Constraints.Required
     private InitiationSchedule initiationSchedule;
 
     public InitiationEvent(Long id, LocalDateTime time, String title, String description, String location) {

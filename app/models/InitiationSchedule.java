@@ -22,10 +22,14 @@ public class InitiationSchedule {
     @Constraints.Required
     private Year year;
 
-    public InitiationSchedule(Long id, Location campus, List<InitiationEvent> events, Year year) {
+    public InitiationSchedule(Location campus, List<InitiationEvent> events, Year year) {
         this.campus = campus;
         this.events = events;
         this.year = year;
+    }
+
+    public InitiationSchedule() {
+
     }
 
     public Long getId() {

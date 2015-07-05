@@ -1,11 +1,11 @@
 @(initGroups: java.util.List[InitiationGroup], locations: java.util.List[Location], maxGroup: Integer)
 
-@views.html.admin.layout("Fadderadmin", "initiation") {
+@views.html.admin.layout("Fadderadmin", "index") {
     <!-- GUARDIAN DISPLAY -->
 
-    @_subheader("Faddereventer")
+    @_subheader("Fadderordninger")
     <a class="button radius" href="@routes.InitiationAdminController.newSchedule()">
-        Opprett ny ordning
+        Opprett ny fadderordning
     </a>
 
     @_subheader("Faddergrupper")

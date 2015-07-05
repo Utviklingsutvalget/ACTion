@@ -1,0 +1,20 @@
+@import views.html.helper.FieldConstructor
+@(locations: java.util.List[Location], form: Form[InitiationSchedule])
+
+<!-- CREATE INITIATIONSCHEDULE -->
+
+@helper.form(action = routes.InitiationAdminController.createSchedule()) {
+    <fieldset>
+        <legend>Opprett fadderordning</legend>
+
+        <div class="small-12 columns">
+            @defining(locations.map(location => (location.getId.toString, location.getName))) { locationOptions =>
+                @helper.select(form("location"), locationOptions.toSeq, '_default -> "Felles", '_label -> "Lokasjon")
+            }
+
+            <a class="small-12 columns cta-button">
+                <input class="button small newclub" type="submit" value="Opprett ordning">
+            </a>
+        </div>
+    </fieldset>
+}

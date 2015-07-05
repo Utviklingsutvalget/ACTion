@@ -4,7 +4,6 @@ import models.Location;
 import models.User;
 import models.clubs.BoardMembership;
 import models.clubs.Club;
-import play.Logger;
 import play.data.Form;
 import play.data.validation.ValidationError;
 import play.mvc.Controller;
@@ -109,7 +108,6 @@ public class ClubAdminController extends Controller {
         List<Location> locations = locationService.findAll();
         Form<Club> form = Form.form(Club.class).bindFromRequest(request());
         Map<String, String> data = form.data();
-        Logger.warn("Received following data: " + data);
         discardError(form, "location");
         Club club = form.get();
 

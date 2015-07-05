@@ -1,0 +1,7 @@
+@import models.InitiationSchedule
+@(initiationSchedule: InitiationSchedule, initiationId: Long)
+
+@views.html.admin.layout("Fadderadministrasjon", "index") {
+
+    @_subheader(initiationSchedule.getCampus.getName)
+}

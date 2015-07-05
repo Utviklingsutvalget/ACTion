@@ -1,0 +1,7 @@
+@import views.html.admin.initiation.events._form
+@(form: Form[InitiationEvent])
+
+@views.html.admin.layout("Fadderadministrasjon", "index") {
+
+    @views.html.admin.initiation.events._form(form)
+}
