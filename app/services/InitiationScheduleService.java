@@ -13,4 +13,9 @@ public class InitiationScheduleService {
     public void save(final InitiationSchedule initiationSchedule) {
         Ebean.save(initiationSchedule);
     }
+
+
+    public InitiationSchedule findScheduleById(long scheduleId) {
+        return Ebean.find(InitiationSchedule.class, scheduleId);
+    }
 }

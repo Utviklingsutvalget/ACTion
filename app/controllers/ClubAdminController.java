@@ -21,7 +21,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class ClubAdminController extends Controller {
 
@@ -39,7 +38,7 @@ public class ClubAdminController extends Controller {
         List<Location> locations = locationService.findAll();
         Form<Club> form = Form.form(Club.class).bindFromRequest(request());
         Map<String, String> data = form.data();
-        Logger.warn("Received following data: " + data);
+//        Logger.warn("Received following data: " + data);
         discardError(form, "location");
         discardError(form, "uploadedFile");
         Club club = form.get();

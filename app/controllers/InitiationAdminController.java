@@ -9,6 +9,7 @@ import play.data.validation.ValidationError;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Content;
+import services.InitiationEventService;
 import services.InitiationGroupService;
 import services.InitiationScheduleService;
 import services.LocationService;
@@ -17,7 +18,9 @@ import views.html.admin.initiation.create;
 import views.html.admin.initiation.index;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -27,11 +30,12 @@ public class InitiationAdminController extends Controller {
 
     @Inject
     private InitiationScheduleService initiationScheduleService;
-
     @Inject
     private InitiationGroupService initiationGroupService;
     @Inject
     private LocationService locationService;
+    @Inject
+    private InitiationEventService initiationEventService;
 
     public Result index() {
         List<Location> locations = locationService.findAll();
@@ -71,13 +75,33 @@ public class InitiationAdminController extends Controller {
     public Result newEvent(long scheduleId) {
         Form<InitiationEvent> form = form(InitiationEvent.class);
 
-        return ok((Content) views.html.admin.initiation.events.create.render(form));
+        return ok((Content) views.html.admin.initiation.events.create.render(form, scheduleId));
     }
 
-    public Result createEvent() {
+    public Result createEvent(long scheduleId) {
+        Form<InitiationEvent> form = form(InitiationEvent.class).bindFromRequest(request());
+        Map<String, String> data = form.data();
 
+        InitiationEvent initiationEvent = new InitiationEvent(data.get("title"), getLocalDateTimeFromString(data.get("date")), data.get("location"),
+                data.get("description"));
+
+        initiationEventService.save(initiationEvent);
+
+        return redirect(routes.InitiationAdminController.showEvents(scheduleId));
+    }
+
+    public Result showEvents(long scheduleId) {
+        InitiationSchedule initiationSchedule = initiationScheduleService.findScheduleById(scheduleId);
+        List<InitiationEvent> initiationEvents = initiationEventService.findAll();
+
+        return ok((Content) views.html.admin.initiation.events.show.render(initiationSchedule, initiationEvents));
+    }
+
+    public Result deleteEvent(long initiationEventId) {
+        /*initiationEventService.delete(initiationEventId);*/
         return TODO;
     }
+
 
     private void discardError(final Form<?> form, String field) {
         List<ValidationError> location = form.errors().remove(field);
@@ -88,5 +112,11 @@ public class InitiationAdminController extends Controller {
                 .filter(loc -> loc.getId() == Long .parseLong(locationId))
                 .findFirst()
                 .orElseGet(null);
+    }
+
+    private LocalDateTime getLocalDateTimeFromString(String localDateTimeAsString) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+
+        return LocalDateTime.parse(localDateTimeAsString, dateTimeFormatter);
     }
 }

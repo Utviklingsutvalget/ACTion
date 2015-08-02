@@ -1,0 +1,26 @@
+@(initiationSchedule: InitiationSchedule, initiationEvents: java.util.List[InitiationEvent])
+
+@views.html.admin.layout("Fadderadministrasjon", "index") {
+
+    @_subheader(initiationSchedule.getCampus.getName + " - " + initiationSchedule.getYear)
+
+    <fieldset>
+        <legend>Fadderevents</legend>
+        <div id="admin-faddere-oversikt" class="admin-faddere-oversikt">
+            <div class="row collapse">
+                <div class="responseShow"></div>
+                @for(initiationEvent <- initiationEvents) {
+                    <div class="small-9 columns displayGuardian">
+                        <span class="prefix">
+                        @initiationEvent.getTitle
+                        @initiationEvent.getTime
+                        </span>
+                    </div>
+                    <div class="small-3 columns">
+                        <input class="button postfix alert" type="submit" value="Slett">
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+}

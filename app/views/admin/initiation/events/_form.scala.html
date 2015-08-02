@@ -1,11 +1,16 @@
-@(form: Form[InitiationEvent])
+@(form: Form[InitiationEvent], scheduleId: Long)
 
-@helper.form(action = routes.InitiationAdminController.createEvent()) {
+@helper.form(action = routes.InitiationAdminController.createEvent(scheduleId)) {
     <fieldset>
         <legend>Opprett Fadderevent</legend>
 
         <div class="small-12 columns">
-        @helper.inputText(form("title"), 'placeholder -> "Tittel", 'required -> "", '_label -> "Tittel")
+            @helper.inputText(form("title"), 'placeholder -> "Tittel", 'required -> "", '_label -> "Tittel")
+        </div>
+
+        <div class="small-12 columns">
+            @helper.inputText(form("date"), 'placeholder -> "yyyy/mm/dd tt", 'required -> "", '_label -> "Dato og tidspunkt",
+                    'id -> "datetimepicker", 'type -> "text")
         </div>
 
         <div class="small-12 columns">
@@ -15,6 +20,10 @@
         <div class="small-12 columns">
            @helper.textarea(form("description"), 'placeholder -> "Beskrivelse", 'required -> "", '_label -> "Beskrivelse",
                'rows -> 10, 'maxlength -> 300)
+        </div>
+
+        <div class="small-12 columns cta-button">
+            <input class="button small newclub" type="submit" value="Opprett event">
         </div>
 
     </fieldset>

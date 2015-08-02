@@ -56,10 +56,13 @@ GET           /admin/clubs/:id                           controllers.Administrat
 GET           /admin/initiation                          controllers.InitiationAdminController.index()
 GET           /admin/initiation/schedules/new            controllers.InitiationAdminController.newSchedule()
 POST          /admin/initiation/schedules/new            controllers.InitiationAdminController.createSchedule()
-GET           /admin/initiation/schedules/:id/new        controllers.InitiationAdminController.newEvent(id: Long)
-POST          /admin/initiation/events/new               controllers.InitiationAdminController.createEvent()
 
-POST		  /api/upload								 controllers.UploadController.postFile()
+GET           /admin/initiation/schedules/:id/new        controllers.InitiationAdminController.newEvent(id: Long)
+POST          /admin/initiation/events/new               controllers.InitiationAdminController.createEvent(id: Long)
+GET           /admin/initiation/events                   controllers.InitiationAdminController.showEvents(id: Long)
+#DELETE        /admin/initiation/events                   controllers.InitiationAdminController.deleteEvent(id: Long)
+
+POST          /api/upload                                controllers.UploadController.postFile()
 
 #Feed
 GET           /feed                                      controllers.Feeds.index()

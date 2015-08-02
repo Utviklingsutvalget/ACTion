@@ -1,7 +1,7 @@
 @import views.html.admin.initiation.events._form
-@(form: Form[InitiationEvent])
+@(form: Form[InitiationEvent], scheduleId: Long)
 
 @views.html.admin.layout("Fadderadministrasjon", "index") {
 
-    @views.html.admin.initiation.events._form(form)
+    @views.html.admin.initiation.events._form(form, scheduleId)
 }

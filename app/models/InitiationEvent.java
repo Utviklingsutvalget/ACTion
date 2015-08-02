@@ -13,23 +13,22 @@ public class InitiationEvent {
     @Id
     private Long id;
     @Constraints.Required
+    private String title;
+    @Constraints.Required
     private LocalDateTime time;
     @Constraints.Required
-    private String title;
+    private String location;
     @Constraints.Required
     @Column (length = 300)
     private String description;
-    @Constraints.Required
-    private String location;
     @ManyToOne
     private InitiationSchedule initiationSchedule;
 
-    public InitiationEvent(Long id, LocalDateTime time, String title, String description, String location) {
-        this.id = id;
-        this.time= time;
+    public InitiationEvent(String title, LocalDateTime time, String location, String description) {
         this.title= title;
-        this.description= description;
+        this.time= time;
         this.location = location;
+        this.description= description;
     }
 
     public Long getId() {
